@@ -42,7 +42,19 @@ Y correr `python -I scripts/60_red_para_mapa.py`, que extrae el zip a `datos/geo
 No importa código de otro módulo. Muestra el simulador por URL y lee el backend por contrato
 (solo para poner en rojo la estación con una alerta abierta).
 
-Con `mapa/config.js` (no versionado; copia `config.ejemplo.js` y pega tu token público de Mapbox)
+El token de Mapbox vive en el `.env` de la raíz (`MAPBOX_ACCESS_TOKEN=pk...`, no versionado) y
+se copia a `mapa/config.js` (tampoco versionado) con:
+
+```powershell
+python -I mapa/generar_config.py
+```
+
+El navegador no puede leer `.env`, por eso existe `config.js`. El script se niega a escribir un
+token secreto (`sk.`) y nunca imprime el token completo. Un token público sigue siendo visible en el
+navegador, como en cualquier mapa de Mapbox: la protección es restringirlo por URL en la cuenta.
+También se puede crear `config.js` a mano copiando `config.ejemplo.js`.
+
+Con `mapa/config.js` y un token público de Mapbox
 usa Mapbox GL JS con el estilo claro de Mapbox. La casilla "Satélite" (Esri World Imagery, sin
 llave) funciona con o sin token. Sin él, usa MapLibre GL
 con la base vectorial de OpenFreeMap, sin llave; se apagan sus ríos para que la

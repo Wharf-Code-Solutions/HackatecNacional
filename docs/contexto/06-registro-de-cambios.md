@@ -21,6 +21,23 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · M6: el token de Mapbox se toma del .env
+
+**Qué cambió.** Nuevo `mapa/generar_config.py`: lee `MAPBOX_ACCESS_TOKEN` del `.env` de la raíz y
+escribe `mapa/config.js`. `.env` entra a `.gitignore`.
+
+**Por qué.** El equipo quiere el token en un solo lugar, el `.env`. La página del mapa no puede
+leerlo (corre en el navegador), así que el script lo copia al `config.js` que ya existía (D21). Se
+niega a escribir un token secreto `sk.` o algo que no tenga forma de token público, y no lo
+imprime completo. El token público sigue siendo visible en el navegador; la protección es la
+restricción por URL en la cuenta de Mapbox, no esconderlo.
+
+**Qué arrastró.** `mapa/README.md`.
+
+**Impacto en otros módulos.** Ninguno. Quien ya tenía `mapa/config.js` a mano puede seguir así.
+
+---
+
 ## 2026-11-24 · M7: gráficas en el panel y arreglo de las pestañas
 
 **Qué cambió.** El panel suma un panorama de cinco gráficas arriba de la lista: alertas por
