@@ -47,8 +47,8 @@ export default function Panorama({ parte, alertas, veredictos, corte, elegida, o
   );
   return (
     <div className="panorama">
-      <Tarjeta titulo="Huella de las últimas horas" subtitulo="Dónde y cuándo se salió cada sonda de lo habitual." ancha>
-        <Huella estaciones={estaciones} veredictos={veredictos} />
+      <Tarjeta titulo="Huella de las últimas horas" subtitulo="Cuándo se salió cada sonda de la estación de lo habitual." ancha>
+        <Huella estaciones={estaciones} veredictos={veredictos} alertas={alertas} elegida={elegida} />
       </Tarjeta>
       <Tarjeta titulo="Alertas por hora" ancha><GraficaHoras alertas={alertas} /></Tarjeta>
       <Tarjeta titulo="Alertas por atender, por estación">

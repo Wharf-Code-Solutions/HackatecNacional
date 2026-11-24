@@ -338,3 +338,4 @@ button.enlace { background: none; border: 0; padding: 0; color: var(--principal)
 .mapa-estaciones .maplibregl-popup-content { font-size: 13px; padding: 8px 10px; border-radius: 3px; }
 .mapa-estaciones .maplibregl-popup-tip { display: none; }
 @media (max-width: 700px) { .mapa-estaciones-lienzo { height: 340px; } }
+.huella-filtro { grid-template-columns: minmax(0, 320px); margin: 0 0 12px; }

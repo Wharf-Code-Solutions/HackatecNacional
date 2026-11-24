@@ -143,7 +143,7 @@ export default function App() {
                   <Expediente alerta={alerta} veredictos={alerta ? be.veredictos[alerta.c_estacion] : []}
                     motor={be.motor} guardar={be.guardar} prediccion={be.prediccion} demo={demo} />
                 </div>
-                <Panorama parte="conteos" alertas={be.alertas} veredictos={be.veredictos} corte={corte} />
+                <Panorama parte="conteos" alertas={be.alertas} veredictos={be.veredictos} corte={corte} elegida={filtros.estacion} />
               </section>
             )}
             {seccion === 'monitoreo' && vista === 'avisos' && <Avisos veredictos={be.veredictos} conectado={be.conectado} />}

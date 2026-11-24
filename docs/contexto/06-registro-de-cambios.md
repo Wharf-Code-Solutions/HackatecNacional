@@ -57,6 +57,17 @@ versionada): si cambia el criterio, se regenera con el script, no se edita.
 
 ---
 
+## 2026-11-24 · M7: la huella muestra una sola estación
+
+**Qué cambió.** "Huella de las últimas horas" muestra una estación con una fila grande y separada por sonda,
+con un selector propio. Sigue a la estación elegida en el mapa, la tabla o el filtro; sin elección, la
+primera con alerta por atender. El selector no filtra la lista de alertas.
+**Por qué.** Petición del usuario: las 5 estaciones juntas daban celdas diminutas y se leía raro.
+**Qué arrastró.** `Huella.jsx`, `Panorama.jsx`, `App.jsx` (pasa `elegida`), `estilos.css`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
 ## 2026-11-24 · M7: en el expediente se elige la sonda que se grafica
 
 **Qué cambió.** Un clic en cualquier miniatura de "Todas las sondas de la estación" la muestra en la serie
