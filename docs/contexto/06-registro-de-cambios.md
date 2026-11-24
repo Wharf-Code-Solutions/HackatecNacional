@@ -21,6 +21,55 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · M3: propagacion, y el modelo que los datos rechazaron
+
+**Qué cambió.** Nuevo `scripts/80_propagacion.py`. Dada una alerta, devuelve a qué sitios
+aguas abajo llega, en qué ventana horaria y con qué concentración, cumpliendo
+`prediccion_propagacion.schema.json`. Escribe `red/atenuacion_observada.csv`,
+`red/tiempo_viaje.csv` (5 769 pares), `contrato/fixtures/prediccion_ejemplo.json` y
+`docs/14-propagacion.md`.
+
+**Por qué el modelo no es el del plan, ni el que yo mismo había propuesto.** Antes de
+escribir una línea se midió la razón entre la concentración aguas abajo y la de aguas
+arriba, en tramos adyacentes muestreados **el mismo día**. Resultado: **mediana 1.00 en
+los once parámetros, sin tendencia con la distancia** entre 0 y 20 km. No hay atenuación
+neta medible: entre dos sitios entran tantas descargas como la autodepuración quita.
+Declarar una constante de decaimiento de literatura habría quedado contradicho por 90
+mediciones de este mismo río, así que **k = 0 y el transporte es conservativo**.
+
+Es el segundo modelo que los datos descartan, después de Streeter-Phelps. No es un
+fracaso: es el río diciendo lo que es.
+
+**Un error de método que hubo que corregir.** La primera medición dio mediana 1.06 y una
+k negativa, porque usaba los 6 276 pares de ancestría y contaba el mismo tramo físico
+muchas veces. Con una razón por tramo adyacente la mediana cae a 1.00. Y la banda
+predictiva se estima con las observaciones individuales, no con las medianas por tramo:
+estimarla con medianas la dejaba demasiado angosta y la cobertura caía al 41 % en E_COLI.
+
+**Lo que se descartó.** `ARBSUM_1` como proxy de caudal para calcular dilución: solo
+explica el 40 % de la varianza (r = 0.63) en los 33 sitios con caudal medido. Y resultó
+innecesario, porque la dilución ya está contenida en la banda medida. `factor_dilucion`
+va nulo con su motivo escrito.
+
+**Validación.** Monotonía de los tiempos: 210 de 210 sitios. Cobertura de la banda **fuera
+de muestra** (estimada con la mitad de los tramos, medida contra la otra mitad, en las dos
+direcciones): 71 a 81 %, **mediana 78 %**, frente al 80 % esperado. Lo que no se validó es
+la velocidad del flujo: no hay un solo dato de velocidad ni de tiempo de viaje en la
+cuenca. Es el supuesto más fuerte del modelo y se cierra con un aforo de flotador en campo.
+
+**Qué arrastró.** Tres campos **opcionales** nuevos en
+`prediccion_propagacion.schema.json` (`valor_estimado_min`, `valor_estimado_max`,
+`advertencia`). Es un cambio aditivo, así que por la invariante I7 **no sube la versión del
+contrato**. Más `docs/01-que-construimos.md`, `docs/12-estado-y-traspaso.md`,
+`docs/README.md`, `docs/contexto/02-mapa-del-repo.md` y `CLAUDE.md`.
+
+**Impacto en otros módulos.** El panel (M7) y el mapa (M6) ya pueden consumir
+`prediccion_ejemplo.json` sin esperar a M5. `nivel_esperado` sale en `Sin dato` a
+propósito: esa clasificación es de **M2** y escribirla aquí habría duplicado la regla.
+Cuando M2 exista, se llena llamándolo.
+
+---
+
 ## 2026-11-24 · M1: topologia de la red calculada
 
 **Qué cambió.** Nuevo `scripts/70_topologia_red.py`. Engancha los 219 sitios a la red

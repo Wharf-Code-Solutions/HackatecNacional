@@ -29,7 +29,7 @@ color no ordena nada y **no se usa para pintar el mapa** (decisión D9).
 | M6 mapa | Prototipo (`mapa/`): ríos, subcuencas, 219 sitios y 5 estaciones con zoom al simulador |
 | M1 topología (orden aguas arriba → abajo) | **Construida** (`scripts/70_topologia_red.py` → `datos/procesados/red/`): 210 de 219 sitios con sucesor y distancia sobre el cauce; 14 marcados para revisión |
 | M2 motor de reglas | **Pendiente**. El mock trae un evaluador `stub` que no discrimina (31 alertas en un día sin incidente) |
-| M3 propagación | **Pendiente, desbloqueada**: ya tiene la topología |
+| M3 propagación | **Construida** (`scripts/80_propagacion.py`): transporte conservativo con k = 0, porque la razón medida abajo/arriba en 90 tramos tiene mediana 1.00. Ventana de llegada por velocidad declarada 0.3-1.0 m/s; valor como banda p10-p90; cobertura 78 % fuera de muestra |
 | M5 backend, M7 panel, M8 app, M9, M10 | Pendientes |
 
 No conviertas "pendiente" en "construido" sin verificarlo contra el repo.

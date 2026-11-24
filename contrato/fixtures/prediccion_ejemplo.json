@@ -1,0 +1,486 @@
+{
+  "version": "1.0",
+  "c_alerta": "AL-20261123-ATY01-01",
+  "modelo": "transporte_adveccion_decaimiento",
+  "supuestos": {
+    "velocidad_flujo_m_s": [
+      0.3,
+      1.0
+    ],
+    "fuente_velocidad": "supuesto_declarado",
+    "k_decaimiento_por_dia": 0,
+    "mezcla_completa": true,
+    "caudal_constante": true,
+    "notas": "Transporte conservativo: k = 0 porque en 90 tramos de este rio muestreados el mismo dia la razon de concentracion aguas abajo entre aguas arriba tiene mediana 1.00, sin tendencia con la distancia. El valor se entrega como banda (valor_estimado_min a valor_estimado_max) a partir de los percentiles 10 y 90 de esa razon. factor_dilucion va nulo: la dilucion ya esta contenida en esa banda medida, y el unico proxy disponible (ARBSUM del INEGI) solo explica el 40 % de la varianza del caudal en los 33 sitios que lo traen. nivel_esperado lo llena M2."
+  },
+  "destinos": [
+    {
+      "c_sitio_destino": "DLTLA0008RNL",
+      "nombre": "RÍO ATOYAC DESPUES DE CONFLUENCIA CON RÍO XOPANAC CONATLAX-2582-RA4",
+      "orden_aguas_abajo": 1,
+      "distancia_cauce_m": 546.8,
+      "llegada_estimada": {
+        "desde": "2026-11-23T10:09:00-06:00",
+        "hasta": "2026-11-23T10:30:36-06:00"
+      },
+      "factor_dilucion": null,
+      "valor_estimado": 415.6,
+      "valor_estimado_min": 154.4,
+      "valor_estimado_max": 1458.0,
+      "c_parametro": "DQO_TOT",
+      "nivel_esperado": "Sin dato",
+      "confianza": "alta",
+      "advertencia": ""
+    },
+    {
+      "c_sitio_destino": "DLTLA2597",
+      "nombre": "RÍO ATOYAC DOMINGO ARENAS",
+      "orden_aguas_abajo": 2,
+      "distancia_cauce_m": 4756.6,
+      "llegada_estimada": {
+        "desde": "2026-11-23T11:19:12-06:00",
+        "hasta": "2026-11-23T14:24:00-06:00"
+      },
+      "factor_dilucion": null,
+      "valor_estimado": 415.6,
+      "valor_estimado_min": 154.4,
+      "valor_estimado_max": 1458.0,
+      "c_parametro": "DQO_TOT",
+      "nivel_esperado": "Sin dato",
+      "confianza": "alta",
+      "advertencia": ""
+    },
+    {
+      "c_sitio_destino": "DLTLA2546",
+      "nombre": "TLAPALAC ANTES DE CONFLUENCIA CON RÍO ATOYAC",
+      "orden_aguas_abajo": 3,
+      "distancia_cauce_m": 11483.7,
+      "llegada_estimada": {
+        "desde": "2026-11-23T13:11:24-06:00",
+        "hasta": "2026-11-23T20:37:48-06:00"
+      },
+      "factor_dilucion": null,
+      "valor_estimado": 415.6,
+      "valor_estimado_min": 154.4,
+      "valor_estimado_max": 1458.0,
+      "c_parametro": "DQO_TOT",
+      "nivel_esperado": "Sin dato",
+      "confianza": "alta",
+      "advertencia": ""
+    },
+    {
+      "c_sitio_destino": "DLTLA2547",
+      "nombre": "RA-12 RÍO ATOYAC, ANTES DE LA CONFLUENCIA CON EL RÍO ZAHUAPAN",
+      "orden_aguas_abajo": 4,
+      "distancia_cauce_m": 11576.0,
+      "llegada_estimada": {
+        "desde": "2026-11-23T13:13:12-06:00",
+        "hasta": "2026-11-23T20:43:12-06:00"
+      },
+      "factor_dilucion": null,
+      "valor_estimado": 415.6,
+      "valor_estimado_min": 154.4,
+      "valor_estimado_max": 1458.0,
+      "c_parametro": "DQO_TOT",
+      "nivel_esperado": "Sin dato",
+      "confianza": "media",
+      "advertencia": ""
+    },
+    {
+      "c_sitio_destino": "DLTLA0321RNL",
+      "nombre": "CONATLAX-RA5 RÍO ATOYAC ANTES DE CONFLUENCIA CON RÍO ZAHUAPAN (SITIO DE INVESTIGACION CONACYT CERCANOS A PUNTOS RENAMECA)",
+      "orden_aguas_abajo": 5,
+      "distancia_cauce_m": 11610.8,
+      "llegada_estimada": {
+        "desde": "2026-11-23T13:13:48-06:00",
+        "hasta": "2026-11-23T20:45:00-06:00"
+      },
+      "factor_dilucion": null,
+      "valor_estimado": 415.6,
+      "valor_estimado_min": 154.4,
+      "valor_estimado_max": 1458.0,
+      "c_parametro": "DQO_TOT",
+      "nivel_esperado": "Sin dato",
+      "confianza": "media",
+      "advertencia": ""
+    },
+    {
+      "c_sitio_destino": "DLPUE6529",
+      "nombre": "ATOYAC ANTES DE LA CONFLUENCIA DEL ZAHUAPAN",
+      "orden_aguas_abajo": 6,
+      "distancia_cauce_m": 11959.5,
+      "llegada_estimada": {
+        "desde": "2026-11-23T13:19:12-06:00",
+        "hasta": "2026-11-23T21:04:12-06:00"
+      },
+      "factor_dilucion": null,
+      "valor_estimado": 415.6,
+      "valor_estimado_min": 154.4,
+      "valor_estimado_max": 1458.0,
+      "c_parametro": "DQO_TOT",
+      "nivel_esperado": "Sin dato",
+      "confianza": "media",
+      "advertencia": ""
+    },
+    {
+      "c_sitio_destino": "DLTLA2588",
+      "nombre": "Z-07 CONFLUENCIA RÍO ZAHUAPAN  CON RÍO ATOYAC/ PAPALOTLA DE XICOHTENCATL",
+      "orden_aguas_abajo": 7,
+      "distancia_cauce_m": 12005.6,
+      "llegada_estimada": {
+        "desde": "2026-11-23T13:19:48-06:00",
+        "hasta": "2026-11-23T21:07:12-06:00"
+      },
+      "factor_dilucion": null,
+      "valor_estimado": 415.6,
+      "valor_estimado_min": 154.4,
+      "valor_estimado_max": 1458.0,
+      "c_parametro": "DQO_TOT",
+      "nivel_esperado": "Sin dato",
+      "confianza": "media",
+      "advertencia": ""
+    },
+    {
+      "c_sitio_destino": "DLPUE6528",
+      "nombre": "ATOYAC DESPUES DE LA CONFLUENCIA DEL ZAHUAPAN",
+      "orden_aguas_abajo": 8,
+      "distancia_cauce_m": 12020.6,
+      "llegada_estimada": {
+        "desde": "2026-11-23T13:20:24-06:00",
+        "hasta": "2026-11-23T21:07:48-06:00"
+      },
+      "factor_dilucion": null,
+      "valor_estimado": 415.6,
+      "valor_estimado_min": 154.4,
+      "valor_estimado_max": 1458.0,
+      "c_parametro": "DQO_TOT",
+      "nivel_esperado": "Sin dato",
+      "confianza": "media",
+      "advertencia": ""
+    },
+    {
+      "c_sitio_destino": "DLPUE1993",
+      "nombre": "AGUAS ABAJO DEL COLECTOR PANZACOLA",
+      "orden_aguas_abajo": 9,
+      "distancia_cauce_m": 12350.8,
+      "llegada_estimada": {
+        "desde": "2026-11-23T13:25:48-06:00",
+        "hasta": "2026-11-23T21:26:24-06:00"
+      },
+      "factor_dilucion": null,
+      "valor_estimado": 415.6,
+      "valor_estimado_min": 154.4,
+      "valor_estimado_max": 1458.0,
+      "c_parametro": "DQO_TOT",
+      "nivel_esperado": "Sin dato",
+      "confianza": "media",
+      "advertencia": ""
+    },
+    {
+      "c_sitio_destino": "DLTLA0182RNL",
+      "nombre": "ATOYAC DESPUES DE LA CONFLUENCIA DEL ZAHUAPAN",
+      "orden_aguas_abajo": 10,
+      "distancia_cauce_m": 12555.5,
+      "llegada_estimada": {
+        "desde": "2026-11-23T13:29:24-06:00",
+        "hasta": "2026-11-23T21:37:48-06:00"
+      },
+      "factor_dilucion": null,
+      "valor_estimado": 415.6,
+      "valor_estimado_min": 154.4,
+      "valor_estimado_max": 1458.0,
+      "c_parametro": "DQO_TOT",
+      "nivel_esperado": "Sin dato",
+      "confianza": "media",
+      "advertencia": ""
+    },
+    {
+      "c_sitio_destino": "DLTLA2544",
+      "nombre": "ATOYAC-PANZACOLA",
+      "orden_aguas_abajo": 11,
+      "distancia_cauce_m": 13775.9,
+      "llegada_estimada": {
+        "desde": "2026-11-23T13:49:48-06:00",
+        "hasta": "2026-11-23T22:45:36-06:00"
+      },
+      "factor_dilucion": null,
+      "valor_estimado": 415.6,
+      "valor_estimado_min": 154.4,
+      "valor_estimado_max": 1458.0,
+      "c_parametro": "DQO_TOT",
+      "nivel_esperado": "Sin dato",
+      "confianza": "media",
+      "advertencia": ""
+    },
+    {
+      "c_sitio_destino": "DLTLA0320RNL",
+      "nombre": "CONATLAX-RA6 RÍO ATOYAC PANZACOLA (SITIO DE INVESTIGACION CONACYT CERCANOS A PUNTOS RENAMECA)",
+      "orden_aguas_abajo": 12,
+      "distancia_cauce_m": 13843.5,
+      "llegada_estimada": {
+        "desde": "2026-11-23T13:51:00-06:00",
+        "hasta": "2026-11-23T22:49:12-06:00"
+      },
+      "factor_dilucion": null,
+      "valor_estimado": 415.6,
+      "valor_estimado_min": 154.4,
+      "valor_estimado_max": 1458.0,
+      "c_parametro": "DQO_TOT",
+      "nivel_esperado": "Sin dato",
+      "confianza": "media",
+      "advertencia": ""
+    },
+    {
+      "c_sitio_destino": "DLPUE1988",
+      "nombre": "AGUAS ABAJO DE LA DESCARGA TEXTIL ZALDO",
+      "orden_aguas_abajo": 13,
+      "distancia_cauce_m": 17895.5,
+      "llegada_estimada": {
+        "desde": "2026-11-23T14:58:12-06:00",
+        "hasta": "2026-11-24T02:34:12-06:00"
+      },
+      "factor_dilucion": null,
+      "valor_estimado": 415.6,
+      "valor_estimado_min": 154.4,
+      "valor_estimado_max": 1458.0,
+      "c_parametro": "DQO_TOT",
+      "nivel_esperado": "Sin dato",
+      "confianza": "media",
+      "advertencia": ""
+    },
+    {
+      "c_sitio_destino": "DLPUE1989",
+      "nombre": "LA AUTOPISTA P1 (24)",
+      "orden_aguas_abajo": 14,
+      "distancia_cauce_m": 21631.4,
+      "llegada_estimada": {
+        "desde": "2026-11-23T16:00:36-06:00",
+        "hasta": "2026-11-24T06:01:48-06:00"
+      },
+      "factor_dilucion": null,
+      "valor_estimado": 415.6,
+      "valor_estimado_min": 154.4,
+      "valor_estimado_max": 1458.0,
+      "c_parametro": "DQO_TOT",
+      "nivel_esperado": "Sin dato",
+      "confianza": "media",
+      "advertencia": ""
+    },
+    {
+      "c_sitio_destino": "DLPUE1991W1",
+      "nombre": "ANTES DE LA PLANTA DE TRATAMIENTO BARRANCA DEL CONDE",
+      "orden_aguas_abajo": 15,
+      "distancia_cauce_m": 22132.8,
+      "llegada_estimada": {
+        "desde": "2026-11-23T16:09:00-06:00",
+        "hasta": "2026-11-24T06:29:24-06:00"
+      },
+      "factor_dilucion": null,
+      "valor_estimado": 415.6,
+      "valor_estimado_min": 154.4,
+      "valor_estimado_max": 1458.0,
+      "c_parametro": "DQO_TOT",
+      "nivel_esperado": "Sin dato",
+      "confianza": "media",
+      "advertencia": ""
+    },
+    {
+      "c_sitio_destino": "DLPUE1992",
+      "nombre": "RA-17 RÍO ATOYAC, AGUAS ABAJO DE LA BARRANCA DEL CONDE",
+      "orden_aguas_abajo": 16,
+      "distancia_cauce_m": 22686.6,
+      "llegada_estimada": {
+        "desde": "2026-11-23T16:18:00-06:00",
+        "hasta": "2026-11-24T07:00:36-06:00"
+      },
+      "factor_dilucion": null,
+      "valor_estimado": 415.6,
+      "valor_estimado_min": 154.4,
+      "valor_estimado_max": 1458.0,
+      "c_parametro": "DQO_TOT",
+      "nivel_esperado": "Sin dato",
+      "confianza": "media",
+      "advertencia": ""
+    },
+    {
+      "c_sitio_destino": "DLPUE2071",
+      "nombre": "ANTES DE LA CONFLUENCIA CON EL ARROYO RABANILLO (PUENTE DE MEXICO)",
+      "orden_aguas_abajo": 17,
+      "distancia_cauce_m": 25570.8,
+      "llegada_estimada": {
+        "desde": "2026-11-23T17:06:00-06:00",
+        "hasta": "2026-11-24T09:40:48-06:00"
+      },
+      "factor_dilucion": null,
+      "valor_estimado": 415.6,
+      "valor_estimado_min": 154.4,
+      "valor_estimado_max": 1458.0,
+      "c_parametro": "DQO_TOT",
+      "nivel_esperado": "Sin dato",
+      "confianza": "media",
+      "advertencia": ""
+    },
+    {
+      "c_sitio_destino": "DLPUE1976",
+      "nombre": "PUEBLA SAN FRANCISCO  (A) AGUAS ARRIBA",
+      "orden_aguas_abajo": 18,
+      "distancia_cauce_m": 33149.0,
+      "llegada_estimada": {
+        "desde": "2026-11-23T19:12:36-06:00",
+        "hasta": "2026-11-24T16:41:24-06:00"
+      },
+      "factor_dilucion": null,
+      "valor_estimado": 415.6,
+      "valor_estimado_min": 154.4,
+      "valor_estimado_max": 1458.0,
+      "c_parametro": "DQO_TOT",
+      "nivel_esperado": "Sin dato",
+      "confianza": "media",
+      "advertencia": ""
+    },
+    {
+      "c_sitio_destino": "DLPUE1977",
+      "nombre": "DESPUÉS DE LA CONFLUENCIA CON EL RÍO SAN FRANCISCO",
+      "orden_aguas_abajo": 19,
+      "distancia_cauce_m": 34302.7,
+      "llegada_estimada": {
+        "desde": "2026-11-23T19:31:48-06:00",
+        "hasta": "2026-11-24T17:45:36-06:00"
+      },
+      "factor_dilucion": null,
+      "valor_estimado": 415.6,
+      "valor_estimado_min": 154.4,
+      "valor_estimado_max": 1458.0,
+      "c_parametro": "DQO_TOT",
+      "nivel_esperado": "Sin dato",
+      "confianza": "media",
+      "advertencia": ""
+    },
+    {
+      "c_sitio_destino": "DLPUE2050",
+      "nombre": "ATOYAC LA CARMELITA P1 (26)",
+      "orden_aguas_abajo": 20,
+      "distancia_cauce_m": 40605.7,
+      "llegada_estimada": {
+        "desde": "2026-11-23T21:16:48-06:00",
+        "hasta": "2026-11-24T23:36:00-06:00"
+      },
+      "factor_dilucion": null,
+      "valor_estimado": 415.6,
+      "valor_estimado_min": 154.4,
+      "valor_estimado_max": 1458.0,
+      "c_parametro": "DQO_TOT",
+      "nivel_esperado": "Sin dato",
+      "confianza": "media",
+      "advertencia": ""
+    },
+    {
+      "c_sitio_destino": "DLPUE2055W1",
+      "nombre": "HIDROMETRICA ECHEVERRIA P1 (28)",
+      "orden_aguas_abajo": 21,
+      "distancia_cauce_m": 46341.5,
+      "llegada_estimada": {
+        "desde": "2026-11-23T22:52:12-06:00",
+        "hasta": "2026-11-25T04:54:36-06:00"
+      },
+      "factor_dilucion": null,
+      "valor_estimado": 415.6,
+      "valor_estimado_min": 154.4,
+      "valor_estimado_max": 1458.0,
+      "c_parametro": "DQO_TOT",
+      "nivel_esperado": "Sin dato",
+      "confianza": "media",
+      "advertencia": ""
+    },
+    {
+      "c_sitio_destino": "DLPUE2052",
+      "nombre": "RA-21 RIO ATOYAC, ANTES DE LA DERIVADORA ECHEVERRIA",
+      "orden_aguas_abajo": 22,
+      "distancia_cauce_m": 46342.9,
+      "llegada_estimada": {
+        "desde": "2026-11-23T22:52:12-06:00",
+        "hasta": "2026-11-25T04:54:36-06:00"
+      },
+      "factor_dilucion": null,
+      "valor_estimado": 415.6,
+      "valor_estimado_min": 154.4,
+      "valor_estimado_max": 1458.0,
+      "c_parametro": "DQO_TOT",
+      "nivel_esperado": "Sin dato",
+      "confianza": "media",
+      "advertencia": "uno de los dos sitios esta marcado para revision en la topologia"
+    },
+    {
+      "c_sitio_destino": "DLPUE2057",
+      "nombre": "PRESA MANUEL AVILA CAMACHO 1",
+      "orden_aguas_abajo": 23,
+      "distancia_cauce_m": 60316.9,
+      "llegada_estimada": {
+        "desde": "2026-11-24T02:45:00-06:00",
+        "hasta": "2026-11-25T17:51:00-06:00"
+      },
+      "factor_dilucion": null,
+      "valor_estimado": 415.6,
+      "valor_estimado_min": 154.4,
+      "valor_estimado_max": 1458.0,
+      "c_parametro": "DQO_TOT",
+      "nivel_esperado": "Sin dato",
+      "confianza": "baja",
+      "advertencia": "el destino es un cuerpo lentico (presa o laguna): la adveccion no describe su tiempo de residencia ni la sedimentacion, la llegada es indicativa; a 60 km, fuera del alcance operativamente util"
+    },
+    {
+      "c_sitio_destino": "DLPUE2068",
+      "nombre": "PRESA MANUEL AVILA CAMACHO 6",
+      "orden_aguas_abajo": 24,
+      "distancia_cauce_m": 65040.4,
+      "llegada_estimada": {
+        "desde": "2026-11-24T04:04:12-06:00",
+        "hasta": "2026-11-25T22:13:12-06:00"
+      },
+      "factor_dilucion": null,
+      "valor_estimado": 415.6,
+      "valor_estimado_min": 154.4,
+      "valor_estimado_max": 1458.0,
+      "c_parametro": "DQO_TOT",
+      "nivel_esperado": "Sin dato",
+      "confianza": "baja",
+      "advertencia": "el destino es un cuerpo lentico (presa o laguna): la adveccion no describe su tiempo de residencia ni la sedimentacion, la llegada es indicativa; uno de los dos sitios esta marcado para revision en la topologia; a 65 km, fuera del alcance operativamente util"
+    },
+    {
+      "c_sitio_destino": "DLPUE2069M1",
+      "nombre": "PUENTE MARQUEZ",
+      "orden_aguas_abajo": 25,
+      "distancia_cauce_m": 224061.6,
+      "llegada_estimada": {
+        "desde": "2026-11-26T00:14:24-06:00",
+        "hasta": "2026-12-02T01:27:36-06:00"
+      },
+      "factor_dilucion": null,
+      "valor_estimado": 415.6,
+      "valor_estimado_min": 154.4,
+      "valor_estimado_max": 1458.0,
+      "c_parametro": "DQO_TOT",
+      "nivel_esperado": "Sin dato",
+      "confianza": "baja",
+      "advertencia": "a 224 km, fuera del alcance operativamente util"
+    },
+    {
+      "c_sitio_destino": "DLPUE2084",
+      "nombre": "RÍO ATOYAC (DESPUES DE LA CONFLUENCIA DEL RÍO MIXTECO)",
+      "orden_aguas_abajo": 26,
+      "distancia_cauce_m": 288302.2,
+      "llegada_estimada": {
+        "desde": "2026-11-26T18:04:48-06:00",
+        "hasta": "2026-12-04T12:57:00-06:00"
+      },
+      "factor_dilucion": null,
+      "valor_estimado": 415.6,
+      "valor_estimado_min": 154.4,
+      "valor_estimado_max": 1458.0,
+      "c_parametro": "DQO_TOT",
+      "nivel_esperado": "Sin dato",
+      "confianza": "baja",
+      "advertencia": "a 288 km, fuera del alcance operativamente util"
+    }
+  ]
+}

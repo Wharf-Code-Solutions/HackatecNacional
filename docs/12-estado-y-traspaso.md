@@ -30,7 +30,7 @@ es alarma (M2) y estimar hasta dónde llega la contaminación (M3), que ya tiene
 | M0 Datos y contrato | **Construido** | `datos/`, `contrato/`, `scripts/` |
 | M1 Topología | **Construida.** 210 de 219 sitios con sucesor; 14 marcados para revisión | `datos/procesados/red/`, `docs/13-topologia-red.md` |
 | M2 Motor de reglas | **Pendiente.** Sin dependencias pendientes | librería propia |
-| M3 Propagación | **Pendiente, ya desbloqueada.** La topología que necesitaba existe | — |
+| M3 Propagación | **Construida.** Modelo calibrado con 90 tramos del propio río, cobertura 78 % fuera de muestra | `scripts/80_propagacion.py`, `docs/14-propagacion.md` |
 | M4 Dispositivo | **Simulador construido y probado; sin hardware** | `dispositivo/` |
 | M5 Backend | Pendiente. Puede empezarse contra el contrato | — |
 | M6 Mapa | **Prototipo** (aún no colorea por índice ni está probado a ancho de teléfono) | `mapa/` |

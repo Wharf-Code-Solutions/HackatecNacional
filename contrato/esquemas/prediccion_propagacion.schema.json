@@ -62,7 +62,22 @@
             "description": "1.0 = llega sin diluirse. Menor que 1 = los afluentes intermedios lo diluyen. null si no hay caudal para calcularlo.",
             "type": ["number", "null"], "minimum": 0, "maximum": 1
           },
-          "valor_estimado": { "type": ["number", "null"] },
+          "valor_estimado": {
+            "description": "Valor central esperado. En el Alto Atoyac la razon medida entre aguas abajo y aguas arriba tiene mediana 1.00, asi que suele coincidir con el valor de origen: el contaminante llega practicamente intacto.",
+            "type": ["number", "null"]
+          },
+          "valor_estimado_min": {
+            "description": "Extremo inferior de la banda de llegada, del percentil 10 de la razon medida en los tramos de este rio. Opcional: si falta, solo hay valor central.",
+            "type": ["number", "null"]
+          },
+          "valor_estimado_max": {
+            "description": "Extremo superior de la banda de llegada, del percentil 90 de la razon medida. La banda es ancha porque cada tramo tiene sus propias descargas; esa anchura es informacion, no error.",
+            "type": ["number", "null"]
+          },
+          "advertencia": {
+            "description": "Por que esta estimacion es menos fiable: destino lentico, sitio marcado en la topologia, distancia fuera del alcance util. Vacio si no aplica.",
+            "type": "string"
+          },
           "c_parametro": { "type": ["string", "null"] },
           "nivel_esperado": { "type": "string", "enum": ["Informativa", "Preventiva", "Critica", "Sin efecto esperado", "Sin dato"] },
           "confianza": {

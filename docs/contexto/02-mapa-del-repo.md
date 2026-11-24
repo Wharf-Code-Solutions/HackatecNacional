@@ -96,6 +96,9 @@ repositorio (`python -m http.server 8000`).
 | `datos/procesados/red/sitio_red.csv` | Dónde quedó enganchado cada sitio y con qué calidad | `70_topologia_red.py` | **NO** |
 | `datos/procesados/red/sitio_aguas_abajo.csv` | **El siguiente sitio aguas abajo y su distancia sobre el cauce** | `70_topologia_red.py` | **NO** |
 | `datos/procesados/red/sitio_pares.csv` | Los 6 276 pares arriba-abajo | `70_topologia_red.py` | **NO** |
+| `datos/procesados/red/atenuacion_observada.csv` | Razón medida abajo/arriba por parámetro: la calibración del modelo | `80_propagacion.py` | **NO** |
+| `datos/procesados/red/tiempo_viaje.csv` | Ventana horaria de llegada de los 5 769 pares utilizables | `80_propagacion.py` | **NO** |
+| `contrato/fixtures/prediccion_ejemplo.json` | Una predicción completa para que el panel y el mapa trabajen sin M5 | `80_propagacion.py` | **NO** |
 
 `muestreo.csv` y `muestreo_nucleo.csv` están en `.gitignore` por tamaño: quien clona debe
 regenerarlas.
@@ -118,6 +121,7 @@ El prefijo numérico indica el orden de ejecución. `_comun.py` no se ejecuta so
 | `scripts/40_generar_fixtures.py` | Genera los fixtures del contrato | `datos/procesados/` | `contrato/fixtures/` |
 | `scripts/60_red_para_mapa.py` | Lee las capas de la red hidrográfica y las simplifica para pintar el mapa. **Fuente de verdad de** qué orden de cauce se dibuja (`ORDEN_MINIMO`) y de las tolerancias de simplificación. No calcula topología | `datos/geo/F08_red_hidrografica/` | `datos/procesados/mapa/` |
 | `scripts/70_topologia_red.py` | **M1.** Engancha los sitios a la red del INEGI, orienta los tramos y calcula el siguiente sitio aguas abajo. **Fuente de verdad de la topología** | `datos/geo/`, `sitio.csv` | `datos/procesados/red/`, `docs/13-...` |
+| `scripts/80_propagacion.py` | **M3.** Calibra la atenuación con los datos, calcula ventanas de llegada y produce la predicción. **Fuente de verdad de la velocidad supuesta y del alcance útil** | `red/`, `muestreo_nucleo.csv` | `red/atenuacion_observada.csv`, `red/tiempo_viaje.csv`, `contrato/fixtures/prediccion_ejemplo.json`, `docs/14-...` |
 | `scripts/50_verificar_repo.py` | **Revisión de salud del repositorio.** Automatiza nueve comprobaciones de invariantes y sale con código 1 si falla. **Fuente de verdad de los conteos esperados** (`FILAS_ESPERADAS`) | todo | stdout |
 
 **Orden de dependencia:** 00 → 10 → 20 → 30 y 40. El 30 y el 40 dependen del 20 porque
@@ -158,6 +162,8 @@ debes tocar.
 | Cómo se escribe el nombre de un estado | `normaliza_estado()` en `scripts/_comun.py` |
 | Qué sitio está aguas abajo de cuál | `datos/procesados/red/sitio_aguas_abajo.csv` (no `sitio.csv`) |
 | Tolerancia de enganche de un sitio al cauce | `ENGANCHE_BUENO` y `ENGANCHE_DUDOSO` en `scripts/70_topologia_red.py` |
+| Velocidad de flujo supuesta | `VELOCIDAD_MIN_MS` y `VELOCIDAD_MAX_MS` en `scripts/80_propagacion.py` |
+| Hasta qué distancia la predicción es útil | `DISTANCIA_UTIL_M` en `scripts/80_propagacion.py` |
 | Los conteos esperados de cada tabla | `FILAS_ESPERADAS` en `scripts/50_verificar_repo.py` |
 | Traducción entre claves CONAGUA y códigos cortos | `datos/procesados/parametro.csv`, columna `c_parametro_std` |
 | Qué parámetros son del núcleo analítico | constante `NUCLEO` en `scripts/10_construir_tablas.py` |
