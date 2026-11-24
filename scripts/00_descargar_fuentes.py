@@ -83,6 +83,29 @@ FUENTES = [
     ('F21', 'power_EST-LAD-05.json',
      'https://power.larc.nasa.gov/api/temporal/daily/point?parameters=IMERG_PRECTOT&community=AG'
      '&longitude=-97.625876&latitude=19.934205&start=20010101&end=20251231&format=JSON&time-standard=utc'),
+    # F21, mas puntos (a pedido): las 5 estaciones de agua de mecanismos.json (EST-ESC-) y dos de referencia en la ciudad de
+    # Puebla (REF-PUE-01 Centro, REF-PUE-02 Cholula), para contrastar la lluvia de la Sierra Norte, la cuenca y la ciudad.
+    ('F21', 'power_EST-ESC-01.json',
+     'https://power.larc.nasa.gov/api/temporal/daily/point?parameters=IMERG_PRECTOT&community=AG'
+     '&longitude=-98.298206&latitude=18.401308&start=20010101&end=20251231&format=JSON&time-standard=utc'),
+    ('F21', 'power_EST-ESC-02.json',
+     'https://power.larc.nasa.gov/api/temporal/daily/point?parameters=IMERG_PRECTOT&community=AG'
+     '&longitude=-98.175344&latitude=18.968553&start=20010101&end=20251231&format=JSON&time-standard=utc'),
+    ('F21', 'power_EST-ESC-03.json',
+     'https://power.larc.nasa.gov/api/temporal/daily/point?parameters=IMERG_PRECTOT&community=AG'
+     '&longitude=-98.493854&latitude=19.327466&start=20010101&end=20251231&format=JSON&time-standard=utc'),
+    ('F21', 'power_EST-ESC-04.json',
+     'https://power.larc.nasa.gov/api/temporal/daily/point?parameters=IMERG_PRECTOT&community=AG'
+     '&longitude=-98.311917&latitude=19.133974&start=20010101&end=20251231&format=JSON&time-standard=utc'),
+    ('F21', 'power_EST-ESC-05.json',
+     'https://power.larc.nasa.gov/api/temporal/daily/point?parameters=IMERG_PRECTOT&community=AG'
+     '&longitude=-98.446222&latitude=19.305107&start=20010101&end=20251231&format=JSON&time-standard=utc'),
+    ('F21', 'power_REF-PUE-01.json',
+     'https://power.larc.nasa.gov/api/temporal/daily/point?parameters=IMERG_PRECTOT&community=AG'
+     '&longitude=-98.1981&latitude=19.0436&start=20010101&end=20251231&format=JSON&time-standard=utc'),
+    ('F21', 'power_REF-PUE-02.json',
+     'https://power.larc.nasa.gov/api/temporal/daily/point?parameters=IMERG_PRECTOT&community=AG'
+     '&longitude=-98.3006&latitude=19.0636&start=20010101&end=20251231&format=JSON&time-standard=utc'),
 ]
 
 args = [a for a in sys.argv[1:]]

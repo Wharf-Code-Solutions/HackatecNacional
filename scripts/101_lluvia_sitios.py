@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 """Lluvia por sitio y umbrales detonantes del módulo de ladera (docs/20 §3.3 y §5).
 
-Escribe dos fixtures, DERIVADOS (se edita este script, no los JSON):
+Escribe tres fixtures, DERIVADOS (se edita este script, no los JSON):
 
     contrato/fixtures/lluvia_sitios.json     por estación de ladera: lluvia diaria típica de temporada y percentiles
                                              de tormenta (p50, p90, p99), de NASA POWER/IMERG (F21)
+    contrato/fixtures/lluvia_historia.json   cuántas veces la lluvia pasó cada umbral en 2001-2025, y series para graficar
     contrato/fixtures/umbrales_lluvia.json   los umbrales que usan las reglas de derrumbe, cada uno con su fuente
 
 LO QUE ES Y LO QUE NO ES. Los umbrales son HIPÓTESIS. No existe un umbral publicado de lluvia para deslaves en la
@@ -114,22 +115,106 @@ def resumir(serie):
     }
 
 
+# Puntos de referencia en la ciudad (no son estaciones): sus coordenadas están también en 00_descargar_fuentes.py (F21).
+REFERENCIAS_CIUDAD = [('REF-PUE-01', 'Centro de Puebla', 19.0436, -98.1981),
+                      ('REF-PUE-02', 'Cholula', 19.0636, -98.3006)]
+HUECO_EPISODIO_DIAS = 2      # días sobre un umbral con menos de esta separación son el mismo episodio
+ANIOS_DE_SERIE = 3           # años recientes de lluvia diaria que se entregan para graficar
+
+
+def fecha_iso(f):
+    return '{}-{}-{}'.format(f[:4], f[4:6], f[6:])
+
+
+def episodios(serie, u24, u72):
+    """Episodios en que la lluvia de un día (>= u24) o de tres días seguidos (>= u72) pasó el umbral.
+
+    El día es el de POWER (UTC), no una ventana móvil de 24 h: aproxima, puede partir una tormenta en dos días.
+    Dos días marcados con menos de HUECO_EPISODIO_DIAS de separación son un solo episodio.
+    """
+    marcados = []
+    for i, (f, v) in enumerate(serie):
+        s3 = None
+        if i >= 2 and all(serie[i - k][1] is not None for k in range(3)):
+            s3 = sum(serie[i - k][1] for k in range(3))
+        if (v is not None and v >= u24) or (s3 is not None and s3 >= u72):
+            marcados.append(i)
+    grupos = []
+    for i in marcados:
+        if grupos and i - grupos[-1][-1] <= HUECO_EPISODIO_DIAS:
+            grupos[-1].append(i)
+        else:
+            grupos.append([i])
+    salida = []
+    for g in grupos:
+        ini = max(0, g[0] - 2)
+        dias = [(serie[k][0], serie[k][1] or 0.0) for k in range(ini, g[-1] + 1)]
+        f_pico, v_pico = max(dias, key=lambda x: x[1])
+        s3max = max(sum((serie[k - j][1] or 0.0) for j in range(3)) for k in range(max(2, g[0]), g[-1] + 1))
+        salida.append({'inicio': fecha_iso(serie[g[0]][0]), 'fin': fecha_iso(serie[g[-1]][0]),
+                       'pico_diario_mm': round(v_pico, 1), 'fecha_pico': fecha_iso(f_pico),
+                       'maximo_3_dias_mm': round(s3max, 1)})
+    return salida
+
+
+def historia_de_sitio(m, serie, res, u):
+    """Cuántas veces la lluvia pasó cada nivel de umbral en la serie, y datos listos para graficar."""
+    t = res['temporada']
+    niveles = {
+        'Informativa': (t['lluvia_diaria_dia_con_lluvia_mm']['p99'], t['lluvia_3_dias_mm']['p99']),
+        'Preventiva': (round(caine_mm(24), 0), round(caine_mm(72), 0)),
+        'Critica': (TEZIUTLAN_24H_MM, TEZIUTLAN_48H_MM),
+    }
+    por_nivel = {}
+    for nombre, (u24, u72) in niveles.items():
+        eps = episodios(serie, u24, u72)
+        por_anio = defaultdict(int)
+        for e in eps:
+            por_anio[e['inicio'][:4]] += 1
+        por_nivel[nombre] = {
+            'umbral_24h_mm': u24, 'umbral_72h_mm': u72, 'episodios': len(eps),
+            'ultimo_episodio': eps[-1] if eps else None,
+            'episodios_por_anio': {a: por_anio.get(a, 0) for a in sorted({f[:4] for f, _ in serie})},
+            # Los más fuertes primero; la lista completa de Informativa sería larga y no se lee de un vistazo.
+            'mayores': sorted(eps, key=lambda e: -e['pico_diario_mm'])[:10],
+        }
+    validos = [(f, v) for f, v in serie if v is not None]
+    anios = sorted({f[:4] for f, _ in validos})
+    cola = serie[-365 * ANIOS_DE_SERIE:]
+    return {
+        'tipo': m['tipo'], 'c_estacion': m['c_estacion'], 'cct': m['cct'], 'localidad': m['localidad'],
+        'municipio': m['municipio'], 'periodo': {'inicio': fecha_iso(validos[0][0]), 'fin': fecha_iso(validos[-1][0]), 'dias_validos': len(validos)},
+        'niveles': por_nivel,
+        'mm_por_anio': {a: round(sum(v for f, v in validos if f[:4] == a), 0) for a in anios},
+        'mm_por_mes_promedio': res['mm_por_mes_promedio'],
+        'diaria_reciente': {'inicio': fecha_iso(cola[0][0]), 'mm': [None if v is None else round(v, 1) for _, v in cola]},
+    }
+
+
 def main():
     with open(os.path.join(FIX, 'escuelas_ladera.json'), encoding='utf-8') as f:
-        modulos = json.load(f)['modulos']
+        modulos = [dict(m, tipo='ladera') for m in json.load(f)['modulos']]
+    # Contraste: las estaciones de agua de la cuenca (mecanismos.json) y dos puntos de referencia en la ciudad de Puebla.
+    with open(os.path.join(FIX, 'mecanismos.json'), encoding='utf-8') as f:
+        modulos += [dict(c_estacion=e['c_estacion'], cct=e['cct'], localidad=e['localidad'], municipio=e['municipio'],
+                         latitud=e['latitud'], longitud=e['longitud'], tipo='agua') for e in json.load(f)['estaciones']]
+    modulos += [dict(c_estacion=ce, cct=None, localidad=loc, municipio='Puebla', latitud=la, longitud=lo, tipo='referencia')
+                for ce, loc, la, lo in REFERENCIAS_CIUDAD]
 
-    sitios = []
+    sitios, historias = [], []
     for m in modulos:
         ruta = os.path.join(F21, 'power_{}.json'.format(m['c_estacion']))
         if not os.path.exists(ruta):
             raise SystemExit('Falta {}: python -I scripts/00_descargar_fuentes.py F21'.format(ruta))
         d, serie = leer_serie(ruta)
         celda = d['geometry']['coordinates'][:2]
+        res = resumir(serie)
+        historias.append(historia_de_sitio(m, serie, res, None))
         sitios.append({
-            'c_estacion': m['c_estacion'], 'cct': m['cct'], 'localidad': m['localidad'], 'municipio': m['municipio'],
+            'tipo': m['tipo'], 'c_estacion': m['c_estacion'], 'cct': m['cct'], 'localidad': m['localidad'], 'municipio': m['municipio'],
             'latitud': m['latitud'], 'longitud': m['longitud'],
             'celda_de_la_fuente': {'longitud': celda[0], 'latitud': celda[1]},
-            **resumir(serie),
+            **res,
         })
 
     lluvia = {
@@ -139,6 +224,9 @@ def main():
         'advertencia': ('Es lluvia de satélite, no de pluviómetro: tiende a subestimar tormentas extremas de montaña. '
                         'Los percentiles dicen qué es normal en temporada en ese sitio, no cuánto llovió en la ladera. '
                         'Dos estaciones pueden compartir celda y dar la misma serie.'),
+        'tipos': {'ladera': 'las 5 escuelas con módulo de ladera (Sierra Norte)',
+                  'agua': 'las 5 estaciones de agua de mecanismos.json (cuenca y alrededores)',
+                  'referencia': 'dos puntos en la ciudad de Puebla, solo para contrastar; no son estaciones'},
         'temporada': 'los meses cuyo promedio mensual supera al promedio de los 12; ver temporada_meses de cada sitio',
         'dia_con_lluvia_mm': DIA_LLUVIOSO_MM,
         'sitios': sitios,
@@ -146,6 +234,21 @@ def main():
     with open(os.path.join(FIX, 'lluvia_sitios.json'), 'w', encoding='utf-8', newline='\n') as f:
         json.dump(lluvia, f, ensure_ascii=False, indent=1)
         f.write('\n')
+
+    historia = {
+        'version': '0.1-propuesta',
+        '_provisional': True,
+        'fuente': lluvia['fuente'],
+        'advertencia': lluvia['advertencia'] + ' Un episodio agrupa los días sobre un umbral con menos de {} días de separación; '
+                       'el día es el de POWER (UTC), no una ventana móvil de 24 h.'.format(HUECO_EPISODIO_DIAS + 1),
+        'como_leerlo': ('Para cada nivel de umbral_lluvia.json: cuántos episodios hubo desde 2001 y cuándo fue el último. '
+                        'Critica no ocurre en 25 años de satélite: la lluvia de 1999 en Teziutlán fue excepcional. '
+                        'Es la frecuencia con la que la lluvia PASÓ el umbral, no la de deslaves.'),
+        'sitios': historias,
+    }
+    with open(os.path.join(FIX, 'lluvia_historia.json'), 'w', encoding='utf-8', newline=chr(10)) as f:
+        json.dump(historia, f, ensure_ascii=False, separators=(',', ':'))
+        f.write(chr(10))
 
     c24, c72 = caine_mm(24), caine_mm(72)
     umbrales = {
@@ -194,6 +297,11 @@ def main():
         f.write('\n')
 
     print('Caine: {:.0f} mm en 24 h, {:.0f} mm en 72 h'.format(c24, c72))
+    for h in historias:
+        n = h['niveles']
+        print('{} episodios sobre el umbral: Informativa {}, Preventiva {} (ultimo {}), Critica {}'.format(
+            h['c_estacion'], n['Informativa']['episodios'], n['Preventiva']['episodios'],
+            (n['Preventiva']['ultimo_episodio'] or {}).get('fecha_pico', '-'), n['Critica']['episodios']))
     for s in sitios:
         t = s['temporada']
         print('{} {:<14} {:<22} anual {:>5.0f} mm  temporada {}  media {:.1f} mm/d  dias con lluvia {:.0%}  '

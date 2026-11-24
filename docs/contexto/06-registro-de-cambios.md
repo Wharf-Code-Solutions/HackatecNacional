@@ -21,6 +21,23 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Módulo A: historia de lluvia y 7 puntos más (contraste Sierra Norte, cuenca y ciudad)
+
+**Qué cambió.** `101_lluvia_sitios.py` escribe ahora `lluvia_historia.json`: por punto, cuántos episodios de lluvia pasaron cada
+nivel de `umbrales_lluvia.json` en 2001-2025 (con el último y los 10 mayores), lluvia por año y por mes, y 3 años de lluvia
+diaria para graficar. `lluvia_sitios.json` pasa de 5 a 12 puntos, con campo `tipo` (`ladera`, `agua`, `referencia`): se suman
+las 5 estaciones de agua de `mecanismos.json` y 2 puntos de referencia en la ciudad de Puebla (Centro y Cholula). Descarga
+F21 ampliada a esos 7 puntos (≈ 143 KB cada uno).
+**Por qué.** Más contenido para el panel y el contraste entre zonas: Sierra Norte 930-1 376 mm/año, 1 a 6 episodios sobre el
+mínimo de Caine; cuenca 717-994 mm, 0 o 1; ciudad 888-973 mm, 0. Es satélite: subestima tormentas de montaña, y es la
+frecuencia con que la lluvia pasó un umbral, no la de deslaves.
+**Qué arrastró.** `00_descargar_fuentes.py`, `datos/bitacora.md`, `docs/04-fuentes-de-datos.md`, `02-mapa-del-repo.md`.
+**Impacto en otros módulos.** Panel: filtrar por `tipo`; las temporadas difieren (jun-oct en la Sierra Norte, may-sep en la
+cuenca). EST-LAD-03 y 05, y EST-ESC-03 y 05, comparten celda de IMERG y por eso la misma serie. Los puntos REF-PUE no son
+estaciones (`cct` nulo).
+
+---
+
 ## 2026-11-24 · Módulo B: panorama de escuelas
 
 **Qué cambió.** La pestaña Escuelas tiene cuatro cifras (riesgo alto o muy alto, escuelas en la cuenca, con mecanismo,
@@ -30,6 +47,7 @@ el AbortError de MapLibre al desmontarse mientras carga.
 **Por qué.** Paso 2 del módulo B (docs/19 §6, punto 1).
 **Qué arrastró.** `Escuelas.jsx`, `MapaEstaciones.jsx`, `estilos.css`.
 **Impacto en otros módulos.** A: faltan `matricula` en todas y `fuente_agua` en casi todas; el panel muestra "sin dato".
+
 
 ---
 

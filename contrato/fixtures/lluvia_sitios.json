@@ -3,10 +3,16 @@
  "_provisional": true,
  "fuente": "NASA POWER, parámetro IMERG_PRECTOT (mm/día, malla 0.1°, día en hora UTC), 2001-2025; datos/crudos/F21",
  "advertencia": "Es lluvia de satélite, no de pluviómetro: tiende a subestimar tormentas extremas de montaña. Los percentiles dicen qué es normal en temporada en ese sitio, no cuánto llovió en la ladera. Dos estaciones pueden compartir celda y dar la misma serie.",
+ "tipos": {
+  "ladera": "las 5 escuelas con módulo de ladera (Sierra Norte)",
+  "agua": "las 5 estaciones de agua de mecanismos.json (cuenca y alrededores)",
+  "referencia": "dos puntos en la ciudad de Puebla, solo para contrastar; no son estaciones"
+ },
  "temporada": "los meses cuyo promedio mensual supera al promedio de los 12; ver temporada_meses de cada sitio",
  "dia_con_lluvia_mm": 1.0,
  "sitios": [
   {
+   "tipo": "ladera",
    "c_estacion": "EST-LAD-01",
    "cct": "21KTV0122C",
    "localidad": "Tecuantla (los Reyes)",
@@ -63,6 +69,7 @@
    }
   },
   {
+   "tipo": "ladera",
    "c_estacion": "EST-LAD-02",
    "cct": "21DPR0901Z",
    "localidad": "El Tabacal",
@@ -119,6 +126,7 @@
    }
   },
   {
+   "tipo": "ladera",
    "c_estacion": "EST-LAD-03",
    "cct": "21DCC0912Z",
    "localidad": "Xinachapan de Allende",
@@ -175,6 +183,7 @@
    }
   },
   {
+   "tipo": "ladera",
    "c_estacion": "EST-LAD-04",
    "cct": "21KJN1742B",
    "localidad": "San Pablito",
@@ -231,6 +240,7 @@
    }
   },
   {
+   "tipo": "ladera",
    "c_estacion": "EST-LAD-05",
    "cct": "21DCC1196M",
    "localidad": "Bonillagco",
@@ -284,6 +294,405 @@
    "maximo_diario_mm": {
     "valor": 188.1,
     "fecha": "2007-08-22"
+   }
+  },
+  {
+   "tipo": "agua",
+   "c_estacion": "EST-ESC-01",
+   "cct": "21DPR0448Z",
+   "localidad": "San Vicente Ferrer",
+   "municipio": "Tehuitzingo",
+   "latitud": 18.401308,
+   "longitud": -98.298206,
+   "celda_de_la_fuente": {
+    "longitud": -98.298,
+    "latitud": 18.401
+   },
+   "dias_validos": 9131,
+   "temporada_meses": [
+    "may",
+    "jun",
+    "jul",
+    "ago",
+    "sep"
+   ],
+   "mm_por_mes_promedio": {
+    "ene": 6.1,
+    "feb": 9.2,
+    "mar": 11.5,
+    "abr": 22.6,
+    "may": 81.1,
+    "jun": 191.3,
+    "jul": 163.1,
+    "ago": 177.5,
+    "sep": 198.1,
+    "oct": 75.2,
+    "nov": 19.7,
+    "dic": 3.5
+   },
+   "mm_anuales_promedio": 959.0,
+   "temporada": {
+    "dias": 3825,
+    "lluvia_diaria_media_mm": 5.32,
+    "dias_con_lluvia": 2010,
+    "fraccion_dias_con_lluvia": 0.525,
+    "lluvia_diaria_dia_con_lluvia_mm": {
+     "p50": 6.1,
+     "p90": 23.4,
+     "p99": 51.2
+    },
+    "lluvia_3_dias_mm": {
+     "p50": 8.8,
+     "p90": 42.7,
+     "p99": 79.6
+    },
+    "n_ventanas_3_dias": 3825
+   },
+   "maximo_diario_mm": {
+    "valor": 89.2,
+    "fecha": "2003-09-19"
+   }
+  },
+  {
+   "tipo": "agua",
+   "c_estacion": "EST-ESC-02",
+   "cct": "21DPR2634H",
+   "localidad": "Guadalupe Tlatelpa",
+   "municipio": "Puebla",
+   "latitud": 18.968553,
+   "longitud": -98.175344,
+   "celda_de_la_fuente": {
+    "longitud": -98.175,
+    "latitud": 18.969
+   },
+   "dias_validos": 9131,
+   "temporada_meses": [
+    "may",
+    "jun",
+    "jul",
+    "ago",
+    "sep"
+   ],
+   "mm_por_mes_promedio": {
+    "ene": 11.9,
+    "feb": 14.2,
+    "mar": 19.5,
+    "abr": 33.0,
+    "may": 91.0,
+    "jun": 189.8,
+    "jul": 157.5,
+    "ago": 172.6,
+    "sep": 187.8,
+    "oct": 82.0,
+    "nov": 27.3,
+    "dic": 7.7
+   },
+   "mm_anuales_promedio": 994.0,
+   "temporada": {
+    "dias": 3825,
+    "lluvia_diaria_media_mm": 5.24,
+    "dias_con_lluvia": 2479,
+    "fraccion_dias_con_lluvia": 0.648,
+    "lluvia_diaria_dia_con_lluvia_mm": {
+     "p50": 5.1,
+     "p90": 17.8,
+     "p99": 37.5
+    },
+    "lluvia_3_dias_mm": {
+     "p50": 10.6,
+     "p90": 37.2,
+     "p99": 70.2
+    },
+    "n_ventanas_3_dias": 3825
+   },
+   "maximo_diario_mm": {
+    "valor": 107.1,
+    "fecha": "2025-09-27"
+   }
+  },
+  {
+   "tipo": "agua",
+   "c_estacion": "EST-ESC-03",
+   "cct": "21EBH0297Z",
+   "localidad": "San Matías Tlalancaleca",
+   "municipio": "San Matías Tlalancaleca",
+   "latitud": 19.327466,
+   "longitud": -98.493854,
+   "celda_de_la_fuente": {
+    "longitud": -98.494,
+    "latitud": 19.327
+   },
+   "dias_validos": 9131,
+   "temporada_meses": [
+    "may",
+    "jun",
+    "jul",
+    "ago",
+    "sep"
+   ],
+   "mm_por_mes_promedio": {
+    "ene": 5.9,
+    "feb": 9.2,
+    "mar": 15.1,
+    "abr": 32.7,
+    "may": 69.2,
+    "jun": 130.3,
+    "jul": 129.1,
+    "ago": 134.2,
+    "sep": 122.2,
+    "oct": 52.0,
+    "nov": 13.3,
+    "dic": 4.1
+   },
+   "mm_anuales_promedio": 717.0,
+   "temporada": {
+    "dias": 3825,
+    "lluvia_diaria_media_mm": 3.85,
+    "dias_con_lluvia": 2378,
+    "fraccion_dias_con_lluvia": 0.622,
+    "lluvia_diaria_dia_con_lluvia_mm": {
+     "p50": 4.2,
+     "p90": 12.7,
+     "p99": 26.9
+    },
+    "lluvia_3_dias_mm": {
+     "p50": 8.5,
+     "p90": 26.1,
+     "p99": 48.8
+    },
+    "n_ventanas_3_dias": 3825
+   },
+   "maximo_diario_mm": {
+    "valor": 77.3,
+    "fecha": "2011-06-30"
+   }
+  },
+  {
+   "tipo": "agua",
+   "c_estacion": "EST-ESC-04",
+   "cct": "21EJN1205S",
+   "localidad": "San Martín Zoquiapan",
+   "municipio": "Coronango",
+   "latitud": 19.133974,
+   "longitud": -98.311917,
+   "celda_de_la_fuente": {
+    "longitud": -98.312,
+    "latitud": 19.134
+   },
+   "dias_validos": 9131,
+   "temporada_meses": [
+    "may",
+    "jun",
+    "jul",
+    "ago",
+    "sep"
+   ],
+   "mm_por_mes_promedio": {
+    "ene": 8.5,
+    "feb": 10.5,
+    "mar": 15.8,
+    "abr": 30.3,
+    "may": 73.5,
+    "jun": 153.2,
+    "jul": 150.9,
+    "ago": 159.1,
+    "sep": 157.5,
+    "oct": 65.4,
+    "nov": 19.4,
+    "dic": 5.2
+   },
+   "mm_anuales_promedio": 849.0,
+   "temporada": {
+    "dias": 3825,
+    "lluvia_diaria_media_mm": 4.56,
+    "dias_con_lluvia": 2502,
+    "fraccion_dias_con_lluvia": 0.654,
+    "lluvia_diaria_dia_con_lluvia_mm": {
+     "p50": 4.8,
+     "p90": 14.7,
+     "p99": 31.9
+    },
+    "lluvia_3_dias_mm": {
+     "p50": 10.1,
+     "p90": 31.4,
+     "p99": 55.7
+    },
+    "n_ventanas_3_dias": 3825
+   },
+   "maximo_diario_mm": {
+    "valor": 55.1,
+    "fecha": "2011-06-30"
+   }
+  },
+  {
+   "tipo": "agua",
+   "c_estacion": "EST-ESC-05",
+   "cct": "21EJN0701K",
+   "localidad": "San Cristóbal Tepatlaxco",
+   "municipio": "San Martín Texmelucan",
+   "latitud": 19.305107,
+   "longitud": -98.446222,
+   "celda_de_la_fuente": {
+    "longitud": -98.446,
+    "latitud": 19.305
+   },
+   "dias_validos": 9131,
+   "temporada_meses": [
+    "may",
+    "jun",
+    "jul",
+    "ago",
+    "sep"
+   ],
+   "mm_por_mes_promedio": {
+    "ene": 5.9,
+    "feb": 9.2,
+    "mar": 15.1,
+    "abr": 32.7,
+    "may": 69.2,
+    "jun": 130.3,
+    "jul": 129.1,
+    "ago": 134.2,
+    "sep": 122.2,
+    "oct": 52.0,
+    "nov": 13.3,
+    "dic": 4.1
+   },
+   "mm_anuales_promedio": 717.0,
+   "temporada": {
+    "dias": 3825,
+    "lluvia_diaria_media_mm": 3.85,
+    "dias_con_lluvia": 2378,
+    "fraccion_dias_con_lluvia": 0.622,
+    "lluvia_diaria_dia_con_lluvia_mm": {
+     "p50": 4.2,
+     "p90": 12.7,
+     "p99": 26.9
+    },
+    "lluvia_3_dias_mm": {
+     "p50": 8.5,
+     "p90": 26.1,
+     "p99": 48.8
+    },
+    "n_ventanas_3_dias": 3825
+   },
+   "maximo_diario_mm": {
+    "valor": 77.3,
+    "fecha": "2011-06-30"
+   }
+  },
+  {
+   "tipo": "referencia",
+   "c_estacion": "REF-PUE-01",
+   "cct": null,
+   "localidad": "Centro de Puebla",
+   "municipio": "Puebla",
+   "latitud": 19.0436,
+   "longitud": -98.1981,
+   "celda_de_la_fuente": {
+    "longitud": -98.198,
+    "latitud": 19.044
+   },
+   "dias_validos": 9131,
+   "temporada_meses": [
+    "may",
+    "jun",
+    "jul",
+    "ago",
+    "sep"
+   ],
+   "mm_por_mes_promedio": {
+    "ene": 13.8,
+    "feb": 14.3,
+    "mar": 20.5,
+    "abr": 35.0,
+    "may": 86.9,
+    "jun": 178.0,
+    "jul": 157.2,
+    "ago": 166.3,
+    "sep": 180.5,
+    "oct": 80.6,
+    "nov": 28.9,
+    "dic": 10.9
+   },
+   "mm_anuales_promedio": 973.0,
+   "temporada": {
+    "dias": 3825,
+    "lluvia_diaria_media_mm": 5.05,
+    "dias_con_lluvia": 2545,
+    "fraccion_dias_con_lluvia": 0.665,
+    "lluvia_diaria_dia_con_lluvia_mm": {
+     "p50": 4.8,
+     "p90": 16.8,
+     "p99": 39.2
+    },
+    "lluvia_3_dias_mm": {
+     "p50": 10.5,
+     "p90": 34.7,
+     "p99": 70.5
+    },
+    "n_ventanas_3_dias": 3825
+   },
+   "maximo_diario_mm": {
+    "valor": 86.9,
+    "fecha": "2012-09-30"
+   }
+  },
+  {
+   "tipo": "referencia",
+   "c_estacion": "REF-PUE-02",
+   "cct": null,
+   "localidad": "Cholula",
+   "municipio": "Puebla",
+   "latitud": 19.0636,
+   "longitud": -98.3006,
+   "celda_de_la_fuente": {
+    "longitud": -98.301,
+    "latitud": 19.064
+   },
+   "dias_validos": 9131,
+   "temporada_meses": [
+    "may",
+    "jun",
+    "jul",
+    "ago",
+    "sep"
+   ],
+   "mm_por_mes_promedio": {
+    "ene": 8.2,
+    "feb": 10.6,
+    "mar": 14.8,
+    "abr": 29.7,
+    "may": 78.1,
+    "jun": 162.8,
+    "jul": 154.1,
+    "ago": 164.5,
+    "sep": 171.7,
+    "oct": 68.6,
+    "nov": 19.5,
+    "dic": 5.8
+   },
+   "mm_anuales_promedio": 888.0,
+   "temporada": {
+    "dias": 3825,
+    "lluvia_diaria_media_mm": 4.8,
+    "dias_con_lluvia": 2416,
+    "fraccion_dias_con_lluvia": 0.632,
+    "lluvia_diaria_dia_con_lluvia_mm": {
+     "p50": 5.2,
+     "p90": 16.1,
+     "p99": 34.9
+    },
+    "lluvia_3_dias_mm": {
+     "p50": 10.6,
+     "p90": 33.6,
+     "p99": 60.7
+    },
+    "n_ventanas_3_dias": 3825
+   },
+   "maximo_diario_mm": {
+    "valor": 96.1,
+    "fecha": "2010-09-02"
    }
   }
  ]
