@@ -21,7 +21,7 @@
     "parametros": {
       "description": "Codigos cortos que la estacion mide. Deben existir en el enum de lectura.schema.json.",
       "type": "array", "minItems": 1,
-      "items": { "type": "string", "enum": ["OD", "OD_PCT", "PH", "COND", "TEMP", "TURB", "SDT"] }
+      "items": { "type": "string", "enum": ["OD", "OD_PCT", "PH", "COND", "TEMP", "TURB", "SDT", "LLUVIA", "HUM_SUELO", "INCL"] }
     },
     "estado_dispositivo": {
       "type": "string",

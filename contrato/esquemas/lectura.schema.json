@@ -34,7 +34,7 @@
           "c_parametro": {
             "description": "Codigo corto del contrato. La traduccion a la clave CONAGUA esta en datos/procesados/parametro.csv, columna c_parametro_std.",
             "type": "string",
-            "enum": ["OD", "OD_PCT", "PH", "COND", "TEMP", "TURB", "SDT"]
+            "enum": ["OD", "OD_PCT", "PH", "COND", "TEMP", "TURB", "SDT", "LLUVIA", "HUM_SUELO", "INCL"]
           },
           "valor": {
             "description": "Valor crudo del sensor. No se recorta ni se corrige aqui: si viene -999 el backend debe poder detectarlo como falla. null significa que el sensor no reporto.",
