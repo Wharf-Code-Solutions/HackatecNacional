@@ -57,6 +57,17 @@ versionada): si cambia el criterio, se regenera con el script, no se edita.
 
 ---
 
+## 2026-11-24 · M7: la huella se explica sola
+
+**Qué cambió.** La huella dice qué es cada cuadro y cuánto dura ("cada cuadro = 15 min", mediana del
+intervalo real entre lecturas), tiene eje de horas en punto con líneas guía, leyenda con nombres
+(de "Mucho más bajo" a "Mucho más alto", y "Sin dato") y ventana al cursor en palabras en lugar del z.
+**Por qué.** Petición del usuario: no se entendía qué significaba cada cuadro.
+**Qué arrastró.** `Huella.jsx`, `estilos.css`.
+**Impacto en otros módulos.** Ninguno; los cortes siguen siendo los del motor.
+
+---
+
 ## 2026-11-24 · M7: la huella muestra una sola estación
 
 **Qué cambió.** "Huella de las últimas horas" muestra una estación con una fila grande y separada por sonda,

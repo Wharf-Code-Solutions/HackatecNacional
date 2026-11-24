@@ -7,15 +7,16 @@ import { horaCorta, inicial, num, porAtender } from '../lib/formato.js';
 // Los cortes son los del motor (motor/reglas.py): 3.5 es Z_ESCALON y 6 es Z_FUERTE. Los dos brazos
 // (azul abajo, guinda arriba) pasan el validador como escalas ordinales; el centro es gris neutro.
 const PASOS = [
-  [-Infinity, -6, '#224497', 'muy por debajo (z ≤ −6)'],
-  [-6, -3.5, '#5F7FD0', 'por debajo (−6 a −3.5)'],
-  [-3.5, -2, '#9DB2E6', 'algo por debajo'],
-  [-2, 2, '#F3F3F3', 'habitual (|z| < 2)'],
-  [2, 3.5, '#CE92A6', 'algo por encima'],
-  [3.5, 6, '#A84565', 'por encima (3.5 a 6)'],
-  [6, Infinity, '#781838', 'muy por encima (z ≥ 6)'],
+  [-Infinity, -6, '#224497', 'Mucho más bajo'],
+  [-6, -3.5, '#5F7FD0', 'Más bajo'],
+  [-3.5, -2, '#9DB2E6', 'Algo más bajo'],
+  [-2, 2, '#F3F3F3', 'Normal'],
+  [2, 3.5, '#CE92A6', 'Algo más alto'],
+  [3.5, 6, '#A84565', 'Más alto'],
+  [6, Infinity, '#781838', 'Mucho más alto'],
 ];
-const colorZ = (z) => (PASOS.find(([a, b]) => z >= a && z < b) || PASOS[3])[2];
+const paso = (z) => PASOS.find(([a, b]) => z >= a && z < b) || PASOS[3];
+const colorZ = (z) => paso(z)[2];
 const PARAMS = ['OD', 'PH', 'COND', 'TEMP', 'TURB'];
 
 // Huella de las ultimas horas de UNA estacion: cada fila es una sonda y cada columna una lectura.
@@ -43,16 +44,40 @@ export default function Huella({ estaciones, veredictos, alertas, elegida }) {
   const col = Object.fromEntries(tiempos.map((t, i) => [t, i]));
   const ancho = W >= 520;
   const Iz = ancho ? 130 : 46, D = 4, A = 4, filaH = ancho ? 34 : 26, sep = 8;
-  const H = A + PARAMS.length * (filaH + sep) + 18;
+  const Ab = 42;   // abajo: marcas de hora y titulo del eje
+  const H = A + PARAMS.length * (filaH + sep) + Ab;
+  const baseY = A + PARAMS.length * (filaH + sep) - sep;
   const cw = (W - Iz - D) / tiempos.length;
   const ref0 = tiempos[0];
+  // Cuanto dura cada cuadro: la mediana del intervalo entre lecturas (el firmware muestrea cada 15 min
+  // y acelera si algo cambia, asi que se calcula, no se supone).
+  const ms = tiempos.map((t) => new Date(t).getTime());
+  const gaps = ms.slice(1).map((t, i) => t - ms[i]).sort((x, y) => x - y);
+  const minCuadro = gaps.length ? Math.round(gaps[Math.floor(gaps.length / 2)] / 60000) : null;
+  const durCuadro = minCuadro == null ? '' : minCuadro >= 60 && minCuadro % 60 === 0 ? (minCuadro / 60) + ' h' : minCuadro + ' min';
+  // Marcas en horas en punto, cada 1, 2, 3, 4 o 6 h segun quepan.
+  const horasTot = (ms[ms.length - 1] - ms[0]) / 3600000;
+  const maxEtq = ancho ? 7 : 4;
+  const paso_h = [1, 2, 3, 4, 6, 12].find((h) => horasTot / h <= maxEtq) || 24;
+  const marcas = [];
+  const h0 = new Date(ms[0]); h0.setMinutes(0, 0, 0);
+  for (let t = h0.getTime(); t <= ms[ms.length - 1]; t += 3600000) {
+    const d = new Date(t);
+    if (t < ms[0] || d.getHours() % paso_h) continue;
+    const i = ms.findIndex((m) => m >= t);
+    if (i >= 0) marcas.push({ i, iso: d.toISOString() });
+  }
   return (
     <div ref={ref} className="lienzo">
       {selector}
-      <div className="escala-z" aria-hidden="true">
-        {PASOS.map(([, , co, t]) => <span key={t} style={{ background: co }} title={t} />)}
-      </div>
-      <div className="escala-z-txt"><span>por debajo de lo habitual</span><span>habitual</span><span>por encima</span></div>
+      <p className="huella-explica">
+        Cada cuadro es una lectura de esa sonda{durCuadro ? ' (una cada ' + durCuadro + ')' : ''}. Su color dice qué tan lejos quedó del valor normal de este
+        punto del río según su historia. Pasa el cursor sobre un cuadro para ver la hora y el valor.
+      </p>
+      <ul className="huella-leyenda">
+        {PASOS.map(([, , co, t]) => <li key={t}><i style={{ background: co }} />{t}</li>)}
+        <li><i style={{ background: '#fff', border: '1px solid #DDDDDD' }} />Sin dato</li>
+      </ul>
       <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H} role="img"
         aria-label={'Qué tan lejos de lo habitual estuvo cada sonda de la estación ' + c + ' en cada lectura reciente'}>
         {PARAMS.map((p, j) => {
@@ -64,9 +89,9 @@ export default function Huella({ estaciones, veredictos, alertas, elegida }) {
                 const i = col[v.fecha_hora];
                 const it = (v.parametros || []).find((x) => x.c_parametro === p);
                 const z = it && it.z_robusto;
-                const tip = `${PARAM[p]} · ${horaCorta(v.fecha_hora, ref0)} · ` +
-                  (it && it.valor != null ? 'valor ' + num(it.valor) : 'sin dato') +
-                  (z != null ? ` · z ${num(z, 1)}` : '');
+                const tip = `${PARAM[p]}, ${horaCorta(v.fecha_hora, ref0)}: ` +
+                  (it && it.valor != null ? num(it.valor) : 'sin dato') +
+                  (z != null ? ` · ${paso(z)[3].toLowerCase()} de lo normal` : '');
                 return (
                   <rect key={v.fecha_hora} x={Iz + i * cw} y={y0} width={Math.max(1, cw - 1)}
                     height={filaH} fill={z == null ? '#FFFFFF' : colorZ(z)}
@@ -76,13 +101,20 @@ export default function Huella({ estaciones, veredictos, alertas, elegida }) {
             </g>
           );
         })}
-        <text x={Iz} y={H - 4}>{horaCorta(tiempos[0], ref0)}</text>
-        <text x={W - D} y={H - 4} textAnchor="end">{horaCorta(tiempos[tiempos.length - 1], ref0)}</text>
+        {marcas.map(({ i, iso }) => {
+          const x = Iz + i * cw;
+          return (
+            <g key={iso}>
+              <line x1={x} x2={x} y1={A} y2={baseY + 5} stroke="#AAAAAA" strokeWidth="0.75" strokeDasharray="2 3" />
+              <text x={x} y={baseY + 17} textAnchor="middle">{horaCorta(iso, ref0)}</text>
+            </g>
+          );
+        })}
+        <text x={Iz + (W - Iz - D) / 2} y={H - 4} textAnchor="middle" className="etq">
+          Hora de la lectura{durCuadro ? ' · cada cuadro = ' + durCuadro : ''}
+        </text>
       </svg>
-      <p className="pie-graf">
-        Cada fila es una sonda y cada columna una de las {tiempos.length} lecturas recientes. El color es la desviación
-        respecto de la historia del propio sitio que calcula el motor de reglas; en blanco, sin dato.
-      </p>
+      <p className="pie-graf">{tiempos.length} lecturas recientes de la estación.</p>
     </div>
   );
 }
