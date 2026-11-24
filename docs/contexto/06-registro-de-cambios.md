@@ -21,6 +21,18 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Módulo A: diseño del mecanismo de derrumbes (docs/20)
+
+**Qué cambió.** Nuevo `docs/20-mecanismo-derrumbes.md`: responde la pregunta abierta de docs/19 §5. El derrumbe se vigila con
+un módulo de ladera en la misma estación (pluviómetro `LLUVIA`, humedad del suelo `HUM_SUELO`, inclinómetro `INCL`), no con
+un dispositivo aparte. Define los tres códigos nuevos del contrato, la forma de las estaciones `EST-LAD-` en
+`mecanismos.json`, lo que hace el simulador y lo que hace la plataforma, y quién hace qué.
+**Por qué.** Contaminación y derrumbe comparten unidad (la escuela), causas y detonante (la lluvia): un solo mecanismo y una
+sola plataforma. El pluviómetro sirve a los dos riesgos.
+**Qué arrastró.** Nada todavía: es el diseño. Los cambios de contrato y de simulador los hace cada dueño (docs/20 §6).
+**Impacto en otros módulos.** Dispositivo: sensores, firmware y escena del módulo de ladera. Todos: tres códigos nuevos en
+`lectura` y `estacion` (compatibles con lo actual).
+
 ## 2026-11-24 · Módulo B: Alertas vuelve primero y el mapa marca las escuelas
 
 **Qué cambió.** Alertas es la primera pestaña y abre por defecto; vuelven el mapa de la red, la matriz y la tabla de
