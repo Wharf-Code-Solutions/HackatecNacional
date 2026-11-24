@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hackatec2026.local/esquemas/reporte_ciudadano.schema.json",
+  "title": "Reporte ciudadano",
+  "description": "Evidencia de campo enviada por una persona. Es dato personal: el correo es opcional, la foto se guarda SIN metadatos EXIF (la camara graba coordenadas y modelo de telefono) y la ubicacion que se publica en el mapa se redondea.",
+  "type": "object",
+  "required": ["version", "c_reporte", "fecha_hora", "tipo", "latitud", "longitud", "estado"],
+  "additionalProperties": false,
+  "properties": {
+    "version": { "type": "string", "const": "1.0" },
+    "c_reporte": {
+      "type": "string",
+      "pattern": "^RC-[0-9]{8}-[0-9]{4}$",
+      "examples": ["RC-20261123-0001"]
+    },
+    "fecha_hora": { "type": "string", "format": "date-time" },
+    "tipo": {
+      "type": "string",
+      "enum": ["descarga_visible", "espuma", "color_anormal", "mal_olor", "basura_o_residuos", "peces_muertos", "otro"]
+    },
+    "descripcion": { "type": ["string", "null"], "maxLength": 1000 },
+    "latitud": { "type": "number", "minimum": 17.5, "maximum": 20.5 },
+    "longitud": { "type": "number", "minimum": -99.5, "maximum": -97.0 },
+    "precision_ubicacion_m": { "type": ["number", "null"] },
+    "foto_url": { "type": ["string", "null"] },
+    "exif_removido": {
+      "description": "Debe ser true antes de almacenar la foto. Si es false el reporte no se publica.",
+      "type": "boolean"
+    },
+    "c_sitio_asignado": {
+      "description": "Sitio o tramo mas cercano SOBRE EL CAUCE, no en linea recta: dos puntos a 200 m pueden estar en barrancas distintas. Requiere la red hidrografica.",
+      "type": ["string", "null"]
+    },
+    "distancia_al_cauce_m": { "type": ["number", "null"] },
+    "correo": {
+      "description": "Opcional, solo para avisar del cierre. No se muestra en el mapa publico ni se expone en la API publica.",
+      "type": ["string", "null"], "format": "email"
+    },
+    "estado": { "type": "string", "enum": ["Recibido", "Validado", "En atencion", "Cerrado", "Descartado"] },
+    "c_alerta_relacionada": {
+      "description": "Si hubo una alerta de sensor cerca en el tiempo y aguas arriba, se vinculan. Un reporte que coincide con una alerta vale mucho mas que cualquiera de los dos por separado.",
+      "type": ["string", "null"]
+    },
+    "clasificacion_automatica": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "etiqueta": { "type": "string" },
+        "confianza": { "type": "number", "minimum": 0, "maximum": 1 },
+        "modelo": { "type": "string" }
+      }
+    }
+  }
+}

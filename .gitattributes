@@ -1,0 +1,16 @@
+# Normaliza los fines de linea para que un equipo con Windows y Linux no vea
+# diffs de archivos completos solo por CRLF contra LF.
+* text=auto eol=lf
+
+# Formatos binarios: git no debe tocarlos.
+*.xlsx binary
+*.xlsb binary
+*.docx binary
+*.pdf  binary
+*.zip  binary
+*.kmz  binary
+*.shp  binary
+*.shx  binary
+*.dbf  binary
+*.png  binary
+*.jpg  binary

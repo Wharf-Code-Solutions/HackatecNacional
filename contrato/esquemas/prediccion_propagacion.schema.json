@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hackatec2026.local/esquemas/prediccion_propagacion.schema.json",
+  "title": "Prediccion de propagacion aguas abajo",
+  "description": "Para una alerta, que le va a pasar a los sitios de abajo y cuando. Se declara como intervalo y no como punto, porque la velocidad del flujo se estima: dar una hora exacta seria inventar precision que los datos no tienen.",
+  "type": "object",
+  "required": ["version", "c_alerta", "modelo", "supuestos", "destinos"],
+  "additionalProperties": false,
+  "properties": {
+    "version": { "type": "string", "const": "1.0" },
+    "c_alerta": { "type": "string" },
+    "modelo": {
+      "description": "transporte_adveccion_decaimiento es el modelo base del proyecto: la masa viaja con el agua y decae a tasa de primer orden si es degradable. streeter_phelps queda como ejercicio opcional, solo valido en tramos con recuperacion de oxigeno observable.",
+      "type": "string",
+      "enum": ["transporte_adveccion_decaimiento", "streeter_phelps"]
+    },
+    "supuestos": {
+      "description": "Lo que se asumio. Va pegado a la prediccion y se muestra en pantalla: una prediccion sin supuestos visibles no es defendible ante una autoridad.",
+      "type": "object",
+      "required": ["velocidad_flujo_m_s", "fuente_velocidad"],
+      "additionalProperties": false,
+      "properties": {
+        "velocidad_flujo_m_s": {
+          "type": "array", "minItems": 2, "maxItems": 2,
+          "items": { "type": "number", "exclusiveMinimum": 0 },
+          "description": "Intervalo [minimo, maximo] usado. De ahi sale la ventana horaria."
+        },
+        "fuente_velocidad": { "type": "string", "enum": ["caudal_medido", "literatura", "supuesto_declarado"] },
+        "k_decaimiento_por_dia": { "type": ["number", "null"] },
+        "mezcla_completa": { "type": "boolean", "default": true },
+        "caudal_constante": { "type": "boolean", "default": true },
+        "notas": { "type": "string" }
+      }
+    },
+    "destinos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["c_sitio_destino", "distancia_cauce_m", "llegada_estimada", "nivel_esperado"],
+        "additionalProperties": false,
+        "properties": {
+          "c_sitio_destino": { "type": "string" },
+          "nombre": { "type": "string" },
+          "orden_aguas_abajo": {
+            "description": "Posicion en la secuencia desde el punto de la alerta. 1 es el inmediato siguiente.",
+            "type": "integer", "minimum": 1
+          },
+          "distancia_cauce_m": {
+            "description": "Distancia sobre el cauce, no en linea recta. Sale de la red hidrografica del INEGI.",
+            "type": "number", "minimum": 0
+          },
+          "llegada_estimada": {
+            "type": "object",
+            "required": ["desde", "hasta"],
+            "additionalProperties": false,
+            "properties": {
+              "desde": { "type": "string", "format": "date-time" },
+              "hasta": { "type": "string", "format": "date-time" }
+            }
+          },
+          "factor_dilucion": {
+            "description": "1.0 = llega sin diluirse. Menor que 1 = los afluentes intermedios lo diluyen. null si no hay caudal para calcularlo.",
+            "type": ["number", "null"], "minimum": 0, "maximum": 1
+          },
+          "valor_estimado": { "type": ["number", "null"] },
+          "c_parametro": { "type": ["string", "null"] },
+          "nivel_esperado": { "type": "string", "enum": ["Informativa", "Preventiva", "Critica", "Sin efecto esperado", "Sin dato"] },
+          "confianza": {
+            "description": "Baja cuando no hay caudal ni velocidad medidos en el tramo, que es el caso general hoy.",
+            "type": "string", "enum": ["alta", "media", "baja"]
+          }
+        }
+      }
+    }
+  }
+}

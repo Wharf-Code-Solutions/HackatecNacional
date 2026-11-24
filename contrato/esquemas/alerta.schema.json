@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hackatec2026.local/esquemas/alerta.schema.json",
+  "title": "Alerta ambiental",
+  "type": "object",
+  "required": ["version", "c_alerta", "c_estacion", "fecha_hora", "nivel", "c_parametro", "regla", "estado"],
+  "additionalProperties": false,
+  "properties": {
+    "version": { "type": "string", "const": "1.0" },
+    "c_alerta": {
+      "type": "string",
+      "pattern": "^AL-[0-9]{8}-[A-Z0-9]+-[0-9]{2}$",
+      "examples": ["AL-20261123-ATY01-01"]
+    },
+    "c_estacion": { "type": "string" },
+    "c_sitio": { "type": ["string", "null"] },
+    "fecha_hora": { "type": "string", "format": "date-time" },
+    "nivel": {
+      "description": "Informativa: salio de su banda normal. Preventiva: salio de la banda y se acerca al criterio. Critica: supera el criterio o el cambio es brusco. La falla tecnica NO es un nivel de alerta: va en avisos_tecnicos.",
+      "type": "string",
+      "enum": ["Informativa", "Preventiva", "Critica"]
+    },
+    "c_parametro": { "type": "string" },
+    "valor": { "type": ["number", "null"] },
+    "regla": {
+      "type": "string",
+      "enum": ["umbral_fijo", "desviacion_linea_base", "persistencia", "cambio_brusco"]
+    },
+    "criterio_aplicado": {
+      "description": "Contra que se comparo. Importa porque la NOM-001 regula DESCARGAS, no cuerpos receptores: en un sitio de cauce se usa la escala de CONAGUA, no la norma.",
+      "type": ["string", "null"],
+      "enum": ["CONAGUA_SUP", "NOM001_2021_RIO", "NOM001_2021_EMBALSE", "LINEA_BASE_SITIO", null]
+    },
+    "lecturas_consecutivas": {
+      "description": "Cuantas lecturas anomalas seguidas la respaldan. La regla de persistencia exige n >= 3 antes de emitir.",
+      "type": ["integer", "null"],
+      "minimum": 1
+    },
+    "fuente_probable": {
+      "type": ["object", "null"],
+      "required": ["tipo", "puntaje", "evidencia"],
+      "additionalProperties": false,
+      "properties": {
+        "tipo": {
+          "type": "string",
+          "enum": ["aguas_residuales_municipales", "descarga_industrial", "escurrimiento_o_arrastre", "mixta", "indeterminada"]
+        },
+        "puntaje": {
+          "description": "0 a 1. Se muestra siempre: es una estimacion, no un diagnostico.",
+          "type": "number", "minimum": 0, "maximum": 1
+        },
+        "evidencia": {
+          "description": "Las razones medibles que llevaron a esa conclusion, en texto corto.",
+          "type": "array", "items": { "type": "string" }
+        },
+        "candidatos_aguas_arriba": {
+          "description": "Descargas o establecimientos concretos aguas arriba del punto. Vacio mientras no se incorporen REPDA y DENUE.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "c_fuente_cont": { "type": "string" },
+              "nombre": { "type": "string" },
+              "giro": { "type": "string" },
+              "distancia_m": { "type": "number" }
+            }
+          }
+        }
+      }
+    },
+    "medidas_sugeridas": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "plazo": { "type": "string", "enum": ["inmediata", "mediano_plazo"] },
+          "accion": { "type": "string" },
+          "autoridad": { "type": "string" }
+        }
+      }
+    },
+    "estado": { "type": "string", "enum": ["Abierta", "En atencion", "Cerrada", "Descartada"] },
+    "responsable": { "type": ["string", "null"] }
+  }
+}

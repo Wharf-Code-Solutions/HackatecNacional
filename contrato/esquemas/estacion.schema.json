@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hackatec2026.local/esquemas/estacion.schema.json",
+  "title": "Estacion de monitoreo",
+  "description": "Punto con dispositivo instalado. Siempre cuelga de un sitio CONAGUA (c_sitio): de ahi saca su linea base. Una estacion sin sitio asociado no se puede evaluar contra historia, solo contra umbral fijo.",
+  "type": "object",
+  "required": ["c_estacion", "c_sitio", "latitud", "longitud", "parametros", "estado_dispositivo"],
+  "additionalProperties": false,
+  "properties": {
+    "c_estacion": { "type": "string", "pattern": "^EST-[A-Z]{3}-[0-9]{2}$" },
+    "c_sitio": {
+      "description": "Clave del sitio CONAGUA. Es la llave con datos/procesados/sitio.csv.",
+      "type": "string"
+    },
+    "nombre": { "type": "string" },
+    "cuerpo_agua": { "type": "string" },
+    "municipio": { "type": "string" },
+    "estado": { "type": "string" },
+    "latitud": { "type": "number", "minimum": 17.5, "maximum": 20.5 },
+    "longitud": { "type": "number", "minimum": -99.5, "maximum": -97.0 },
+    "parametros": {
+      "description": "Codigos cortos que la estacion mide. Deben existir en el enum de lectura.schema.json.",
+      "type": "array", "minItems": 1,
+      "items": { "type": "string", "enum": ["OD", "OD_PCT", "PH", "COND", "TEMP", "TURB", "SDT"] }
+    },
+    "estado_dispositivo": {
+      "type": "string",
+      "enum": ["Activo", "Sin senal", "Falla", "Mantenimiento"]
+    },
+    "ultima_calibracion": {
+      "description": "Las sondas de OD y pH derivan en semanas. Sin esta fecha no se puede distinguir un rio que empeoro de un sensor que se descalibro.",
+      "type": ["string", "null"], "format": "date"
+    },
+    "es_descarga": {
+      "description": "true si el punto mide un efluente y no el cauce. Cambia el criterio legal aplicable: a una descarga si le aplica la NOM-001-SEMARNAT-2021, a un sitio de cauce no.",
+      "type": "boolean", "default": false
+    }
+  }
+}

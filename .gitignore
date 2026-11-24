@@ -1,0 +1,21 @@
+# Archivos crudos y geográficos: son grandes y se vuelven a bajar con
+# scripts/00_descargar_fuentes.py. La bitácora guarda la URL exacta de cada uno.
+datos/crudos/*
+!datos/crudos/.gitkeep
+datos/geo/*
+!datos/geo/.gitkeep
+
+# Tablas procesadas pesadas (se regeneran con scripts/10_construir_tablas.py)
+datos/procesados/muestreo.csv
+datos/procesados/muestreo_nucleo.csv
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Sistema
+Thumbs.db
+desktop.ini
+.DS_Store

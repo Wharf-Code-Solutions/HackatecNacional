@@ -1,0 +1,2836 @@
+{
+ "version": "1.0",
+ "escenario": "falla_sensor",
+ "descripcion": "Fallas tecnicas en la estacion 1: turbiedad congelada 5 h, pH con valor imposible, salto imposible de OD y bateria critica. Debe producir avisos tecnicos, NO alertas ambientales. Es la prueba de que el sistema no confunde un sensor roto con un rio contaminado.",
+ "estacion_del_evento": "EST-ATY-01",
+ "paquetes": [
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T00:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2126.768
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.685
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.468
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 19.294
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 456.904
+    }
+   ],
+   "bateria": 80,
+   "senal": -69
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T00:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2248.266
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.674
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.636
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 21.405
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 371.051
+    }
+   ],
+   "bateria": 82,
+   "senal": -94
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T00:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2401.397
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.924
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.332
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 21.112
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 395.565
+    }
+   ],
+   "bateria": 74,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T00:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 1815.359
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.966
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.809
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 21.275
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 161.608
+    }
+   ],
+   "bateria": 82,
+   "senal": -60
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T01:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2307.656
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 1.377
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.384
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 22.623
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 410.469
+    }
+   ],
+   "bateria": 98,
+   "senal": -72
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T01:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2303.526
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.416
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.252
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 23.89
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 418.207
+    }
+   ],
+   "bateria": 81,
+   "senal": -68
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T01:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2107.109
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.985
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.15
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 19.385
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 254.298
+    }
+   ],
+   "bateria": 79,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T01:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2431.898
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 1.121
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.1
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 22.7
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 415.829
+    }
+   ],
+   "bateria": 98,
+   "senal": -92
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T02:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2258.874
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 1.067
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.323
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 17.744
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 447.595
+    }
+   ],
+   "bateria": 89,
+   "senal": -90
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T02:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 1950.523
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 1.29
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.301
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 20.063
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 377.398
+    }
+   ],
+   "bateria": 99,
+   "senal": -72
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T02:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 1739.514
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.692
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.081
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 19.887
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 383.582
+    }
+   ],
+   "bateria": 88,
+   "senal": -61
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T02:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2028.769
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 1.183
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.333
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 20.121
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 395.637
+    }
+   ],
+   "bateria": 77,
+   "senal": -90
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T03:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 1852.69
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 1.216
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.111
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 18.874
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 346.521
+    }
+   ],
+   "bateria": 87,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T03:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 1535.264
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 1.104
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.218
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 21.309
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 454.885
+    }
+   ],
+   "bateria": 72,
+   "senal": -64
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T03:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 1733.802
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.949
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.268
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 19.739
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 368.936
+    }
+   ],
+   "bateria": 96,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T03:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2593.689
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.4
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.464
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 22.061
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 315.543
+    }
+   ],
+   "bateria": 85,
+   "senal": -60
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T04:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2400.625
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.999
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.781
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 21.878
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 286.395
+    }
+   ],
+   "bateria": 99,
+   "senal": -76
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T04:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 1736.574
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.671
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.235
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 20.341
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 280.033
+    }
+   ],
+   "bateria": 72,
+   "senal": -65
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T04:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2309.341
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.6
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.346
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 19.213
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 425.259
+    }
+   ],
+   "bateria": 95,
+   "senal": -75
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T04:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2209.826
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.706
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.612
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 21.472
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 461.307
+    }
+   ],
+   "bateria": 93,
+   "senal": -82
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T05:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 1836.679
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.4
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.555
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 21.644
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 37.5
+    }
+   ],
+   "bateria": 82,
+   "senal": -62,
+   "_nota": "lectura congelada en TURB"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T05:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2577.398
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.897
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 7.361
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 20.068
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 37.5
+    }
+   ],
+   "bateria": 92,
+   "senal": -74,
+   "_nota": "lectura congelada en TURB"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T05:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2892.551
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 1.128
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.945
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 21.848
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 37.5
+    }
+   ],
+   "bateria": 93,
+   "senal": -91,
+   "_nota": "lectura congelada en TURB"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T05:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2578.102
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 1.447
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.71
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 18.948
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 37.5
+    }
+   ],
+   "bateria": 78,
+   "senal": -94,
+   "_nota": "lectura congelada en TURB"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T06:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 1959.578
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.581
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 5.487
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 22.461
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 37.5
+    }
+   ],
+   "bateria": 86,
+   "senal": -60,
+   "_nota": "lectura congelada en TURB"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T06:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2793.407
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 1.06
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.394
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 19.617
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 37.5
+    }
+   ],
+   "bateria": 85,
+   "senal": -74,
+   "_nota": "lectura congelada en TURB"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T06:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2271.846
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 1.301
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.517
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 23.042
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 37.5
+    }
+   ],
+   "bateria": 95,
+   "senal": -66,
+   "_nota": "lectura congelada en TURB"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T06:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 1991.496
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 1.069
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.283
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 21.922
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 37.5
+    }
+   ],
+   "bateria": 84,
+   "senal": -70,
+   "_nota": "lectura congelada en TURB"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T07:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 1967.636
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.803
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.086
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 20.637
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 37.5
+    }
+   ],
+   "bateria": 89,
+   "senal": -63,
+   "_nota": "lectura congelada en TURB"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T07:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2538.312
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 1.157
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.402
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 18.457
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 37.5
+    }
+   ],
+   "bateria": 93,
+   "senal": -62,
+   "_nota": "lectura congelada en TURB"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T07:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2634.83
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.502
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.473
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 20.887
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 37.5
+    }
+   ],
+   "bateria": 79,
+   "senal": -94,
+   "_nota": "lectura congelada en TURB"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T07:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2229.931
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.4
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.177
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 20.408
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 37.5
+    }
+   ],
+   "bateria": 84,
+   "senal": -90,
+   "_nota": "lectura congelada en TURB"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T08:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2400.848
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.899
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.651
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 22.65
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 37.5
+    }
+   ],
+   "bateria": 89,
+   "senal": -91,
+   "_nota": "lectura congelada en TURB"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T08:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2384.578
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 1.217
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 7.039
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 20.041
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 37.5
+    }
+   ],
+   "bateria": 73,
+   "senal": -80,
+   "_nota": "lectura congelada en TURB"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T08:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 1623.386
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.432
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.175
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 20.241
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 37.5
+    }
+   ],
+   "bateria": 75,
+   "senal": -73,
+   "_nota": "lectura congelada en TURB"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T08:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2286.305
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 1.043
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.124
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 19.803
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 37.5
+    }
+   ],
+   "bateria": 72,
+   "senal": -59,
+   "_nota": "lectura congelada en TURB"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T09:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 1776.74
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 1.37
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.465
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 23.659
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 37.5
+    }
+   ],
+   "bateria": 94,
+   "senal": -85,
+   "_nota": "lectura congelada en TURB"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T09:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 1817.537
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.509
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.074
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 19.589
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 37.5
+    }
+   ],
+   "bateria": 87,
+   "senal": -65,
+   "_nota": "lectura congelada en TURB"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T09:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2216.49
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.77
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.569
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 20.975
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 37.5
+    }
+   ],
+   "bateria": 75,
+   "senal": -71,
+   "_nota": "lectura congelada en TURB"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T09:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 3362.191
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.855
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.209
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 20.595
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 37.5
+    }
+   ],
+   "bateria": 77,
+   "senal": -76,
+   "_nota": "lectura congelada en TURB"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T10:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 1472.686
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 1.13
+    },
+    {
+     "c_parametro": "PH",
+     "valor": -999.0
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 22.225
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 265.703
+    }
+   ],
+   "bateria": 96,
+   "senal": -81,
+   "_nota": "valor imposible en PH"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T10:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2210.259
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 1.034
+    },
+    {
+     "c_parametro": "PH",
+     "valor": -999.0
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 21.091
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 352.377
+    }
+   ],
+   "bateria": 99,
+   "senal": -80,
+   "_nota": "valor imposible en PH"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T10:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 1836.771
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.927
+    },
+    {
+     "c_parametro": "PH",
+     "valor": -999.0
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 21.613
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 517.043
+    }
+   ],
+   "bateria": 79,
+   "senal": -82,
+   "_nota": "valor imposible en PH"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T10:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2611.293
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 1.176
+    },
+    {
+     "c_parametro": "PH",
+     "valor": -999.0
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 22.434
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 335.144
+    }
+   ],
+   "bateria": 78,
+   "senal": -63,
+   "_nota": "valor imposible en PH"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T11:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 1812.242
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.721
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 7.135
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 19.13
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 370.637
+    }
+   ],
+   "bateria": 80,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T11:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2435.885
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 1.144
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.296
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 17.502
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 343.981
+    }
+   ],
+   "bateria": 90,
+   "senal": -82
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T11:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 1517.986
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.769
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.986
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 19.525
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 264.303
+    }
+   ],
+   "bateria": 79,
+   "senal": -76
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T11:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 1992.307
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.716
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.889
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 20.829
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 249.746
+    }
+   ],
+   "bateria": 78,
+   "senal": -78
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T12:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2451.172
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 1.261
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.578
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 18.107
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 365.919
+    }
+   ],
+   "bateria": 72,
+   "senal": -80
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T12:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2084.818
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.724
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.855
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 19.035
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 460.642
+    }
+   ],
+   "bateria": 87,
+   "senal": -68
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T12:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2602.61
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.843
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 5.715
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 22.441
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 355.457
+    }
+   ],
+   "bateria": 93,
+   "senal": -94
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T12:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2272.701
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.914
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.513
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 22.794
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 320.63
+    }
+   ],
+   "bateria": 82,
+   "senal": -77
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T13:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2205.109
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.792
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.294
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 21.9
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 238.755
+    }
+   ],
+   "bateria": 94,
+   "senal": -82
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T13:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2521.099
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 1.56
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.904
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 18.676
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 296.917
+    }
+   ],
+   "bateria": 89,
+   "senal": -70
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T13:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 1863.413
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 1.088
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 5.353
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 20.994
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 245.26
+    }
+   ],
+   "bateria": 96,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T13:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 1949.663
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.856
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.46
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 20.217
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 332.976
+    }
+   ],
+   "bateria": 81,
+   "senal": -76
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T14:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2483.616
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.941
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.629
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 19.053
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 258.185
+    }
+   ],
+   "bateria": 95,
+   "senal": -78
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T14:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2015.796
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 1.685
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 5.594
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 19.327
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 365.543
+    }
+   ],
+   "bateria": 92,
+   "senal": -81
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T14:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2206.222
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.734
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.165
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 21.684
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 273.309
+    }
+   ],
+   "bateria": 94,
+   "senal": -64
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T14:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2602.199
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 1.459
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.343
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 16.277
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 389.841
+    }
+   ],
+   "bateria": 95,
+   "senal": -76
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T15:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2757.573
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 19.9
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.089
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 19.291
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 226.822
+    }
+   ],
+   "bateria": 79,
+   "senal": -58,
+   "_nota": "salto imposible en OD"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T15:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2749.984
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 19.9
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.362
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 21.574
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 461.538
+    }
+   ],
+   "bateria": 85,
+   "senal": -66,
+   "_nota": "salto imposible en OD"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T15:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 1943.038
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 19.9
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.93
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 21.422
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 376.862
+    }
+   ],
+   "bateria": 88,
+   "senal": -71,
+   "_nota": "salto imposible en OD"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T15:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 1918.619
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 19.9
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 5.939
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 20.253
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 425.396
+    }
+   ],
+   "bateria": 84,
+   "senal": -94,
+   "_nota": "salto imposible en OD"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T16:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2998.618
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 1.303
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.705
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 20.799
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 402.828
+    }
+   ],
+   "bateria": 87,
+   "senal": -59
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T16:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2472.765
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 1.441
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.426
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 19.658
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 448.215
+    }
+   ],
+   "bateria": 94,
+   "senal": -73
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T16:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2051.442
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.956
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.113
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 18.896
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 399.252
+    }
+   ],
+   "bateria": 74,
+   "senal": -74
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T16:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 1962.652
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.781
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.344
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 20.831
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 260.139
+    }
+   ],
+   "bateria": 77,
+   "senal": -58
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T17:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2161.529
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.507
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.084
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 21.027
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 515.594
+    }
+   ],
+   "bateria": 82,
+   "senal": -73
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T17:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2537.897
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.725
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 5.939
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 20.674
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 519.922
+    }
+   ],
+   "bateria": 81,
+   "senal": -77
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T17:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 1969.325
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 1.224
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.441
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 18.732
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 351.559
+    }
+   ],
+   "bateria": 95,
+   "senal": -74
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T17:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2725.734
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 1.115
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.938
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 20.348
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 295.683
+    }
+   ],
+   "bateria": 95,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T18:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2708.505
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.95
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.05
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 21.525
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 237.787
+    }
+   ],
+   "bateria": 82,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T18:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 1734.423
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.404
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.47
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 19.491
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 342.016
+    }
+   ],
+   "bateria": 84,
+   "senal": -77
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T18:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2511.025
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.8
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.639
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 20.663
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 483.8
+    }
+   ],
+   "bateria": 80,
+   "senal": -70
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T18:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2439.705
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.998
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.764
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 20.421
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 233.838
+    }
+   ],
+   "bateria": 92,
+   "senal": -77
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T19:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2495.069
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.4
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.009
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 19.836
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 338.247
+    }
+   ],
+   "bateria": 74,
+   "senal": -68
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T19:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2859.551
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.648
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 5.926
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 20.796
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 348.121
+    }
+   ],
+   "bateria": 88,
+   "senal": -59
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T19:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2273.017
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 1.084
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.639
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 20.772
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 379.01
+    }
+   ],
+   "bateria": 83,
+   "senal": -74
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T19:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2187.106
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.9
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.067
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 18.971
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 277.185
+    }
+   ],
+   "bateria": 79,
+   "senal": -94
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T20:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 1838.167
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.76
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 5.81
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 21.412
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 345.118
+    }
+   ],
+   "bateria": 12,
+   "senal": -104,
+   "_nota": "bateria critica"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T20:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2024.676
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 1.061
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.852
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 22.4
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 420.006
+    }
+   ],
+   "bateria": 12,
+   "senal": -104,
+   "_nota": "bateria critica"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T20:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2352.634
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.4
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.276
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 21.988
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 448.231
+    }
+   ],
+   "bateria": 12,
+   "senal": -104,
+   "_nota": "bateria critica"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T20:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 3062.73
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.788
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 5.92
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 18.723
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 380.74
+    }
+   ],
+   "bateria": 12,
+   "senal": -104,
+   "_nota": "bateria critica"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T21:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2590.178
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 1.187
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 5.922
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 21.887
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 373.297
+    }
+   ],
+   "bateria": 12,
+   "senal": -104,
+   "_nota": "bateria critica"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T21:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2145.32
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.951
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.212
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 20.119
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 307.272
+    }
+   ],
+   "bateria": 12,
+   "senal": -104,
+   "_nota": "bateria critica"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T21:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2415.848
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.402
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.117
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 17.857
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 517.031
+    }
+   ],
+   "bateria": 12,
+   "senal": -104,
+   "_nota": "bateria critica"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T21:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2302.016
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.858
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 5.896
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 19.691
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 588.627
+    }
+   ],
+   "bateria": 12,
+   "senal": -104,
+   "_nota": "bateria critica"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T22:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 1087.218
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.819
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.407
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 20.879
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 331.93
+    }
+   ],
+   "bateria": 12,
+   "senal": -104,
+   "_nota": "bateria critica"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T22:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2620.29
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 1.296
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.575
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 16.96
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 221.018
+    }
+   ],
+   "bateria": 12,
+   "senal": -104,
+   "_nota": "bateria critica"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T22:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2137.075
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.584
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.397
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 24.811
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 343.975
+    }
+   ],
+   "bateria": 12,
+   "senal": -104,
+   "_nota": "bateria critica"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T22:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2208.269
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 1.157
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.423
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 22.888
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 417.707
+    }
+   ],
+   "bateria": 12,
+   "senal": -104,
+   "_nota": "bateria critica"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T23:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2518.789
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.948
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.592
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 18.65
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 553.787
+    }
+   ],
+   "bateria": 12,
+   "senal": -104,
+   "_nota": "bateria critica"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T23:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2516.581
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 1.064
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.656
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 22.392
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 394.386
+    }
+   ],
+   "bateria": 12,
+   "senal": -104,
+   "_nota": "bateria critica"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T23:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2266.189
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.744
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 6.421
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 22.538
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 412.569
+    }
+   ],
+   "bateria": 12,
+   "senal": -104,
+   "_nota": "bateria critica"
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-ATY-01",
+   "fecha_hora": "2026-11-23T23:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "COND",
+     "valor": 2314.983
+    },
+    {
+     "c_parametro": "OD",
+     "valor": 0.826
+    },
+    {
+     "c_parametro": "PH",
+     "valor": 5.618
+    },
+    {
+     "c_parametro": "TEMP",
+     "valor": 19.597
+    },
+    {
+     "c_parametro": "TURB",
+     "valor": 370.086
+    }
+   ],
+   "bateria": 12,
+   "senal": -104,
+   "_nota": "bateria critica"
+  }
+ ]
+}

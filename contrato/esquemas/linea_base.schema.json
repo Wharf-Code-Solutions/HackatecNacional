@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hackatec2026.local/esquemas/linea_base.schema.json",
+  "title": "Linea base de un sitio",
+  "description": "Banda de comportamiento normal de un parametro en un sitio, calculada con los datos historicos de la Etapa 1. En el Alto Atoyac es la pieza critica: el rio esta permanentemente fuera de norma, asi que un umbral fijo se dispara siempre y lo unico que detecta un evento nuevo es la desviacion respecto de la propia historia del punto.",
+  "type": "object",
+  "required": ["c_sitio", "c_parametro", "temporada", "n", "media", "p10", "p90", "minimo", "maximo"],
+  "additionalProperties": false,
+  "properties": {
+    "c_sitio": { "type": "string" },
+    "c_parametro": { "type": "string" },
+    "temporada": {
+      "description": "estiaje = noviembre a mayo, lluvias = junio a octubre, anual = todo junto. La diferencia no es menor: la DBO mediana se duplica en estiaje.",
+      "type": "string", "enum": ["anual", "estiaje", "lluvias"]
+    },
+    "unidad": { "type": "string" },
+    "n": {
+      "description": "Numero de mediciones que respaldan la banda. Debe viajar siempre con los estadisticos y mostrarse en la interfaz: con n = 3 la banda no significa nada. Convencion del proyecto: n >= 12 para usarla en reglas de alerta.",
+      "type": "integer", "minimum": 1
+    },
+    "media": { "type": "number" },
+    "mediana": { "type": ["number", "null"] },
+    "desv_est": { "type": ["number", "null"] },
+    "mad": {
+      "description": "Desviacion absoluta mediana. Preferible a la desviacion estandar aqui, porque las series traen valores extremos reales que no son errores.",
+      "type": ["number", "null"]
+    },
+    "p10": { "type": "number" },
+    "p90": { "type": "number" },
+    "minimo": { "type": "number" },
+    "maximo": { "type": "number" },
+    "primera_fecha": { "type": ["string", "null"], "format": "date" },
+    "ultima_fecha": {
+      "description": "Si es vieja, la banda puede estar desactualizada. La interfaz debe advertirlo.",
+      "type": ["string", "null"], "format": "date"
+    }
+  }
+}

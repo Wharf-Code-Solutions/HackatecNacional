@@ -1,0 +1,95 @@
+{
+  "version": "1.0",
+  "estaciones": [
+    {
+      "c_estacion": "EST-ATY-01",
+      "c_sitio": "DLTLA2582",
+      "nombre": "RA-10 RÍO XOPANAC, ANTES DE LA CONFLUENCIA CON EL RÍO ATOYAC",
+      "cuerpo_agua": "RÍO ATOYAC",
+      "municipio": "NATIVITAS",
+      "estado": "TLAXCALA",
+      "latitud": 19.2044,
+      "longitud": -98.3353,
+      "parametros": [
+        "COND",
+        "OD",
+        "PH",
+        "TEMP",
+        "TURB"
+      ],
+      "estado_dispositivo": "Activo"
+    },
+    {
+      "c_estacion": "EST-ATY-02",
+      "c_sitio": "DLPUE2051",
+      "nombre": "ANTES DE LA CONFLUENCIA CON EL RIO ATOYAC",
+      "cuerpo_agua": "ARROYO ATENCO",
+      "municipio": "OCOYUCAN",
+      "estado": "PUEBLA",
+      "latitud": 18.97386,
+      "longitud": -98.28458,
+      "parametros": [
+        "COND",
+        "OD",
+        "PH",
+        "TEMP",
+        "TURB"
+      ],
+      "estado_dispositivo": "Activo"
+    },
+    {
+      "c_estacion": "EST-ATY-03",
+      "c_sitio": "DLPUE2019",
+      "nombre": "RA-8 RÍO XOCHIAC, AGUAS ARRIBA DE LA CONFLUENCIA CON COLECTOR EL CARMEN",
+      "cuerpo_agua": "RÍO XOCHIAC",
+      "municipio": "HUEJOTZINGO",
+      "estado": "PUEBLA",
+      "latitud": 19.2125,
+      "longitud": -98.3926,
+      "parametros": [
+        "COND",
+        "OD",
+        "PH",
+        "TEMP",
+        "TURB"
+      ],
+      "estado_dispositivo": "Activo"
+    },
+    {
+      "c_estacion": "EST-ATY-04",
+      "c_sitio": "DLPUE2063",
+      "nombre": "PUEBLA ALSESECA  (A) AGUAS ARRIBA",
+      "cuerpo_agua": "RÍO ALSESECA",
+      "municipio": "CUAUTLANCINGO",
+      "estado": "PUEBLA",
+      "latitud": 18.9546,
+      "longitud": -98.1884,
+      "parametros": [
+        "COND",
+        "OD",
+        "PH",
+        "TEMP",
+        "TURB"
+      ],
+      "estado_dispositivo": "Activo"
+    },
+    {
+      "c_estacion": "EST-ATY-05",
+      "c_sitio": "DLTLA2547",
+      "nombre": "RA-12 RÍO ATOYAC, ANTES DE LA CONFLUENCIA CON EL RÍO ZAHUAPAN",
+      "cuerpo_agua": "RÍO ATOYAC",
+      "municipio": "PAPALOTLA DE XICOHTÉNCATL",
+      "estado": "TLAXCALA",
+      "latitud": 19.15754,
+      "longitud": -98.24199,
+      "parametros": [
+        "COND",
+        "OD",
+        "PH",
+        "TEMP",
+        "TURB"
+      ],
+      "estado_dispositivo": "Activo"
+    }
+  ]
+}

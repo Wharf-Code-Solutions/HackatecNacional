@@ -1,0 +1,49 @@
+﻿campo,descripcion,tipo,valor_posible,fuente
+CLAVE,Clave del sitio de monitoreo,Texto,A - Z,F02
+SITIO,Nombre del sitio de muestreo,Texto,A - Z,F02
+ID_ ORG_CUENCA,Numero de identificacion del Organismo de Cuenca de agua donde se localiza el sitio de monitoreo,Numerico,Entero,F02
+ORGANISMO_DE_CUENCA,Nombre del Organismo de Cuenca de agua donde se localiza el sitio de monitoreo,Texto,A - Z,F02
+ID_ESTADO,Numero de identificacion del Estado donde se encuentra el sitio de muestreo,Numerico,Entero,F02
+ESTADO,Estado donde se encuentra el sitio de muestreo,Texto,A - Z,F02
+MUNICIPIO,Municipio donde se encuentra el sitio de muestreo,Texto,A - Z,F02
+CUENCA,Nombre de la cuenca donde se localiza el sitio de monitoreo,Texto,A - Z,F02
+CUERPO_DE_AGUA,Nombre del cuerpo de agua donde se localiza el sitio de monitoreo,Texto,A - Z,F02
+TIPO,Tipo de cuerpo de agua donde se encuentra el sitio de muestreo,Texto,A - Z,F02
+SUBTIPO,Subtipo de cuerpo de agua donde se encuentra el sitio de muestreo ,Texto,A - Z,F02
+LONGITUD,Coordenada de longitud,Numerico,6 decimales,F02
+LATITUD,Coordenada de latitud,Numerico,6 decimales,F02
+PERIODO,Año en que se realizo el muestreo,Texto,2012 - actual,F02
+CF_NMP100mL,"Valor de los Coliformes Fecales, en numero mas probable por cien mililitros",Texto,"1 decimal, ND ",F02
+DBO_mg/L,"Valor de la Demanda Bioquimica de Oxigeno, en miligramos por litro",Texto,"1 decimal, ND ",F02
+DQO_mg/L,"Valor de la Demanda Quimica de Oxigeno, en miligramos por litro",Texto,"1 decimal, ND ",F02
+E_COLI_NMP_100mL,"Valor de Escherichia coli, en numero mas probable por cien mililitros",Texto,"1 decimal, ND ",F02
+ENTEROC_NMP_100mL,"Valor de Enterococos fecales, en numero mas probable por cien mililitros",Texto,"1 decimal, ND ",F02
+OD_PORC,"Valor de Porcentaje de saturacion de oxigeno disuelto, en cuerpos loticos",Texto,"1 decimal, ND ",F02
+OD_PORC_FON,Valor de Porcentaje de saturacion de oxigeno disuelto en fondo,Texto,"1 decimal, ND ",F02
+OD_PORC_MED,Valor de Porcentaje de saturacion de oxigeno disuelto medio,Texto,"1 decimal, ND ",F02
+OD_PORC_SUP,Valor de Porcentaje de saturacion de oxigeno disuelto superficial,Texto,"1 decimal, ND ",F02
+SST_mg/L,"Valor de los Solidos Suspendidos Totales, en miligramos por litro",Texto,"1 decimal, ND ",F02
+TOX_D_48_FON_UT,"Valor de Toxicidad, Dafnia magna 48 horas, de fondo, Unidades de Toxicidad",Texto,"1 decimal, ND ",F02
+TOX_D_48_SUP_UT,"Valor de Toxicidad, Dafnia magna 48 horas, superficial, Unidades de Toxicidad",Texto,"1 decimal, ND ",F02
+TOX_D_48_UT,"Valor de Toxicidad, Dafnia magna, 48 horas, Unidades de Toxicidad, en cuerpos loticos",Texto,"1 decimal, ND ",F02
+TOX_FIS_FON_15_UT,"Valor de Toxicidad, Vibrio Fisheri, 15 minutos, en fondo, Unidades de Toxicidad",Texto,"1 decimal, ND ",F02
+TOX_FIS_SUP_15_UT,"Valor de Toxicidad, Vibrio Fisheri, 15 minutos, superficial, Unidades de Toxicidad",Texto,"1 decimal, ND ",F02
+TOX_V_15_UT,"Valor de Toxicidad, Vibrio Fisheri, 15 minutos, Unidades de Toxicidad, en cuerpos loticos",Texto,"1 decimal, ND ",F02
+CALIDAD_COLI_FEC,Clasificacion de la calidad del agua de acuerdo con el indicador Coliformes Fecales,Texto,"Excelente, Buena calidad, Aceptable, Contaminada, Fuertemente contaminada",F02
+CALIDAD_DBO,Clasificacion de la calidad del agua de acuerdo con el indicador Demanda Bioquimica de Oxigeno,Texto,"Excelente, Buena calidad, Aceptable, Contaminada, Fuertemente contaminada",F02
+CALIDAD_DQO,Clasificacion de la calidad del agua de acuerdo con el indicador Demanda Quimica de Oxigeno,Texto,"Excelente, Buena calidad, Aceptable, Contaminada, Fuertemente contaminada",F02
+CALIDAD_E_COLI,Clasificacion de la calidad del agua de acuerdo con el indicador Escherichia coli,Texto,"Excelente, Buena calidad, Aceptable, Contaminada, Fuertemente contaminada",F02
+CALIDAD_ENTEROC,Clasificacion de la calidad del agua de acuerdo con el indicador Enterococos fecales,Texto,"Excelente, Buena calidad, Contaminada, Fuertemente contaminada",F02
+CALIDAD_OD_PORC,Clasificacion de la calidad del agua de acuerdo con el indicador Porcentaje de saturaci¢n de oxigeno disuelto,Texto,"Excelente, Buena calidad, Aceptable, Contaminada, Fuertemente contaminada",F02
+CALIDAD_OD_PORC_FON,"Clasificacion de la calidad del agua de acuerdo con el indicador Porcentaje de saturacion de oxigeno disuelto, en fondo",Texto,"Excelente, Buena calidad, Aceptable, Contaminada, Fuertemente contaminada",F02
+CALIDAD_OD_PORC_MED,"Clasificacion de la calidad del agua de acuerdo con el indicador Porcentaje de saturacion de oxigeno disuelto, medio",Texto,"Excelente, Buena calidad, Aceptable, Contaminada, Fuertemente contaminada",F02
+CALIDAD_OD_PORC_SUP,"Clasificacion de la calidad del agua de acuerdo con el indicador Porcentaje de saturaci¢n de Oxigeno disuelto, superficial",Texto,"Excelente, Buena calidad, Aceptable, Contaminada, Fuertemente contaminada",F02
+CALIDAD_SST,Clasificacion de la calidad del agua de acuerdo con el indicador Solidos Suspendidos Totales,Texto,"Excelente, Buena calidad, Aceptable, Contaminada, Fuertemente contaminada",F02
+CALIDAD_TOX_D_48,"Clasificacion de la calidad del agua de acuerdo con el indicador Toxicidad, Dafnia magna, 48 horas",Texto,"No toxico, Toxicidad baja, Toxicidad moderada, Toxicidad alta",F02
+CALIDAD_TOX_D_48_FON,"Clasificacion de la calidad del agua de acuerdo con el indicador, Toxicidad, Dafnia magna 48 horas, en fondo",Texto,"No toxico, Toxicidad baja, Toxicidad moderada, Toxicidad alta",F02
+CALIDAD_TOX_D_48_SUP,"Clasificacion de la calidad del agua de acuerdo con el indicador de Toxicidad, Dafnia magna 48 horas, superficial",Texto,"No toxico, Toxicidad baja, Toxicidad moderada, Toxicidad alta",F02
+CALIDAD_TOX_FIS_FON_15,"Clasificacion de la calidad del agua de acuerdo con el indicador Toxicidad, Vibrio Fisheri, 15 minutos, en fondo",Texto,"No toxico, Toxicidad baja, Toxicidad moderada, Toxicidad alta",F02
+CALIDAD_TOX_FIS_SUP_15,"Clasificacion de la calidad del agua de acuerdo con el indicador de Toxicidad, Vibrio Fisheri, 15 minutos, superficial",Texto,"No toxico, Toxicidad baja, Toxicidad moderada, Toxicidad alta",F02
+CALIDAD_TOX_V_15,"Clasificacion de la calidad del agua de acuerdo con el indicador Toxicidad, Vibrio Fisheri, 15 minutos",Texto,"No toxico, Toxicidad baja, Toxicidad moderada, Toxicidad alta",F02
+CONTAMINANTES,Contaminantes  presentes en incumplimiento (Contaminados),Texto,"DBO,DQO,SST,CF,E_COLI,ENT_FEC, OD%S,OD%M,OD%F,TOX_S,TOX_F, TOX_L",F02
+SEMAFORO,Indica el nivel de contaminacion de acuerdo a los contaminantes presentes,Texto,"Verde, Amarillo, Rojo",F02

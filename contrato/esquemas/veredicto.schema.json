@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hackatec2026.local/esquemas/veredicto.schema.json",
+  "title": "Veredicto de una lectura",
+  "description": "Lo que devuelve el motor de reglas para un paquete de lectura. Es la frontera entre el modulo de analisis (M2) y el backend (M5): mientras este esquema no cambie, los dos avanzan por separado. El plan original no definia esta salida y es justo la que mas se comparte.",
+  "type": "object",
+  "required": ["version", "c_estacion", "fecha_hora", "parametros", "indice_deterioro", "avisos_tecnicos", "alertas"],
+  "additionalProperties": false,
+  "properties": {
+    "version": { "type": "string", "const": "1.0" },
+    "c_estacion": { "type": "string" },
+    "fecha_hora": { "type": "string", "format": "date-time" },
+    "parametros": {
+      "description": "Un elemento por parametro evaluado.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["c_parametro", "valor", "clase_conagua", "posicion_en_banda"],
+        "additionalProperties": false,
+        "properties": {
+          "c_parametro": { "type": "string" },
+          "valor": { "type": ["number", "null"] },
+          "unidad": { "type": "string" },
+          "clase_conagua": {
+            "description": "Clase de la escala oficial. null si el parametro no tiene escala.",
+            "type": ["string", "null"],
+            "enum": ["Excelente", "Buena calidad", "Aceptable", "Contaminada", "Fuertemente contaminada", "No toxico", "Toxicidad baja", "Toxicidad moderada", "Toxicidad alta", null]
+          },
+          "veces_el_limite": {
+            "description": "valor / limite de la clase Contaminada. Es la medida continua que si ordena los sitios, a diferencia del color.",
+            "type": ["number", "null"]
+          },
+          "posicion_en_banda": {
+            "description": "Donde cae respecto de la historia del propio sitio: 'bajo_p10', 'normal', 'sobre_p90' o 'sin_linea_base'. Esta es la senal que detecta un evento en un rio que ya esta permanentemente mal.",
+            "type": "string",
+            "enum": ["bajo_p10", "normal", "sobre_p90", "sin_linea_base"]
+          },
+          "z_robusto": {
+            "description": "(valor - mediana) / MAD del propio sitio. null si no hay linea base.",
+            "type": ["number", "null"]
+          },
+          "n_linea_base": {
+            "description": "Cuantas mediciones historicas respaldan la banda. Si es bajo, la interfaz debe decirlo.",
+            "type": ["integer", "null"]
+          }
+        }
+      }
+    },
+    "indice_deterioro": {
+      "description": "Resumen continuo de la lectura, 0 a 100. Sustituye al semaforo como variable de ordenamiento; el color se deriva de el solo para el publico.",
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 100
+    },
+    "semaforo_publico": {
+      "description": "Derivado del indice, SOLO para la vista ciudadana.",
+      "type": ["string", "null"],
+      "enum": ["Verde", "Amarillo", "Rojo", null]
+    },
+    "riesgo_por_uso": {
+      "description": "Traduccion a lenguaje de la persona. Es la capa que el ciudadano necesita y que el semaforo de calidad no responde.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "contacto_directo": { "type": "string", "enum": ["No recomendado", "Precaucion", "Aceptable", "Sin dato"] },
+        "riego_de_hortalizas": { "type": "string", "enum": ["No recomendado", "Precaucion", "Aceptable", "Sin dato"] },
+        "abrevadero_de_ganado": { "type": "string", "enum": ["No recomendado", "Precaucion", "Aceptable", "Sin dato"] },
+        "mensaje": { "type": "string" }
+      }
+    },
+    "avisos_tecnicos": {
+      "description": "Problemas del dispositivo, no del rio. Nunca se mezclan con las alertas ambientales.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["tipo", "detalle"],
+        "additionalProperties": false,
+        "properties": {
+          "tipo": { "type": "string", "enum": ["valor_imposible", "lectura_congelada", "salto_imposible", "bateria_baja", "enlace_marginal", "sin_reporte", "posible_deriva"] },
+          "c_parametro": { "type": ["string", "null"] },
+          "detalle": { "type": "string" }
+        }
+      }
+    },
+    "alertas": {
+      "description": "Alertas ambientales generadas. Vacio si la lectura no amerita ninguna.",
+      "type": "array",
+      "items": { "$ref": "alerta.schema.json" }
+    }
+  }
+}

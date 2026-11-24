@@ -1,0 +1,348 @@
+﻿c_parametro,nombre,unidad,medible_en_campo,c_parametro_std,nucleo_analitico,fuente
+"1,1,1,2_TTCETA","1,1,1,2-Tetracloroetano",mg/L,false,,false,F05
+"1,1,2,2_TETRACLETAN","1,1,2,2-Tetracloroetano",mg/L,false,,false,F05
+"1,1,2_TCETA","1,1,2-Tricloroetano",mg/L,false,,false,F05
+"1,1-DICLOROPROPILENO",DICLOROPROPILENO,mg/L,false,,false,F05
+"1,1_DICLETAN","1,1-Dicloroetano",mg/L,false,,false,F05
+"1,1_DICLETILEN","1,1-Dicloroetileno",mg/L,false,,false,F05
+"1,2,3_TRICLBENCEN","1,2,3-Triclorobenceno",mg/L,false,,false,F05
+"1,2,4-TRIMETILBENCENO","1,2,4-Trimetilbenceno",mg/L,false,,false,F05
+"1,2,4_TRICLBENCEN","1,2,4-Triclorobenceno",mg/L,false,,false,F05
+"1,2_DIBRETANO","1,2-Dibromoetano",mg/L,false,,false,F05
+"1,2_DIBR_3_CLPROPAN","1,2-Dibromo-3-Cloropropano (DBCP)",mg/L,false,,false,F05
+"1,2_DICLBENC","1,2-Diclorobenceno",mg/L,false,,false,F05
+"1,2_DICLETAN","1,2-Dicloroetano",mg/L,false,,false,F05
+"1,2_DICLPROPAN","1,2-Dicloropropano",mg/L,false,,false,F05
+"1,2_DIFENILHIDRACINA","1,2-Difenilhidracina",mg/L,false,,false,F05
+"1,3,5-TRIMETILBENCENO","1,3,5-Trimetilbenceno",mg/L,false,,false,F05
+"1,3_DICLBEN","1,3-Diclorobenceno",mg/L,false,,false,F05
+"1,3_DICLPROPAN","1,3-Dicloropropano",mg/L,false,,false,F05
+"1,4_DICLBEN","1,4-Diclorobenceno",mg/L,false,,false,F05
+1_C_NAF,1-Cloronaftaleno,mg/L,false,,false,F05
+"2,3_DICLOROFENOL_DCF","2,3-Diclorofenol",mg/L,false,,false,F05
+"2,4,5_TRICLOROFENOL","2,4,5-Triclorofenol",mg/L,false,,false,F05
+"2,4,6_TRICLFENOL","2,4,6-Triclorofenol",mg/L,false,,false,F05
+"2,4_DICLFENOL","2,4-Diclorofenol",mg/L,false,,false,F05
+"2,4_DIMETILFEN","2,4-Dimetilfenol",mg/L,false,,false,F05
+"2,4_DINITOL","2,4-Dinitrotolueno",mg/L,false,,false,F05
+"2,4_DNF","2,4-Dinitrofenol",mg/L,false,,false,F05
+"2,6_DINTOL","2,6-Dinitrotolueno",mg/L,false,,false,F05
+2_CEVE,2-Cloroetilvinil Éter,mg/L,false,,false,F05
+2_CF,2-Clorofenol,mg/L,false,,false,F05
+2_CLNAFT,2-Cloronaftaleno,mg/L,false,,false,F05
+2_CLOROTOLUENO,2-Clorotolueno,mg/L,false,,false,F05
+2_METILNAFTA,2-Metilnaftaleno,mg/L,false,,false,F05
+2_NIFENOL,2-Nitrofenol,mg/L,false,,false,F05
+4-ISOPROPILTOLUENO,Isopropiltolueno,mg/L,false,,false,F05
+4_BRFENFENETER,4-Bromofenil Fenil Éter,mg/L,false,,false,F05
+4_CLOROTOLUENO,4-Clorotolueno,mg/L,false,,false,F05
+4_CLORO_3_METILFEN,4-Cloro-3-Metilfenol,mg/L,false,,false,F05
+4_NITROFENOL,4-Nitrofenol,mg/L,false,,false,F05
+ABS_UV,Absorción UV,U Abs/cm,false,,false,F05
+ACENAF,Acenafteno,mg/L,false,,false,F05
+ACENAFTIL,Acenaftileno,mg/L,false,,false,F05
+ACENAFTIL_8310,Acenaftileno_8310,mg/L,false,,false,F01
+ACENAF_8310,Acenafteno_8310,mg/L,false,,false,F01
+ACID_TOT,Acidez Total,mg/L CaCO3,false,,false,F05
+ACRILONITRILO,Acrilonitrilo,mg/L,false,,false,F05
+ACROLEINA,Acroleina,mg/L,false,,false,F05
+ALC_A,Alcalinidad al Anaranjado de Metileno,mg/L,false,,false,F05
+ALC_FEN,Alcalinidad a la Fenoftaleína,mg CaCO3/L,false,,false,F05
+ALC_TOT,Alcalinidad Total,mg CaCO3/L,false,,false,F05
+ALDRIN,Aldrín,mg/L,false,,false,F05
+ALFA_BHC,Alfa-BHC,mg/L,false,,false,F05
+ALFA_ENDO,Alfa-Endosulfan,mg/L,false,,false,F01
+AL_SOL,Aluminio Soluble,mg/L,false,,false,F05
+AL_TOT,Aluminio Total,mg/L,false,,false,F05
+ANTRA,Antraceno,mg/L,false,,false,F05
+ANTRA_8310,Antraceno_8310,mg/L,false,,false,F01
+AS_SOL,Arsénico Soluble,mg/L,false,,false,F05
+AS_TOT,Arsénico Total,mg/L,false,,true,F05
+AZOBENCENO,Azobenceno,mg/L,false,,false,F05
+B2_ETILHEXIL_FTALATO,Bis (2-Etilhexil) Ftalato,mg/L,false,,false,F05
+BA_SOL,Bario Soluble,mg/L,false,,false,F05
+BA_TOT,Bario Total,mg/L,false,,false,F05
+BENCENO,Benceno,mg/L,false,,false,F05
+BENCIDINA,Bencidina,mg/L,false,,false,F05
+BEN_A_ANT,Benzo(A)Antraceno,mg/L,false,,false,F05
+BEN_A_ANT_8310,Benzo(A)Antraceno_8310,mg/L,false,,false,F01
+BEN_A_PIR,Benzo(A)Pireno,mg/L,false,,false,F05
+BEN_A_PIR_8310,Benzo(A)Pireno_8310,mg/L,false,,false,F01
+BEN_B_FANT,Benzo(B)Fluoranteno,mg/L,false,,false,F05
+BEN_B_FANT_8310,Benzo(B)Fluoranteno_8310,mg/L,false,,false,F01
+"BEN_G,H,I_PER",Benzo(GHI)Perileno,mg/L,false,,false,F05
+"BEN_G,H,I_PER_8310",Benzo(GHI)Perileno_8310,mg/L,false,,false,F01
+BEN_K_FANT,Benzo(K)Fluoranteno,mg/L,false,,false,F05
+BEN_K_FANT_8310,Benzo(K)Fluoranteno_8310,mg/L,false,,false,F01
+BETA_BHC,Beta-BHC,mg/L,false,,false,F05
+BETA_ENDO,Beta-Endosulfan,mg/L,false,,false,F01
+BHC_ISOMEROS,Mezcla de Isómeros BHC,mg/L,false,,false,F05
+BIS2_CLETETER,Bis (2-Cloroetil) Éter,mg/L,false,,false,F05
+BIS2_CLIOISOPET,Bis (2-Cloroisopropil) Éter,mg/L,false,,false,F05
+BIS_2_CLOROETOXI_MET,Bis (2-Cloroetoxi),mg/L,false,,false,F05
+BPCS,Bifenilos Policlorados,mg/L,false,,false,F01
+BROMOBENCENO,Bromobenceno,mg/L,false,,false,F05
+BROMOF,Bromoformo,mg/L,false,,false,F05
+BROMOMETANO,Bromometano,mg/L,false,,false,F05
+BR_CLMET,Bromoclorometano,mg/L,false,,false,F05
+BR_DICLMET,Bromodiclorometano,mg/L,false,,false,F05
+BUTILBENCIL_FTAL,Butilbencilftalato,mg/L,false,,false,F05
+B_TOT,Boro Total,mg/L,false,,false,F05
+CARBAZOLA,Carbazola,mg/L,false,,false,F05
+CAUDAL,Caudal,L/s,false,,true,F05
+CA_SOL,Calcio Soluble,mg/L,false,,false,F05
+CA_TOT,Calcio Total,mg/L,false,,false,F05
+CD_SOL,Cadmio Soluble,mg/L,false,,false,F05
+CD_TOT,Cadmio Total,mg/L,false,,true,F05
+CIS-CLORDANO,Cis-Clordano,mg/L,false,,false,F05
+"CIS_1,2_DICLETEN","Cis-1,2-Dicloroetileno",mg/L,false,,false,F05
+CLOROFORMO,Cloroformo,mg/L,false,,false,F05
+CLOROF_A,Clorofila A,mg/m3,false,,false,F05
+CLOROMETANO,Clorometano,mg/L,false,,false,F05
+CLORUROS_SOL,Cloruros Solubles,mg/L,false,,false,F05
+CLORUROS_TOT,Cloruros Totales,mg/L,false,,false,F05
+CLORURO_DE_VINILO,Cloruro de Vinilo,mg/L,false,,false,F05
+CL_BENC,Clorobenceno,mg/L,false,,false,F05
+CL_METILENO,Cloruro de Metileno,mg/L,false,,false,F05
+CL_RES,Cloro Residual,mg/L,false,,false,F05
+CN_TOT,Cianuros Totales,mg/L,false,,true,F05
+CO3,Carbonatos,mg CaCO3/L,false,,false,F05
+COLI_FEC,Coliformes Fecales,NMP/100 mL,false,CF,true,F05
+COLI_FEC_UFC,Coliformes Fecales UFC,UFC/100 mL,false,,false,F05
+COLI_TOT,Coliformes Totales,NMP/100 mL,false,,true,F05
+COLOR,Color,SI/NO,false,,false,F05
+COLOR_APA,Color Aparente,mg/L,false,,false,F05
+COLOR_VER,Color Verdadero,U Pt/Co,false,,false,F05
+COLOR_VER_436,Color Verdadero por Coeficiente de Absorción a Longitud de Onda 436,m-1,false,,false,F05
+COLOR_VER_525,Color Verdadero por Coeficiente de Absorción a Longitud de Onda 525,m-1,false,,false,F05
+COLOR_VER_620,Color Verdadero por Coeficiente de Absorción a Longitud de Onda 620,m-1,false,,false,F05
+CONDUC_CAMPO,Conductividad eléctrica,µS/cm,true,COND,true,F05
+CONDUC_CAMPO_FON,Conductividad eléctrica fondo,µS/cm,true,,false,F05
+CONDUC_CAMPO_MED,Conductividad eléctrica media,µS/cm,true,,false,F05
+CONDUC_CAMPO_SUP,Conductividad eléctrica superficie,µS/cm,true,,false,F05
+COS,Carbono Orgánico Fijo Soluble,mg/L,false,,false,F05
+COT,Carbono Orgánico Total,mg/L,false,,false,F05
+COT_SOL,Carbono Orgánico Soluble,mg/L,false,,false,F05
+CRISENO,Criseno,mg/L,false,,false,F05
+CRISENO_8310,Criseno_8310,mg/L,false,,false,F01
+CR_HEX,Cromo Hexavalente,mg/L,false,,true,F05
+CR_SOL,Cromo Soluble,mg/L,false,,false,F05
+CR_TOT,Cromo Total,mg/L,false,,true,F05
+CU_SOL,Cobre Soluble,mg/L,false,,false,F05
+CU_TOT,Cobre Total,mg/L,false,,true,F05
+DBO_SOL,Demanda Bioquímica de Oxígeno Soluble,mg/L,false,,true,F05
+DBO_TOT,Demanda Bioquímica de Oxígeno Total,mg/L,false,DBO5,true,F05
+DDD,DDD,mg/L,false,,false,F05
+DDE,DDE,mg/L,false,,false,F05
+DDT,DDT,mg/L,false,,false,F05
+DELTA_BHC,Delta-BHC,mg/L,false,,false,F05
+DI-OCTILFTALATO,Di-Octilftalato,mg/L,false,,false,F05
+DIBENZOFURANO,Diibenzofurano,mg/L,false,,false,F05
+DIBEN_ANT,Dibenzo(AH)Antraceno,mg/L,false,,false,F05
+DIBEN_ANT_8310,Dibenzo(AH)Antraceno_8310,mg/L,false,,false,F01
+DIBR_CLMET,Dibromoclorometano,mg/L,false,,false,F05
+DIBR_MET,Dibromometano,mg/L,false,,false,F05
+DIBUTILFTALATO (DBP),Dibutilftalato (DBP),mg/L,false,,false,F05
+DICLOROBENCENOS,Diclorobencenos (Mezcla de Isomeros),mg/L,false,,false,F05
+DICLOROMETANO,Diclorometano,mg/L,false,,false,F05
+DIELDRIN,Dieldrín,mg/L,false,,false,F05
+DIET_FTAL,Dietilftalato,mg/L,false,,false,F05
+DIMETIL_FTAL,Dimetilftalato,mg/L,false,,false,F05
+DINITRO_O_CRESOL,Dinitro-o-Cresol,mg/L,false,,false,F05
+DI_2_ETILEXIL_ADIPATO,Di (2 Etilexil) Adipato,mg/L,false,,false,F05
+DQO_SOL,Demanda Química de Oxígeno Soluble,mg/L,false,,true,F05
+DQO_TOT,Demanda Química de Oxígeno Total,mg/L,false,DQO,true,F05
+DUR_Ca,Dureza Calcio,mg/L,false,,false,F05
+DUR_Mg,Dureza Magnesio,mg/L,false,,false,F05
+DUR_TOT,Dureza Total,mg CaCO3/L,false,,false,F05
+ENDO_SUL,Endosulfan (Endosulfano),mg/L,false,,false,F05
+ENDO_SULSO4,Endosulfan sulfato,mg/L,false,,false,F05
+ENDRIN,Endrín,mg/L,false,,false,F05
+ENDRÍN CETONA,Endrín Cetona,mg/L,false,,false,F05
+END_ALD,Endrín Aldehído,mg/L,false,,false,F05
+ENTEROC_FEC,Enterococos Fecales,NMP/100 mL,false,,false,F05
+ESTIRENO,Estireno,mg/L,false,,false,F05
+ETILBENCENO,Etilbenceno,mg/L,false,,false,F05
+E_COLI,Escherichia coli,NMP/100 mL,false,ECOLI,true,F05
+FENANTRENO,Fenantreno,mg/L,false,,false,F05
+FENANTRENO_8310,Fenantreno_8310,mg/L,false,,false,F01
+FENOL,Fenol,mg/L,false,,false,F05
+FENOLES_TOT,Fenoles Totales,mg/L,false,,true,F05
+FE_SOL,Fierro Soluble,mg/L,false,,false,F05
+FE_TOT,Fierro Total,mg/L,false,,false,F05
+FLUORANTENO,Fluoranteno,mg/L,false,,false,F05
+FLUORANTENO_8310,Fluoranteno_8310,mg/L,false,,false,F01
+FLUORENO,Fluoreno,mg/L,false,,false,F05
+FLUORENO_8310,Fluoreno_8310,mg/L,false,,false,F01
+FLUORUROS_SOL,Fluoruros Solubles,mg/L,false,,false,F05
+FLUORUROS_TOT,Fluoruros Totales,mg/L,false,,false,F05
+GAMA_BHC_LIN,Gama-BHC (Lindano),mg/L,false,,false,F05
+GRAS_ACEI,Grasas y Aceites,mg/L,false,,true,F05
+HAPS,Total de hidrocarburos poliaromáticos,mg/L,false,,false,F05
+HAPS_8310,Total de hidrocarburos poliaromáticos,mg/L,false,,false,F01
+HCO3,Bicarbonatos,mg CaCO3/L,false,,false,F05
+HEPTACLOR,Heptacloro,mg/L,false,,false,F05
+HEPTA_EPOX,Heptacloro epóxido,mg/L,false,,false,F05
+HEXACL_BENC,Hexaclorobenceno,mg/L,false,,false,F05
+HEXACL_BUT,Hexaclorobutadieno,mg/L,false,,false,F05
+HEXACL_CICLOPEN,Hexaclorociclopentadieno,mg/L,false,,false,F05
+HEXACL_ETANO,Hexacloroetano,mg/L,false,,false,F05
+HG_SOL,Mercurio Soluble,mg/L,false,,false,F05
+HG_TOT,Mercurio Total,mg/L,false,,true,F05
+HIDROCAR_F_MED_PES,Hidrocarburos Fracción Media y Pesada,mg/L,false,,false,F05
+H_HELMINTOS,Huevos de Helminto,No. de huevos / 5 L,false,,true,F05
+IND_PIR,"Indeno (1,2,3-CD) Pireno",mg/L,false,,false,F05
+IND_PIR_8310,"Indeno (1,2,3-CD) Pireno_8310",mg/L,false,,false,F05
+ISOPROPILBENCENO,Isopropilbenceno,mg/L,false,,false,F05
+ISO_FOR,Isoforona,mg/L,false,,false,F05
+K_SOL,Potasio Soluble,mg/L,false,,false,F05
+K_TOT,Potasio Total,mg/L,false,,false,F05
+"M,P_XILENO","m,p-Xilenos",mg/L,false,,false,F05
+MAT_FLOTANTE,MATERIA FLOTANTE,AUSENTE/PRESENTE,false,,true,F05
+METILTERBUTILETER_MTBE_,Metilterbutiléter (MTBE),mg/L,false,,false,F05
+METOXICLO,Metoxicloro,mg/L,false,,false,F05
+MG_SOL,Magnesio Soluble,mg/L,false,,false,F05
+MG_TOT,Magnesio Total,mg/L,false,,false,F05
+MN_SOL,Manganeso Soluble,mg/L,false,,false,F05
+MN_TOT,Manganeso Total,mg/L,false,,false,F05
+N-BUTILBENCENO,N-Butilbenceno,mg/L,false,,false,F05
+N-PROPILBENCENO,N-Propilbenceno,mg/L,false,,false,F05
+NAFTALENO,Naftaleno,mg/L,false,,false,F05
+NAFTALENO_8310,Naftaleno_8310,mg/L,false,,false,F01
+NA_SOL,Sodio Soluble,mg/L,false,,false,F05
+NA_TOT,Sodio Total,mg/L,false,,false,F05
+NITROBENCENO,Nitrobenceno,mg/L,false,,false,F05
+NI_SOL,Niquel Soluble,mg/L,false,,false,F05
+NI_TOT,Níquel Total,mg/L,false,,true,F05
+NO2,Nitritos,mg/L,false,,false,F05
+NO3,Nitratos,mg/L,false,,false,F05
+N_NH3,Nitrógeno Amoniacal,mg/L,false,,true,F05
+N_NITROSODIFENILAMINA,N-Nitrosodifenilamina,mg/L,false,,false,F05
+N_NITROS_DIMETILA,N-Nitrosodimetilamina,mg/L,false,,false,F05
+N_NITROS_N_PROPAM,N-Nitrosodi-N-Propilamina,mg/L,false,,false,F05
+N_NO2,Nitrógeno de Nitritos,mg/L,false,,false,F05
+N_NO3,Nitrógeno de Nitratos,mg/L,false,,false,F05
+N_ORG,Nitrógeno Orgánico,mg/L,false,,false,F05
+N_TOT,Nitrógeno Total (Cálculo),mg/L,false,,true,F05
+N_TOTK,Nitrógeno Kjeldahl,mg/L,false,,false,F05
+O-NITROANILINA,O-Nitroanilina,mg/L,false,,false,F05
+OD_%,Oxígeno Disuelto_%,% Saturación,true,OD_PCT,true,F05
+OD_%_FON,Oxígeno Disuelto fondo_%,% Saturación,true,,false,F05
+OD_%_MED,Oxígeno Disuelto media_%,% Saturación,true,,false,F05
+OD_%_SUP,Oxígeno Disuelto superficie_%,% Saturación,true,,false,F05
+OD_mg/L,Oxígeno Disuelto,mg/L,true,OD,true,F05
+OD_mg/L_FON,Oxígeno Disuelto fondo,mg/L,true,,false,F05
+OD_mg/L_MED,Oxígeno Disuelto media,mg/L,true,,false,F05
+OD_mg/L_SUP,Oxígeno Disuelto superficie,mg/L,true,,false,F05
+OH,Hidroxilos,mg CaCO3/L,false,,false,F05
+OLOR,Olor,SI/NO,false,,false,F05
+ORTO_PO4,Fósforo Reactivo total (o-fosfatos),mg/l,false,,false,F05
+O_XILENO,o-Xileno,mg/L,false,,false,F05
+P-CLOROANILINA,P-Cloroanilina,mg/L,false,,false,F05
+PB_SOL,Plomo Soluble,mg/L,false,,false,F05
+PB_TOT,Plomo Total,mg/L,false,,true,F05
+PCBEN,Pentaclorobenceno,mg/L,false,,false,F05
+PENTACLOROFENOL,Pentaclorofenol,mg/L,false,,false,F05
+PIRENO,Pireno,mg/L,false,,false,F05
+PIRENO_8310,Pireno_8310,mg/L,false,,false,F01
+PO4_TOT,Fosfatos Totales (a partir de P total),mg/L,false,,false,F05
+POT_REDOX_CAMPO,Potencial REDOX,mV,true,,false,F05
+POT_REDOX_CAMPO_FON,Potencial REDOX fondo,mV,false,,false,F05
+POT_REDOX_CAMPO_MED,Potencial REDOX media,mV,false,,false,F05
+POT_REDOX_CAMPO_SUP,Potencial REDOX superficie,mV,false,,false,F05
+PROFUNDIDAD,Profundidad,m,true,,false,F05
+P_TOT,Fósforo Total,mg/L,false,,true,F05
+SAAM,Sustancias Activas al Azul de Metileno,mg/L,false,,true,F05
+SB_SOL,Antimonio Soluble,mg/L,false,,false,F05
+SB_TOT,Antimonio Total,mg/L,false,,false,F05
+SDF,Solidos Disueltos Fijos,mg/L,false,,false,F05
+SDT,Sólidos Disueltos Totales (Cálculo),mg/L,true,SDT,true,F05
+SDV,Solidos Disueltos Volátiles,mg/L,false,,false,F05
+SEC-BUTILBENCENO,Sec-Bultibenceno,mg/L,false,,false,F05
+SE_TOT,Selenio Total,mg/L,false,,false,F05
+SIO2,Silica Total (SiO2),mg/L,false,,false,F05
+SO4_SOL,Sulfatos Solubles,mg/L,false,,false,F05
+SO4_TOT,Sulfatos Totales,mg/L,false,,false,F05
+SOLID_SED,Sólidos Sedimentables,mL/L,false,,true,F05
+SSF,Solidos Suspendidos Fijos,mg/L,false,,false,F05
+SST,Sólidos Suspendidos Totales,mg/L,false,SST,true,F05
+SSV,Sólidos Suspendidos Volátiles,mg/L,false,,false,F05
+ST,Sólidos Totales,mg/L,false,,false,F05
+STF,Solidos Totales Fijos,mg/L,false,,false,F05
+STT,Sólidos Totales Totales,mg/L,false,,false,F05
+STV,Sólidos Totales Volátiles,mg/L,false,,false,F05
+SULFUROS_SOL,Sulfuros Solubles,mg/L,false,,false,F05
+SULFUROS_TOT,Sulfuros (H2S),mg/L,false,,true,F05
+TALIO,Talio Total,mg/L,false,,false,F05
+TALIO_SOL,Talio Soluble,mg/L,false,,false,F05
+TEMP_AGUA,Temperatura agua,°C,true,TEMP,true,F05
+TEMP_AGUA_0.5,Temperatura Prof. 0.5 m.,°C,false,,false,F05
+TEMP_AGUA_1,Temperatura Prof. 1 m.,°C,false,,false,F05
+TEMP_AGUA_10,Temperatura Prof. 10 m.,°C,false,,false,F05
+TEMP_AGUA_11,Temperatura Prof. 11 m.,°C,false,,false,F05
+TEMP_AGUA_12,Temperatura Prof. 12 m.,°C,false,,false,F05
+TEMP_AGUA_13,Temperatura Prof. 13 m.,°C,false,,false,F05
+TEMP_AGUA_14,Temperatura Prof. 14 m.,°C,false,,false,F05
+TEMP_AGUA_15,Temperatura Prof. 15 m.,°C,false,,false,F05
+TEMP_AGUA_16,Temperatura Prof. 16 m.,°C,false,,false,F05
+TEMP_AGUA_17,Temperatura Prof. 17 m.,°C,false,,false,F05
+TEMP_AGUA_18,Temperatura Prof. 18 m.,°C,false,,false,F05
+TEMP_AGUA_19,Temperatura Prof. 19 m.,°C,false,,false,F05
+TEMP_AGUA_2,Temperatura Prof. 2 m.,°C,false,,false,F05
+TEMP_AGUA_20,Temperatura Prof. 20 m.,°C,false,,false,F05
+TEMP_AGUA_21,Temperatura Prof. 21 m.,°C,false,,false,F05
+TEMP_AGUA_22,Temperatura Prof. 22 m.,°C,false,,false,F05
+TEMP_AGUA_23,Temperatura Prof. 23 m.,°C,false,,false,F05
+TEMP_AGUA_24,Temperatura Prof. 24 m.,°C,false,,false,F05
+TEMP_AGUA_25,Temperatura Prof. 25 m.,°C,false,,false,F05
+TEMP_AGUA_26,Temperatura Prof. 26 m.,°C,false,,false,F05
+TEMP_AGUA_27,Temperatura Prof. 27 m.,°C,false,,false,F05
+TEMP_AGUA_28,Temperatura Prof. 28 m.,°C,false,,false,F05
+TEMP_AGUA_29,Temperatura Prof. 29 m.,°C,false,,false,F05
+TEMP_AGUA_3,Temperatura Prof. 3 m.,°C,false,,false,F05
+TEMP_AGUA_30,Temperatura Prof. 30 m.,°C,false,,false,F05
+TEMP_AGUA_31,Temperatura Prof. 31 m.,°C,false,,false,F05
+TEMP_AGUA_32,Temperatura Prof. 32 m.,°C,false,,false,F05
+TEMP_AGUA_33,Temperatura Prof. 33 m.,°C,false,,false,F05
+TEMP_AGUA_34,Temperatura Prof. 34 m.,°C,false,,false,F05
+TEMP_AGUA_4,Temperatura Prof. 4 m.,°C,false,,false,F05
+TEMP_AGUA_5,Temperatura Prof. 5 m.,°C,false,,false,F05
+TEMP_AGUA_6,Temperatura Prof. 6 m.,°C,false,,false,F05
+TEMP_AGUA_7,Temperatura Prof. 7 m.,°C,false,,false,F05
+TEMP_AGUA_8,Temperatura Prof. 8 m.,°C,false,,false,F05
+TEMP_AGUA_9,Temperatura Prof. 9 m.,°C,false,,false,F05
+TEMP_AGUA_FON,Temperatura agua fondo,°C,false,,false,F05
+TEMP_AGUA_MED,Temperatura agua media,°C,false,,false,F05
+TEMP_AGUA_SUP,Temperatura agua superficie,°C,false,,false,F05
+TEMP_AMB,Temperatura ambiente,°C,true,,false,F05
+TER-BUTILBENCENO,Ter-Bultibenceno,mg/L,false,,false,F05
+TETRACLOROETILENO_,Tetracloroeteno (Tetracloroetileno),mg/L,false,,false,F05
+TETRACL_CARB,Tetracloruro de Carbono,mg/L,false,,false,F05
+THMs,Trihalometanos Totales,mg/L,false,,false,F05
+TOLUENO,Tolueno,mg/L,false,,false,F05
+TOXAFENO,Toxafeno,mg/L,false,,false,F05
+TOX_D_48_FON_UT,"Toxicidad Daphnia magna, Fondo, 48 h",UT,false,,false,F05
+TOX_D_48_SUP_UT,"Toxicidad Daphnia magna, Superficial, 48 h",UT,false,,false,F05
+TOX_D_48_UT,"Toxicidad Daphnia magna, 48 h",UT,false,TOX_D,true,F05
+TOX_FIS_FON_15_UT,"Toxicidad Vibrio fischeri Fondo, 15min",UT,false,,false,F05
+TOX_FIS_FON_30_UT,"Toxicidad Vibrio fischeri Fondo, 30min",UT,false,,false,F05
+TOX_FIS_FON_5_UT,"Toxicidad Vibrio fischeri Fondo, 5min",UT,false,,false,F05
+TOX_FIS_SUP_15_UT,"Toxicidad Vibrio fischeri Superficial, 15min",UT,false,,false,F05
+TOX_FIS_SUP_30_UT,"Toxicidad Vibrio fischeri Superficial, 30min",UT,false,,false,F05
+TOX_FIS_SUP_5_UT,"Toxicidad Vibrio fischeri Superficial, 5min",UT,false,,false,F05
+TOX_V_15_UT,Toxicidad Vibrio fischeri 15min UT,UT,false,TOX_V,true,F05
+TOX_V_30_UT,"Toxicidad Vibrio fischeri, 30min",UT,false,,false,F05
+TOX_V_5_UT,Toxicidad Vibrio fischeri 5min UT,UT,false,,false,F05
+TRANS-CLORDANO,Trans-Clordano,mg/L,false,,false,F05
+TRANSPARENCIA,Transparencia disco de Secchi,m,true,,false,F05
+"TRANS_1,2_DICLOROETILENO","Trans-1,2-Dicloroetileno",mg/L,false,,false,F05
+TRICLOROETILENO,Tricloroetileno,mg/L,false,,false,F05
+TRICLOROFLUOROMETANO,Triclorofluorometano,mg/L,false,,false,F05
+TURBIEDAD,Turbiedad,UNT,true,TURB,true,F05
+XILEN_ISOMEROS,Mezcla de Isómeros de Xilenos,mg/L,false,,false,F05
+ZN_SOL,Zinc Soluble,mg/L,false,,false,F05
+ZN_TOT,Zinc Total,mg/L,false,,true,F05
+pH_CAMPO,Potencial de Hidrógeno,UpH,true,PH,true,F05
+pH_CAMPO_FON,Potencial de Hidrógeno fondo,UpH,true,,false,F05
+pH_CAMPO_MED,Potencial de Hidrógeno media,UpH,true,,false,F05
+pH_CAMPO_SUP,Potencial de Hidrógeno superficie,UpH,true,,false,F05
