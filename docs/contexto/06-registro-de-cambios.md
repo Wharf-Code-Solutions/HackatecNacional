@@ -21,6 +21,20 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Módulo B (cambio de rumbo): el panel se organiza por escuelas
+
+**Qué cambió.** El panel tiene cuatro pestañas: Escuelas (abre por defecto; lista por índice de riesgo), Alertas,
+Autorizaciones (trámites por escuela) y Reportes ciudadanos. Lee `escuelas.json` y `zonas_riesgo.geojson`
+(`copiar-datos.mjs`, `datos.js`; si faltan, listas vacías). La vista de alertas ya no muestra el mapa de la red, la
+matriz ni la tabla de estaciones del Atoyac, y el expediente ya no muestra "Hasta dónde llega" ni "Aguas arriba":
+el código se conserva (docs/19 §6). Título, pie y `<title>` hablan de escuelas en riesgo y del reto CAPCEE.
+**Por qué.** Paso 1 del módulo B (docs/19 §6): la unidad del panel es la escuela.
+**Qué arrastró.** `App.jsx`, `Escuelas.jsx` y `Autorizaciones.jsx` nuevos, `Expediente.jsx`, `datos.js`,
+`copiar-datos.mjs`, `index.html`. Probado con las 400 escuelas reales sin cambiar código.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
 ## 2026-11-24 · Módulo A: los 5 mecanismos se reubican junto a escuelas rurales
 
 **Qué cambió.** `scripts/99_reubicacion.py` escribe `contrato/fixtures/mecanismos.json` y `datos/procesados/mapa/red_mecanismos.geojson`:

@@ -40,7 +40,10 @@ export function useDatosFijos() {
       fetch(base + 'sitio_pares.csv').then((r) => r.text()),
       getJSON(base + 'sitios.geojson'),
       getJSON(base + 'rios.json'),
-    ]).then(([est, lb, abajo, pares, geo, rios]) => {
+      // Escuelas y zonas (docs/19 §4): si faltan, el panel sigue con listas vacias.
+      getJSON(base + 'escuelas.json').catch(() => []),
+      getJSON(base + 'zonas_riesgo.geojson').catch(() => ({ type: 'FeatureCollection', features: [] })),
+    ]).then(([est, lb, abajo, pares, geo, rios, esc, zonas]) => {
       const estaciones = Object.fromEntries(est.estaciones.map((e) => [e.c_estacion, e]));
       const lineaBase = {};
       lb.linea_base.forEach((r) => {
@@ -54,7 +57,8 @@ export function useDatosFijos() {
       // Coordenadas de los 219 sitios oficiales, para el mapa y la pluma.
       const sitios = Object.fromEntries(geo.features.map((f) => [f.properties.c_sitio,
         { lon: f.geometry.coordinates[0], lat: f.geometry.coordinates[1], nombre: f.properties.nombre, municipio: f.properties.municipio }]));
-      setDatos({ estaciones, lineaBase, nombresSitio, pares: listaPares, sitios, rios: rios.lineas });
+      const escuelas = (Array.isArray(esc) ? esc : esc.escuelas || []).filter((e) => e && e.cct);
+      setDatos({ estaciones, lineaBase, nombresSitio, pares: listaPares, sitios, rios: rios.lineas, escuelas, zonas });
     }).catch((e) => setError(e.message));
   }, []);
   return { datos, error };

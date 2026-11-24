@@ -203,16 +203,8 @@ export default function Expediente({ alerta, alertas, veredictos, motor, guardar
       <section className="bloque"><h3>Fuente probable</h3><Fuente f={a.fuente_probable} motor={motor} /></section>
       <section className="bloque"><h3>Medidas sugeridas</h3><Medidas ms={a.medidas_sugeridas} /></section>
 
-      <section className="bloque">
-        <h3>Hasta dónde llega</h3>
-        <Prediccion alerta={a} unidad={unidad(a)} obtener={prediccion}
-          sinPrediccion={<TablaRed sitio={a.c_sitio || e.c_sitio} sentido="abajo" />} />
-      </section>
-
-      <section className="bloque">
-        <h3>Aguas arriba del punto</h3>
-        <TablaRed sitio={a.c_sitio || e.c_sitio} sentido="arriba" />
-      </section>
+      {/* Cambio de rumbo (docs/19 §6): la llegada aguas abajo y los sitios aguas arriba del Atoyac no
+          aparecen en la vista nueva. Prediccion y TablaRed se conservan en el código. */}
     </article>
   );
 }

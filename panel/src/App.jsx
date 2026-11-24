@@ -3,18 +3,25 @@ import { Datos, ayudantes } from './lib/contexto.js';
 import { useBackend, useDatosFijos } from './lib/datos.js';
 import { hora, porAtender } from './lib/formato.js';
 import { REPORTE_ABIERTO } from './lib/etiquetas.js';
+import Autorizaciones from './componentes/Autorizaciones.jsx';
 import Avisos from './componentes/Avisos.jsx';
+import Escuelas from './componentes/Escuelas.jsx';
 import Expediente from './componentes/Expediente.jsx';
 import ListaAlertas from './componentes/ListaAlertas.jsx';
 import Panorama from './componentes/Panorama.jsx';
 import Reportes from './componentes/Reportes.jsx';
 import Resumen from './componentes/Resumen.jsx';
-import TablaEstaciones from './componentes/TablaEstaciones.jsx';
 import Tooltip from './componentes/Tooltip.jsx';
 
-// Dos paneles en uno: lo que mide el prototipo (alertas de las estaciones) y la gestión de lo que reportan las personas.
+// Cambio de rumbo (docs/19 §6): la unidad es la escuela. Escuelas en riesgo, alertas de los mecanismos,
+// autorizaciones de CEASPUE y CAPCEE, y la gestión de lo que reportan las personas.
 // [id, nombre corto, resto]: en el teléfono la barra solo muestra el nombre corto.
-const SECCIONES = [['monitoreo', 'Monitoreo', ' del prototipo'], ['reportes', 'Reportes', ' ciudadanos']];
+const SECCIONES = [['escuelas', 'Escuelas', ''], ['monitoreo', 'Alertas', ''], ['autorizaciones', 'Autorizaciones', ''], ['reportes', 'Reportes', ' ciudadanos']];
+const BAJADA = {
+  escuelas: 'Escuelas rurales en riesgo de contaminación o derrumbe: cuáles atender primero y por qué.',
+  monitoreo: 'Alertas de los mecanismos de calidad del agua: qué se midió, de dónde pudo venir y quién la atiende.',
+  autorizaciones: 'Lo que falta autorizar a CEASPUE y CAPCEE. Un mecanismo sin autorización de CEASPUE sigue como propuesto.',
+};
 const VISTAS = [['alertas', 'Alertas'], ['avisos', 'Avisos técnicos']];
 
 // Hora del dato más reciente recibido: es el corte de todo lo que se muestra (I12).
@@ -37,7 +44,7 @@ export default function App() {
   const codigos = useMemo(() => (fijos ? Object.keys(fijos.estaciones).sort() : []), [fijos]);
   const be = useBackend(codigos);
   const ctx = useMemo(() => (fijos ? ayudantes(fijos) : null), [fijos]);
-  const [seccion, setSeccion] = useState('monitoreo');
+  const [seccion, setSeccion] = useState('escuelas');
   const [vista, setVista] = useState('alertas');
   const [sel, setSel] = useState(null);
   const [filtros, setFiltros] = useState({ estado: 'activas', nivel: 'todos', estacion: 'todas' });
@@ -48,6 +55,7 @@ export default function App() {
   const conteo = { alertas: activas, avisos: nAvisos };
   const reportesAbiertos = be.reportes.filter((x) => REPORTE_ABIERTO(x.estado)).length;
   const conteoSeccion = { monitoreo: activas, reportes: reportesAbiertos };
+  const conPagina = seccion !== 'reportes';
   const corte = corteDe(be.alertas, be.veredictos);
   const alerta = be.alertas.find((a) => a.c_alerta === sel) || null;
 
@@ -73,7 +81,7 @@ export default function App() {
           <div className="navbar-izq">
             <img src="https://framework-gb.cdn.gob.mx/landing/img/logoheader.svg" alt="Gobierno de México" className="navbar-logo" />
             <div className="navbar-divisor" />
-            <span className="navbar-titulo">Río Atoyac · Autoridad</span>
+            <span className="navbar-titulo">Escuelas en riesgo</span>
           </div>
           <nav className="secciones" aria-label="Paneles">
             {SECCIONES.map(([id, nombre, resto]) => (
@@ -85,20 +93,16 @@ export default function App() {
         </div>
       </header>
 
-      {seccion === 'monitoreo' && (
+      {conPagina && (
       <div className="encabezado-pagina">
         <div className="contenedor">
-          <p className={claseConexion}>{conexion}</p>
-          <h1 className="titulo-panel">Panel de autoridad</h1>
+          {seccion === 'monitoreo' && <p className={claseConexion}>{conexion}</p>}
+          <h1 className="titulo-panel">{SECCIONES.find(([id]) => id === seccion)[1]}</h1>
           <p className="bajada">
-            {seccion === 'monitoreo'
-              ? <>Alertas de las {codigos.length || 5} estaciones del Alto Atoyac: qué se midió, de dónde pudo venir, hasta dónde
-                llega y quién la atiende.{corte && <> Datos al {hora(corte)}</>}</>
-              : <>Lo que reportan las personas desde la app ciudadana: dónde se concentra, qué tan urgente es cada foco y en
-                qué va su atención.</>}
+            {BAJADA[seccion]}{seccion === 'monitoreo' && corte && <> Datos al {hora(corte)}.</>}
           </p>
           {seccion === 'monitoreo' ? (
-            <nav className="subnav" aria-label="Vistas del monitoreo">
+            <nav className="subnav" aria-label="Vistas de alertas">
               {VISTAS.map(([id, nombre]) => (
                 <button key={id} className={vista === id ? 'activa' : ''} onClick={() => setVista(id)} aria-current={vista === id ? 'page' : undefined}>
                   {nombre} {conteo[id] > 0 && <span className="contador">{conteo[id]}</span>}
@@ -136,10 +140,8 @@ export default function App() {
             {seccion === 'monitoreo' && vista === 'alertas' && (
               <section className="vista">
                 <Resumen alertas={be.alertas} veredictos={be.veredictos} totalEstaciones={codigos.length} corte={corte} />
-                <Panorama parte="mapa" alertas={be.alertas} veredictos={be.veredictos} corte={corte} elegida={filtros.estacion}
-                  onElegir={(c) => setFiltros({ ...filtros, estacion: filtros.estacion === c ? 'todas' : c })} />
-                <TablaEstaciones alertas={be.alertas} veredictos={be.veredictos} elegida={filtros.estacion}
-                  onElegir={(c) => setFiltros({ ...filtros, estacion: c })} />
+                {/* Sin el mapa de la red, la matriz ni la tabla de estaciones del Atoyac (docs/19 §6): se
+                    conservan en Panorama.jsx y TablaEstaciones.jsx. */}
                 <div className="trabajo">
                   <ListaAlertas alertas={be.alertas} filtros={filtros} setFiltros={setFiltros} sel={sel}
                     onElegir={elegirAlerta} conectado={be.conectado} />
@@ -150,6 +152,8 @@ export default function App() {
               </section>
             )}
             {seccion === 'monitoreo' && vista === 'avisos' && <Avisos veredictos={be.veredictos} conectado={be.conectado} />}
+            {seccion === 'escuelas' && <Escuelas escuelas={ctx.escuelas} />}
+            {seccion === 'autorizaciones' && <Autorizaciones escuelas={ctx.escuelas} />}
             {seccion === 'reportes' && (
               <Reportes reportes={be.reportes} prioridades={be.prioridades} huella={be.huella} conectado={be.conectado}
                 guardarReporte={be.guardarReporte} refrescar={be.refrescar} demo={demo} />
@@ -158,19 +162,20 @@ export default function App() {
         )}
       </main>
 
-      {seccion === 'monitoreo' && (
+      {conPagina && (
       <footer className="pie">
         <div className="contenedor pie-rejilla">
           <div>
-            <p className="pie-titulo">Monitoreo del río Atoyac</p>
-            <p>Sistema de alerta por contaminación para la cuenca del Alto Atoyac. Prototipo para el HackaTec 2026,
-              reto SECIHTI Puebla. No es un sitio oficial del Gobierno de México.</p>
+            <p className="pie-titulo">Escuelas rurales en riesgo</p>
+            <p>Prevención de contaminación y derrumbes en escuelas rurales de Puebla. Prototipo para el HackaTec 2026,
+              reto CAPCEE. No es un sitio oficial del Gobierno de México, de CAPCEE ni de CEASPUE.</p>
           </div>
           <div>
             <p className="pie-titulo">Fuentes de datos</p>
             <ul>
               <li>CONAGUA, Red Nacional de Medición de Calidad del Agua, 2012 a 2025</li>
-              <li>INEGI, Red hidrográfica 1:50 000 y DENUE</li>
+              <li>INEGI, Red hidrográfica 1:50 000, DENUE y censo 2020 por localidad</li>
+              <li>Escuelas y zonas de riesgo: provisionales, ilustrativas</li>
             </ul>
           </div>
           <div>
