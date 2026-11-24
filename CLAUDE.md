@@ -35,7 +35,8 @@ después el **análisis**. Las vistas actuales no anuncian el análisis en panta
 | M1 topología (orden aguas arriba → abajo) | **Construida** (`scripts/70_topologia_red.py` → `datos/procesados/red/`): 210 de 219 sitios con sucesor y distancia sobre el cauce; 14 marcados para revisión |
 | M2 motor de reglas | **Construido** (`motor/reglas.py`): 0 alertas en el día de control contra 31 del stub, 0 ambientales con el sensor roto, los tres eventos detectados antes de su intensidad plena y su fuente bien clasificada. `servidor_mock.py --motor real` lo usa |
 | M3 propagación | **Construida** (`scripts/80_propagacion.py`): transporte conservativo con k = 0, porque la razón medida abajo/arriba en 90 tramos tiene mediana 1.00. Ventana de llegada por velocidad declarada 0.3-1.0 m/s; valor como banda p10-p90; cobertura 78 % fuera de muestra |
-| M5 backend, M7 panel, M8 app, M9, M10 | Pendientes |
+| M7 panel de autoridad | **Prototipo** (`panel/`): alertas con evidencia y gráficas, estado y responsable vía `PATCH /alertas/<c_alerta>`; aún no muestra la predicción de M3 ni pide sesión |
+| M5 backend, M8 app, M9, M10 | Pendientes |
 
 No conviertas "pendiente" en "construido" sin verificarlo contra el repo.
 
@@ -94,6 +95,7 @@ python contrato/servidor_mock.py
 ```
 
 - Mapa: `http://127.0.0.1:8000/mapa/`
+- Panel de autoridad: `http://127.0.0.1:8000/panel/` (para ver alertas: `python contrato/reproducir_escenario.py descarga_industrial`)
 - Simulador solo: `http://127.0.0.1:8000/dispositivo/simulador/`
 - Pruebas del firmware: `node dispositivo/simulador/prueba.js`
 - Validar paquetes del simulador: `python contrato/validador.py lectura $env:TEMP\paquetes_simulador.json`
@@ -130,6 +132,8 @@ El usuario rechazó explícitamente el diseño con aspecto "hecho por IA" y lo h
   real, filetes en lugar de tarjetas, jerarquía clara, tipografía Public Sans. Solo se mueve lo que cambia
   con el dato.
 - Le gusta ver los componentes del dispositivo descritos dentro de la figura, sin separarlos en otra sección.
+- **Excepción, el panel de autoridad (`panel/`)**: usa el Sistema Nacional de Diseño del gobierno (snd.gob.mx),
+  tema guinda, Noto Sans; los niveles de alerta van en rojo, amarillo y azul semánticos del SND (D22).
 - Toda cifra mostrada lleva su `n` y su fecha (I12). "Sin dato" es un estado visible, no un hueco (I13).
 
 ## Trampas conocidas

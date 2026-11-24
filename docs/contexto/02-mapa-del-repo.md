@@ -57,6 +57,18 @@ estaciones leyendo `GET /alertas` del backend. Se sirve desde la raíz del repo.
 
 ---
 
+## `panel/` — prototipo de M7
+
+| Ruta | Qué es | Editable |
+|---|---|---|
+| `panel/index.html`, `panel.js`, `estilos.css` | Panel de autoridad: lista de alertas con su evidencia (banda histórica con `n` y fechas), fuente probable, medidas, sitios aguas abajo y aguas arriba; cambia estado y responsable. Avisos técnicos y reportes ciudadanos en pestañas aparte | sí |
+
+El panel **no evalúa nada**: lee `GET /alertas`, `GET /veredictos`, `GET /reportes` y escribe
+con `PATCH /alertas/<c_alerta>`. Por su cuenta solo lee tablas publicadas: la línea base del
+contrato y `datos/procesados/red/sitio_pares.csv`. Se sirve desde la raíz del repo.
+
+---
+
 ## `dispositivo/` — módulo M4
 
 | Ruta | Qué es | Fuente de verdad de | Editable |

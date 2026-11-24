@@ -402,3 +402,32 @@ restringirse a las URL de la demo en la cuenta de Mapbox. En la primera prueba, 
 (`mapbox.satellite`) respondió 429 a todas las teselas mientras el estilo y el relieve cargaban.
 Por eso la casilla "Satélite" usa Esri World Imagery (sin llave) con cualquiera de las dos
 bibliotecas; es imagen para demostración, no para uso público sin acuerdo con Esri.
+
+---
+
+## D22 · El panel de autoridad sigue el Sistema Nacional de Diseño, tema guinda
+
+**Decisión.** `panel/` usa la paleta y la tipografía del Sistema Nacional de Diseño (SND,
+snd.gob.mx): gama guinda como color principal (`--pguinda900` #611232 en cabecera y botón
+primario), dorado `--dorado600` #A57F2C solo como acento de títulos y foco, neutros del SND
+para texto y filetes, y los colores semánticos del SND para los niveles: Crítica en
+`--rojo500` #9B0F15 (error), Preventiva en `--dorado600` #A57F2C e Informativa en
+`--azul500` #224497 (info). Para Preventiva se usa el dorado y no `--amarillo500` #684700 porque
+este se confunde con el rojo en deuteranopia (ΔE 2.4 medido con el validador de paletas). Tipografía Noto Sans. Los valores se copiaron de las variables CSS
+publicadas en snd.gob.mx el 2026-11-24.
+
+**Por qué.** Es una herramienta para autoridades del gobierno federal. La Gráfica base v3 de
+gob.mx (gob.mx/guias/grafica/v3) declara que todas las plataformas deben migrar al SND, así que
+se toma el estándar vigente y no la v3. El SND pide elegir una sola gama primaria (guinda para
+proyectos federales) y no asignar significados distintos a los colores de validación.
+
+**Alternativa descartada.** La paleta de la Gráfica base v3 (#611232, #9d2449, #a57f2c…) y la de
+v1 y v2 (#9F2241, #235B4E, #691C32…): son versiones anteriores que el propio sitio manda
+migrar. Tampoco se enlaza el CSS del SND desde su CDN: trae su propia retícula y componentes, y
+el panel solo necesita los colores y la fuente.
+
+**Consecuencia.** El rojo de alerta crítica y el guinda institucional son cercanos; por eso el
+nivel siempre va escrito junto a su color y el guinda no se usa para nada que signifique
+alarma. Patria (la tipografía de encabezados del SND) no está en Google Fonts y no se usa. El
+mapa (`mapa/`) conserva por ahora su estilo anterior; si se quiere unificar, se aplica la misma
+paleta allí.

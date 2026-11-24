@@ -37,7 +37,7 @@ punta (M9).
 | M4 Dispositivo | **Simulador construido y probado; sin hardware.** Figura 3D y línea de tiempo de recepción | `dispositivo/` |
 | M5 Backend | Pendiente. Puede empezarse contra el contrato | — |
 | M6 Mapa | **Prototipo**: cuenca delimitada y confluencias (aún no colorea por índice ni está probado a ancho de teléfono) | `mapa/` |
-| M7 Panel de autoridad | Pendiente | — |
+| M7 Panel de autoridad | **Prototipo.** Lista alertas con evidencia y gráficas, cambia estado y responsable; aún no muestra la predicción de M3 ni pide sesión | `panel/` |
 | M8 App ciudadana | Pendiente | — |
 | M9 Integración | Pendiente | — |
 | M10 Documentación y costos | En curso; faltan costos, manual por usuario y propuesta por fases | `docs/` |
@@ -96,6 +96,7 @@ python contrato/servidor_mock.py
 ```
 
 - Mapa: `http://127.0.0.1:8000/mapa/`
+- Panel de autoridad: `http://127.0.0.1:8000/panel/`
 - Simulador: `http://127.0.0.1:8000/dispositivo/simulador/`
 - Pruebas del firmware: `node dispositivo/simulador/prueba.js`
 - Verificación del repositorio, antes de entregar cualquier cambio: `python -I scripts/50_verificar_repo.py`

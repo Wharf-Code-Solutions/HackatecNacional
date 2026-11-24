@@ -45,8 +45,9 @@ día entero de lecturas de cinco estaciones con una descarga industrial inyectad
 | GET | `/escenarios` | nombres de los escenarios disponibles |
 | GET | `/escenarios/<nombre>` | los paquetes de lecturas de ese escenario |
 | POST | `/lecturas` | valida contra el esquema y evalúa; acepta un objeto o un arreglo |
-| GET | `/veredictos` | los últimos 50 veredictos emitidos |
+| GET | `/veredictos` | los últimos 50 veredictos emitidos; `?c_estacion=` los filtra por estación |
 | GET | `/alertas` | alertas generadas |
+| PATCH | `/alertas/<c_alerta>` | cambia `estado` y `responsable`; cualquier otro campo da 422 (lo usa el panel M7) |
 | POST | `/reportes` | reporte ciudadano (rechaza fotos con EXIF) |
 | GET | `/reportes` | reportes sin el campo `correo` |
 

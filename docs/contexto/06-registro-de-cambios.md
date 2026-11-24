@@ -21,6 +21,76 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · M7: gráficas en el panel y arreglo de las pestañas
+
+**Qué cambió.** El panel suma un panorama de cinco gráficas arriba de la lista: alertas por
+hora del día apiladas por nivel, una matriz estación × sonda con la posición de la última
+lectura en la banda del sitio (sobre, dentro, bajo; viene de `posicion_en_banda` del
+veredicto), alertas por atender por estación, alertas por parámetro y el avance de la
+atención (abiertas, en atención, cerradas, descartadas). En el expediente se agregan
+miniaturas de las cinco sondas de la estación contra su banda. Las pestañas de avisos y
+reportes tienen su gráfica. Todas llevan tooltip, leyenda y nivel escrito, nunca solo color.
+Se arregló que las pestañas no cambiaban: el JS buscaba la clase `.vistas` que el rediseño
+renombró a `.subnav`.
+
+**Colores de las gráficas.** Niveles: Crítica #9B0F15, Preventiva #A57F2C (dorado600 del
+SND; el amarillo500 #684700 del SND se confunde con el rojo en deuteranopia, ΔE 2.4),
+Informativa #224497. Validado con el script de paletas: separación para daltonismo ΔE ≥ 17 y
+contraste ≥ 3:1; el azul queda más oscuro que la banda recomendada, compensado con etiqueta.
+
+**Qué arrastró.** `panel/README.md`, D22 en `05-decisiones-tecnicas.md`.
+
+**Impacto en otros módulos.** Ninguno.
+
+---
+
+## 2026-11-24 · M7: el panel adopta el Sistema Nacional de Diseño y se rediseña
+
+**Qué cambió.** `panel/` cambia a la paleta y tipografía del SND, tema guinda (decisión D22), y
+se reorganiza: cabecera institucional, resumen arriba (críticas por atender, por atender, sin
+responsable, estaciones con falla técnica, con su hora de corte), tabla de las 5 estaciones
+que filtra la lista al hacer clic, y en el expediente tres cifras clave (valor medido, banda
+habitual con su `n`, lecturas seguidas fuera) antes de la gráfica. La gráfica se dibuja al
+ancho real para que se lea en teléfono.
+
+**Por qué.** El panel es para autoridades federales y la guía gráfica de gob.mx manda migrar al
+SND. El diseño anterior no le gustó al equipo.
+
+**Qué arrastró.** `05-decisiones-tecnicas.md` (D22), `panel/README.md`, `CLAUDE.md`.
+
+**Impacto en otros módulos.** Ninguno en el contrato. Si M6 y M8 quieren verse igual, D22 dice
+qué valores usar.
+
+---
+
+## 2026-11-24 · M7: prototipo del panel de autoridad y PATCH /alertas en el mock
+
+**Qué cambió.** Nueva carpeta `panel/` (HTML, CSS y JS sin dependencias, mismo estilo que
+el mapa). Lista las alertas con filtros por estado, nivel y estación; el expediente de cada
+una muestra regla, criterio, lecturas seguidas, la banda p10 a p90 del sitio con su `n` y sus
+fechas, una gráfica de las lecturas recientes contra esa banda, fuente probable, medidas
+sugeridas y los sitios aguas abajo y aguas arriba con distancia sobre el cauce (M1). Permite
+cambiar estado y asignar responsable. Avisos técnicos y reportes ciudadanos van en pestañas
+separadas (I8). En el mock: `PATCH /alertas/<c_alerta>` (solo `estado` y `responsable`,
+validado contra `alerta.schema.json`) y filtro `?c_estacion=` en `GET /veredictos`.
+
+**Por qué.** El criterio de terminado de M7 pide cambiar estado y asignar responsable, y el
+mock no tenía cómo escribir una alerta. El filtro por estación hace falta porque los últimos
+50 veredictos globales cubren unas 2.5 h por estación, poco para ver la evidencia.
+
+**Qué arrastró.** Tabla de rutas de `contrato/README.md`, `02-mapa-del-repo.md`,
+`12-estado-y-traspaso.md` y `CLAUDE.md`. El esquema `alerta` no cambia: `estado` y
+`responsable` ya existían.
+
+**Lo que falta para terminar M7.** Predicción de llegada (espera a M3: hoy se dice "sin
+predicción" y se lista la topología), fuente probable con puntaje (el stub no la calcula),
+sesión de usuario y la ruta equivalente en el backend real (M5).
+
+**Impacto en otros módulos.** M5 debe implementar `PATCH /alertas/<c_alerta>` con la misma
+regla: solo `estado` y `responsable`, 422 para lo demás. El resto de frontends, ninguno.
+
+---
+
 ## 2026-11-24 · Mapbox opcional por token
 
 **Qué cambió.** Con `mapa/config.js` el mapa usa Mapbox GL JS (estilo claro y relieve); sin él,

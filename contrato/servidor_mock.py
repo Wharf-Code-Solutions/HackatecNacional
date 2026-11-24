@@ -22,8 +22,9 @@ Rutas:
     GET  /escenarios                 lista de escenarios disponibles
     GET  /escenarios/<nombre>        paquetes de lecturas de ese escenario
     POST /lecturas                   valida contra el esquema y evalua
-    GET  /veredictos                 ultimos veredictos emitidos
-    GET  /alertas                    alertas abiertas
+    GET  /veredictos                 ultimos veredictos emitidos (?c_estacion= filtra)
+    GET  /alertas                    alertas generadas
+    PATCH /alertas/<c_alerta>        cambia estado y responsable (panel de autoridad)
     POST /reportes                   reporte ciudadano
     GET  /reportes
 """
@@ -35,7 +36,7 @@ import sys
 from collections import defaultdict, deque
 from datetime import datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 FIX = os.path.join(AQUI, 'fixtures')
@@ -44,6 +45,9 @@ from validador import cargar_esquema, validar          # noqa: E402
 
 ESQ_LECTURA = cargar_esquema('lectura')
 ESQ_REPORTE = cargar_esquema('reporte_ciudadano')
+ESQ_ALERTA = cargar_esquema('alerta')
+# Lo unico que la autoridad cambia de una alerta. El resto lo decide el motor.
+CAMPOS_GESTION = ('estado', 'responsable')
 
 # El motor real de M2 vive en motor/reglas.py y se carga solo si se pide con
 # --motor real. Por omision se usa el stub, que es la linea base medida contra
@@ -175,7 +179,7 @@ class Manejador(BaseHTTPRequestHandler):
         self.send_header('Content-Length', str(len(datos)))
         self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Access-Control-Allow-Headers', 'Content-Type')
-        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, PATCH, OPTIONS')
         self.end_headers()
         self.wfile.write(datos)
 
@@ -209,7 +213,9 @@ class Manejador(BaseHTTPRequestHandler):
                 return self._responder(404, {'error': 'escenario no encontrado'})
             return self._responder(200, leer_json(ruta_f))
         if ruta == '/veredictos':
-            return self._responder(200, {'veredictos': list(VEREDICTOS)[-50:]})
+            est = parse_qs(urlparse(self.path).query).get('c_estacion', [None])[0]
+            lista = [v for v in VEREDICTOS if not est or v['c_estacion'] == est]
+            return self._responder(200, {'veredictos': lista[-50:]})
         if ruta == '/alertas':
             return self._responder(200, {'alertas': ALERTAS})
         if ruta == '/reportes':
@@ -281,6 +287,33 @@ class Manejador(BaseHTTPRequestHandler):
                                          'estado': cuerpo['estado']})
 
         return self._responder(404, {'error': 'ruta no encontrada', 'ruta': ruta})
+
+    def do_PATCH(self):
+        ruta = urlparse(self.path).path.rstrip('/') or '/'
+        m = re.match(r'^/alertas/([A-Z0-9-]+)$', ruta)
+        if not m:
+            return self._responder(404, {'error': 'ruta no encontrada', 'ruta': ruta})
+        alerta = next((a for a in ALERTAS if a['c_alerta'] == m.group(1)), None)
+        if alerta is None:
+            return self._responder(404, {'error': 'alerta no encontrada'})
+        cuerpo, problema = self._leer_cuerpo()
+        if problema:
+            return self._responder(400, {'error': problema})
+        if not isinstance(cuerpo, dict):
+            return self._responder(422, {'error': 'se espera un objeto'})
+        ajenos = sorted(set(cuerpo) - set(CAMPOS_GESTION))
+        if ajenos:
+            return self._responder(422, {
+                'error': 'solo se pueden cambiar estado y responsable',
+                'detalles': ajenos})
+        if isinstance(cuerpo.get('responsable'), str):
+            cuerpo['responsable'] = cuerpo['responsable'].strip() or None
+        nueva = dict(alerta, **cuerpo)
+        e = validar(nueva, ESQ_ALERTA)
+        if e:
+            return self._responder(422, {'error': 'contrato no cumplido', 'detalles': e})
+        alerta.update(cuerpo)
+        return self._responder(200, alerta)
 
 
 def main():
