@@ -40,6 +40,8 @@ from almacen import Almacen, es_postgres, huella   # noqa: E402
 from propagacion import Propagacion                 # noqa: E402
 from asignacion import Asignador               # noqa: E402
 import correo                                   # noqa: E402
+import antispam                                 # noqa: E402
+import time                                     # noqa: E402
 
 VERSION_CONTRATO = '1.0'
 # Lo unico que la autoridad cambia de una alerta. El resto lo decide el motor.
@@ -115,6 +117,7 @@ def motor_de_estacion(almacen, c_estacion):
 
 def crear_app(url=None):
     url, persistencia = url_base(url)
+    sal = antispam.sal_de(url)      # para la huella de la IP en el freno antispam
     estaciones = TABLAS_MOTOR['estaciones']
     # Se crea al llegar la primera peticion, no al importar: en Vercel el modulo se
     # importa al compilar, sin base disponible.
@@ -221,11 +224,20 @@ def crear_app(url=None):
         return prioridad_huella.prioridades(a.reportes(), a.alertas())
 
     @app.get('/reportes/{c_reporte}')
-    def get_reporte(c_reporte: str):
+    def get_reporte(c_reporte: str, request: Request):
         # Consulta de folio para la app ciudadana (M8). Devuelve un solo reporte
         # para no obligarla a descargar todos. El correo no sale, igual que en
         # la lista: es solo para avisar del cierre.
-        r = ctx()['almacen'].reporte(c_reporte)
+        almacen = ctx()['almacen']
+        # 20 consultas por minuto por persona, como SIGRIV: que no se puedan probar folios en masa
+        quien = antispam.origen(request, sal)
+        with almacen.transaccion('envio:' + quien):
+            mensaje = antispam.excede(almacen, 'rastreo', quien)
+            if not mensaje:
+                almacen.registrar_envio('rastreo', quien, time.time())
+        if mensaje:
+            return error(429, {'error': 'demasiadas solicitudes', 'detalle': mensaje})
+        r = almacen.reporte(c_reporte)
         if r is None:
             return error(404, {'error': 'folio no encontrado',
                                'detalle': 'revisa que este completo, con el formato '
@@ -371,7 +383,20 @@ def crear_app(url=None):
             if not cuerpo['exif_removido']:
                 return error(409, {'error': 'la foto conserva metadatos EXIF',
                                    'detalle': 'quita el EXIF antes de enviar: lleva coordenadas y modelo del telefono'})
+            # Freno antispam (antispam.py), después de validar: un cuerpo inválido recibe el mismo error que en el mock.
+            quien, ahora = antispam.origen(request, sal), time.time()
+            mensaje = antispam.excede(almacen, 'reportes', quien, ahora)
+            if mensaje:
+                return error(429, {'error': 'demasiadas solicitudes', 'detalle': mensaje})
+            previo = antispam.repetido(almacen, quien, cuerpo, ahora)
+            if previo:
+                # Misma persona, mismo tipo, mismo punto, hace poco: no se crea otro reporte, se le devuelve su folio
+                anterior = almacen.reporte(previo) or {}
+                return JSONResponse({'c_reporte': previo, 'estado': anterior.get('estado', 'Recibido'), 'repetido': True,
+                                     'detalle': 'Ya recibimos tu reporte de este mismo problema aquí hace poco; '
+                                                'este es su folio.'}, status_code=200)
             almacen.guardar_reporte(cuerpo)
+            almacen.registrar_envio('reportes', quien, ahora, cuerpo['latitud'], cuerpo['longitud'], cuerpo['tipo'], cuerpo['c_reporte'])
         return JSONResponse({'c_reporte': cuerpo['c_reporte'], 'estado': cuerpo['estado']}, status_code=201)
 
     return app

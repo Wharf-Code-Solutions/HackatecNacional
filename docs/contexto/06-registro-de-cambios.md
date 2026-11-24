@@ -21,6 +21,23 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · M5 y M8: freno a los reportes repetidos de una misma persona
+
+**Qué cambió.** `backend/antispam.py` y la tabla `envio`. Por persona (huella SHA-256 de la IP con sal secreta; la IP no se
+guarda): más de 5 reportes por minuto dan 429; el mismo tipo a menos de 150 m en 30 minutos no crea otro reporte, responde 200
+con `repetido: true` y el folio anterior; más de 20 consultas de folio por minuto dan 429. La app muestra «Ya teníamos tu
+reporte» con el mismo folio, o el mensaje de espera; en la cola sin señal un 429 se reintenta y no se pierde.
+**Por qué.** SIGRIV frenaba 5 reportes por minuto por IP, pero en memoria, que en Vercel se reinicia en cada instancia. Aquí
+`POST /reportes` no tenía freno: una persona podía mandar el mismo reporte muchas veces y cada uno contaba como corroboración
+ciudadana de su propio foco (D30).
+**Qué arrastró.** `backend/README.md`, `CLAUDE.md`, `backend/prueba.py` (prueba 9, 10 comprobaciones; la 8 ahora manda cada
+reporte desde otra IP). Probado en la app: el segundo envío igual devuelve el mismo folio y el sexto del minuto pide esperar.
+**Impacto en otros módulos.** Ninguno en el contrato: el freno va después de validar, así que el mock y el backend siguen
+rechazando igual. Límite conocido: personas que comparten IP (datos móviles, wifi de una escuela) que reporten el mismo tipo
+en el mismo punto en 30 minutos quedan como un solo reporte.
+
+---
+
 ## 2026-11-24 · M5: aviso por correo al cerrar un reporte ciudadano
 
 **Qué cambió.** `backend/correo.py`: al pasar un reporte a «Cerrado» por primera vez, el backend avisa por SMTP a quien

@@ -101,6 +101,13 @@ Las del contrato (`contrato/README.md`) más una:
   `no_configurado`, `fallido` o `no_aplica`) y el cuerpo sigue igual al del mock. Un correo que falla no
   deshace el cierre. `/salud` dice `"aviso_por_correo": true` si hay credenciales. La prueba 8 lo cubre
   con un SMTP falso.
+- **Freno antispam** (`antispam.py`), como el de SIGRIV pero guardado en la base (tabla `envio`), porque en
+  Vercel un contador en memoria se reinicia en cada instancia. Por persona (huella SHA-256 de la IP con
+  una sal secreta, nunca la IP; la sal es `ANTISPAM_SECRETO` o, si no existe, la cadena de la base):
+  más de 5 reportes en un minuto dan 429; el mismo tipo a menos de 150 m en 30 minutos no crea otro
+  reporte y responde 200 con `repetido: true` y el folio anterior; más de 20 consultas de folio por
+  minuto dan 429. Va después de validar el contrato, así que los rechazos siguen iguales a los del mock.
+  Los registros se borran a la hora. La prueba 9 lo cubre.
 
 ## Desplegarlo en Vercel (mismo proyecto que el panel)
 

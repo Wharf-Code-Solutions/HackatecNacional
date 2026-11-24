@@ -25,7 +25,7 @@ import threading
 import time
 from contextlib import contextmanager
 
-TABLAS = ('lectura', 'veredicto', 'alerta', 'reporte')
+TABLAS = ('lectura', 'veredicto', 'alerta', 'reporte', 'envio')
 
 ESQUEMA_SQLITE = """
 CREATE TABLE IF NOT EXISTS lectura (
@@ -55,6 +55,18 @@ CREATE TABLE IF NOT EXISTS reporte (
     c_reporte TEXT NOT NULL UNIQUE,
     reporte TEXT NOT NULL
 );
+CREATE TABLE IF NOT EXISTS envio (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    cubeta TEXT NOT NULL,
+    origen TEXT NOT NULL,
+    momento REAL NOT NULL,
+    latitud REAL,
+    longitud REAL,
+    tipo TEXT,
+    c_reporte TEXT
+);
+CREATE INDEX IF NOT EXISTS envio_origen ON envio (cubeta, origen, momento);
+CREATE INDEX IF NOT EXISTS envio_momento ON envio (momento);
 """
 
 ESQUEMA_POSTGRES = [
@@ -81,6 +93,18 @@ ESQUEMA_POSTGRES = [
         id BIGSERIAL PRIMARY KEY,
         c_reporte TEXT NOT NULL UNIQUE,
         reporte TEXT NOT NULL)""",
+    # Freno antispam (backend/antispam.py): la huella de la IP, nunca la IP, y solo la última hora.
+    """CREATE TABLE IF NOT EXISTS envio (
+        id BIGSERIAL PRIMARY KEY,
+        cubeta TEXT NOT NULL,
+        origen TEXT NOT NULL,
+        momento DOUBLE PRECISION NOT NULL,
+        latitud DOUBLE PRECISION,
+        longitud DOUBLE PRECISION,
+        tipo TEXT,
+        c_reporte TEXT)""",
+    'CREATE INDEX IF NOT EXISTS envio_origen ON envio (cubeta, origen, momento)',
+    'CREATE INDEX IF NOT EXISTS envio_momento ON envio (momento)',
     # Supabase publica toda tabla del esquema public por su API REST, y la llave
     # "anon" que la abre no es secreta. Con RLS activo y sin politicas, esa API no
     # ve ni escribe nada; el backend entra como el dueno de las tablas y RLS no lo
@@ -89,6 +113,7 @@ ESQUEMA_POSTGRES = [
     'ALTER TABLE veredicto ENABLE ROW LEVEL SECURITY',
     'ALTER TABLE alerta ENABLE ROW LEVEL SECURITY',
     'ALTER TABLE reporte ENABLE ROW LEVEL SECURITY',
+    'ALTER TABLE envio ENABLE ROW LEVEL SECURITY',
 ]
 
 # Parametros que agregan las integraciones (Vercel + Supabase pone supa=base-pooler.x;
@@ -262,6 +287,19 @@ class Almacen:
         """Llamar dentro de transaccion('reportes')."""
         self._q('UPDATE reporte SET reporte = ? WHERE c_reporte = ?',
                 (json.dumps(reporte, ensure_ascii=False), reporte['c_reporte']))
+
+    # ------------------------------------------- freno antispam (antispam.py)
+    def registrar_envio(self, cubeta, origen, momento, latitud=None, longitud=None, tipo=None, c_reporte=None):
+        """Llamar dentro de una transaccion(). Borra de paso lo de hace más de una hora: solo sirve para la ventana."""
+        self._q('DELETE FROM envio WHERE momento < ?', (momento - 3600,))
+        self._q('INSERT INTO envio (cubeta, origen, momento, latitud, longitud, tipo, c_reporte) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                (cubeta, origen, momento, latitud, longitud, tipo, c_reporte))
+
+    def envios_recientes(self, cubeta, origen, desde):
+        """[(momento, latitud, longitud, tipo, c_reporte)] de ese origen desde `desde`. Dentro de una transaccion()."""
+        return self._q('SELECT momento, latitud, longitud, tipo, c_reporte FROM envio '
+                       'WHERE cubeta = ? AND origen = ? AND momento >= ? ORDER BY momento DESC',
+                       (cubeta, origen, desde)).fetchall()
 
     def actualizar_alerta(self, alerta):
         """Llamar dentro de transaccion()."""

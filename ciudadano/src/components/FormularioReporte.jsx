@@ -93,10 +93,12 @@ export default function FormularioReporte({ lat, lon, precision, origen, datos, 
     const r = await enviarReporte(origen, payload);
     if (r.ok) {
       guardarFolio(r.c_reporte, tipo, payload.fecha_hora);
-      setFin({ c_reporte: r.c_reporte });
+      setFin({ c_reporte: r.c_reporte, repetido: r.repetido });
       onEnviado?.();
       // Con el folio emitido, pregunta al backend a qué punto quedó asociado (orientación; no bloquea)
       if (origen.modo === 'api') getJSON(origen.url + '/reportes/' + r.c_reporte).then(setDetalle).catch(() => {});
+    } else if (r.espera) {
+      setErrorEnvio(r.texto);
     } else if (r.reintentable) {
       if (!encolar(payload)) { setErrorEnvio('No hay conexión y tampoco espacio para guardar el reporte en este teléfono.'); setEnviando(false); return; }
       onPendiente?.();
@@ -129,8 +131,10 @@ export default function FormularioReporte({ lat, lon, precision, origen, datos, 
             </>
           ) : (
             <>
-              <h3>¡Gracias por reportar!</h3>
-              <p>{nombreTipo(tipo)}. Guarda tu folio para consultar en qué va.</p>
+              <h3>{fin.repetido ? 'Ya teníamos tu reporte' : '¡Gracias por reportar!'}</h3>
+              <p>{fin.repetido
+                ? 'Hace poco reportaste este mismo problema en este punto, así que no se creó otro: es el mismo folio.'
+                : nombreTipo(tipo) + '. Guarda tu folio para consultar en qué va.'}</p>
               <div className="rf-folio">
                 <div>
                   <span className="rf-folio__etiqueta">Folio</span>

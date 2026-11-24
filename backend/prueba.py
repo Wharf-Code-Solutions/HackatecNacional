@@ -393,12 +393,15 @@ try:
     for k in _entorno:
         os.environ.pop(k, None)
     with TestClient(crear_app(base_temporal())) as c:
+        personas = iter(range(1, 100))
+
         def nuevo_reporte(correo_persona):
             cuerpo = {'version': '1.0', 'fecha_hora': '2026-11-24T10:00:00Z', 'tipo': 'descarga_visible',
                       'latitud': 19.0262, 'longitud': -98.2335, 'exif_removido': True}
             if correo_persona:
                 cuerpo['correo'] = correo_persona
-            return c.post('/reportes', json=cuerpo).json()['c_reporte']
+            # cada reporte de otra persona: el freno antispam (prueba 9) juntaria los del mismo punto
+            return c.post('/reportes', json=cuerpo, headers={'X-Forwarded-For': '10.0.8.{}'.format(next(personas))}).json()['c_reporte']
 
         f1 = nuevo_reporte('persona@ejemplo.mx')
         r = c.patch('/reportes/' + f1, json={'estado': 'Cerrado'})
@@ -440,6 +443,33 @@ finally:
         else:
             os.environ[k] = v
 revisar(modulo_correo.enmascarar('persona@ejemplo.mx') == 'pe***@ejemplo.mx', 'los registros enmascaran el correo')
+
+# ------------------------------------------------------------- 9. freno antispam
+print('\n9) Freno a los envios repetidos de una misma persona')
+with TestClient(crear_app(base_temporal())) as c:
+    def mandar(ip, tipo='espuma', lat=19.3240, lon=-98.2512):
+        return c.post('/reportes', json={'tipo': tipo, 'latitud': lat, 'longitud': lon, 'exif_removido': True},
+                      headers={'X-Forwarded-For': ip + ', 10.255.0.1'})
+
+    r1 = mandar('200.1.1.1')
+    r2 = mandar('200.1.1.1', lat=19.3245)             # ~55 m, mismo tipo, misma persona
+    revisar(r1.status_code == 201 and r2.status_code == 200 and r2.json().get('repetido') and r2.json()['c_reporte'] == r1.json()['c_reporte'],
+            'misma persona, mismo tipo y mismo punto: devuelve su folio y no crea otro', r2.json().get('c_reporte'))
+    revisar(c.get('/salud').json()['reportes'] == 1, 'el repetido no se guarda')
+    revisar(mandar('200.1.1.1', tipo='mal_olor').status_code == 201, 'otro tipo en el mismo punto sí se recibe')
+    revisar(mandar('200.1.1.1', lat=19.3300).status_code == 201, 'el mismo tipo a ~660 m sí se recibe')
+    revisar(mandar('200.2.2.2').status_code == 201, 'otra persona en el mismo punto sí se recibe (corrobora)')
+    lugares = [(19.10, -98.20), (19.12, -98.22), (19.14, -98.24)]
+    codigos = [mandar('200.1.1.1', lat=la, lon=lo).status_code for la, lo in lugares]
+    ultimo = codigos[-1]
+    revisar(codigos[:2] == [201, 201] and ultimo == 429, 'mas de 5 reportes por minuto de una persona dan 429', str(codigos))
+    revisar(mandar('200.3.3.3', lat=19.16, lon=-98.26).status_code == 201, 'el limite es por persona: otra sigue reportando')
+    con_ip = c.get('/reportes').json()['reportes']
+    revisar(all('200.1.1.1' not in json.dumps(x) for x in con_ip), 'la IP no aparece en los reportes')
+    folio = r1.json()['c_reporte']
+    consultas = [c.get('/reportes/' + folio, headers={'X-Forwarded-For': '200.9.9.9'}).status_code for _ in range(21)]
+    revisar(consultas[:20] == [200] * 20 and consultas[20] == 429, 'mas de 20 consultas de folio por minuto dan 429')
+    revisar(c.get('/reportes/' + folio, headers={'X-Forwarded-For': '200.8.8.8'}).status_code == 200, 'otra persona sigue consultando')
 
 print('\n{}'.format('Todo pasa.' if not fallas else '{} falla(s): {}'.format(len(fallas), ', '.join(fallas))))
 sys.exit(1 if fallas else 0)

@@ -20,7 +20,11 @@ export default function Rastreo({ origen, datos, folioInicial }) {
     if (!FORMATO.test(id)) { setError('El folio tiene este formato: RC-20261124-0001.'); return; }
     setCargando(true);
     try { setR(await consultarFolio(origen, id)); }
-    catch (e) { setError(e.status === 404 ? 'No encontramos ese folio. Revisa que esté completo.' : 'No se pudo consultar. Revisa tu conexión y vuelve a intentar.'); }
+    catch (e) {
+      setError(e.status === 404 ? 'No encontramos ese folio. Revisa que esté completo.'
+        : e.status === 429 ? 'Hiciste muchas consultas seguidas. Espera un minuto y vuelve a intentar.'
+          : 'No se pudo consultar. Revisa tu conexión y vuelve a intentar.');
+    }
     setCargando(false);
   };
 

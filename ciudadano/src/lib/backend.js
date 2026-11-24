@@ -70,6 +70,16 @@ export async function enviarReporte(origen, payload) {
     const j = await r.json();
     return { ok: true, c_reporte: j.c_reporte, estado: j.estado };
   }
+  // Misma persona, mismo problema, mismo punto, hace poco: el backend no crea otro y devuelve el folio que ya tenía
+  if (r.status === 200) {
+    const j = await r.json().catch(() => ({}));
+    if (j.c_reporte) return { ok: true, c_reporte: j.c_reporte, estado: j.estado, repetido: !!j.repetido };
+  }
+  // Demasiados envíos seguidos: se vale reintentar, pero dentro de un minuto (en la cola no se pierde)
+  if (r.status === 429) {
+    const j = await r.json().catch(() => ({}));
+    return { ok: false, reintentable: true, espera: true, texto: j.detalle || 'Espera un minuto y vuelve a intentar.' };
+  }
   if (r.status >= 500) return { ok: false, reintentable: true };
   let detalle = '';
   try { const j = await r.json(); detalle = [j.error, j.detalle, ...(j.detalles || [])].filter(Boolean).join(' · '); } catch { /* sin cuerpo */ }
