@@ -1,17 +1,17 @@
 /* Mapa de la cuenca del Alto Atoyac.
  *
- * Con token de Mapbox (mapa/config.js, no versionado) usa Mapbox GL JS: estilo claro,
- * satélite y relieve de Mapbox. Sin token usa MapLibre GL con la base gratuita de
- * OpenFreeMap y el relieve Terrarium. El código es el mismo: la API de ambos coincide.
+ * Con token de Mapbox (mapa/config.js, no versionado) usa Mapbox GL JS con su estilo claro. Sin
+ * token usa MapLibre GL con la base gratuita de OpenFreeMap. El código es el mismo: la API de ambos
+ * coincide.
  *
- * Datos: contorno, subcuencas, red hidrográfica, confluencias y toponimia
- * (scripts/60_red_para_mapa.py, de INEGI); los 219 sitios y las 5 estaciones
- * (contrato/fixtures). Al elegir una estación el mapa se acerca y se abre su
- * simulador en un marco.
+ * Muestra solo lo que se lee de un vistazo: la cuenca, sus ríos (INEGI, scripts/60_red_para_mapa.py)
+ * con el flujo animado aguas abajo (casilla "Flujo del agua"), las confluencias principales y las 5
+ * estaciones (contrato/fixtures). Abre en la zona de la red (scripts/96_red_estaciones.py). Al elegir
+ * una estación el mapa se acerca y se abre su simulador en un marco. Sin satélite, relieve ni sitios
+ * oficiales: se quitaron para que el mapa diga una sola cosa.
  *
- * La base es solo contexto: se apagan sus ríos para que la red del INEGI sea lo
- * único que se lee como agua. El relieve es una capa opcional (elevación
- * Terrarium en AWS, sin llave).
+ * La base es solo contexto: se apagan sus ríos para que la red del INEGI sea lo único que se lee
+ * como agua.
  *
  * Frontera: el mapa NO importa código del simulador. Lo muestra por URL y se
  * entera de las alertas leyendo el backend por el contrato (GET /alertas).
@@ -23,6 +23,7 @@
   var MOCK = Q.has('mock') ? Q.get('mock') : 'http://127.0.0.1:8080';
   var $ = function (id) { return document.getElementById(id); };
   var AGUA = '#1d6fa5', TINTA = '#16222c';
+  var VALSEQUILLO = 'DLPUE2068';     // presa Manuel Ávila Camacho: donde termina la red de estaciones
   var ROTULOS = ['RIO ATOYAC', 'RIO ZAHUAPAN', 'RIO ALSESECA', 'RIO XOPANAC', 'RIO XOCHIAC', 'RIO NEXAPA', 'RIO ATENCO', 'RIO MIXTECO', 'RIO ACATLAN'];
 
   function sinAcentos(t) { return (t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase(); }
@@ -51,33 +52,40 @@
   mapa.touchZoomRotate.disableRotation();
   mapa.addControl(new gl.NavigationControl({ showCompass: false }), 'top-left');
   mapa.addControl(new gl.ScaleControl({ unit: 'metric' }), 'bottom-left');
-  mapa.addControl(new gl.AttributionControl({ compact: true, customAttribution: 'Ríos y subcuencas: INEGI · Sitios: CONAGUA' }), 'bottom-right');
+  mapa.addControl(new gl.AttributionControl({ compact: true, customAttribution: 'Ríos: INEGI · Estaciones sobre sitios de CONAGUA' }), 'bottom-right');
   window.mapaAtoyac = mapa;
 
-  var marcadores = {}, vistaCuenca = null, abierta = null;
+  var marcadores = {}, vistaRed = null, abierta = null;
 
   var datos = Promise.all([
     get('../datos/procesados/mapa/cuenca.geojson'),
-    get('../datos/procesados/mapa/subcuencas.geojson'),
     get('../datos/procesados/mapa/red_hidrografica.geojson'),
     get('../datos/procesados/mapa/confluencias.geojson'),
     get('../datos/procesados/mapa/toponimia_hidrografica.geojson'),
     get('../contrato/fixtures/sitios.geojson'),
-    get('../contrato/fixtures/estaciones.json')
+    get('../contrato/fixtures/estaciones.json'),
+    get('../datos/procesados/mapa/red_vigilada.geojson')
   ]);
   var estilo = new Promise(function (ok) { mapa.on('load', ok); });
 
   Promise.all([datos, estilo]).then(function (r) {
     var d = r[0];
     apagaBase();
-    agregaRelieve();
-    agregaCuenca(d[0], d[1]);
-    agregaRios(d[2], d[4]);
-    agregaConfluencias(d[3]);
-    agregaSitios(d[5]);
-    agregaEstaciones(d[6].estaciones);
-    vistaCuenca = limites(d[0].features[0].geometry.coordinates[0]);
-    mapa.fitBounds(vistaCuenca, { padding: 30, duration: 0 });
+    agregaCuenca(d[0]);
+    agregaRios(d[1], d[3], d[6]);
+    agregaConfluencias(d[2]);
+    agregaEstaciones(d[5].estaciones);
+    // Se abre en la zona de la red: los tramos vigilados, las estaciones y la presa de Valsequillo,
+    // donde termina. La cuenca completa sigue a la vista al alejar.
+    var puntos = [];
+    d[6].features.forEach(function (f) {
+      (f.geometry.type === 'MultiLineString' ? f.geometry.coordinates : [f.geometry.coordinates])
+        .forEach(function (l) { puntos.push.apply(puntos, l); });
+    });
+    d[5].estaciones.forEach(function (e) { puntos.push([e.longitud, e.latitud]); });
+    d[4].features.forEach(function (f) { if (f.properties.c_sitio === VALSEQUILLO) puntos.push(f.geometry.coordinates); });
+    vistaRed = limites(puntos);
+    mapa.fitBounds(vistaRed, { padding: 50, duration: 0 });
     if (MOCK) { consultaBackend(); setInterval(consultaBackend, 3000); }
   }).catch(function (e) {
     console.error(e);
@@ -91,10 +99,14 @@
   }
 
   // ---------------------------------------------------------------- base
-  // Los ríos de la base no son los del INEGI: se apagan. También rótulos de calles y comercios.
+  // La base es solo contexto: se apagan sus ríos (no son los del INEGI), sus calles, carreteras y
+  // vías, y los rótulos de comercios. Las fronteras estatales quedan en gris muy claro. Así las únicas
+  // líneas fuertes del mapa son el contorno de la cuenca y los ríos.
   function apagaBase() {
     mapa.getStyle().layers.forEach(function (l) {
       if (/waterway/.test(l.id)) mapa.setLayoutProperty(l.id, 'visibility', 'none');
+      else if (l.type === 'line' && /(road|street|highway|motorway|bridge|tunnel|rail|transit|ferry|path|aeroway)/.test(l.id)) mapa.setLayoutProperty(l.id, 'visibility', 'none');
+      else if (l.type === 'line' && /(admin|boundar)/.test(l.id)) { mapa.setPaintProperty(l.id, 'line-color', '#d3d9dd'); mapa.setPaintProperty(l.id, 'line-opacity', 0.7); }
       else if (l.type === 'symbol' && /(poi|road|highway|transport|housenum|water_name|aeroway)/.test(l.id)) mapa.setLayoutProperty(l.id, 'visibility', 'none');
       else if (l.type === 'symbol' && l.layout && l.layout['text-field']) mapa.setLayoutProperty(l.id, 'text-field', ['coalesce', ['get', NOMBRE_ES], ['get', 'name']]);
     });
@@ -102,53 +114,42 @@
     var at = document.querySelector('.' + CSS + '-ctrl-attrib');
     if (at) at.classList.remove(CSS + '-compact-show');
   }
-  // Satélite y relieve: capas opcionales, apagadas por defecto, debajo de los nombres de lugar
-  // de la base y de todas nuestras capas. El satélite es Esri World Imagery (sin llave) con
-  // cualquiera de las dos bibliotecas: el de Mapbox respondió 429 con nuestra cuenta (D21).
-  function agregaRelieve() {
-    var primerRotulo = (mapa.getStyle().layers.filter(function (l) { return l.type === 'symbol'; })[0] || {}).id;
-    mapa.addSource('satelite', {
-      type: 'raster', tileSize: 256, maxzoom: 19,
-      tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],
-      attribution: 'Imagen satelital: Esri, Maxar, Earthstar Geographics'
-    });
-    mapa.addLayer({ id: 'satelite', type: 'raster', source: 'satelite', layout: { visibility: 'none' } }, primerRotulo);
-    $('chkSatelite').onchange = function () { mapa.setLayoutProperty('satelite', 'visibility', this.checked ? 'visible' : 'none'); };
-    if (MB) {
-      mapa.addSource('dem', { type: 'raster-dem', url: 'mapbox://mapbox.mapbox-terrain-dem-v1', tileSize: 512, maxzoom: 14 });
-    } else {
-      mapa.addSource('dem', {
-        type: 'raster-dem', encoding: 'terrarium', tileSize: 256, maxzoom: 13,
-        tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],
-        attribution: 'Relieve: Mapzen Terrarium (AWS)'
-      });
-    }
-    mapa.addLayer({ id: 'relieve', type: 'hillshade', source: 'dem', layout: { visibility: 'none' },
-      paint: { 'hillshade-exaggeration': 0.35, 'hillshade-shadow-color': '#5b6974', 'hillshade-highlight-color': '#ffffff', 'hillshade-accent-color': '#5b6974' } }, primerRotulo);
-    $('chkRelieve').onchange = function () { mapa.setLayoutProperty('relieve', 'visibility', this.checked ? 'visible' : 'none'); };
-  }
-
   // ---------------------------------------------------------------- cuenca
-  function agregaCuenca(cuenca, subcuencas) {
+  function agregaCuenca(cuenca) {
     var anillo = cuenca.features[0].geometry.coordinates[0];
     var mundo = [[-180, -85], [180, -85], [180, 85], [-180, 85], [-180, -85]];
     mapa.addSource('mascara', { type: 'geojson', data: { type: 'Feature', properties: {}, geometry: { type: 'Polygon', coordinates: [mundo, anillo] } } });
     mapa.addLayer({ id: 'mascara', type: 'fill', source: 'mascara', paint: { 'fill-color': '#f3f5f6', 'fill-opacity': 0.8 } });
-    mapa.addSource('subcuencas', { type: 'geojson', data: subcuencas });
-    mapa.addLayer({ id: 'subcuencas', type: 'line', source: 'subcuencas',
-      paint: { 'line-color': '#7b6a52', 'line-width': 0.8, 'line-opacity': 0.55, 'line-dasharray': [4, 3] } });
+    // las subcuencas ya no se dibujan: eran una línea discontinua más que se confundía con las de la base
     mapa.addSource('cuenca', { type: 'geojson', data: cuenca });
     mapa.addLayer({ id: 'cuenca', type: 'line', source: 'cuenca', paint: { 'line-color': TINTA, 'line-width': 1.8 } });
   }
 
   // ---------------------------------------------------------------- ríos
-  function agregaRios(red, toponimia) {
+  // Un solo estilo para todos los ríos: el mismo azul, con el grosor creciendo poco con el tamaño del
+  // río (orden 4 a 7). Encima, el flujo: guiones blancos del mismo grosor que el río que corren aguas
+  // abajo en toda la red. Las líneas del INEGI están trazadas en el sentido del flujo.
+  function agregaRios(red, toponimia, vigilada) {
+    var ancho = function (k) { return ['match', ['get', 'orden'], 7, 1.6 * k, 6, 1.3 * k, 5, 1.05 * k, 0.85 * k]; };
+    var grosor = ['interpolate', ['linear'], ['zoom'], 7, ancho(1), 10, ancho(1.7), 13, ancho(2.6)];
+    var trazo = { 'line-color': AGUA, 'line-opacity': 0.9, 'line-width': grosor };
     mapa.addSource('rios', { type: 'geojson', data: red });
-    var ancho = function (k) { return ['match', ['get', 'orden'], 7, 1.7 * k, 6, 1.1 * k, 5, 0.7 * k, 0.4 * k]; };
-    mapa.addLayer({ id: 'rios', type: 'line', source: 'rios',
-      layout: { 'line-cap': 'round', 'line-join': 'round' },
-      paint: { 'line-color': AGUA, 'line-opacity': 0.95,
-        'line-width': ['interpolate', ['linear'], ['zoom'], 7, ancho(1), 10, ancho(1.8), 13, ancho(2.6)] } });
+    mapa.addLayer({ id: 'rios', type: 'line', source: 'rios', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: trazo });
+    // los tramos que llegan a una estación desde un cauce menor (no están en la red del mapa), igual que el resto
+    mapa.addSource('rios_vigilados', { type: 'geojson', data: vigilada });
+    mapa.addLayer({ id: 'rios_vigilados', type: 'line', source: 'rios_vigilados', filter: ['==', ['get', 'conexion'], true],
+      layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: trazo });
+    // el flujo: guiones blancos del mismo grosor que el río, que avanzan aguas abajo en todos los ríos
+    // del mapa y en los tramos que conectan una estación con ellos. Se apaga con la casilla "Flujo del agua".
+    mapa.addImage('flujo', IMAGEN_FLUJO, { pixelRatio: 2 });
+    var guiones = { 'line-pattern': 'flujo', 'line-opacity': 0.9, 'line-width': grosor };
+    mapa.addLayer({ id: 'flujo', type: 'line', source: 'rios', layout: { 'line-cap': 'butt', 'line-join': 'round' }, paint: guiones });
+    mapa.addLayer({ id: 'flujo_conexion', type: 'line', source: 'rios_vigilados', filter: ['==', ['get', 'conexion'], true],
+      layout: { 'line-cap': 'butt', 'line-join': 'round' }, paint: guiones });
+    var quieto = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    $('chkFlujo').checked = !quieto;
+    $('chkFlujo').onchange = function () { flujo(this.checked); };
+    flujo(!quieto);
     var nombres = { type: 'FeatureCollection', features: toponimia.features.filter(function (f) {
       return ROTULOS.indexOf(sinAcentos(f.properties.nombre)) >= 0;
     }).map(function (f) { return { type: 'Feature', geometry: f.geometry, properties: { n: inicial(f.properties.nombre) } }; }) };
@@ -156,6 +157,40 @@
     mapa.addLayer({ id: 'nombres_rios', type: 'symbol', source: 'nombres_rios', minzoom: 8.5,
       layout: { 'text-field': ['get', 'n'], 'text-font': ITALICA, 'text-size': 12, 'text-offset': [0, -0.8] },
       paint: { 'text-color': '#14527a', 'text-halo-color': '#fff', 'text-halo-width': 1.5 } });
+  }
+
+  // El flujo es un patrón de línea (line-pattern) con un guion blanco sobre fondo transparente que se
+  // redibuja en cada cuadro corrido unos píxeles. Antes se animaba cambiando line-dasharray: en Mapbox
+  // GL 3 esa propiedad obliga a rehacer los teselados de toda la red (8 184 tramos) en cada paso, el mapa
+  // se volvía lento y al desplazarlo se dejaban de ver ríos mientras cargaban. Cambiar la imagen solo
+  // vuelve a subir 128 × 16 píxeles a la tarjeta gráfica.
+  // La textura del patrón avanza con la distancia desde el inicio de la línea; correr el guion hacia la
+  // derecha de la imagen lo lleva hacia el final de la línea, que es aguas abajo (en 195 de 245 tramos de
+  // red_asignacion.json la línea termina junto a su sitio aguas abajo).
+  var PAT_W = 128, PAT_H = 16, GUION = 44, PX_POR_S = 110;     // en píxeles de la imagen (pixelRatio 2)
+  var flujoEncendido = true;
+  var IMAGEN_FLUJO = {
+    width: PAT_W, height: PAT_H, data: new Uint8Array(PAT_W * PAT_H * 4),
+    onAdd: function () {},
+    render: function () {
+      if (!flujoEncendido) return false;
+      var x0 = Math.floor(performance.now() / 1000 * PX_POR_S) % PAT_W, d = this.data;
+      for (var x = 0; x < PAT_W; x++) {
+        var u = (x - x0 + PAT_W) % PAT_W;                     // posición dentro del guion
+        var a = u < GUION ? Math.round(235 * Math.min(1, u / 6, (GUION - u) / 6)) : 0;   // bordes suaves
+        for (var y = 0; y < PAT_H; y++) {
+          var i = (y * PAT_W + x) * 4;
+          d[i] = d[i + 1] = d[i + 2] = 255; d[i + 3] = a;
+        }
+      }
+      mapa.triggerRepaint();
+      return true;
+    }
+  };
+  function flujo(encendido) {
+    flujoEncendido = encendido;
+    ['flujo', 'flujo_conexion'].forEach(function (id) { mapa.setLayoutProperty(id, 'visibility', encendido ? 'visible' : 'none'); });
+    if (encendido) mapa.triggerRepaint();
   }
 
   // Confluencias: dónde se juntan los ríos grandes. Se rotulan solo las que el INEGI
@@ -180,27 +215,12 @@
     });
   }
 
-  // Sitios oficiales en gris: el semáforo de CONAGUA no distingue entre ellos (D9).
-  function agregaSitios(g) {
-    g.features = g.features.filter(function (f) { return f.geometry; });
-    mapa.addSource('sitios', { type: 'geojson', data: g });
-    mapa.addLayer({ id: 'sitios', type: 'circle', source: 'sitios',
-      paint: { 'circle-radius': ['interpolate', ['linear'], ['zoom'], 7, 1.8, 12, 3.5],
-        'circle-color': ['case', ['to-boolean', ['get', 'semaforo_conagua']], '#8a979f', '#ffffff'],
-        'circle-stroke-color': '#6d7b85', 'circle-stroke-width': 0.8 } });
-    $('chkSitios').onchange = function () { mapa.setLayoutProperty('sitios', 'visibility', this.checked ? 'visible' : 'none'); };
-    emergente('sitios', function (p) {
-      return '<b>' + (p.nombre || p.c_sitio) + '</b><br>' + inicial(p.cuerpo_agua) + '. ' + inicial(p.municipio) + ', ' + inicial(p.estado);
-    });
-  }
-
   function emergente(capa, html) {
     var pop = new gl.Popup({ closeButton: false, closeOnClick: false, offset: 8 });
     mapa.on('mousemove', capa, function (e) {
-      mapa.getCanvas().style.cursor = 'pointer';
       pop.setLngLat(e.lngLat).setHTML(html(e.features[0].properties)).addTo(mapa);
     });
-    mapa.on('mouseleave', capa, function () { mapa.getCanvas().style.cursor = ''; pop.remove(); });
+    mapa.on('mouseleave', capa, function () { pop.remove(); });
   }
 
   // ---------------------------------------------------------------- estaciones
@@ -243,30 +263,33 @@
   $('btnMenu').onclick = function () {
     menuElegido = $('app').classList.contains('menu-cerrado');
     menu(menuElegido);
+    reencuadra();
   };
-  // El mapa se redimensiona y se reencuadra cuando termina de moverse el diseño (transición de 0.22 s).
+  // El diseño cambia de golpe (sin transición, que obligaba a redibujar el mapa en cada paso); en el
+  // cuadro siguiente el mapa toma su nuevo tamaño y se desliza a la zona en 0.6 s.
   var encuadre = null;
   function reencuadra() {
-    mapa.resize();
-    if (encuadre) encuadre();
+    requestAnimationFrame(function () { mapa.resize(); if (encuadre) encuadre(); });
   }
-  ['lateral', 'detalle'].forEach(function (id) {
-    $(id).addEventListener('transitionend', function (ev) { if (ev.target === this && ev.propertyName === 'flex-basis') reencuadra(); });
-  });
 
   function abre(e) {
-    var yaAbierta = !!abierta;
     abierta = e;
     $('detTitulo').textContent = e.c_estacion + ' · ' + inicial(e.cuerpo_agua) + ', ' + inicial(e.municipio);
-    $('marco').src = '../dispositivo/simulador/index.html?incrustado=1&vel=300&estacion=' + encodeURIComponent(e.c_estacion) +
+    // El simulador arma su escena 3D en el mismo hilo que el mapa: si se carga a la vez, el
+    // desplazamiento se detiene un momento. Se carga cuando el mapa termina de moverse.
+    var src = '../dispositivo/simulador/index.html?incrustado=1&vel=300&estacion=' + encodeURIComponent(e.c_estacion) +
       (MOCK ? '&backend=' + encodeURIComponent(MOCK) : '');
+    $('marco').removeAttribute('src');
+    var cargado = false, carga = function () { if (!cargado && abierta === e) { cargado = true; $('marco').src = src; } };
+    mapa.once('moveend', carga);
+    setTimeout(carga, 900);
     $('app').classList.add('abierto');
     $('detalle').setAttribute('aria-hidden', 'false');
     menu(false);
     marcaActiva(e.c_estacion);
     // la zona: la estación al centro de la columna del mapa, a una escala que deja ver el tramo de río
-    encuadre = function () { mapa.flyTo({ center: [e.longitud, e.latitud], zoom: 12.6, duration: 1100 }); };
-    if (yaAbierta) reencuadra(); else setTimeout(reencuadra, 260);   // respaldo si no hay transición
+    encuadre = function () { mapa.easeTo({ center: [e.longitud, e.latitud], zoom: 12.6, duration: 600, essential: true }); };
+    reencuadra();
   }
   function cierra() {
     abierta = null;
@@ -275,8 +298,8 @@
     $('marco').removeAttribute('src');
     menu(menuElegido);
     marcaActiva(null);
-    encuadre = function () { if (vistaCuenca) mapa.fitBounds(vistaCuenca, { padding: 30, duration: 1000 }); };
-    setTimeout(reencuadra, 260);
+    encuadre = function () { if (vistaRed) mapa.fitBounds(vistaRed, { padding: 50, duration: 600, essential: true }); };
+    reencuadra();
   }
   $('btnVolver').onclick = cierra;
   document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape' && abierta) cierra(); });

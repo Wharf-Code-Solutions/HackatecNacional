@@ -1,5 +1,5 @@
 /* Carta temática: base vectorial clara, el agua en azul, las estaciones en tinta.
-   La barra lateral es solo el índice de estaciones y dos capas opcionales. */
+   La barra lateral es el índice de estaciones y la casilla del flujo. */
 :root {
   --papel: #f3f5f6;
   --superficie: #ffffff;
@@ -19,7 +19,7 @@ h1 { font-size: 18px; font-weight: 700; line-height: 1.25; margin-bottom: 14px; 
 
 .app { display: flex; height: 100%; }
 .lateral { flex: 0 0 240px; overflow-y: auto; overflow-x: hidden; background: var(--superficie); border-right: 1px solid var(--linea);
-  padding: 18px 16px; display: flex; flex-direction: column; transition: flex-basis 0.22s ease, padding 0.22s ease; }
+  padding: 18px 16px; display: flex; flex-direction: column; }
 .lat-cabeza { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 14px; }
 .lat-cabeza h1 { margin: 0; flex: 1; }
 .plegar { flex: none; width: 28px; height: 28px; display: grid; place-items: center; padding: 0; cursor: pointer;
@@ -30,8 +30,7 @@ h1 { font-size: 18px; font-weight: 700; line-height: 1.25; margin-bottom: 14px; 
 /* menú plegado: solo los números de las estaciones, que siguen abriendo cada una */
 .app.menu-cerrado .lateral { flex-basis: 52px; padding: 12px 8px; }
 .app.menu-cerrado .lat-cabeza { justify-content: center; }
-.app.menu-cerrado .lat-cabeza h1, .app.menu-cerrado .estaciones b, .app.menu-cerrado .estaciones .det,
-.app.menu-cerrado .capas { display: none; }
+.app.menu-cerrado .lat-cabeza h1, .app.menu-cerrado .estaciones b, .app.menu-cerrado .estaciones .det { display: none; }
 .app.menu-cerrado .plegar svg { transform: rotate(180deg); }
 .app.menu-cerrado .estaciones li + li { border-top: 0; }
 .app.menu-cerrado .estaciones button { grid-template-columns: 26px; justify-content: center; padding: 6px 0; }
@@ -48,7 +47,8 @@ h1 { font-size: 18px; font-weight: 700; line-height: 1.25; margin-bottom: 14px; 
 .estaciones .det { display: block; color: var(--tenue); font-size: 12px; }
 
 .capas { margin-top: auto; padding-top: 14px; border-top: 1px solid var(--linea); }
-.check { display: flex; align-items: center; gap: 8px; margin-top: 4px; cursor: pointer; font-size: 13px; color: var(--tenue); }
+.check { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px; color: var(--tenue); }
+.app.menu-cerrado .capas { display: none; }
 .boton { font: inherit; font-size: 13px; color: var(--tinta); background: var(--superficie); border: 1px solid #aeb9c0;
   border-radius: 3px; padding: 5px 12px; cursor: pointer; }
 .boton:hover { border-color: var(--tinta); }
@@ -61,8 +61,16 @@ h1 { font-size: 18px; font-weight: 700; line-height: 1.25; margin-bottom: 14px; 
 .maplibregl-popup-content b, .mapboxgl-popup-content b { font-weight: 600; }
 .error { position: absolute; top: 12px; left: 60px; background: #fff; border: 1px solid var(--alerta); color: var(--alerta); padding: 8px 12px; margin: 0; }
 
+/* cursor: flecha en tinta con borde blanco. La flecha blanca del sistema se perdía sobre la base clara.
+   Mapbox y MapLibre ponen "grab" en el lienzo; aquí se reemplaza en todo el mapa y en las estaciones. */
+.mapa-col, .mapa-col .mapboxgl-canvas-container, .mapa-col .maplibregl-canvas-container,
+.mapa-col .mapboxgl-canvas-container.mapboxgl-interactive, .mapa-col .maplibregl-canvas-container.maplibregl-interactive,
+.mapa-col .mapboxgl-interactive:active, .mapa-col .maplibregl-interactive:active, .est-marca {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M3 2v17l4.6-4.4 3.1 6.6 3-1.4-3-6.5H17z' fill='%2316222c' stroke='%23fff' stroke-width='1.6' stroke-linejoin='round'/%3E%3C/svg%3E") 3 2, default !important;
+}
+
 /* estaciones */
-.est-marca { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+.est-marca { display: flex; align-items: center; gap: 6px; }
 .est-marca .punto { width: 26px; height: 26px; border-radius: 50%; background: var(--tinta); color: #fff; border: 2px solid #fff;
   box-shadow: 0 0 0 1px var(--tinta); display: grid; place-items: center; font-weight: 700; font-size: 13px; }
 .est-marca.alerta .punto { background: var(--alerta); box-shadow: 0 0 0 1px var(--alerta); }
@@ -73,7 +81,7 @@ h1 { font-size: 18px; font-weight: 700; line-height: 1.25; margin-bottom: 14px; 
 
 /* detalle: el simulador de la estación */
 .detalle { flex: 0 0 0; width: 0; overflow: hidden; background: var(--papel); border-left: 1px solid var(--linea); display: flex; flex-direction: column;
-  transition: flex-basis 0.22s ease; }
+}
 /* con una estación abierta: la zona en el mapa a la izquierda (≈ 40 %) y su simulador a la derecha */
 .app.abierto .detalle { flex: 0 0 58%; width: auto; }
 .detalle header { display: flex; align-items: center; gap: 14px; padding: 8px 14px; background: var(--superficie); border-bottom: 1px solid var(--linea); flex: none; }

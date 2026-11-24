@@ -55,9 +55,11 @@ navegador, como en cualquier mapa de Mapbox: la protección es restringirlo por 
 También se puede crear `config.js` a mano copiando `config.ejemplo.js`.
 
 Con `mapa/config.js` y un token público de Mapbox
-usa Mapbox GL JS con el estilo claro de Mapbox. La casilla "Satélite" (Esri World Imagery, sin
-llave) funciona con o sin token. Sin él, usa MapLibre GL
+usa Mapbox GL JS con el estilo claro de Mapbox. Sin él, usa MapLibre GL
 con la base vectorial de OpenFreeMap, sin llave; se apagan sus ríos para que la
-red del INEGI sea la única agua. El relieve es opcional (casilla "Relieve"). La barra lateral es
-solo la lista de estaciones y las casillas, y se pliega con el botón junto al título (al abrir una
-estación se pliega sola para dar lugar a la zona y al simulador); las fuentes están en el botón de atribución.
+red del INEGI sea la única agua. El mapa abre en la zona de la red de estaciones y no en toda la
+cuenca. Todos los ríos tienen el mismo estilo y llevan guiones blancos que corren aguas abajo; la
+casilla "Flujo del agua" los apaga. De la base se apagan calles y carreteras. El satélite, el relieve y
+los sitios oficiales se quitaron para que el mapa diga una sola cosa. La barra lateral es
+la lista de estaciones y la casilla del flujo, y se pliega con el botón junto al título (al abrir una estación se pliega
+sola para dar lugar a la zona y al simulador); las fuentes están en el botón de atribución.

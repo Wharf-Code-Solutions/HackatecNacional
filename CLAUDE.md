@@ -79,18 +79,27 @@ No conviertas "pendiente" en "construido" sin verificarlo contra el repo.
   alertas** (eso es del backend, invariante I10); muestreo adaptativo; ahorro por batería.
 
 **Mapa (`mapa/`)** (D20, D21):
-- Con token en `mapa/config.js` usa **Mapbox GL JS 3.8** (`light-v11`, relieve de Mapbox). Sin token usa
-  **MapLibre GL** con la base vectorial de OpenFreeMap `positron` y relieve Terrarium de AWS. `index.html` elige
-  la biblioteca; `mapa.js` usa solo la API común (`gl.`).
+- Con token en `mapa/config.js` usa **Mapbox GL JS 3.8** (`light-v11`). Sin token usa **MapLibre GL** con la base
+  vectorial de OpenFreeMap `positron`. `index.html` elige la biblioteca; `mapa.js` usa solo la API común (`gl.`).
 - La base se recorta al cargar: se apagan sus ríos y rótulos de calles y comercios; nombres en español.
-- Capas opcionales, apagadas por defecto: **Satélite** (Esri World Imagery, sin llave, en ambos modos; el
-  satélite de Mapbox respondió 429 con nuestra cuenta) y **Relieve**. **Sitios oficiales** encendida.
+- Una sola casilla, "Flujo del agua". Satélite, relieve y los 219 sitios oficiales se quitaron.
+- Abre encuadrado en la zona de la red (tramos vigilados, estaciones y Valsequillo); la cuenca completa al alejar.
+- Todos los ríos con un solo estilo: el mismo azul, grosor que crece poco con el orden (4 a 7). Lo vigilado se
+  distingue solo por el flujo. Sin subcuencas; de la base se apagan calles, carreteras y vías, y las fronteras
+  quedan en gris muy claro. Cursor propio: flecha en tinta con borde blanco (la del sistema se perdía).
+- Flujo: guiones blancos del mismo grosor que el río que avanzan aguas abajo en **todos** los ríos, más los
+  tramos que conectan una estación con la red (`red_vigilada.geojson`, `conexion: true`, de `96_red_estaciones.py`).
+  Es un `line-pattern` cuya imagen se redibuja cada cuadro (no `line-dasharray`: en Mapbox GL 3 rehace los teselados
+  de toda la red en cada paso y los ríos desaparecen al desplazar). Se enciende y apaga con la casilla "Flujo del agua" (encendida; apagada con `prefers-reduced-motion`). El sentido
+  está comprobado: en 195 de 245 tramos de `red_asignacion.json` la línea termina junto a su sitio aguas abajo.
+  El simulador se carga cuando el mapa termina de desplazarse (armar la escena 3D detenía el desplazamiento).
 - Cuenca RH18A (10 subcuencas, 31 480 km²) delimitada: máscara fuera, contorno en tinta. Ríos con grosor por
   orden y zoom. 14 confluencias; se rotulan solo las que el INEGI nombra como río en ambos brazos.
-- Barra lateral plegable (botón junto al título): plegada queda una columna con los números de las 5 estaciones.
-  Título, estaciones y casillas. Fuentes en el botón de atribución.
-- Al elegir una estación la barra se pliega, el mapa (≈ 40 %) centra la estación a zoom 12.6 cuando termina la
-  transición, y su simulador (58 %) se abre en un marco **por URL**, con la figura 3D completa a la vista
+- Barra lateral plegable (botón junto al título): título, estaciones y la casilla del flujo; plegada queda una
+  columna con los números.
+  Fuentes en el botón de atribución.
+- Al elegir una estación la barra se pliega de golpe (sin transición), el mapa (≈ 40 %) se desliza a la estación en
+  0.6 s (zoom 12.6) y su simulador (58 %) se abre en un marco **por URL**, con la figura 3D completa a la vista
   (`?incrustado=1&estacion=...&vel=...&backend=...`). Lee `GET /alertas` solo para poner en rojo la estación.
 
 **Datos para el mapa**: `scripts/60_red_para_mapa.py` lee la red del INEGI (F08) y escribe
@@ -128,7 +137,7 @@ python contrato/servidor_mock.py
 
 Los frontends leen `contrato/fixtures/` y `datos/procesados/`, así que **hay que servir el repo desde su
 raíz**; con doble clic (`file://`) el navegador bloquea la lectura. Mapa y simulador necesitan internet
-(bibliotecas por CDN, base, satélite, relieve) y WebGL.
+(bibliotecas por CDN y base) y WebGL.
 
 ## Fronteras
 

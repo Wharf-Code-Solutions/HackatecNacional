@@ -150,7 +150,8 @@ repositorio (`python -m http.server 8000`).
 | `datos/procesados/indicador_sitio_periodo.csv` | Indicadores CONAGUA por sitio | `10_construir_tablas.py` | **NO** |
 | `datos/procesados/diccionario_conagua.csv` | Diccionario oficial de campos | `10_construir_tablas.py` | **NO** |
 | `datos/procesados/proxy_modelos.csv` | Los dos modelos proxy con su validación y si se publican | `90_modelos_proxy.py` | **NO** |
-| `datos/procesados/mapa/*.geojson` | Cauces (orden ≥ 4), subcuencas, contorno de la cuenca, confluencias principales y toponimia hidrográfica, simplificados para el mapa | `60_red_para_mapa.py` | **NO** |
+| `datos/procesados/mapa/red_vigilada.geojson` | Los tramos del mapa que vigila cada estación (20 km aguas arriba), con su `estacion` | `96_red_estaciones.py` | **NO** |
+| `datos/procesados/mapa/*.geojson` (el resto) | Cauces (orden ≥ 4), subcuencas, contorno de la cuenca, confluencias principales y toponimia hidrográfica, simplificados para el mapa | `60_red_para_mapa.py` | **NO** |
 | `datos/procesados/analisis/*.csv` | Línea base, ranking, temporada, tendencia, cobertura, correlaciones | `20_analisis_exploratorio.py` | **NO** |
 | `datos/procesados/red/tramo.csv` | 65 342 tramos con orden de Strahler, longitud y tramo de aguas abajo. **No se versiona** (8.2 MB) | `70_topologia_red.py` | **NO** |
 | `datos/procesados/red/sitio_red.csv` | Dónde quedó enganchado cada sitio y con qué calidad | `70_topologia_red.py` | **NO** |
@@ -187,7 +188,7 @@ El prefijo numérico indica el orden de ejecución. `_comun.py` no se ejecuta so
 | `motor/reglas.py` | **M2.** `evaluar(paquete) → veredicto`. **Fuente de verdad de los umbrales de deteccion y de la firma de fuente probable** | fixtures, `umbral.csv` | nada en disco |
 | `motor/prueba.py` | Banco de pruebas de M2: mide el criterio de terminado | escenarios | `docs/15-...` |
 | `scripts/90_modelos_proxy.py` | Ajusta y **valida fuera de muestra** los modelos proxy sensor→laboratorio. **Fuente de verdad del criterio de publicación** (`MAX_ERROR_MEDIANO`) | `muestreo_nucleo.csv` | `proxy_modelos.csv`, `contrato/fixtures/modelos_proxy.json`, `docs/16-...` |
-| `scripts/96_red_estaciones.py` | Elige la red de estaciones: sitios con historia de campo que más establecimientos DENUE vigilan a 20 km aguas arriba. **Fuente de verdad de `N_ESTACIONES`** | `sitio.csv`, `analisis/linea_base_...`, `red/`, `denue/establecimientos_cuenca.csv` | `red/red_estaciones.csv` |
+| `scripts/96_red_estaciones.py` | Elige la red de estaciones: sitios con historia de campo que más establecimientos DENUE vigilan a 20 km aguas arriba. **Fuente de verdad de `N_ESTACIONES`** | `sitio.csv`, `analisis/linea_base_...`, `red/`, `denue/establecimientos_cuenca.csv`, `mapa/red_hidrografica.geojson` | `red/red_estaciones.csv`, `mapa/red_vigilada.geojson` |
 | `scripts/71_red_para_asignacion.py` | Poda la red a los tramos que alcanzan un sitio en 20 km y la simplifica, para que la asignación quepa en la función de Vercel. **Fuente de verdad de `ALCANCE_M`** | `datos/geo/`, `red/` | `red/red_asignacion.json` |
 | `scripts/50_verificar_repo.py` | **Revisión de salud del repositorio.** Automatiza nueve comprobaciones de invariantes y sale con código 1 si falla. **Fuente de verdad de los conteos esperados** (`FILAS_ESPERADAS`) | todo | stdout |
 

@@ -21,6 +21,113 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · M6: el flujo se anima con una imagen de patrón, no con line-dasharray
+
+**Qué cambió.** El flujo es un `line-pattern` con un guion blanco sobre fondo transparente; la imagen
+(128 × 16 px) se redibuja en cada cuadro corrida unos píxeles (`StyleImageInterface.render`). Antes se
+cambiaba `line-dasharray` cada 70 ms.
+**Por qué.** Con el flujo en los 8 184 tramos, cambiar `line-dasharray` obliga a Mapbox GL 3 a rehacer los
+teselados de toda la red en cada paso: el usuario vio el mapa lento y ríos que desaparecían al desplazarlo.
+Subir una imagen pequeña a la tarjeta gráfica no toca la geometría.
+**Qué arrastró.** `mapa.js?v=20`, `CLAUDE.md`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
+## 2026-11-24 · M6: el flujo en todos los ríos, con casilla para apagarlo
+
+**Qué cambió.** Los guiones blancos del flujo corren en todos los ríos del mapa (y en los tramos que
+conectan una estación con la red), no solo en los vigilados. Una casilla "Flujo del agua" en la barra
+lateral lo enciende y apaga; al apagarlo se detiene también la animación.
+**Por qué.** Lo pidió el usuario. Consecuencia: el mapa ya no distingue a simple vista qué tramos vigila
+cada estación; eso sigue en `red_vigilada.geojson` y en docs/18.
+**Qué arrastró.** `mapa.js?v=19`, `index.html`, `estilos.css?v=10`, `mapa/README.md`, `CLAUDE.md`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
+## 2026-11-24 · M6: el flujo vuelve a ser de guiones blancos
+
+**Qué cambió.** Se quitan los puntos del flujo y vuelven los guiones blancos animados, ahora del mismo
+grosor que el río (los ríos vigilados ya no son más anchos) y en el sentido corregido, aguas abajo.
+**Por qué.** Al usuario no le gustaron los círculos; las líneas anteriores estaban bien.
+**Qué arrastró.** `mapa.js?v=18`, `mapa/README.md`, `CLAUDE.md`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
+## 2026-11-24 · M6: un solo estilo para los ríos, flujo blanco, cursor visible y base sin calles
+
+**Qué cambió.** Todos los ríos con el mismo azul y un grosor que crece poco con el orden (de 0.85 a 1.6
+veces); los tramos vigilados ya no son más anchos: se distinguen solo por el flujo, ahora puntos blancos
+con borde azul. Se quitan las subcuencas (línea discontinua) y, de la base, las líneas de calles,
+carreteras y vías; las fronteras estatales quedan en gris muy claro. El cursor sobre el mapa es una flecha
+en tinta con borde blanco.
+**Por qué.** El usuario veía cuatro tipos de línea mezclados (ríos de distinto color y grosor, flujo,
+líneas de la base) y el cursor blanco del sistema se perdía sobre la base clara.
+**Qué arrastró.** `mapa.js?v=17`, `estilos.css?v=9`, `mapa/README.md`, `CLAUDE.md`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
+## 2026-11-24 · M6: el flujo del mapa con puntos y el simulador se carga después del desplazamiento
+
+**Qué cambió.** El trazo discontinuo se cambia por puntos azul oscuro con borde blanco, uno cada 2.2 km
+de tramo vigilado, que avanzan del inicio al final de cada línea a 900 m de mapa por segundo (se
+recalculan unas 30 veces por segundo). El sentido se comprobó con los datos: en 195 de 245 tramos de
+`red_asignacion.json` la línea termina junto a su sitio aguas abajo. Al elegir una estación, el
+simulador se carga cuando el mapa termina de desplazarse (o a los 0.9 s).
+**Por qué.** El usuario no veía el trazo y notaba una pausa al hacer clic: el simulador arma su escena
+3D en el mismo hilo que el mapa y lo detenía a mitad del desplazamiento.
+**Qué arrastró.** `mapa.js?v=16`, `mapa/README.md`, `CLAUDE.md`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
+## 2026-11-24 · M6: flujo en el sentido correcto, trazo visible, selección fluida y sin capas opcionales
+
+**Qué cambió.** La animación del flujo se recorre al revés: el usuario vio que iba contra la corriente.
+El trazo pasa de blanco a azul oscuro (#0b2e4a), más ancho, sobre tramos vigilados más anchos. Al elegir
+una estación el diseño cambia de golpe (se quitó la transición de 0.22 s, que redibujaba el mapa en cada
+paso) y el mapa se desliza en 0.6 s con `easeTo` en lugar del `flyTo` de 1.1 s. Se quitan las capas
+opcionales: satélite, relieve y los 219 sitios oficiales. `96_red_estaciones.py` agrega a
+`red_vigilada.geojson` los tramos que desembocan en cada estación a 3 km o menos: el Alseseca en
+Totimehuacán es de orden 2 y la estación quedaba lejos de cualquier río dibujado.
+**Por qué.** Lo pidió el usuario para dar claridad al mapa: una sola cosa a la vista.
+**Qué arrastró.** `mapa.js?v=14`, `index.html`, `estilos.css?v=8`, `mapa/README.md`, `CLAUDE.md`.
+**Impacto en otros módulos.** Ninguno. La decisión D21 (satélite de Esri) queda sin uso en el mapa.
+
+---
+
+## 2026-11-24 · M6: los ríos vuelven a su estilo y el flujo se anima en los tramos vigilados
+
+**Qué cambió.** Se quita el azul tenue de la red: todos los ríos vuelven a su azul de siempre. Los tramos
+vigilados van un poco más anchos y con un trazo blanco discontinuo que avanza aguas abajo hacia la
+estación (patrón de guiones que cambia cada 70 ms). Las líneas del INEGI están trazadas en el sentido
+del flujo: en 321 nodos terminan dos o más líneas y en ninguno empiezan dos. Con
+`prefers-reduced-motion` no se anima.
+**Por qué.** Al usuario no le gustó el difuminado y pidió ver el flujo de los ríos en el mapa: el
+movimiento dice qué agua llega a cada estación sin leyenda.
+**Qué arrastró.** `mapa.js?v=12`, `mapa/README.md`, `CLAUDE.md`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
+## 2026-11-24 · M6: el mapa abre en la zona de la red y resalta lo que vigila cada estación
+
+**Qué cambió.** El encuadre inicial (y al cerrar una estación) es la zona de la red: tramos vigilados,
+estaciones y la presa de Valsequillo, en lugar de toda la cuenca. La red de ríos va en azul tenue y,
+encima, en el azul del agua y más gruesos, los 305 tramos del mapa que vigila alguna estación a 20 km
+aguas arriba. `96_red_estaciones.py` los calcula y escribe `datos/procesados/mapa/red_vigilada.geojson`
+(84 KB): un tramo del mapa es vigilado si su vértice central cae a menos de ~120 m de un tramo de
+`red_asignacion.json` que llega a una estación.
+**Por qué.** Con la cuenca completa (31 480 km²) las 5 estaciones quedaban amontonadas en una esquina y
+parecía que casi nada estaba vigilado; el usuario lo notó. El contraste dice qué cubre la red y qué no.
+**Qué arrastró.** `mapa.js?v=11`, `mapa/README.md`, `02-mapa-del-repo.md`, `CLAUDE.md`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
 ## 2026-11-24 · M7: el mapa de la red de estaciones es el mismo que el de mapa/
 
 **Qué cambió.** "La red de estaciones" del panel deja el SVG dibujado y usa el mapa del módulo M6:
@@ -112,6 +219,8 @@ galería, folio, rastreo, términos, cola sin señal y modo demostración (D28).
 `02-mapa-del-repo.md`, `03-tecnologias.md`, D28.
 **Impacto en otros módulos.** Ninguno en código. Falta el `buildCommand` de `vercel.json` y probarla en teléfono
 real; la geolocalización exige HTTPS (túnel con cloudflared).
+
+---
 
 ## 2026-11-24 · M10, M0: red de 5 estaciones elegida por cobertura; fixtures con esas 5
 
