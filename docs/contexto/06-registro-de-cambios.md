@@ -99,6 +99,18 @@ general y el usuario pidió ver cada componente de cerca. Pidió explícitamente
 
 ---
 
+## 2026-11-24 · M7: orden de la vista de alertas
+
+**Qué cambió.** La vista de alertas del panel va en este orden: resumen, mapa de la red a todo el ancho,
+lista de alertas con expediente, tabla y estado de las estaciones (matriz y huella) y al final los
+conteos (por hora, por estación, por parámetro y avance). `Panorama.jsx` recibe `parte`.
+**Por qué.** Petición del usuario: el mapa filtra la lista de alertas y estaban separados por cinco
+gráficas; ahora cada bloque colinda con lo que tiene que ver.
+**Qué arrastró.** Nada más.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
 ## 2026-11-24 · M7: sin sitios de CONAGUA en el mapa de la red de estaciones
 
 **Qué cambió.** `panel/src/graficas/MapaEstaciones.jsx` ya no dibuja los 219 sitios oficiales en gris
