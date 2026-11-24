@@ -175,8 +175,14 @@ def escuelas_provisionales():
     return salida
 
 
+# Escuelas de interés con datos reales: las de riesgo medio o mayor, las más altas primero, con tope para que
+# el panel y la app carguen rápido. La tabla completa queda en factores_escuelas.csv.
+INDICE_MINIMO = 0.30
+TOPE_ESCUELAS = 400
+
+
 def escuelas_reales():
-    """Lee factores_escuelas.csv cuando exista. Columnas: las del contrato más un puntaje por factor."""
+    """Lee factores_escuelas.csv (98_escuelas_candidatas.py): columnas del contrato más un puntaje por factor."""
     salida = []
     with open(ENTRADA_REAL, encoding='utf-8-sig') as f:
         for r in csv.DictReader(f):
@@ -187,9 +193,54 @@ def escuelas_reales():
                 'latitud': round(float(r['latitud']), 6), 'longitud': round(float(r['longitud']), 6),
                 'fuente_agua': r.get('fuente_agua') or 'desconocida',
                 'riesgo': evaluar({k: float(r[k]) for k in PESOS}),
-                'c_estacion': r.get('c_estacion') or None, 'autorizaciones': [],
+                'c_estacion': r.get('c_estacion') or None,
+                # Con estación cerca hay un mecanismo propuesto: sus trámites base, sin solicitar (docs/19 §4.3).
+                # Sin CEASPUE otorgada se muestra como «propuesto», no como «activo».
+                'autorizaciones': [{'organismo': 'CEASPUE', 'tramite': CEASPUE_INSTALACION, 'estado': 'pendiente', 'fecha': None},
+                                   {'organismo': 'CAPCEE', 'tramite': CAPCEE_ACCESO, 'estado': 'pendiente', 'fecha': None}]
+                                  if r.get('c_estacion') else [],
             })
-    return salida
+    salida = [e for e in salida if e['riesgo']['indice'] >= INDICE_MINIMO]
+    salida.sort(key=lambda e: -e['riesgo']['indice'])
+    return salida[:TOPE_ESCUELAS]
+
+
+# Zonas con datos reales: grupos de escuelas (a menos de AGRUPAR_M) cuyo sub-índice de derrumbe o de
+# contaminación es alto. No son el atlas de CENAPRED: cada zona dice de dónde sale.
+AGRUPAR_M = 1500
+SUB_MINIMO = 0.6
+FUENTE_ZONA = {
+    'derrumbe': 'Derivada de la pendiente del terreno alrededor de escuelas (mosaicos de elevación); no es el atlas de CENAPRED',
+    'contaminacion': 'Escuelas con fuentes contaminantes del DENUE cerca y marginación alta (CONAPO); no es una medición',
+}
+
+
+def zonas_reales(escuelas):
+    feats, n = [], 0
+    for tipo in ('derrumbe', 'contaminacion'):
+        grupos = []
+        for e in sorted(escuelas, key=lambda e: -e['riesgo'][tipo]):
+            if e['riesgo'][tipo] < SUB_MINIMO:
+                continue
+            punto = (e['latitud'], e['longitud'])
+            g = next((g for g in grupos if metros(g['centro'], punto) <= AGRUPAR_M), None)
+            if g:
+                g['miembros'].append(e)
+            else:
+                grupos.append({'centro': punto, 'miembros': [e]})
+        for g in grupos:
+            n += 1
+            m = g['miembros']
+            centro = (sum(e['latitud'] for e in m) / len(m), sum(e['longitud'] for e in m) / len(m))
+            radio = max(400, max(metros(centro, (e['latitud'], e['longitud'])) for e in m) + 300)
+            alto = max(e['riesgo'][tipo] for e in m)
+            feats.append({
+                'type': 'Feature',
+                'geometry': {'type': 'Polygon', 'coordinates': [poligono(centro, radio, 1.0, 0)]},
+                'properties': {'c_zona': 'ZR-{:04d}'.format(n), 'tipo': tipo, 'nivel': 'muy_alto' if alto >= 0.8 else 'alto',
+                               'fuente': FUENTE_ZONA[tipo], 'escuelas': [e['cct'] for e in m]},
+            })
+    return {'type': 'FeatureCollection', 'features': feats}
 
 
 def zonas(escuelas):
@@ -210,16 +261,17 @@ def main():
     real = os.path.exists(ENTRADA_REAL)
     escuelas = escuelas_reales() if real else escuelas_provisionales()
     escuelas.sort(key=lambda e: -e['riesgo']['indice'])
+    capas = zonas_reales(escuelas) if real else zonas(escuelas)
     with open(os.path.join(FIX, 'escuelas.json'), 'w', encoding='utf-8') as f:
         json.dump(escuelas, f, ensure_ascii=False, indent=1)
     with open(os.path.join(FIX, 'zonas_riesgo.geojson'), 'w', encoding='utf-8') as f:
-        json.dump(zonas(escuelas), f, ensure_ascii=False)
+        json.dump(capas, f, ensure_ascii=False)
     por_nivel = {}
     for e in escuelas:
         por_nivel[e['riesgo']['nivel']] = por_nivel.get(e['riesgo']['nivel'], 0) + 1
     print('escuelas.json: {} escuelas ({}), por nivel: {}'.format(
         len(escuelas), 'datos reales' if real else 'PROVISIONALES', por_nivel))
-    print('zonas_riesgo.geojson: {} zonas'.format(len(ZONAS)))
+    print('zonas_riesgo.geojson: {} zonas'.format(len(capas['features'])))
 
 
 if __name__ == '__main__':

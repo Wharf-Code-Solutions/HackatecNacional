@@ -118,6 +118,19 @@ contaminados.
 
 ---
 
+## Fuentes del cambio de rumbo: escuelas rurales vulnerables (docs/19)
+
+| Fuente | Qué aporta | Por qué esta |
+|---|---|---|
+| **F18** Catálogo de centros de trabajo SEP 2026 | Las escuelas: CCT, nivel, ámbito rural/urbano, sostenimiento, coordenadas. 7 384 públicas rurales en Puebla | Es el registro oficial y completo. El DENUE casi no registra escuelas en localidades chicas (473 contra 7 384) y no trae la CCT |
+| **F19** Índice de marginación por localidad 2020 (CONAPO) | Grado de marginación y % de ocupantes sin drenaje ni excusado, por localidad | Es el índice oficial; armar uno propio con el censo sería repetirlo peor |
+| **F16** Censo 2020, ITER de Puebla (INEGI) | Coordenadas de cada localidad, para ligar escuelas con su localidad cuando el nombre no coincide | CONAPO no publica coordenadas |
+| **F17** Mosaicos de elevación Terrarium (AWS) | Pendiente del terreno alrededor de cada escuela | Públicos y sin llave, los mismos del mapa; evitan bajar el Continuo de Elevaciones completo |
+| **F12** DENUE (ya estaba) | Fuentes contaminantes cercanas y altas recientes de establecimientos (urbanización) | Ya se usaba para la fuente probable de las alertas |
+
+Pendientes: susceptibilidad de laderas (CENAPRED o atlas de Puebla) y red hidrográfica fuera de la cuenca del
+Atoyac (la Sierra Norte drena al Golfo).
+
 ## Qué se hizo con los datos crudos
 
 Tres reglas que explican las decisiones de limpieza. El detalle está en

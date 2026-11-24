@@ -21,6 +21,24 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Módulo A: escuelas y zonas con datos reales
+
+**Qué cambió.** `escuelas.json` y `zonas_riesgo.geojson` dejan de ser provisionales. `98_escuelas_candidatas.py` toma el
+catálogo de centros de trabajo de la SEP 2026 (F18, bajado a mano) y deja `factores_escuelas.csv`: 7 384 escuelas públicas
+rurales de Puebla (preescolar a media superior) con su localidad (7 298 por nombre, 82 por cercanía, 4 sin localidad),
+marginación y drenaje (CONAPO, F19), pendiente (F17), fuente contaminante cercana y altas recientes del DENUE, y calidad del
+agua del sitio CONAGUA a menos de 2 km. `97_escuelas_riesgo.py` escribe las 400 de mayor índice (11 alto, 389 medio) y 21
+zonas agrupadas de los datos (10 de derrumbe, 11 de contaminación). Las 7 escuelas junto a `EST-ATY-05` traen sus trámites
+CEASPUE y CAPCEE en `pendiente`.
+**Por qué.** Que el panel (B) y la app (C) usen datos reales. El DENUE solo tenía 473 escuelas rurales; la SEP, 7 384 y con CCT.
+**Qué arrastró.** `contrato/fixtures/LEEME.md`, `02-mapa-del-repo.md`, `04-fuentes-de-datos.md`, `datos/bitacora.md`,
+`00_descargar_fuentes.py` (F16 y F19; F18 se baja a mano). Se quita `escuelas_candidatas.csv`.
+**Impacto en otros módulos.** Misma forma del contrato. `matricula` viene `null` y `fuente_agua` `desconocida`. Dos factores
+valen 0 por falta de fuente (laderas de CENAPRED en todas; calidad del agua lejos de sitios CONAGUA), así que hoy nadie llega
+a «muy alto»: no es ausencia de riesgo. Propuesta para el grupo: agregar `sin_dato` al contrato para mostrarlo.
+
+---
+
 ## 2026-11-24 · Módulo A (cambio de rumbo): contrato de escuelas y zonas, fixtures provisionales y primeros datos reales
 
 **Qué cambió.** Esquemas `escuela` y `zona_riesgo` (docs/19 §4.1 y §4.2). `scripts/97_escuelas_riesgo.py` escribe

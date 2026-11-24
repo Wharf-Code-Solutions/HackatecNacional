@@ -58,6 +58,14 @@ FUENTES = [
     ('F15', '2023_Diagnostico_rio_Atoyac_Pue_2012-2022.pdf',
      'https://www.gob.mx/cms/uploads/attachment/file/925318/'
      '2023_Diagn_stico_r_o_Atoyac_Pue_2012-2022.pdf'),
+    # Cambio de rumbo (docs/19): escuelas rurales vulnerables. F18, el catálogo de centros de trabajo de la SEP,
+    # no está aquí: repodatos.atdt.gob.mx responde "Access Denied" a cualquier cliente que no sea un navegador.
+    # Se baja a mano desde https://www.datos.gob.mx/dataset/catalogo_centros_trabajo_sep (2026) a crudos/F18/.
+    # F17, la elevación, no se baja aquí: 98_escuelas_candidatas.py pide solo los mosaicos que necesita.
+    ('F16', 'iter_21_cpv2020_csv.zip',
+     'https://www.inegi.org.mx/contenidos/programas/ccpv/2020/datosabiertos/iter/iter_21_cpv2020_csv.zip'),
+    ('F19', 'IML_2020.zip',
+     'https://conapo.segob.gob.mx/work/models/CONAPO/Datos_Abiertos/Localidad/IML_2020.zip'),
 ]
 
 args = [a for a in sys.argv[1:]]
