@@ -16,6 +16,9 @@ __pycache__/
 .venv/
 venv/
 
+# Llaves y tokens locales (Mapbox, etc.): nunca al repositorio
+.env
+
 # Sistema
 Thumbs.db
 desktop.ini
