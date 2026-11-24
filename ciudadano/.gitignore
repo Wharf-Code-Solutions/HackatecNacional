@@ -1,0 +1,4 @@
+node_modules/
+dist/
+# Copia de contrato/fixtures que hace scripts/copiar-datos.mjs
+public/datos/

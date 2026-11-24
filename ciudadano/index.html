@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b231e">
+<title>Reporta el río Atoyac</title>
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icono.svg" type="image/svg+xml">
+
+<!-- Conexiones tempranas: tipografías y kit oficial gob.mx -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://framework-gb.cdn.gob.mx" crossorigin>
+
+<!-- Tipografías (Montserrat y Noto Sans) y kit gob.mx v3, igual que SIGRIV. No bloquean el primer pintado. -->
+<link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Noto+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" media="print" onload="this.media='all'" href="https://framework-gb.cdn.gob.mx/gm/v3/assets/styles/main.css">
+<noscript>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Noto+Sans:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="https://framework-gb.cdn.gob.mx/gm/v3/assets/styles/main.css">
+</noscript>
+
+<!-- Lo que se ve antes de que cargue React -->
+<style>
+  html, body { margin: 0; padding: 0; }
+  body { font-family: 'Noto Sans', 'Montserrat', Arial, sans-serif; color: #545454; background: #ebe7e4; }
+  .shell-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; align-items: center; height: 60px; padding: 0 24px; box-sizing: border-box; background: #0b231e; color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,.2); }
+  .shell-nav img { height: 32px; }
+  .shell-nav i { display: block; height: 32px; margin: 0 16px; border-left: 1px solid #bc955c; }
+  .shell-nav b { font-size: 16px; font-weight: 600; letter-spacing: .5px; }
+  .shell-cargando { position: fixed; top: 60px; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; font-size: 14px; }
+  .shell-spinner { width: 36px; height: 36px; border: 4px solid #d9cdb8; border-top-color: #9d2449; border-radius: 50%; animation: shell-giro .8s linear infinite; }
+  @keyframes shell-giro { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<div id="raiz">
+  <header class="shell-nav">
+    <img src="https://framework-gb.cdn.gob.mx/landing/img/logoheader.svg" alt="Gobierno de México">
+    <i></i><b>Río Atoyac</b>
+  </header>
+  <div class="shell-cargando" role="status"><div class="shell-spinner"></div><span>Cargando mapa…</span></div>
+</div>
+<script type="module" src="/src/main.jsx"></script>
+</body>
+</html>

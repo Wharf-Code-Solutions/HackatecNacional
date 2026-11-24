@@ -1,0 +1,42 @@
+/* Paleta oficial gob.mx v3, la misma de SIGRIV */
+:root {
+  --gob-guinda: #9D2449;
+  --gob-guinda-oscuro: #7a1a32;
+  --gob-dorado: #BC955C;
+  --gob-verde: #13322E;
+  --gob-gris-oscuro: #545454;
+  --gob-gris-claro: #F4F4F4;
+  --gob-nav: #0B231E;
+  --error: #b3261e;
+  --font-gob: 'Noto Sans', 'Montserrat', sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { font-family: var(--font-gob); color: var(--gob-gris-oscuro); background: #ebe7e4; -webkit-text-size-adjust: 100%; }
+#raiz { height: 100vh; height: 100dvh; }
+:focus-visible { outline: 3px solid var(--gob-dorado); outline-offset: 2px; }
+[hidden] { display: none !important; }
+button, input, textarea { font-family: inherit; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+/* Respaldo si el kit gob.mx no cargó (sin red o bloqueado): los controles se ven igual */
+.btn, .form-control { font-family: inherit; }
+.form-control {
+  display: block; width: 100%; padding: 8px 12px; font-size: 16px; line-height: 1.4; color: #212529;
+  background: #fff; border: 1px solid #ced4da; border-radius: 6px; -webkit-appearance: none; appearance: none;
+}
+.btn {
+  display: inline-block; line-height: 1.4; text-align: center; text-decoration: none; cursor: pointer; user-select: none;
+  background: transparent; border: 1px solid transparent; border-radius: 6px; -webkit-appearance: none; appearance: none;
+}
+.btn-primary { background: var(--gob-guinda); border-color: var(--gob-guinda); color: #fff; }
+.btn-primary:hover, .btn-primary:focus-visible { background: var(--gob-guinda-oscuro); border-color: var(--gob-guinda-oscuro); color: #fff; }
+.btn-primary:disabled { background: var(--gob-guinda); border-color: var(--gob-guinda); color: #fff; opacity: .6; cursor: default; }
+.btn-outline-secondary { color: var(--gob-gris-oscuro); background: #fff; border-color: #999; }
+.btn-outline-secondary:hover { background: var(--gob-gris-claro); color: var(--gob-gris-oscuro); }
+.alert { padding: 10px 14px; border: 1px solid transparent; border-radius: 6px; font-size: 14px; }
+.alert-danger { color: var(--gob-guinda-oscuro); background: #fde8ec; border-color: #f4b6c2; }
+.alert-warning { color: #664d03; background: #fff3cd; border-color: #ffe69c; }
+.mb-3 { margin-bottom: 16px; }
+.w-100 { width: 100%; }

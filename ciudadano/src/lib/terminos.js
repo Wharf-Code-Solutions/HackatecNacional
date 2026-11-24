@@ -1,0 +1,9 @@
+// Términos y aviso de privacidad. Borrador del equipo: debe revisarlo quien responda legalmente del proyecto.
+export const SECCIONES = [
+  ['Qué datos recopilamos', 'Solo los necesarios para atender tu reporte: el tipo de problema, la ubicación que eliges en el mapa, la descripción y la foto que decidas adjuntar, y tu correo electrónico si quieres que te avisemos del cierre (opcional). No pedimos nombre, teléfono ni ningún otro dato personal, ni rastreamos tu ubicación en segundo plano.'],
+  ['Para qué los usamos', 'Únicamente para dar seguimiento a tu reporte ante la autoridad responsable y cruzarlo con las mediciones de las estaciones del río. No los vendemos ni los usamos para otros fines. Tu correo no se muestra en ninguna vista pública: el mapa solo muestra el tipo de problema, su estado y su ubicación aproximada, redondeada a unos 100 metros.'],
+  ['Tu foto', 'La foto se reduce y se le borran los datos ocultos (como el lugar exacto y el modelo del teléfono) en tu propio teléfono, antes de enviarse. No se analiza con inteligencia artificial.'],
+  ['Cómo se comparten', 'Tu reporte se envía a la plataforma de monitoreo del río Atoyac y puede compartirse con las autoridades ambientales competentes para su atención.'],
+  ['Reglas de uso', 'Reporta solo lo que veas en el río o en su orilla, dentro de la cuenca del Alto Atoyac (Puebla y Tlaxcala). No envíes fotos de personas ni de placas de vehículos. Un reporte falso o repetido puede descartarse.'],
+  ['Sin diagnóstico', 'Esta aplicación no evalúa si el agua es segura para algún uso. Para una emergencia, llama al 911.'],
+];

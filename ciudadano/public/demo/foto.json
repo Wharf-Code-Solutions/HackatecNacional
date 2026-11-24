@@ -1,0 +1,15 @@
+{
+  "capturado": "2026-11-24",
+  "origen": "Reportes de ejemplo para la demostración sin backend. No son reportes reales.",
+  "reportes": [
+    { "version": "1.0", "c_reporte": "RC-20261124-0001", "fecha_hora": "2026-11-24T09:15:00-06:00", "tipo": "espuma",
+      "descripcion": "Espuma blanca abundante bajo el puente", "latitud": 19.02, "longitud": -98.21, "exif_removido": true,
+      "estado": "En atencion", "c_sitio_asignado": "DLPUE 1975", "distancia_al_cauce_m": 85 },
+    { "version": "1.0", "c_reporte": "RC-20261124-0002", "fecha_hora": "2026-11-24T10:40:00-06:00", "tipo": "descarga_visible",
+      "descripcion": "Tubo vertiendo agua turbia", "latitud": 19.04, "longitud": -98.19, "exif_removido": true,
+      "estado": "Recibido", "c_sitio_asignado": null, "distancia_al_cauce_m": null },
+    { "version": "1.0", "c_reporte": "RC-20261124-0003", "fecha_hora": "2026-11-24T11:05:00-06:00", "tipo": "mal_olor",
+      "latitud": 19.1, "longitud": -98.3, "exif_removido": true, "estado": "Cerrado",
+      "c_sitio_asignado": null, "distancia_al_cauce_m": null }
+  ]
+}

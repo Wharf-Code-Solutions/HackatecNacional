@@ -1,0 +1,25 @@
+{
+  "name": "app-ciudadana-atoyac",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "M8: app ciudadana (PWA) para reportar y consultar el río Atoyac",
+  "scripts": {
+    "datos": "node scripts/copiar-datos.mjs",
+    "predev": "node scripts/copiar-datos.mjs",
+    "dev": "vite",
+    "prebuild": "node scripts/copiar-datos.mjs",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "mapbox-gl": "3.8.0",
+    "maplibre-gl": "4.7.1",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "4.3.4",
+    "vite": "5.4.11"
+  }
+}

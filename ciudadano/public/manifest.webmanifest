@@ -1,0 +1,14 @@
+{
+  "name": "Reporta el río Atoyac",
+  "short_name": "Río Atoyac",
+  "description": "Reporta lo que ves en el río y consulta en qué va tu reporte.",
+  "lang": "es",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F3F3F3",
+  "theme_color": "#611232",
+  "icons": [
+    { "src": "icono.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
