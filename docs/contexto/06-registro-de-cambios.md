@@ -21,6 +21,16 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Terreno de la figura 3D parecido a la cuenca
+
+**Qué cambió.** `escena.js` reemplaza las cajas del corte por un valle con el río en un cauce de
+taludes que serpentea, agua turbia (verde grisácea a café según la turbiedad), árboles en las
+orillas y un volcán tenue al fondo. Las sondas, el cable y la torre se recolocaron sobre el terreno.
+**Por qué.** La superficie anterior no se parecía a la cuenca.
+**Qué arrastró.** `dispositivo/simulador/escena.js`, `index.html` (versión), `dispositivo/README.md`,
+`05-decisiones-tecnicas.md` (consecuencia de D19), `CLAUDE.md`.
+**Impacto en otros módulos.** Ninguno.
+
 ## 2026-11-24 · Modelos proxy: uno sirve, el otro no, y una correccion
 
 **Qué cambió.** Nuevo `scripts/90_modelos_proxy.py`. Ajusta las dos relaciones

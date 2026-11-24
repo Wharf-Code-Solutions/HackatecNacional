@@ -57,20 +57,96 @@
     G.escena.add(m);
     return m;
   }
+  // Agua del Atoyac: verde grisácea con poca turbiedad, café con mucha.
   function colorAgua(turb) {
     var k = M.acota(Math.log10(turb + 1) / 3.7, 0, 1);
-    return new T.Color().setRGB((150 + 70 * k) / 255, (195 + 10 * k) / 255, (225 - 70 * k) / 255);
+    return new T.Color().setRGB((88 + 40 * k) / 255, (122 - 6 * k) / 255, (128 - 38 * k) / 255);
+  }
+
+  // ------------------------------------------------------------ el valle
+  // Valle casi plano con el río en un cauce de taludes de tierra que serpentea un poco, como el
+  // Atoyac entre Tlaxcala y Puebla. Unidades ≈ metros; la estación está en la orilla izquierda.
+  var Z_CORTE = 2.4, SUP_AGUA = -0.1;
+  function ejeRio(z) { return 3.25 + 0.9 * Math.sin(z * 0.13 + 0.3); }
+  function suave(t) { t = M.acota(t, 0, 1); return t * t * (3 - 2 * t); }
+  function altura(x, z) {
+    var d = Math.abs(x - ejeRio(z));
+    var y = -1.7 + 2.3 * suave((d - 3.0) / 2.0);                       // lecho, talud y orilla
+    var ondula = 0.07 * Math.sin(x * 1.3 + z * 0.7) + 0.05 * Math.sin(x * 0.4 - z * 1.1) + 0.04 * Math.sin(x * 2.3 + z * 1.9);
+    var cercaEst = Math.hypot(x + 4.3, z - 0.1) < 2.6 ? 0.15 : 1;       // la base del mástil queda plana
+    y += ondula * suave((d - 4.6) / 1.2) * cercaEst + 0.03 * Math.sin(x * 3.1 + z * 2.7) * (1 - suave((d - 2.8) / 0.4));
+    if (z < -8) y += Math.pow(-8 - z, 1.25) * 0.035 * suave((d - 6) / 3);   // el valle sube suave hacia el fondo
+    return y;
+  }
+  function construyeValle() {
+    var X0 = -13, X1 = 19, Z0 = -36, NX = 128, NZ = 120;
+    var g = new T.PlaneGeometry(X1 - X0, Z_CORTE - Z0, NX, NZ);
+    g.rotateX(-Math.PI / 2);
+    g.translate((X0 + X1) / 2, 0, (Z0 + Z_CORTE) / 2);
+    var pos = g.attributes.position, col = [], c = new T.Color();
+    var PASTO = new T.Color(0xa7b08c), TIERRA = new T.Color(0xae9c7e), LECHO = new T.Color(0x6f675a);
+    for (var i = 0; i < pos.count; i++) {
+      var x = pos.getX(i), z = pos.getZ(i), y = altura(x, z), d = Math.abs(x - ejeRio(z));
+      pos.setY(i, y);
+      if (d < 3.2) c.copy(LECHO); else if (d < 4.9) c.copy(TIERRA).lerp(PASTO, suave((d - 4.3) / 0.6)); else c.copy(PASTO);
+      c.offsetHSL(0, 0, 0.025 * Math.sin(x * 5.1 + z * 3.7));
+      col.push(c.r, c.g, c.b);
+    }
+    g.setAttribute('color', new T.Float32BufferAttribute(col, 3));
+    g.computeVertexNormals();
+    G.escena.add(new T.Mesh(g, new T.MeshLambertMaterial({ vertexColors: true, flatShading: true })));
+
+    // Corte frontal: el perfil del terreno hasta abajo, en tierra, con el contorno en tinta.
+    var perfil = [], forma = new T.Shape(), k;
+    for (k = 0; k <= 256; k++) { var xx = X0 + (X1 - X0) * k / 256; perfil.push(new T.Vector2(xx, altura(xx, Z_CORTE))); }
+    forma.moveTo(X0, -3.2);
+    perfil.forEach(function (q) { forma.lineTo(q.x, q.y); });
+    forma.lineTo(X1, -3.2); forma.lineTo(X0, -3.2);
+    var corte = new T.Mesh(new T.ShapeGeometry(forma), mate(0xc9b99b));
+    corte.position.z = Z_CORTE; G.escena.add(corte);
+    var contorno = new T.Line(new T.BufferGeometry().setFromPoints(perfil.map(function (q) { return new T.Vector3(q.x, q.y, Z_CORTE + 0.01); })),
+      new T.LineBasicMaterial({ color: TINTA }));
+    G.escena.add(contorno);
+
+    // Agua: superficie y cara del corte, del mismo material; su color sigue a la turbiedad.
+    G.matAgua = new T.MeshPhongMaterial({ color: 0x587a80, specular: 0x33414a, shininess: 40, transparent: true, opacity: 0.72, depthWrite: false, side: T.DoubleSide });
+    var sup = new T.Mesh(new T.PlaneGeometry(16, Z_CORTE - Z0), G.matAgua);
+    sup.rotation.x = -Math.PI / 2; sup.position.set(3.25, SUP_AGUA, (Z0 + Z_CORTE) / 2); G.escena.add(sup);
+    var mojado = perfil.filter(function (q) { return q.y < SUP_AGUA; });
+    var fa = new T.Shape();
+    fa.moveTo(mojado[0].x, SUP_AGUA);
+    mojado.forEach(function (q) { fa.lineTo(q.x, q.y); });
+    fa.lineTo(mojado[mojado.length - 1].x, SUP_AGUA);
+    var caraAgua = new T.Mesh(new T.ShapeGeometry(fa), G.matAgua);
+    caraAgua.position.z = Z_CORTE + 0.02; G.escena.add(caraAgua);
+    // la lámina de agua en el corte, en azul: es lo primero que tiene que leerse como agua
+    G.escena.add(new T.Line(new T.BufferGeometry().setFromPoints([new T.Vector3(mojado[0].x, SUP_AGUA, Z_CORTE + 0.03), new T.Vector3(mojado[mojado.length - 1].x, SUP_AGUA, Z_CORTE + 0.03)]),
+      new T.LineBasicMaterial({ color: AGUA })));
+
+    // Árboles sobre las orillas (ahuejotes y sauces, en volumen simple).
+    var copa = mate(0x7d8c6c, { flatShading: true }), tronco = mate(0x6f6250);
+    [[-8.5, -3], [-6.8, -9.5], [-9.5, -15], [-3.2, -17], [-11, -7.5], [-5.5, -24], [10.5, -3.5], [13, -11],
+     [9.8, -19], [15, -5.5], [12, -27], [-2, -30]].forEach(function (a, i) {
+      var y = altura(a[0], a[1]), h = 1.6 + (i % 3) * 0.5;
+      cilindro(0.08, h * 0.45, tronco, a[0], y + h * 0.22, a[1], null, 6);
+      var m = new T.Mesh(new T.IcosahedronGeometry(0.5 + (i % 2) * 0.15, 1), copa);
+      m.scale.set(1, 1.6 + (i % 3) * 0.35, 1); m.position.set(a[0], y + h * 0.45 + 0.6, a[1]); G.escena.add(m);
+    });
+
+    // Un volcán al fondo, apagado por la niebla: la cuenca está entre la Malinche y la Sierra Nevada.
+    var volcan = new T.Mesh(new T.ConeGeometry(30, 11, 9, 1, true), mate(0xd3d9dc, { flatShading: true }));
+    volcan.position.set(-14, 3.5, -95); G.escena.add(volcan);
   }
 
   // ------------------------------------------------------------ rótulos HTML
   // Un rótulo por componente: nombre y dato vivo. Se colocan proyectando un punto 3D.
   var ROTULOS = [
-    { id: 'sondas', nombre: 'Sondas', equipo: 'OD, pH, conductividad, temperatura, turbiedad', ancla: [-0.95, -1.35, 0.9], lado: 'izq' },
+    { id: 'sondas', nombre: 'Sondas', equipo: 'OD, pH, conductividad, temperatura, turbiedad', ancla: [0.6, -1.15, 0.9], lado: 'izq' },
     { id: 'ctrl', nombre: 'Controlador', equipo: 'ESP32, reloj y microSD', ancla: S([-4.62, 2.15, 0.45]), lado: 'izq' },
     { id: 'modem', nombre: 'Módem LTE-M', equipo: '', ancla: S([-3.48, 2.45, 0.45]), lado: 'der' },
     { id: 'bat', nombre: 'Baterías', equipo: '2 × 18650, 22 Wh', ancla: S([-4.62, 1.55, 0.45]), lado: 'izq' },
     { id: 'panel', nombre: 'Panel solar', equipo: '5 W', ancla: S([-5.1, 4.95, 0.2]), lado: 'izq' },
-    { id: 'torre', nombre: 'Torre celular', equipo: 'red del operador', ancla: [6.5, 7.6, -10], lado: 'der' }
+    { id: 'torre', nombre: 'Torre celular', equipo: 'red del operador', ancla: [11.4, 7.4, -9], lado: 'der' }
   ];
   function construyeRotulos() {
     var capa = $('rotulos3d'); capa.innerHTML = '';
@@ -111,34 +187,26 @@
     G.render = new T.WebGLRenderer({ canvas: G.lienzo, antialias: true, alpha: true });
     G.render.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     G.escena = new T.Scene();
-    G.camara = new T.PerspectiveCamera(30, 2, 0.1, 200);
+    G.escena.fog = new T.Fog(0xffffff, 32, 120);
+    G.camara = new T.PerspectiveCamera(30, 2, 0.1, 250);
     G.objetivo = new T.Vector3(-0.4, 3.0, -2.2);
     G.orbita = { yaw: -0.42, pitch: 0.16, dist: 24 };
 
     G.escena.add(new T.HemisphereLight(0xffffff, 0xd8dee2, 0.85));
     var sol = new T.DirectionalLight(0xffffff, 0.55); sol.position.set(-6, 12, 8); G.escena.add(sol);
 
-    var tierra = mate(0xe4ddd0), lecho = mate(0xd2c8b6), pvc = mate(0xf4f6f7), metal = mate(0xb9c2c8), oscuro = mate(0x2a3640);
+    var pvc = mate(0xf4f6f7), metal = mate(0xb9c2c8), oscuro = mate(0x2a3640);
 
-    // Terreno en corte: orilla izquierda, lecho y orilla derecha. La cara frontal es el corte.
-    caja(7, 2.3, 8, tierra, -5, -0.55, -2);                     // orilla izquierda, cima en y = 0.6
-    caja(9.5, 0.5, 8, lecho, 3.25, -1.95, -2);                  // lecho del río
-    caja(6, 2.3, 8, tierra, 11, -0.55, -2);                     // orilla derecha
-    caja(14, 0.6, 14, tierra, 9, 0.3, -13, null, 0.25);         // terreno al fondo, donde está la torre
-    // Agua: volumen translúcido entre orillas; su color sigue a la turbiedad.
-    G.matAgua = mate(0x9cc3e1, { transparent: true, opacity: 0.62, depthWrite: false });
-    G.agua = caja(9.5, 1.6, 8, G.matAgua, 3.25, -0.9, -2, null, 0.35);
-    var sup = new T.Mesh(new T.PlaneGeometry(9.5, 8), new T.MeshBasicMaterial({ color: AGUA, transparent: true, opacity: 0.12, depthWrite: false }));
-    sup.rotation.x = -Math.PI / 2; sup.position.set(3.25, -0.1, -2); G.escena.add(sup);
+    construyeValle();
 
-    // Tubo de protección con las cinco sondas, anclado a la orilla con un brazo.
-    caja(1.2, 0.08, 0.12, metal, -1.35, 0.55, 0.9);
-    G.tuboSondas = cilindro(0.17, 2.0, pvc, -0.75, -0.4, 0.9, null, 24);
+    // Tubo de protección con las cinco sondas, en el agua y anclado a la orilla con un brazo.
+    caja(2.5, 0.08, 0.12, metal, -0.3, 0.58, 0.9);
+    G.tuboSondas = cilindro(0.17, 2.0, pvc, 0.9, -0.4, 0.9, null, 24);
     G.tuboSondas.material = mate(0xf4f6f7, { transparent: true, opacity: 0.38, depthWrite: false });
     aristas(G.tuboSondas, 0.5);
     G.puntas = {};
     M.PARAMS.forEach(function (p, i) {
-      var x = -0.75 + (i - 2) * 0.06, z = 0.9 + ((i % 2) ? 0.05 : -0.05);
+      var x = 0.9 + (i - 2) * 0.06, z = 0.9 + ((i % 2) ? 0.05 : -0.05);
       cilindro(0.022, 1.7, mate(0x55626c), x, -0.45, z, null, 10);
       G.puntas[p] = cilindro(0.03, 0.16, mate(AGUA), x, -1.33, z, null, 10);
     });
@@ -146,7 +214,8 @@
     // Cable de las sondas al gabinete, por la orilla.
     G.matCable = mate(0x55626c);
     var finCable = [S([-4.0, 1.3, 0.45]), S([-4.0, 1.12, 0.45])];
-    tubo([[-0.75, 0.6, 0.9], [-0.9, 0.85, 0.9], [-2.2, 0.68, 0.8], [-3.3, 0.7, 0.9], finCable[1], finCable[0]], 0.035, G.matCable);
+    var trazoCable = [[0.9, 0.6, 0.9], [0.7, 0.82, 0.9], [-1.5, 0.74, 0.85], [-3.3, 0.74, 0.9], finCable[1], finCable[0]];
+    tubo(trazoCable, 0.035, G.matCable);
 
     // Mástil, gabinete abierto, panel y antena: todo lo que se crea hasta "fin de la estación"
     // se mueve a un grupo escalado 1.6× desde la base del mástil.
@@ -194,24 +263,24 @@
     G.escena.add(est);
 
     // Torre celular al fondo: celosía simple.
-    var mt = mate(0xa3adb4), base = [6.5, 0.6, -10];
+    var mt = mate(0xa3adb4), base = [11, altura(11, -9), -9];
     [[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]].forEach(function (d) {
       var a = new T.Vector3(base[0] + d[0], base[1], base[2] + d[1]), b = new T.Vector3(base[0] + d[0] * 0.15, base[1] + 6.6, base[2] + d[1] * 0.15);
       var l = new T.Mesh(new T.CylinderGeometry(0.04, 0.04, a.distanceTo(b), 6), mt);
       l.position.copy(a).add(b).multiplyScalar(0.5); l.lookAt(b); l.rotateX(Math.PI / 2); G.escena.add(l);
     });
-    for (var y = 1.5; y < 7; y += 1.5) {
-      var f = 1 - (y - 0.6) / 6.6 * 0.85;
-      caja(1 * f, 0.03, 1 * f, mt, base[0], y, base[2], null, 0.4);
+    for (var y = 0.9; y < 6.4; y += 1.5) {
+      var f = 1 - y / 6.6 * 0.85;
+      caja(1 * f, 0.03, 1 * f, mt, base[0], base[1] + y, base[2], null, 0.4);
     }
-    G.torreTope = new T.Vector3(base[0], 7.4, base[2]);
-    caja(0.12, 0.6, 0.12, mate(0xe9edf0), base[0] + 0.2, 7.0, base[2] + 0.1);
-    caja(0.12, 0.6, 0.12, mate(0xe9edf0), base[0] - 0.2, 7.0, base[2] - 0.1);
+    G.torreTope = new T.Vector3(base[0], base[1] + 6.8, base[2]);
+    caja(0.12, 0.6, 0.12, mate(0xe9edf0), base[0] + 0.2, base[1] + 6.4, base[2] + 0.1);
+    caja(0.12, 0.6, 0.12, mate(0xe9edf0), base[0] - 0.2, base[1] + 6.4, base[2] - 0.1);
 
     // El paquete: un punto que viaja por el cable al medir y por el aire al enviar.
     G.paquete = new T.Mesh(new T.SphereGeometry(0.09, 16, 12), new T.MeshBasicMaterial({ color: TINTA }));
     G.paquete.visible = false; G.escena.add(G.paquete);
-    G.rutaCable = new T.CatmullRomCurve3([[-0.75, 0.6, 0.9], [-0.9, 0.85, 0.9], [-2.2, 0.68, 0.8], [-3.3, 0.7, 0.9], finCable[1], finCable[0], S([-4.1, 1.95, 0.36])]
+    G.rutaCable = new T.CatmullRomCurve3(trazoCable.concat([S([-4.1, 1.95, 0.36])])
       .map(function (p) { return new T.Vector3(p[0], p[1], p[2]); }));
     var pa = S([-3.65, 4.0, 0.35]), a0 = new T.Vector3(pa[0], pa[1], pa[2]), a1 = G.torreTope.clone();
     var medio = a0.clone().add(a1).multiplyScalar(0.5); medio.y += 3.2;

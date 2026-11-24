@@ -365,7 +365,8 @@ envío por paquete (dice si se envió, no qué llegó ni cuándo).
 
 **Consecuencia.** La página depende de WebGL y de bajar Three.js; sin WebGL lo avisa. Las
 proporciones de la estación están exageradas 1.6× respecto al río para que se lea; no es un
-plano de instalación.
+plano de instalación. El terreno imita el Atoyac del valle Puebla-Tlaxcala (cauce de taludes de
+tierra, orillas con pasto y árboles, agua turbia), pero no es el relieve de un sitio concreto.
 
 ## D20 · El mapa usa MapLibre con base vectorial y las vistas solo muestran lo que se ve
 

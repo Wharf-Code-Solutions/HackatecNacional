@@ -50,7 +50,9 @@ No conviertas "pendiente" en "construido" sin verificarlo contra el repo.
   energía, enlace), `firmware.js` (máquina de estados pura), `montaje.js`, `prueba.js`, `escena.js`,
   `recepcion.js`, `ui.js`.
 - **Pantalla (D19, D20)**: solo tres cosas.
-  - Figura 3D (Three.js r149 desde unpkg): corte del río, sondas en su tubo, cable, gabinete abierto con
+  - Figura 3D (Three.js r149 desde unpkg): valle casi plano con el río en un cauce de taludes de tierra que
+    serpentea, agua verde grisácea que se vuelve café con la turbiedad, árboles en las orillas y un volcán
+    tenue al fondo (niebla); corte frontal con el perfil en tinta. Sondas en su tubo, cable, gabinete abierto con
     controlador, SD (un cubo por paquete pendiente), módem y baterías, panel, antena y torre celular. Rótulos
     HTML con nombre y dato vivo. La estación está a 1.6× respecto al río para que se lea. Se gira arrastrando.
   - Recepción: pestañas con el último valor de cada parámetro y línea de tiempo de 12 h; punto lleno =
@@ -143,8 +145,9 @@ El usuario rechazó explícitamente el diseño con aspecto "hecho por IA" y lo h
 - Scripts de datos con `python -I`; `_comun.py` se importa con `importlib` y ruta explícita.
 - Un script nuevo no debe duplicar lo que vive en `scripts/_comun.py`.
 - `datos/crudos/` y `datos/geo/` no se versionan y no se editan nunca (I1, I15).
-- **Token de Mapbox**: vive en `mapbox.txt` (raíz) y `mapa/config.js`; ambos están en `.gitignore`. Nunca lo
-  escribas en un archivo versionado ni lo repitas en la conversación. `mapa/config.ejemplo.js` muestra el formato.
+- **Token de Mapbox**: vive en el `.env` de la raíz (`MAPBOX_ACCESS_TOKEN`) y `python -I mapa/generar_config.py`
+  lo copia a `mapa/config.js`; `.env`, `config.js` y `mapbox.txt` están en `.gitignore`. Nunca lo escribas en un
+  archivo versionado ni lo repitas en la conversación. `mapa/config.ejemplo.js` muestra el formato.
 - **Caché del navegador**: `index.html` del mapa y del simulador cargan sus `.js` y `.css` con `?v=N`. Sube el
   número al cambiarlos o el navegador seguirá usando la versión vieja.
 - **Panel del navegador de la app**: si está oculto, `requestAnimationFrame` se pausa y MapLibre/Mapbox y
