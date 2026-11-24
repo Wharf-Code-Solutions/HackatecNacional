@@ -3,9 +3,9 @@
 Conjunto de datos base para el Reto SECIHTI Puebla (HackaTec 2026): calidad del agua
 superficial del río Atoyac, sus afluentes y barrancas en Puebla y Tlaxcala.
 
-- Plan de la etapa: [`documentacion/07-plan-recoleccion-datos.md`](../documentacion/07-plan-recoleccion-datos.md)
+- Plan de la etapa: [`docs/07-plan-recoleccion-datos.md`](../docs/07-plan-recoleccion-datos.md)
 - Registro de fuentes: [`bitacora.md`](bitacora.md)
-- Hallazgos del análisis: [`documentacion/09-hallazgos-exploratorio.md`](../documentacion/09-hallazgos-exploratorio.md)
+- Hallazgos del análisis: [`docs/09-hallazgos-exploratorio.md`](../docs/09-hallazgos-exploratorio.md)
 
 ## Estructura
 

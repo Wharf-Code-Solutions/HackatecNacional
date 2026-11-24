@@ -109,8 +109,8 @@ El prefijo numérico indica el orden de ejecución. `_comun.py` no se ejecuta so
 | `scripts/01_inspeccionar_crudos.py` | Diagnóstico: hojas, dimensiones, primeras filas de un Excel | un archivo que le pases | stdout |
 | `scripts/02_explorar_f02.py` | Diagnóstico: columnas, cuencas y escalas del archivo de indicadores | `datos/crudos/F02/` | stdout |
 | `scripts/10_construir_tablas.py` | Construye el modelo de datos. **Fuente de verdad de `en_area()`, el núcleo analítico y los límites NOM-001 transcritos** | `datos/crudos/` | `datos/procesados/` |
-| `scripts/20_analisis_exploratorio.py` | Línea base y análisis | `datos/procesados/` | `datos/procesados/analisis/`, `documentacion/09-...` |
-| `scripts/30_verificacion_datos.py` | Verifica integridad y emite veredictos | `datos/crudos/`, `datos/procesados/` | `documentacion/08-...` |
+| `scripts/20_analisis_exploratorio.py` | Línea base y análisis | `datos/procesados/` | `datos/procesados/analisis/`, `docs/09-...` |
+| `scripts/30_verificacion_datos.py` | Verifica integridad y emite veredictos | `datos/crudos/`, `datos/procesados/` | `docs/08-...` |
 | `scripts/40_generar_fixtures.py` | Genera los fixtures del contrato | `datos/procesados/` | `contrato/fixtures/` |
 | `scripts/60_red_para_mapa.py` | Lee las capas de la red hidrográfica y las simplifica para pintar el mapa. **Fuente de verdad de** qué orden de cauce se dibuja (`ORDEN_MINIMO`) y de las tolerancias de simplificación. No calcula topología | `datos/geo/F08_red_hidrografica/` | `datos/procesados/mapa/` |
 | `scripts/50_verificar_repo.py` | **Revisión de salud del repositorio.** Automatiza nueve comprobaciones de invariantes y sale con código 1 si falla. **Fuente de verdad de los conteos esperados** (`FILAS_ESPERADAS`) | todo | stdout |
@@ -120,24 +120,24 @@ usan la línea base.
 
 ---
 
-## `documentacion/`
+## `docs/`
 
 | Ruta | Qué es | Editable |
 |---|---|---|
-| `documentacion/README.md` | Índice de las dos secciones | sí |
-| `documentacion/01-que-construimos.md` | Problema, solución, **qué existe vs. qué está planeado** | sí |
-| `documentacion/02-arquitectura.md` | Cómo encajan las piezas, recorrido de un dato | sí |
-| `documentacion/03-tecnologias.md` | Stack con justificación, lo descartado | sí |
-| `documentacion/04-fuentes-de-datos.md` | De dónde, cómo y por qué cada fuente | sí |
-| `documentacion/05-decisiones-tecnicas.md` | D1 a D18 con justificación y consecuencia | sí |
-| `documentacion/06-glosario.md` | Términos del dominio y del proyecto | sí |
-| `documentacion/07-plan-recoleccion-datos.md` | Plan original de la Etapa 1 | **histórico** |
-| `documentacion/08-verificacion-datos.md` | Estado del conjunto de datos | **NO** (script 30) |
-| `documentacion/09-hallazgos-exploratorio.md` | Qué dicen los datos | **NO** (script 20) |
-| `documentacion/10-revision-critica-plan.md` | Seis objeciones al plan, con alternativas | sí |
-| `documentacion/11-metodologia-modulos.md` | Módulos, criterios de terminado, degradación | sí |
-| `documentacion/12-estado-y-traspaso.md` | Estado por módulo y qué puede tomarse hoy | sí |
-| `documentacion/contexto/**` | Esta carpeta | sí, salvo el registro, que es de solo añadir |
+| `docs/README.md` | Índice de las dos secciones | sí |
+| `docs/01-que-construimos.md` | Problema, solución, **qué existe vs. qué está planeado** | sí |
+| `docs/02-arquitectura.md` | Cómo encajan las piezas, recorrido de un dato | sí |
+| `docs/03-tecnologias.md` | Stack con justificación, lo descartado | sí |
+| `docs/04-fuentes-de-datos.md` | De dónde, cómo y por qué cada fuente | sí |
+| `docs/05-decisiones-tecnicas.md` | D1 a D18 con justificación y consecuencia | sí |
+| `docs/06-glosario.md` | Términos del dominio y del proyecto | sí |
+| `docs/07-plan-recoleccion-datos.md` | Plan original de la Etapa 1 | **histórico** |
+| `docs/08-verificacion-datos.md` | Estado del conjunto de datos | **NO** (script 30) |
+| `docs/09-hallazgos-exploratorio.md` | Qué dicen los datos | **NO** (script 20) |
+| `docs/10-revision-critica-plan.md` | Seis objeciones al plan, con alternativas | sí |
+| `docs/11-metodologia-modulos.md` | Módulos, criterios de terminado, degradación | sí |
+| `docs/12-estado-y-traspaso.md` | Estado por módulo y qué puede tomarse hoy | sí |
+| `docs/contexto/**` | Esta carpeta | sí, salvo el registro, que es de solo añadir |
 
 ---
 
@@ -163,5 +163,5 @@ debes tocar.
 | Firma de cada escenario | funciones `f_organica`, `f_industrial`, `f_lluvia` en `scripts/40_generar_fixtures.py` |
 | URL de cada fuente de datos | `scripts/00_descargar_fuentes.py`, registradas en `datos/bitacora.md` |
 | Rangos y errores de las sondas, ciclo y consumos del dispositivo | `ESPEC` en `dispositivo/simulador/modelo.js`, `CFG` y `CARGA` en `dispositivo/simulador/firmware.js`; descritos en `dispositivo/ficha-tecnica.md` |
-| Criterio de terminado de cada módulo | `documentacion/11-metodologia-modulos.md` |
-| Justificación de una decisión | `documentacion/05-decisiones-tecnicas.md` |
+| Criterio de terminado de cada módulo | `docs/11-metodologia-modulos.md` |
+| Justificación de una decisión | `docs/05-decisiones-tecnicas.md` |

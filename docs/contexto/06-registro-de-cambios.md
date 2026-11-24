@@ -21,13 +21,37 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · La carpeta `documentacion/` pasa a llamarse `docs/`
+
+**Qué cambió.** Renombrada con `git mv`, conservando el historial. Se actualizaron las 90
+referencias a la ruta en 17 archivos, incluidas las rutas de salida de
+`scripts/20_analisis_exploratorio.py` y `scripts/30_verificacion_datos.py`, y `CLAUDE.md`.
+La estructura interna no cambió: siguen las dos secciones, con `contexto/` dentro.
+
+**Por qué.** Lo pidió el usuario. `docs` es la convención que GitHub reconoce y es más
+corta de escribir en los enlaces.
+
+**Qué arrastró.** `CLAUDE.md`, `README.md`, `datos/README.md`, `datos/bitacora.md`,
+`dispositivo/README.md`, los nueve documentos de `docs/` que se referenciaban entre sí,
+y los tres scripts que mencionaban la ruta. Los dos documentos generados (`08-` y `09-`)
+se regeneraron en la ruta nueva.
+
+**Nota.** La entrada del 2026-11-23 dice que `docs/` pasó a `documentacion/`. Queda como
+está: el registro es de solo añadir y el cambio de ida y de vuelta forma parte del
+historial.
+
+**Impacto en otros módulos.** Cualquier enlace o ruta guardada a `documentacion/...` hay
+que cambiarla por `docs/...`. Ningún cambio de código ni de datos.
+
+---
+
 ## 2026-11-24 · Documento de estado y traspaso
 
-**Qué cambió.** Nuevo `documentacion/12-estado-y-traspaso.md`: estado por módulo, lo que puede
+**Qué cambió.** Nuevo `docs/12-estado-y-traspaso.md`: estado por módulo, lo que puede
 tomarse hoy sin esperar a nadie (M2, M1, M5, M10) con sus entradas, su criterio y cómo probar, y lo
 que sigue siendo supuesto.
 **Por qué.** Que un compañero pueda avanzar en otro módulo sin reconstruir el contexto.
-**Qué arrastró.** `documentacion/README.md` (índice y ficha del dispositivo ya no pendiente),
+**Qué arrastró.** `docs/README.md` (índice y ficha del dispositivo ya no pendiente),
 `contexto/02-mapa-del-repo.md`, `contexto/00-LEEME-PRIMERO.md` (qué está construido),
 `11-metodologia-modulos.md` (M4 y M6 hechos), `CLAUDE.md`.
 **Impacto en otros módulos.** Ninguno.
@@ -46,7 +70,7 @@ la misma figura y sin ruido.
 
 **Qué arrastró.** `mapa/mapa.js`, `mapa/estilos.css`, `mapa/index.html`, `mapa/README.md`,
 `dispositivo/simulador/escena.js`, `dispositivo/simulador/index.html` (`aria-label`),
-`dispositivo/README.md`, `documentacion/03-tecnologias.md`, `CLAUDE.md`.
+`dispositivo/README.md`, `docs/03-tecnologias.md`, `CLAUDE.md`.
 
 **Impacto en otros módulos.** Ninguno: no cambia el contrato ni los datos.
 
@@ -172,10 +196,10 @@ Los conteos de filas no cambiaron.
 
 ## 2026-11-23 · Documentación reorganizada en dos secciones
 
-**Qué cambió.** `docs/` pasó a `documentacion/`, con los cinco documentos existentes
+**Qué cambió.** `docs/` pasó a `docs/`, con los cinco documentos existentes
 renumerados del 07 al 11 y seis documentos nuevos escritos a mano (01 a 06): qué
 construimos, arquitectura, tecnologías, fuentes de datos, decisiones técnicas y glosario.
-Se creó `documentacion/contexto/` con siete documentos para agentes de IA y
+Se creó `docs/contexto/` con siete documentos para agentes de IA y
 desarrolladores: este registro, las invariantes, el mapa del repositorio, las fronteras
 entre módulos, la verificación obligatoria y el protocolo de cambios.
 
@@ -209,7 +233,7 @@ transitada del sistema: sin él, el motor de reglas y la plataforma no se pueden
 desacoplar.
 
 **Qué arrastró.** `scripts/40_generar_fixtures.py` nuevo. `README.md` del repositorio.
-`documentacion/11-metodologia-modulos.md`, que se apoya en estas piezas.
+`docs/11-metodologia-modulos.md`, que se apoya en estas piezas.
 
 **Impacto en otros módulos.** Es la base de todos. Contrato congelado en v1.0 a la espera
 de la revisión del equipo. Los 2 016 paquetes de fixtures validan con cero errores.
@@ -272,7 +296,7 @@ está sin calcular (BLOQUEANTE).
 **Por qué.** Antes de declarar concluida la Etapa 1 había que saber si el conjunto de datos
 aguanta lo que las etapas siguientes le van a pedir.
 
-**Qué arrastró.** `documentacion/08-verificacion-datos.md`, generado. Refactor de
+**Qué arrastró.** `docs/08-verificacion-datos.md`, generado. Refactor de
 `scripts/10_construir_tablas.py` para extraer la lógica compartida a `scripts/_comun.py`,
 verificado con salida byte a byte idéntica.
 

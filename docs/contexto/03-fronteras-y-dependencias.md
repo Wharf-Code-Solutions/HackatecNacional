@@ -25,7 +25,7 @@ De ahí se derivan dos prohibiciones concretas:
 
 | Módulo | Es dueño de | No toca |
 |---|---|---|
-| **M0** Datos y contrato | `scripts/`, `datos/`, `contrato/esquemas/`, `contrato/fixtures/`, `documentacion/` | el código de los módulos |
+| **M0** Datos y contrato | `scripts/`, `datos/`, `contrato/esquemas/`, `contrato/fixtures/`, `docs/` | el código de los módulos |
 | **M1** Topología | lo que escriba en `datos/procesados/` sobre tramos y orden de sitios | el resto de `datos/procesados/` |
 | **M2** Motor de reglas | su librería y sus pruebas | los esquemas, los fixtures |
 | **M3** Propagación | su módulo de propagación | la salida de M1, que consume sin modificar |
@@ -35,7 +35,7 @@ De ahí se derivan dos prohibiciones concretas:
 | **M7** Panel de autoridad | su frontend | la API, que consume |
 | **M8** App ciudadana | su app | la API, que consume |
 | **M9** Integración | guion de demo, evidencia, pruebas de extremo a extremo | el código de los demás; reporta, no arregla |
-| **M10** Documentación | `documentacion/01` a `06`, `10`, `11` | `08` y `09`, que son generados |
+| **M10** Documentación | `docs/01` a `06`, `10`, `11` | `08` y `09`, que son generados |
 
 **Caso especial.** Los esquemas del contrato son de M0, pero cualquiera puede **proponer**
 un cambio. Lo que no puede es hacerlo en silencio: ver

@@ -13,30 +13,30 @@ Las etapas 2 a 8 pueden arrancar en paralelo.
 
 | Si eres... | Lee esto |
 |---|---|
-| **Un agente de IA que va a modificar el repositorio** | [`documentacion/contexto/00-LEEME-PRIMERO.md`](documentacion/contexto/00-LEEME-PRIMERO.md) |
+| **Un agente de IA que va a modificar el repositorio** | [`docs/contexto/00-LEEME-PRIMERO.md`](docs/contexto/00-LEEME-PRIMERO.md) |
 | Quien va a escribir código de cualquier módulo | [`contrato/README.md`](contrato/README.md) — arranca en 30 segundos |
-| Quien reparte el trabajo | [`documentacion/11-metodologia-modulos.md`](documentacion/11-metodologia-modulos.md) |
-| Quien quiere saber qué objetamos del plan y por qué | [`documentacion/10-revision-critica-plan.md`](documentacion/10-revision-critica-plan.md) |
+| Quien reparte el trabajo | [`docs/11-metodologia-modulos.md`](docs/11-metodologia-modulos.md) |
+| Quien quiere saber qué objetamos del plan y por qué | [`docs/10-revision-critica-plan.md`](docs/10-revision-critica-plan.md) |
 | Quien va a trabajar con los datos | [`datos/README.md`](datos/README.md) |
 
 ## Documentos
 
 El índice completo, con las dos secciones, está en
-[`documentacion/README.md`](documentacion/README.md).
+[`docs/README.md`](docs/README.md).
 
 | Documento | Contenido |
 |---|---|
-| [`documentacion/01-que-construimos.md`](documentacion/01-que-construimos.md) | El problema, la solución y **qué existe hoy frente a qué está planeado** |
-| [`documentacion/02-arquitectura.md`](documentacion/02-arquitectura.md) | Cómo encajan las piezas y el recorrido de un dato |
-| [`documentacion/03-tecnologias.md`](documentacion/03-tecnologias.md) | Stack con justificación y lo que se descartó |
-| [`documentacion/04-fuentes-de-datos.md`](documentacion/04-fuentes-de-datos.md) | De dónde salen los datos, cómo se obtuvieron y por qué |
-| [`documentacion/05-decisiones-tecnicas.md`](documentacion/05-decisiones-tecnicas.md) | D1 a D18, con alternativa descartada y consecuencia |
-| [`documentacion/06-glosario.md`](documentacion/06-glosario.md) | Términos del dominio y del proyecto |
-| [`documentacion/07-plan-recoleccion-datos.md`](documentacion/07-plan-recoleccion-datos.md) | Plan original de la Etapa 1 |
-| [`documentacion/08-verificacion-datos.md`](documentacion/08-verificacion-datos.md) | Verificación del conjunto de datos, con veredicto por sección |
-| [`documentacion/09-hallazgos-exploratorio.md`](documentacion/09-hallazgos-exploratorio.md) | Hallazgos del análisis exploratorio |
-| [`documentacion/10-revision-critica-plan.md`](documentacion/10-revision-critica-plan.md) | Seis objeciones al plan de etapas 2 a 8, con alternativas |
-| [`documentacion/11-metodologia-modulos.md`](documentacion/11-metodologia-modulos.md) | Módulos independientes, criterios de terminado y plan de degradación |
+| [`docs/01-que-construimos.md`](docs/01-que-construimos.md) | El problema, la solución y **qué existe hoy frente a qué está planeado** |
+| [`docs/02-arquitectura.md`](docs/02-arquitectura.md) | Cómo encajan las piezas y el recorrido de un dato |
+| [`docs/03-tecnologias.md`](docs/03-tecnologias.md) | Stack con justificación y lo que se descartó |
+| [`docs/04-fuentes-de-datos.md`](docs/04-fuentes-de-datos.md) | De dónde salen los datos, cómo se obtuvieron y por qué |
+| [`docs/05-decisiones-tecnicas.md`](docs/05-decisiones-tecnicas.md) | D1 a D18, con alternativa descartada y consecuencia |
+| [`docs/06-glosario.md`](docs/06-glosario.md) | Términos del dominio y del proyecto |
+| [`docs/07-plan-recoleccion-datos.md`](docs/07-plan-recoleccion-datos.md) | Plan original de la Etapa 1 |
+| [`docs/08-verificacion-datos.md`](docs/08-verificacion-datos.md) | Verificación del conjunto de datos, con veredicto por sección |
+| [`docs/09-hallazgos-exploratorio.md`](docs/09-hallazgos-exploratorio.md) | Hallazgos del análisis exploratorio |
+| [`docs/10-revision-critica-plan.md`](docs/10-revision-critica-plan.md) | Seis objeciones al plan de etapas 2 a 8, con alternativas |
+| [`docs/11-metodologia-modulos.md`](docs/11-metodologia-modulos.md) | Módulos independientes, criterios de terminado y plan de degradación |
 | [`datos/bitacora.md`](datos/bitacora.md) | Registro de fuentes, correcciones al inventario y pendientes |
 | [`datos/README.md`](datos/README.md) | Descripción del conjunto de datos |
 | [`contrato/README.md`](contrato/README.md) | Contrato de datos v1.0 |
@@ -99,7 +99,7 @@ mapa/            mapa de la cuenca con las estaciones y zoom al simulador (proto
 datos/crudos/    archivos tal cual se descargaron (no versionados, no se editan)
 datos/geo/       red hidrográfica del INEGI extraída (no versionada)
 datos/procesados/ tablas del modelo de datos y salidas del análisis
-documentacion/   sección 1: qué se construye y por qué · sección 2: contexto para agentes
+docs/            sección 1: el prototipo · sección 2 (contexto/): reglas para agentes
 scripts/         descarga, construcción, análisis, verificación y fixtures
 ```
 

@@ -30,8 +30,8 @@ registrada en `datos/bitacora.md`). Si un script abre un archivo de `crudos/` en
 |---|---|
 | `datos/procesados/*.csv` | `scripts/10_construir_tablas.py` |
 | `datos/procesados/analisis/*.csv` | `scripts/20_analisis_exploratorio.py` |
-| `documentacion/09-hallazgos-exploratorio.md` | `scripts/20_analisis_exploratorio.py` |
-| `documentacion/08-verificacion-datos.md` | `scripts/30_verificacion_datos.py` |
+| `docs/09-hallazgos-exploratorio.md` | `scripts/20_analisis_exploratorio.py` |
+| `docs/08-verificacion-datos.md` | `scripts/30_verificacion_datos.py` |
 | `contrato/fixtures/**` | `scripts/40_generar_fixtures.py` |
 
 **Por qué:** la siguiente corrida los sobrescribe y la edición se pierde en silencio.

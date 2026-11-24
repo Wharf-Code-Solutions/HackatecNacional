@@ -109,7 +109,7 @@ estudio por ti.
 python -I scripts/20_analisis_exploratorio.py
 ```
 
-Regenera `documentacion/09-hallazgos-exploratorio.md` y las seis tablas de
+Regenera `docs/09-hallazgos-exploratorio.md` y las seis tablas de
 `datos/procesados/analisis/`. Revisa el diff del documento: si una cifra del exploratorio
 cambió, es probable que haya que actualizar los documentos escritos a mano que la citan
 (`01-que-construimos.md`, `05-decisiones-tecnicas.md`, `10-revision-critica-plan.md`).
@@ -120,7 +120,7 @@ cambió, es probable que haya que actualizar los documentos escritos a mano que 
 python -I scripts/30_verificacion_datos.py
 ```
 
-Regenera `documentacion/08-verificacion-datos.md`. Revisa que ningún veredicto pasó de
+Regenera `docs/08-verificacion-datos.md`. Revisa que ningún veredicto pasó de
 **OK** a **ATENCION** o **BLOQUEANTE** sin que lo esperaras.
 
 ### Si tocaste un esquema de `contrato/esquemas/`

@@ -5,13 +5,13 @@ Tlaxcala). Idioma del proyecto, de la documentación y de la conversación: **es
 
 ## Antes de tocar algo
 
-1. Lee `documentacion/contexto/00-LEEME-PRIMERO.md` y `01-invariantes.md`. Son las reglas que no se rompen.
-2. Ubica el archivo en `documentacion/contexto/02-mapa-del-repo.md`. Si es derivado (CSV procesados,
+1. Lee `docs/contexto/00-LEEME-PRIMERO.md` y `01-invariantes.md`. Son las reglas que no se rompen.
+2. Ubica el archivo en `docs/contexto/02-mapa-del-repo.md`. Si es derivado (CSV procesados,
    fixtures, `08-` y `09-` de documentación), **no lo edites: edita su generador**.
 3. Busca tu tipo de cambio en `05-protocolo-de-cambios.md`. Casi todo cambio arrastra documentación.
 4. Al terminar corre `python -I scripts/50_verificar_repo.py` (debe decir "Todas las comprobaciones
    mecanicas pasan"). Si el cambio es relevante, añade una entrada al registro
-   (`documentacion/contexto/06-registro-de-cambios.md`, solo se añade, lo más reciente arriba).
+   (`docs/contexto/06-registro-de-cambios.md`, solo se añade, lo más reciente arriba).
 
 ## La idea central
 
@@ -139,6 +139,6 @@ reemplaza al mock; M7 y M8 son pantallas para la autoridad y la ciudadanía; M9 
 
 - Commits: prefijo del módulo, primera línea corta, cuerpo con el por qué y el número si lo hay.
 - Rama `main` del remoto del equipo. Sin líneas de coautor en los commits.
-- El estado para traspaso a compañeros vive en `documentacion/12-estado-y-traspaso.md`: actualízalo al
+- El estado para traspaso a compañeros vive en `docs/12-estado-y-traspaso.md`: actualízalo al
   terminar un módulo.
 - Cada cifra de la documentación sale de un archivo o de una corrida; si no puedes rastrearla, verifícala.

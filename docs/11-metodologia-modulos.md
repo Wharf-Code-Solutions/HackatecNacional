@@ -86,7 +86,7 @@ módulo está mal cortado.
 | **M7** | El mock genera alertas de verdad al reproducir un escenario. | `servidor_mock.py` + `reproducir_escenario.py descarga_industrial` |
 | **M8** | `POST /reportes` del mock valida, asigna folio y rechaza fotos con EXIF. | `servidor_mock.py` |
 | **M9** | Empieza el día uno escribiendo el guion, no al final. | los escenarios |
-| **M10** | No depende de código, depende de decisiones. Las decisiones ya están en `documentacion/`. | — |
+| **M10** | No depende de código, depende de decisiones. Las decisiones ya están en `docs/`. | — |
 
 ---
 

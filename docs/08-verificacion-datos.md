@@ -6,8 +6,8 @@ Generado por `scripts/30_verificacion_datos.py`. Cada seccion termina en un vere
 
 - `datos/crudos/`: 138.0 MB
 - `datos/geo/`: 61.0 MB
-- `datos/procesados/`: 16.9 MB
-- **Total en disco: 215.9 MB.** De eso, 138.0 MB son archivos crudos que no se versionan y se vuelven a bajar con un script.
+- `datos/procesados/`: 19.4 MB
+- **Total en disco: 218.3 MB.** De eso, 138.0 MB son archivos crudos que no se versionan y se vuelven a bajar con un script.
 
 | Tabla | Filas |
 |---|---|

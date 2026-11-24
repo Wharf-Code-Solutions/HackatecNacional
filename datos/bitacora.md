@@ -1,7 +1,7 @@
 # Bitácora de fuentes
 
 Etapa 1 — Recolección, procesamiento y análisis de datos · Reto SECIHTI Puebla (HackaTec 2026).
-Plan de referencia: [`documentacion/07-plan-recoleccion-datos.md`](../documentacion/07-plan-recoleccion-datos.md).
+Plan de referencia: [`docs/07-plan-recoleccion-datos.md`](../docs/07-plan-recoleccion-datos.md).
 
 Todas las descargas de esta sesión: **2026-11-23**. Nada de lo que está en `crudos/` se edita;
 se puede volver a bajar con `python -I scripts/00_descargar_fuentes.py`.
@@ -49,7 +49,7 @@ se puede volver a bajar con `python -I scripts/00_descargar_fuentes.py`.
 | F11 | Plantas de tratamiento municipales | Pendiente | Está en el *Inventario Nacional de Plantas de Tratamiento* y en las Estadísticas del Agua en México. |
 | F13 | Precipitación mensual por estación | Pendiente | Las páginas del SMN cargan los enlaces con JavaScript y las rutas antiguas `tools/RESOURCES/...` responden **500**. Hay que entrar al buscador de normales por estado. |
 | F14 | Caudales BANDAS | Pendiente | La serie puede estar congelada en años anteriores; la columna `CAUDAL` de F01/F05 ya trae caudal puntual en varios muestreos. |
-| F16–F18 | Estudios, medidas de mitigación y notas | Pendiente | Prioridad C; se recopilan en `documentacion/` con una ficha por documento. |
+| F16–F18 | Estudios, medidas de mitigación y notas | Pendiente | Prioridad C; se recopilan en `docs/` con una ficha por documento. |
 
 ## Reproducibilidad
 

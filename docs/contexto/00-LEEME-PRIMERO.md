@@ -39,8 +39,8 @@ Si tu cambio toca un módulo que no es el tuyo, lee también
 
 Si solo vas a leer un párrafo, que sea este.
 
-1. **Editar un archivo generado.** `documentacion/08-verificacion-datos.md` y
-   `documentacion/09-hallazgos-exploratorio.md` los sobrescribe un script. Igual
+1. **Editar un archivo generado.** `docs/08-verificacion-datos.md` y
+   `docs/09-hallazgos-exploratorio.md` los sobrescribe un script. Igual
    `datos/procesados/*.csv` y `contrato/fixtures/*`. Tu edición se pierde en la siguiente
    corrida.
 2. **Tocar `datos/crudos/`.** Es inmutable. Sin excepciones.
@@ -58,7 +58,7 @@ Si solo vas a leer un párrafo, que sea este.
 ## Contexto mínimo del proyecto
 
 Lo necesario para que un cambio tenga sentido. Si necesitas más, la sección 1 de
-`documentacion/` lo explica a fondo.
+`docs/` lo explica a fondo.
 
 - **Qué es.** Sistema de monitoreo y alertamiento de contaminación del río Atoyac, entre
   Puebla y Tlaxcala, para el reto SECIHTI de HackaTec 2026.

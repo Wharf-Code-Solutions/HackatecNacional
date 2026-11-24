@@ -3,7 +3,7 @@
 comprobar sin correr el pipeline completo.
 
 Es la verificacion que debe pasar cualquier cambio. La lista de invariantes esta
-en documentacion/contexto/01-invariantes.md; aqui se automatizan las que tienen
+en docs/contexto/01-invariantes.md; aqui se automatizan las que tienen
 una comprobacion mecanica.
 
 Uso:  python -I scripts/50_verificar_repo.py
@@ -64,7 +64,7 @@ for nombre, esperado in FILAS_ESPERADAS.items():
     else:
         falla(nombre, 'esperaba {:,} filas, hay {:,}. Si el cambio era '
                       'intencional, actualiza FILAS_ESPERADAS y la '
-                      'documentacion que cita la cifra'.format(esperado, n))
+                      'docs que cita la cifra'.format(esperado, n))
 
 # ------------------------------------------- I6 / solo Puebla y Tlaxcala
 print('\n2) Recorte del area de estudio (invariante I6)')
@@ -200,7 +200,7 @@ if os.path.exists(ruta_esq) and os.path.exists(ruta_par):
 else:
     aviso('codigos del contrato', 'falta lectura.schema.json o parametro.csv')
 
-# ---------------------------------------------------- enlaces de la documentacion
+# ---------------------------------------------------- enlaces de la docs
 print('\n8) Enlaces relativos en los .md')
 rotos = []
 for raiz, _, archivos in os.walk(RAIZ):

@@ -37,7 +37,7 @@ la contaminación (M3).
 | M7 Panel de autoridad | Pendiente | — |
 | M8 App ciudadana | Pendiente | — |
 | M9 Integración | Pendiente | — |
-| M10 Documentación y costos | En curso; faltan costos, manual por usuario y propuesta por fases | `documentacion/` |
+| M10 Documentación y costos | En curso; faltan costos, manual por usuario y propuesta por fases | `docs/` |
 
 ## Qué se puede tomar hoy sin esperar a nadie
 

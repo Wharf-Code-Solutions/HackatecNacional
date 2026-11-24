@@ -4,7 +4,7 @@ Esta carpeta tiene **dos secciones con propósitos distintos**. Conviene no conf
 
 | Sección | Para quién | Qué contiene |
 |---|---|---|
-| **Esta carpeta** (`documentacion/*.md`) | Personas: quien escribe la documentación técnica del reto, quien prepara el pitch, quien se incorpora al equipo | Qué se está construyendo, con qué tecnologías, de dónde salen los datos y por qué se decidió cada cosa |
+| **Esta carpeta** (`docs/*.md`) | Personas: quien escribe la documentación técnica del reto, quien prepara el pitch, quien se incorpora al equipo | Qué se está construyendo, con qué tecnologías, de dónde salen los datos y por qué se decidió cada cosa |
 | **[`contexto/`](contexto/)** | Agentes de IA y desarrolladores antes de tocar código | Las reglas que no se pueden romper, el mapa de qué archivo manda sobre qué, el protocolo para hacer un cambio y el registro de cambios |
 
 **Si eres un agente de IA y vas a modificar este repositorio, empieza por

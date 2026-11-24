@@ -3,7 +3,7 @@
 linea base y que riesgos quedan abiertos.
 
 Lee    : datos/crudos/F01, F05 y datos/procesados/*.csv
-Escribe: documentacion/08-verificacion-datos.md  (y nada mas)
+Escribe: docs/08-verificacion-datos.md  (y nada mas)
 
 Uso: python -I scripts/30_verificacion_datos.py
 """
@@ -411,7 +411,7 @@ di('| Caudal continuo (F14) | Carga masica y dilucion | Solo se prioriza por '
    'concentracion, que castiga a los arroyos pequenos |')
 di()
 
-ruta = os.path.join(RAIZ, 'documentacion', '08-verificacion-datos.md')
+ruta = os.path.join(RAIZ, 'docs', '08-verificacion-datos.md')
 with open(ruta, 'w', encoding='utf-8') as f:
     f.write('\n'.join(L) + '\n')
-print('\n-> documentacion/08-verificacion-datos.md')
+print('\n-> docs/08-verificacion-datos.md')

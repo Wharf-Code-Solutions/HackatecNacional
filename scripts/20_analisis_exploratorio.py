@@ -2,7 +2,7 @@
 """Analisis exploratorio inicial (seccion 11 del plan).
 
 Lee    : datos/procesados/*.csv
-Escribe: datos/procesados/analisis/*.csv  y  documentacion/09-hallazgos-exploratorio.md
+Escribe: datos/procesados/analisis/*.csv  y  docs/09-hallazgos-exploratorio.md
 
 Uso: python -I scripts/20_analisis_exploratorio.py
 """
@@ -326,8 +326,8 @@ L.append('- Cruce con descargas y establecimientos (F09-F12) y con precipitacion
 L.append('- Limites de la NOM-001-SEMARNAT-2021 cargados a `umbral` (F07 ya descargado).')
 L.append('')
 
-ruta_md = os.path.join(RAIZ, 'documentacion', '09-hallazgos-exploratorio.md')
+ruta_md = os.path.join(RAIZ, 'docs', '09-hallazgos-exploratorio.md')
 with open(ruta_md, 'w', encoding='utf-8') as f:
     f.write('\n'.join(L))
-print('  -> documentacion/09-hallazgos-exploratorio.md')
+print('  -> docs/09-hallazgos-exploratorio.md')
 print('\nListo.')

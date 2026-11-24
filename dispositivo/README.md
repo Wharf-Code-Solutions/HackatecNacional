@@ -57,4 +57,4 @@ python contrato/validador.py lectura $env:TEMP\paquetes_simulador.json
 
 M4 es dueño de esta carpeta y **no toca el contrato**. Habla con el resto del sistema
 únicamente por `POST /lecturas`. Si el simulador necesita un campo que `lectura` no tiene, se
-propone el cambio por el protocolo de `documentacion/contexto/05-protocolo-de-cambios.md`.
+propone el cambio por el protocolo de `docs/contexto/05-protocolo-de-cambios.md`.
