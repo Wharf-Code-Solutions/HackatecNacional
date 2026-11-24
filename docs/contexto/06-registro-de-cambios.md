@@ -21,6 +21,38 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · M8: huella de calor y prioridad de reportes; el panel muestra qué atender primero
+
+**Qué cambió.** `contrato/prioridad_huella.py` y las rutas `GET /huella` y `GET /prioridades` en el mock y el
+backend. La app ciudadana pinta la huella sobre el río; el panel de autoridad muestra «Qué atender primero»
+con el desglose de cada prioridad (D30).
+**Por qué.** El usuario pidió definir la huella por densidad de reportes y la prioridad con todo lo que tiene
+el proyecto. Pesos y umbrales son hipótesis sin datos reales.
+**Qué arrastró.** `contrato/README.md` (rutas), `02-mapa-del-repo.md`, `05-decisiones-tecnicas.md` (D30),
+`50_verificar_repo.py` (los módulos del propio contrato no cuentan como dependencia externa), `panel/`.
+**Impacto en otros módulos.** El panel lee `/prioridades` si existe y sigue funcionando sin ella.
+**Vercel.** `prioridad_huella.py` debe entrar en `includeFiles` de `vercel.json`.
+
+## 2026-11-24 · M8: la foto de un reporte se valida con Gemini
+
+**Qué cambió.** `POST /reportes/analizar-foto` (`contrato/analisis_foto.py`) en el mock y el backend. La app no
+deja enviar una foto que no corresponda a ninguno de los 6 tipos; si falla el servicio, avisa y deja enviar
+(D29). Los términos pasan a v2: la foto reducida va a Google.
+**Por qué.** Evitar datos basura. `gemini-2.5-flash` ya responde 404 a cuentas nuevas: cadena de modelos.
+**Qué arrastró.** `contrato/README.md`, `02-mapa-del-repo.md`, `03-tecnologias.md`, D29.
+**Impacto en otros módulos.** Variable `GEMINI_API_KEY` en el `.env` local y en Vercel; `analisis_foto.py` en
+`includeFiles` de `vercel.json`. Precisión con fotos reales sin medir.
+
+## 2026-11-24 · M8: app ciudadana, prototipo con el flujo de SIGRIV
+
+**Qué cambió.** Nueva carpeta `ciudadano/`: PWA en React y Vite con mapa y pin central, reporte con cámara o
+galería, folio, rastreo, términos, cola sin señal y modo demostración (D28).
+**Por qué.** M8 estaba pendiente; el usuario pidió replicar el flujo y el aspecto de SIGRIV (kit gob.mx v3).
+**Qué arrastró.** `12-estado-y-traspaso.md`, `CLAUDE.md` (tabla de módulos, cómo correrla, excepción de diseño),
+`02-mapa-del-repo.md`, `03-tecnologias.md`, D28.
+**Impacto en otros módulos.** Ninguno en código. Falta el `buildCommand` de `vercel.json` y probarla en teléfono
+real; la geolocalización exige HTTPS (túnel con cloudflared).
+
 ## 2026-11-24 · M10, M0: red de 5 estaciones elegida por cobertura; fixtures con esas 5
 
 **Qué cambió.** `scripts/96_red_estaciones.py` elige la red entre los 69 sitios con historia de campo

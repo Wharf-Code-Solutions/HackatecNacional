@@ -35,6 +35,8 @@ Leyenda de "editable":
 | `contrato/esquemas/reporte_ciudadano.schema.json` | Reporte ciudadano | catálogo de tipos de reporte | sí, con protocolo |
 | `contrato/validador.py` | Validador de JSON Schema sin dependencias | — | sí |
 | `contrato/servidor_mock.py` | Servidor HTTP con evaluador stub | las rutas de la API | sí |
+| `contrato/analisis_foto.py` | Pregunta a Gemini si la foto de un reporte corresponde a algún tipo (cadena de modelos, llave en `GEMINI_API_KEY`); lo cargan el mock y el backend | `POST /reportes/analizar-foto` | sí |
+| `contrato/prioridad_huella.py` | Huella de calor sobre el río y prioridad de los reportes; los pesos son hipótesis ajustables arriba del archivo | `GET /huella`, `GET /prioridades` | sí |
 | `contrato/reproducir_escenario.py` | Envía un escenario a un servidor | — | sí |
 | `contrato/fixtures/estaciones.json` | Las 5 estaciones de la red propuesta (docs/18) | `40_generar_fixtures.py`, que las toma de `red/red_estaciones.csv` | **NO** |
 | `contrato/fixtures/linea_base.json` | Banda de esas 5 estaciones | — | **NO** |
@@ -71,6 +73,21 @@ estaciones leyendo `GET /alertas` del backend. Se sirve desde la raíz del repo.
 El panel **no evalúa nada**: lee `GET /alertas`, `GET /veredictos`, `GET /reportes` y escribe
 con `PATCH /alertas/<c_alerta>`. Por su cuenta solo lee tablas publicadas. Se corre con
 `npm run dev` dentro de `panel/` (D23).
+
+---
+
+## `ciudadano/` — M8, app ciudadana
+
+| Ruta | Qué es | Editable |
+|---|---|---|
+| `ciudadano/src/` | PWA en React (Vite): `App.jsx`, `components/` (mapa, hoja inferior, formulario, rastreo, términos), `lib/` (backend, foto, ubicación, almacén local, etiquetas) | sí |
+| `ciudadano/scripts/copiar-datos.mjs` | Copia `sitios.geojson` y `cuenca.geojson` a `ciudadano/public/datos/` antes de `dev` y `build` | sí |
+| `ciudadano/public/datos/` | Copia de lo anterior | **NO** (generado, no versionado) |
+| `ciudadano/public/demo/foto.json` | Reportes de ejemplo para el modo demostración (no son reales) | sí |
+| `ciudadano/public/sw.js`, `manifest.webmanifest` | Service worker mínimo e instalación | sí |
+
+La app **no evalúa nada**: manda `POST /reportes` y `POST /reportes/analizar-foto`, y lee `GET /reportes`,
+`GET /reportes/<folio>` y `GET /huella`. Se corre con `npm run dev` dentro de `ciudadano/` (D28).
 
 ---
 

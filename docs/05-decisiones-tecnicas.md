@@ -616,3 +616,72 @@ contaminados (vigilan poco) y enlace propio por radio o satélite.
 **Consecuencia.** Fixtures, escenarios y simulador usan estas 5; el motor da 0, 1, 5, 3 y 0 alertas en
 los cinco escenarios. Falta medir la señal en cada sitio y confirmar el flujo todo el año en el
 Zahuapan y el Alseseca. Detalle en `docs/18-red-de-estaciones.md`.
+## D28 · La app ciudadana sigue el flujo y el aspecto de SIGRIV, con mapa
+
+**Decisión.** `ciudadano/` es una PWA en React y Vite bajo `/ciudadano/`. Arranca en un mapa a pantalla
+completa con un pin fijo al centro («Ubica el problema aquí»), «Ubicarme» y «Generar Reporte», y el
+formulario sube como hoja inferior con las categorías en cuadrícula, foto (cámara o galería),
+descripción y correo opcionales. Después, folio con «Copiar», rastreo por folio y términos. Usa el kit
+oficial gob.mx v3, Montserrat y Noto Sans, y la paleta guinda y dorado de SIGRIV. El mapa usa Mapbox GL
+con `VITE_MAPBOX_TOKEN` y MapLibre con OpenFreeMap sin él. La ubicación del reporte es la del pin, no
+exige GPS. El mapa muestra el contorno de la cuenca, los reportes de otras personas (gota guinda
+abierta, gris cerrada, a ~100 m) y la huella de calor (D30). No muestra las estaciones: al ciudadano no
+le importan. Se quitó el tipo «Otro»: una foto sin tipo claro no se puede validar.
+
+**Por qué.** El usuario pidió replicar SIGRIV, cuyo flujo ya estaba validado. Corrige la regla del plan
+(D-E, sin librería de mapas) y la paleta del plan (SND guinda 611232): el ciudadano ve el mismo lenguaje
+que SIGRIV y el panel de autoridad conserva el SND (D22). Los términos pasan a v2 y se vuelven a aceptar.
+
+**Alternativa descartada.** Flutter y rutas dentro del panel (ya descartadas en el plan). Una pantalla de
+inicio sin mapa, como pedía el plan: el usuario prefirió arrancar en el mapa.
+
+**Consecuencia.** El estilo contradice la regla «sin píldoras ni sombras» de `CLAUDE.md`: se anota como
+excepción, igual que el panel. Los marcadores no llevan estilos en su elemento raíz: MapLibre lo posiciona
+con `transform`, y si se le pone rotación o `position` el pin se desplaza al hacer zoom.
+
+## D29 · La foto se valida en el servidor con Gemini y, si falla el servicio, se deja enviar
+
+**Decisión.** `POST /reportes/analizar-foto` (`contrato/analisis_foto.py`, cargado por el mock y el
+backend) manda la miniatura a Gemini con un esquema de respuesta (`tipo`, `confianza`, `motivo`). Si el
+tipo es «ninguno» o la confianza es menor a 0.6, la app no deja enviar con esa foto (la persona puede
+tomar otra o quitarla). Si la foto parece de otro tipo, sugiere cambiarlo sin bloquear. Se manda
+`clasificacion_automatica` con el reporte. La llave va en `GEMINI_API_KEY` (`.env` local o variable de
+Vercel), nunca al navegador. `GEMINI_MODEL` admite una lista: 404, 429 y 5xx pasan al siguiente modelo.
+Por omisión van primero los «lite» (≈1 s medido; los «flash» completos tardaron más de 40 s con 503).
+Hay freno de 10 solicitudes por minuto por IP.
+
+**Por qué.** El usuario quiere evitar datos basura. No hay imágenes etiquetadas del Atoyac para entrenar
+nada (plan §9), y SIGRIV ya usaba Gemini. `gemini-2.5-flash` responde 404 a cuentas nuevas.
+
+**Alternativa descartada.** CLIP en el teléfono (decenas de MB y sin precisión probada) y revisión local
+solo de brillo y nitidez (no sabe si hay espuma). Bloquear cuando el servicio cae: dejaría sin app a
+quien reporta por una falla nuestra; lo que se envía así lleva `no_disponible` y se verifica después.
+
+**Consecuencia.** La imagen reducida sale del teléfono hacia Google: los términos lo dicen. En el nivel
+gratuito Google puede usar las entradas para mejorar sus modelos: para producción, nivel de pago. La
+precisión con fotos reales del río **no está medida**.
+
+## D30 · La huella de calor sigue el río y la prioridad cruza reportes con sensores
+
+**Decisión.** `contrato/prioridad_huella.py`. Huella: los reportes abiertos del mismo tipo a ≤150 m y
+≤24 h forman un foco (peso `1 + log2 n`, que se satura), con vida media de 72 h; los focos del mismo
+sitio a ≤1.5 km forman una zona, que pinta calor solo con ≥3 reportes y peso ≥2.5 (I12). El calor cae
+a lo largo del cauce (σ 500 m aguas arriba, 1 500 m aguas abajo) y se pinta como el propio río, por tramo.
+Prioridad de 1 a 10: `calidad × (gravedad del tipo + min(2, log2 n)) + sensor + fuente`; gravedad:
+peces muertos 5, descarga 4, color 3, espuma 3, basura 2, mal olor 2; sensor +3 si hay una alerta abierta
+del motor en el mismo sitio a ≤24 h y +2 si está aguas abajo dentro de la ventana de llegada de M3;
+fuente +1 si el DENUE tiene un establecimiento compatible a ≤5 km aguas arriba; calidad 1.0 con foto
+validada, 0.9 sin validar, 0.8 sin foto, ×0.9 con GPS peor que 100 m. Bandas: ≥7 alta, 4-6 media.
+`GET /huella` es pública; `GET /prioridades` va al panel con el desglose completo.
+
+**Por qué.** La fórmula de SIGRIV (`base + (reportes − 1) + entorno`) se infla con spam (no hay cuentas),
+mide en línea recta (barrancas que no se comunican) y no usa lo que distingue al proyecto. No se usa el
+semáforo de CONAGUA (D9).
+
+**Alternativa descartada.** Mapa de calor 2D de reportes y un contador lineal. Receptores (hospitales,
+escuelas, tomas de agua) como bono de entorno: faltan REPDA y los datos de tomas.
+
+**Consecuencia.** **Todos los pesos son hipótesis sin reportes reales con que calibrarlos**; viven como
+constantes arriba del módulo. La red publicada no trae los enlaces entre tramos: la distancia sobre el
+cauce se aproxima con los metros al sitio y puede quedar algo corta entre afluentes (el factor de
+cercanía en línea recta la limita). Un reporte lejos de todo cauce se prioriza igual y se marca.

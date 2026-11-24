@@ -38,7 +38,7 @@ punta (M9).
 | M5 Backend | **Construido.** FastAPI; SQLite en local y Postgres en Vercel, en `/api` del mismo proyecto que el panel; mismas respuestas que el mock, comparado en vivo; sin memoria entre peticiones; predicción de M3. Sin autenticación | `backend/`, `api/` |
 | M6 Mapa | **Prototipo**: cuenca delimitada y confluencias (aún no colorea por índice ni está probado a ancho de teléfono) | `mapa/` |
 | M7 Panel de autoridad | **Construido.** Alertas con evidencia y gráficas, fuente probable con puntaje, predicción de M3 y cambio de estado y responsable; React con Vite, desplegado en Vercel. Sin inicio de sesión | `panel/` |
-| M8 App ciudadana | Pendiente | — |
+| M8 App ciudadana | **Prototipo.** PWA con el flujo de SIGRIV: mapa con pin central, reporte con cámara o galería, foto validada con Gemini, folio, rastreo, cola sin señal y modo demostración. Probada contra el mock a 390 px; **falta probarla en un teléfono real** y la validación con fotos reales | `ciudadano/`, `docs/17-plan-app-ciudadana.md` |
 | M9 Integración | Pendiente | — |
 | M10 Documentación y costos | En curso. **Red de 5 estaciones decidida** (cobertura, enlace por la red celular existente y costos por cotizar, `docs/18`); faltan cotización, manual por usuario y propuesta por fases | `docs/`, `scripts/96_red_estaciones.py` |
 
@@ -78,12 +78,19 @@ punta (M9).
 
 ## App ciudadana (M8)
 
-No está construida, pero **su especificación completa sí**, en
-[17-plan-app-ciudadana.md](17-plan-app-ciudadana.md): PWA en React y Vite bajo
-`/ciudadano/`, con las decisiones tomadas, las alternativas descartadas y un criterio de
-terminado medible. Sus dos dependencias de backend ya están resueltas: la consulta de folio
-y la asignación al tramo. Lo único pendiente es el `buildCommand` del despliegue, que se
-aplica junto con el andamio.
+Construida como prototipo en `ciudadano/` (D28). La especificación original está en
+[17-plan-app-ciudadana.md](17-plan-app-ciudadana.md); **se desvió de ella en tres cosas**, por pedido
+del usuario: lleva mapa (el plan descartaba librería de mapas), sigue el estilo de SIGRIV con el kit
+gob.mx y valida la foto con Gemini (D29). Pendiente:
+
+- Probarla en un teléfono real (cámara, GPS, un solo pulgar) con un túnel HTTPS: la geolocalización
+  exige HTTPS.
+- Medir la validación de fotos con imágenes reales del Atoyac; los umbrales son un punto de partida.
+- El `buildCommand` y el `includeFiles` (`contrato/analisis_foto.py`, `prioridad_huella.py`) de
+  `vercel.json`, que son de quien lleva M5/M7, y la llave `GEMINI_API_KEY` en Vercel.
+- Huella de calor y prioridad (D30): construidas, con pesos que son hipótesis sin calibrar.
+- `GET /reportes` expone la coordenada exacta de cada reporte: las vistas la redondean, pero la API
+  pública no. Decidir si se redondea en el servidor.
 
 ## Modelos proxy
 

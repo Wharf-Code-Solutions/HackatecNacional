@@ -42,7 +42,7 @@ después el **análisis**. Las vistas actuales no anuncian el análisis en panta
 | M7 panel de autoridad | **Construido** (`panel/`): alertas con evidencia y gráficas, fuente probable con puntaje, predicción de M3 (ventanas de llegada aguas abajo), estado y responsable vía `PATCH /alertas/<c_alerta>`; React con Vite en Vercel, modo demostración sin backend (D23). Sin inicio de sesión |
 | Modelos proxy | Conductividad→SDT **publicado** (2 % de error fuera de muestra); turbiedad→SST **descartado** (35 %) |
 | M5 backend | **Construido** (`backend/`): FastAPI, SQLite en local y Postgres en Vercel (`/api` del mismo proyecto que el panel, D25); mismas respuestas que el mock (`backend/prueba.py` lo compara en vivo); motor sin memoria entre peticiones; `GET /alertas/<c_alerta>/prediccion` con M3. Sin autenticación |
-| M8 app ciudadana | **Pendiente, especificada.** Plan completo en `docs/17-plan-app-ciudadana.md`: PWA en React y Vite bajo `/ciudadano/`. Sus dos dependencias de backend ya están resueltas (`GET /reportes/<folio>` y la asignación al tramo en `backend/asignacion.py`). Queda el `buildCommand` de `vercel.json`, que va junto con el andamio |
+| M8 app ciudadana | **Prototipo** (`ciudadano/`): PWA con mapa y pin central al estilo SIGRIV, reporte con cámara o galería, foto validada con Gemini (`POST /reportes/analizar-foto`), folio, rastreo, cola sin señal y modo demostración. Falta probarla en teléfono real. Huella de calor (`GET /huella`) y prioridad (`GET /prioridades`) construidas en `contrato/prioridad_huella.py`, con pesos que son hipótesis |
 | Red de estaciones | **Decidida** (`scripts/96_red_estaciones.py`, `docs/18-red-de-estaciones.md`): 5 estaciones con historia de campo que vigilan 1 124 de 2 863 establecimientos DENUE (39 %) a 20 km aguas arriba; las anteriores vigilaban 265. Enlace por la red celular existente, sin antenas propias. Los fixtures son estas 5 |
 | M9, M10 | Pendientes (M10: falta cotizar, manual y propuesta por fases) |
 
@@ -117,6 +117,9 @@ python contrato/servidor_mock.py
 - Mapa: `http://127.0.0.1:8000/mapa/`
 - Panel de autoridad (React): en `panel/`, `npm install` la primera vez y `npm run dev` → `http://localhost:5173/`
   (para ver alertas: backend o mock con `--motor real`, y `python contrato/reproducir_escenario.py descarga_industrial`)
+- App ciudadana: en `ciudadano/`, `npm install` la primera vez y `npm run dev` → `http://localhost:5174/ciudadano/`
+  (con el mock o el backend en el 8080; para probar en teléfono, `cloudflared tunnel --url http://localhost:5174`,
+  porque la geolocalización exige HTTPS; la llave de Gemini va en `GEMINI_API_KEY` del `.env` de la raíz)
 - Simulador solo: `http://127.0.0.1:8000/dispositivo/simulador/`
 - Pruebas del firmware: `node dispositivo/simulador/prueba.js`
 - Validar paquetes del simulador: `python contrato/validador.py lectura $env:TEMP\paquetes_simulador.json`
@@ -155,6 +158,9 @@ El usuario rechazó explícitamente el diseño con aspecto "hecho por IA" y lo h
 - Le gusta ver los componentes del dispositivo descritos dentro de la figura, sin separarlos en otra sección.
 - **Excepción, el panel de autoridad (`panel/`)**: usa el Sistema Nacional de Diseño del gobierno (snd.gob.mx),
   tema guinda, Noto Sans; los niveles de alerta van en rojo, amarillo y azul semánticos del SND (D22).
+- **Excepción, la app ciudadana (`ciudadano/`)**: replica el aspecto de SIGRIV a pedido del usuario: kit gob.mx v3,
+  Montserrat y Noto Sans, guinda y dorado, barra verde oscuro con el logotipo del Gobierno de México, mapa a
+  pantalla completa y hoja inferior (D28). Ahí sí hay botones redondeados y sombras.
 - Toda cifra mostrada lleva su `n` y su fecha (I12). "Sin dato" es un estado visible, no un hueco (I13).
 
 ## Trampas conocidas
@@ -209,5 +215,5 @@ Ya hay datos (M0), sensor simulado (M4), mapa (M6), topología (M1), motor de re
 - Rama `main` del remoto del equipo. Sin líneas de coautor en los commits.
 - El estado para traspaso vive en `docs/12-estado-y-traspaso.md`: se actualiza al hacer push, no en cada cambio.
 - Commit y push solo cuando el usuario lo pide. Remoto: `Wharf-Code-Solutions/HackatecNacional`.
-- Decisiones técnicas numeradas en `docs/05-decisiones-tecnicas.md` (hoy D1 a D27).
+- Decisiones técnicas numeradas en `docs/05-decisiones-tecnicas.md` (hoy D1 a D30).
 - Cada cifra de la documentación sale de un archivo o de una corrida; si no puedes rastrearla, verifícala.

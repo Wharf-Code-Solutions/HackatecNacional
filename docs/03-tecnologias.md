@@ -145,6 +145,17 @@ Las tablas que el panel lee (`estaciones.json`, `linea_base.json`, `sitio_aguas_
 `sitio_pares.csv`) se copian a `panel/public/datos/` antes de cada arranque y compilación; no se
 versionan ahí. Decisión D23.
 
+### React 18, Vite y MapLibre o Mapbox para la app ciudadana (M8)
+
+`ciudadano/`: PWA con el mismo stack del panel. El mapa usa Mapbox GL (`streets-v12`, como SIGRIV) si hay
+`VITE_MAPBOX_TOKEN` y MapLibre con OpenFreeMap si no (D28). El kit gob.mx v3 y las tipografías vienen de CDN.
+
+### Gemini para revisar las fotos de los reportes
+
+`contrato/analisis_foto.py` llama a la API REST de Gemini con `urllib` (sin dependencias) desde el
+servidor; la llave nunca llega al navegador (D29). `gemini-2.5-flash` ya no se ofrece a cuentas nuevas
+(responde 404), por eso hay una cadena de modelos.
+
 ### Git y GitHub
 
 Con una regla que se verifica: `datos/crudos/` y `datos/geo/` **no se versionan**. Son

@@ -51,6 +51,9 @@ día entero de lecturas de cinco estaciones con una descarga industrial inyectad
 | GET | `/alertas/<c_alerta>/prediccion` | **solo en el backend (M5)**: propagación aguas abajo de M3. El mock no la tiene |
 | POST | `/reportes` | reporte ciudadano (rechaza fotos con EXIF) |
 | GET | `/reportes` | reportes sin el campo `correo` |
+| POST | `/reportes/analizar-foto` | la app manda la miniatura (`{"foto": "data:image/jpeg;base64,..."}`) y Gemini responde si corresponde a algún tipo: `{estado, tipo, confianza, motivo, modelo, valida}`. Sin llave o con el servicio caído responde `estado: no_disponible` y la app deja enviar con aviso. Lógica en `analisis_foto.py`; freno de 10 por minuto por IP |
+| GET | `/huella` | GeoJSON de los tramos del río con `intensidad` de 0 a 1 según la densidad de reportes abiertos; solo dónde hay evidencia (3 reportes y peso ≥ 2.5). Pública. Lógica en `prioridad_huella.py` |
+| GET | `/prioridades` | focos de reportes (mismo tipo, 150 m, 24 h) con prioridad de 1 a 10, banda y desglose; para la autoridad |
 
 Tiene CORS abierto, así que un frontend en otro puerto lo consume sin configurar nada.
 

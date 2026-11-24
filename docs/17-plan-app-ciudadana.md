@@ -1,5 +1,10 @@
 # Plan de trabajo: app ciudadana (M8)
 
+> **Nota (2026-11-24).** La app se construyó en `ciudadano/` y **se desvió de este plan** por pedido del
+> usuario: lleva mapa (D-E queda sin efecto), sigue el flujo y el aspecto de SIGRIV con el kit gob.mx
+> (no la paleta SND de la sección 8), quita el tipo «Otro» y valida la foto con Gemini (sección 9, que
+> descartaba el modelo). Ver D28, D29 y D30 en [05-decisiones-tecnicas.md](05-decisiones-tecnicas.md).
+
 **Para quien la va a construir.** Este documento es la especificación completa. Las
 decisiones ya están tomadas y justificadas: no hace falta volver a elegir stack, ubicación
 ni paleta. Lo que sí hace falta es leer la sección de **dependencias de otros** antes de
