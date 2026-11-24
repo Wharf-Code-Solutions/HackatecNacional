@@ -178,7 +178,9 @@ def escuelas_provisionales():
 # Escuelas de interés con datos reales: las de riesgo medio o mayor, las más altas primero, con tope para que
 # el panel y la app carguen rápido. La tabla completa queda en factores_escuelas.csv.
 INDICE_MINIMO = 0.30
-TOPE_ESCUELAS = 400
+TOPE_INDICE = 300               # las de mayor índice general
+TOPE_CONTAMINACION = 100        # más las de mayor riesgo de contaminación: sin ellas, la lista es solo de laderas
+CONTAMINACION_MINIMA = 0.5
 
 
 def escuelas_reales():
@@ -200,17 +202,20 @@ def escuelas_reales():
                                    {'organismo': 'CAPCEE', 'tramite': CAPCEE_ACCESO, 'estado': 'pendiente', 'fecha': None}]
                                   if r.get('c_estacion') else [],
             })
-    salida = [e for e in salida if e['riesgo']['indice'] >= INDICE_MINIMO]
-    salida.sort(key=lambda e: -e['riesgo']['indice'])
-    return salida[:TOPE_ESCUELAS]
+    por_indice = sorted((e for e in salida if e['riesgo']['indice'] >= INDICE_MINIMO), key=lambda e: -e['riesgo']['indice'])
+    elegidas = por_indice[:TOPE_INDICE]
+    ya = {e['cct'] for e in elegidas}
+    por_cont = sorted((e for e in salida if e['riesgo']['contaminacion'] >= CONTAMINACION_MINIMA and e['cct'] not in ya),
+                      key=lambda e: -e['riesgo']['contaminacion'])
+    return elegidas + por_cont[:TOPE_CONTAMINACION]
 
 
 # Zonas con datos reales: grupos de escuelas (a menos de AGRUPAR_M) cuyo sub-índice de derrumbe o de
 # contaminación es alto. No son el atlas de CENAPRED: cada zona dice de dónde sale.
-AGRUPAR_M = 1500
+AGRUPAR_M = 3000
 SUB_MINIMO = 0.6
 FUENTE_ZONA = {
-    'derrumbe': 'Derivada de la pendiente del terreno alrededor de escuelas (mosaicos de elevación); no es el atlas de CENAPRED',
+    'derrumbe': 'Escuelas con susceptibilidad de laderas alta (CENAPRED, mapa nacional) y pendiente fuerte; agrupadas',
     'contaminacion': 'Escuelas con fuentes contaminantes del DENUE cerca y marginación alta (CONAPO); no es una medición',
 }
 

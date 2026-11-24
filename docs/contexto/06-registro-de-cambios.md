@@ -21,6 +21,19 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Módulo A: susceptibilidad de laderas de CENAPRED en el índice de escuelas
+
+**Qué cambió.** `98_escuelas_candidatas.py` lee el Mapa Nacional de Susceptibilidad por Inestabilidad de Laderas de CENAPRED
+desde su servicio ArcGIS público (`servicios1.cenapred.unam.mx:6080/.../Inestabilidad_Laderas/MapServer`), exportado en bloques
+de 0.25° (~55 m por pixel; caché en `datos/crudos/F20`) y leído por el color de la leyenda. En las 7 384 escuelas: 79 Muy alto,
+2 194 Alto, 1 064 Moderada, 475 Bajo, 3 572 zona libre. `escuelas.json` pasa a 330 escuelas (las 300 de mayor índice más 30 de
+contaminación ≥ 0.5): 1 muy alto, 150 alto, 176 medio, 3 bajo. 107 zonas (96 de derrumbe, 11 de contaminación), agrupadas a 3 km.
+**Por qué.** El factor valía 0 en todas por falta de fuente. La página del atlas no tiene descarga, pero su visor usa un servicio
+público. Pedir el mapa por bloques evita 7 384 consultas punto por punto. Sin las 30 de contaminación la lista quedaba solo de laderas.
+**Qué arrastró.** `contrato/fixtures/LEEME.md`. El sitio del atlas solo responde por `http://`.
+**Impacto en otros módulos.** Misma forma del contrato. `calidad_agua` sigue en 0 lejos de los sitios CONAGUA. Se regeneró `mecanismos.json` con `99_reubicacion.py` (deriva de `escuelas.json`): siguen las 5 estaciones
+`EST-ESC-01` a `05`, que ahora protegen 16 escuelas en lugar de 13.
+
 ## 2026-11-24 · Módulo B (cambio de rumbo): el panel se organiza por escuelas
 
 **Qué cambió.** El panel tiene cuatro pestañas: Escuelas (abre por defecto; lista por índice de riesgo), Alertas,

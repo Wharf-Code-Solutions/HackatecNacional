@@ -123,7 +123,9 @@
    "escuela": "Santos Hernandez Aguilar",
    "localidad": "San Matías Tlalancaleca",
    "escuelas_protegidas": [
-    "21EBH0297Z"
+    "21EBH0297Z",
+    "21DJN1644R",
+    "21DPR0752I"
    ],
    "distancia_escuela_m": 456,
    "distancia_al_sitio_m": 5058,
@@ -216,7 +218,8 @@
    "localidad": "San Cristóbal Tepatlaxco",
    "escuelas_protegidas": [
     "21EJN0701K",
-    "21EJN1306Q"
+    "21EJN1306Q",
+    "21DPR2838B"
    ],
    "distancia_escuela_m": 31,
    "distancia_al_sitio_m": 3958,

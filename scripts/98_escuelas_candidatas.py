@@ -10,7 +10,9 @@ Factores y su puntaje (los cortes son hipótesis, igual que los pesos de 97):
 
     pendiente                   percentil 75 de la pendiente en RADIO_PENDIENTE_M (la ladera, no la parcela):
                                 0 en 5°, 1 en 30° o más. Mosaicos de elevación terrarium (AWS, públicos).
-    susceptibilidad_laderas     SIN DATO todavía (CENAPRED). 0.
+    susceptibilidad_laderas     CENAPRED, Mapa Nacional de Susceptibilidad por Inestabilidad de Laderas (15 m),
+                                leído de su servicio ArcGIS público en bloques: Muy bajo 0, Bajo 0.25, Moderada 0.5,
+                                Alto 0.75, Muy alto 1. Sin color = zona que CENAPRED da por libre (pendiente < 6°): 0.
     urbanizacion_reciente       establecimientos del DENUE dados de alta desde 2020 a menos de 1 km: 1 con 30 o más.
     cercania_cauce_o_descarga   fuente contaminante del DENUE más cercana (giros de 95_denue_cuenca.py):
                                 1 a menos de 100 m, 0 a 1 km o más. La red de ríos solo existe para la cuenca
@@ -25,7 +27,8 @@ La columna `sin_dato` dice qué factores quedaron en 0 por falta de fuente, para
 
 Lee    : datos/crudos/F18/cnct2026.csv (SEP, bajado a mano: el portal bloquea descargas automáticas),
          F19/IML_2020.zip (CONAPO, necesita xlrd), F16/iter_21_cpv2020_csv.zip (INEGI, coordenadas de localidades),
-         F12/denue_21_puebla_csv.zip (DENUE), F17/terrarium (caché de elevación), contrato/fixtures/sitios.geojson
+         F12/denue_21_puebla_csv.zip (DENUE), F17/terrarium (caché de elevación), F20/cenapred_laderas
+         (caché del mapa de laderas de CENAPRED), contrato/fixtures/sitios.geojson
          y estaciones.json
 Escribe: datos/procesados/escuelas/factores_escuelas.csv
 
@@ -52,6 +55,12 @@ IML = os.path.join(CR, 'F19', 'IML_2020.zip')
 ITER = os.path.join(CR, 'F16', 'iter_21_cpv2020_csv.zip')
 DENUE = os.path.join(CR, 'F12', 'denue_21_puebla_csv.zip')
 TERRENO = os.path.join(CR, 'F17', 'terrarium')
+LADERAS = os.path.join(CR, 'F20', 'cenapred_laderas')
+SERVICIO_LADERAS = ('http://servicios1.cenapred.unam.mx:6080/arcgis/rest/services/Aplicativos/'
+                    'Inestabilidad_Laderas/MapServer')
+BLOQUE_GRADOS = 0.25            # cada imagen pedida al servicio
+PIXELES_BLOQUE = 500            # 0.25° / 500 ~ 55 m por pixel
+COLOR_CLASE = {(0, 96, 0): 0.0, (123, 170, 0): 0.25, (255, 255, 0): 0.5, (255, 154, 0): 0.75, (255, 31, 0): 1.0}
 FIX = os.path.join(RAIZ, 'contrato', 'fixtures')
 SALIDA = os.path.join(RAIZ, 'datos', 'procesados', 'escuelas', 'factores_escuelas.csv')
 
@@ -243,6 +252,48 @@ class Terreno:
         return round(pend[int(0.75 * (len(pend) - 1))], 1)
 
 
+# ------------------------------------------------------------------ laderas (CENAPRED)
+class Laderas:
+    """Lee la clase de susceptibilidad por el color del pixel, en imágenes que el servicio exporta por bloques
+    (lo mismo que pide su visor). Las imágenes se guardan en F20 para no volver a pedirlas."""
+    def __init__(self):
+        self.cache = {}
+
+    def bloque(self, i, j):
+        from PIL import Image
+        if (i, j) not in self.cache:
+            ruta = os.path.join(LADERAS, '{}_{}.png'.format(i, j))
+            if not os.path.exists(ruta):
+                os.makedirs(LADERAS, exist_ok=True)
+                o, s = i * BLOQUE_GRADOS, j * BLOQUE_GRADOS
+                url = '{}/export?bbox={},{},{},{}&bboxSR=4326&imageSR=4326&size={},{}&format=png&transparent=true' \
+                      '&layers=show:0&f=image'.format(SERVICIO_LADERAS, o, s, o + BLOQUE_GRADOS, s + BLOQUE_GRADOS,
+                                                      PIXELES_BLOQUE, PIXELES_BLOQUE)
+                for intento in range(3):
+                    try:
+                        with urllib.request.urlopen(urllib.request.Request(url, headers={'User-Agent': UA}), timeout=120) as r:
+                            datos = r.read()
+                        break
+                    except OSError:
+                        if intento == 2:
+                            raise
+                        time.sleep(3)
+                with open(ruta, 'wb') as f:
+                    f.write(datos)
+            self.cache[(i, j)] = Image.open(ruta).convert('RGBA')
+        return self.cache[(i, j)]
+
+    def clase(self, lat, lon):
+        i, j = math.floor(lon / BLOQUE_GRADOS), math.floor(lat / BLOQUE_GRADOS)
+        im = self.bloque(i, j)
+        x = int((lon - i * BLOQUE_GRADOS) / BLOQUE_GRADOS * PIXELES_BLOQUE)
+        y = int(((j + 1) * BLOQUE_GRADOS - lat) / BLOQUE_GRADOS * PIXELES_BLOQUE)
+        r, g, b, a = im.getpixel((min(x, PIXELES_BLOQUE - 1), min(y, PIXELES_BLOQUE - 1)))
+        if a < 128:
+            return 0.0                    # zona que CENAPRED da por libre de inestabilidad
+        return min(COLOR_CLASE.items(), key=lambda kv: sum((u - v) ** 2 for u, v in zip(kv[0], (r, g, b))))[1]
+
+
 # ------------------------------------------------------------------ armado
 def main():
     escuelas = escuelas_sep()
@@ -263,6 +314,7 @@ def main():
     print('CONAPO: {} localidades; DENUE: {} fuentes, {} altas desde 2020'.format(len(iml), len(fuentes), len(recientes)))
 
     t = Terreno()
+    lad = Laderas()
     por_nombre_ok = por_cercania = sin_loc = 0
     for i, e in enumerate(escuelas, 1):
         la, lo = e['latitud'], e['longitud']
@@ -292,13 +344,13 @@ def main():
         e['c_estacion'] = est[1] if est and est[0] <= 3000 else ''
         # puntajes 0..1
         e['pendiente'] = lineal(e['pendiente_p75'], 5, 30)
-        e['susceptibilidad_laderas'] = 0.0
+        e['susceptibilidad_laderas'] = lad.clase(la, lo)
         e['urbanizacion_reciente'] = lineal(e['altas_recientes_1km'], 0, 30)
         e['cercania_cauce_o_descarga'] = lineal(fc[0], 1000, 100) if fc else 0.0
         e['calidad_agua'] = round(min(1.0, float(e['pct_mediciones_malas'])), 3) if e['pct_mediciones_malas'] not in ('', None) else 0.0
         e['sin_drenaje'] = lineal(l.get('ovsde'), 0, 50) if l.get('ovsde') is not None else 0.0
         e['marginacion'] = GRADO.get(l.get('grado'), 0.0)
-        faltan = ['susceptibilidad_laderas']
+        faltan = []
         if not sc:
             faltan.append('calidad_agua')
         if not l:
@@ -319,7 +371,8 @@ def main():
         w = csv.DictWriter(f, fieldnames=campos, extrasaction='ignore')
         w.writeheader()
         w.writerows(escuelas)
-    print('{}: {} escuelas ({} mosaicos de elevación)'.format(os.path.relpath(SALIDA, RAIZ), len(escuelas), len(t.cache)))
+    print('{}: {} escuelas ({} mosaicos de elevación, {} bloques de laderas)'.format(
+        os.path.relpath(SALIDA, RAIZ), len(escuelas), len(t.cache), len(lad.cache)))
 
 
 if __name__ == '__main__':
