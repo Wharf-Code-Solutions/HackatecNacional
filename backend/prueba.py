@@ -244,7 +244,6 @@ with TestClient(crear_app(base_temporal())) as c:
     revisar(c.patch('/alertas/' + al['c_alerta'], json={'nivel': 'Informativa'}).status_code == 422, 'PATCH rechaza otros campos')
     revisar(c.patch('/alertas/' + al['c_alerta'], json={'estado': 'Resuelta'}).status_code == 422, 'PATCH rechaza un estado fuera del contrato')
     revisar(c.patch('/alertas/AL-0-X-01', json={'estado': 'Cerrada'}).status_code == 404, 'PATCH de una alerta inexistente da 404')
-
     r = c.post('/reportes', json={'tipo': 'espuma', 'latitud': 19.2, 'longitud': -98.3,
                                   'exif_removido': True, 'correo': 'persona@ejemplo.mx'})
     publico = c.get('/reportes').json()['reportes']
@@ -255,6 +254,17 @@ with TestClient(crear_app(base_temporal())) as c:
     revisar(pr.status_code == 200 and not errores and pr.json()['destinos'],
             'prediccion de M3 cumple el contrato', '{} destinos'.format(len(pr.json().get('destinos', []))))
     revisar(c.get('/alertas/AL-0-X-01/prediccion').status_code == 404, 'prediccion de alerta inexistente da 404')
+
+    # La autoridad cambia el estado de un reporte ciudadano (mismas respuestas que el mock)
+    rp = c.post('/reportes', json={'version': '1.0', 'fecha_hora': '2026-11-24T10:00:00Z', 'tipo': 'espuma',
+                                   'latitud': 19.0, 'longitud': -98.2, 'exif_removido': True, 'correo': 'a@b.mx'})
+    folio = rp.json()['c_reporte']
+    r = c.patch('/reportes/' + folio, json={'estado': 'Validado'})
+    revisar(r.status_code == 200 and r.json()['estado'] == 'Validado' and 'correo' not in r.json(), 'PATCH /reportes cambia el estado y no expone el correo')
+    revisar(c.get('/reportes/' + folio).json()['estado'] == 'Validado', 'el estado del reporte persiste')
+    revisar(c.patch('/reportes/' + folio, json={'estado': 'Hecho'}).status_code == 422, 'PATCH /reportes rechaza un estado fuera del contrato')
+    revisar(c.patch('/reportes/' + folio, json={'tipo': 'mal_olor'}).status_code == 422, 'PATCH /reportes rechaza otros campos')
+    revisar(c.patch('/reportes/RC-20260101-0001', json={'estado': 'Cerrado'}).status_code == 404, 'PATCH de un folio inexistente da 404')
 
 # La prediccion del backend es la de M3: misma salida que el ejemplo que M3 genera.
 from datetime import datetime, timedelta, timezone   # noqa: E402

@@ -26,6 +26,7 @@ Rutas:
     GET  /alertas                    alertas generadas
     PATCH /alertas/<c_alerta>        cambia estado y responsable (panel de autoridad)
     POST /reportes                   reporte ciudadano
+    PATCH /reportes/<c_reporte>      cambia el estado de un reporte (panel de autoridad)
     POST /reportes/analizar-foto     la foto corresponde a algun tipo? (Gemini; ver analisis_foto.py)
     GET  /reportes
     GET  /huella                     calor sobre el rio por densidad de reportes (publica)
@@ -53,6 +54,8 @@ ESQ_REPORTE = cargar_esquema('reporte_ciudadano')
 ESQ_ALERTA = cargar_esquema('alerta')
 # Lo unico que la autoridad cambia de una alerta. El resto lo decide el motor.
 CAMPOS_GESTION = ('estado', 'responsable')
+# De un reporte ciudadano la autoridad solo cambia su estado (Recibido, Validado, En atencion, Cerrado, Descartado).
+CAMPOS_GESTION_REPORTE = ('estado',)
 
 # El motor real de M2 vive en motor/reglas.py y se carga solo si se pide con
 # --motor real. Por omision se usa el stub, que es la linea base medida contra
@@ -316,6 +319,24 @@ class Manejador(BaseHTTPRequestHandler):
 
     def do_PATCH(self):
         ruta = urlparse(self.path).path.rstrip('/') or '/'
+        r = re.match(r'^/reportes/(RC-[0-9]{8}-[0-9]{4})$', ruta)
+        if r:
+            reporte = next((x for x in REPORTES if x['c_reporte'] == r.group(1)), None)
+            if reporte is None:
+                return self._responder(404, {'error': 'folio no encontrado'})
+            cuerpo, problema = self._leer_cuerpo()
+            if problema:
+                return self._responder(400, {'error': problema})
+            if not isinstance(cuerpo, dict):
+                return self._responder(422, {'error': 'se espera un objeto'})
+            ajenos = sorted(set(cuerpo) - set(CAMPOS_GESTION_REPORTE))
+            if ajenos:
+                return self._responder(422, {'error': 'solo se puede cambiar el estado', 'detalles': ajenos})
+            e = validar(dict(reporte, **cuerpo), ESQ_REPORTE)
+            if e:
+                return self._responder(422, {'error': 'contrato no cumplido', 'detalles': e})
+            reporte.update(cuerpo)
+            return self._responder(200, {k: v for k, v in reporte.items() if k != 'correo'})
         m = re.match(r'^/alertas/([A-Z0-9-]+)$', ruta)
         if not m:
             return self._responder(404, {'error': 'ruta no encontrada', 'ruta': ruta})
@@ -353,7 +374,15 @@ def main():
     global MOTOR_REAL
     if args.motor == 'real':
         MOTOR_REAL = cargar_motor_real()
-    srv = ThreadingHTTPServer((args.host, args.puerto), Manejador)
+    # En Windows, SO_REUSEADDR deja que DOS servidores escuchen el mismo puerto y las peticiones van al mas
+    # viejo: un mock olvidado con codigo anterior contesta en lugar del nuevo. Se desactiva para que el
+    # segundo falle con un mensaje claro.
+    ThreadingHTTPServer.allow_reuse_address = os.name != 'nt'
+    try:
+        srv = ThreadingHTTPServer((args.host, args.puerto), Manejador)
+    except OSError as e:
+        sys.exit('No se pudo abrir el puerto {}: {}\nOtro servidor lo esta usando (un mock anterior?). '
+                 'Detenlo con Ctrl+C en su terminal y vuelve a arrancar este.'.format(args.puerto, e))
     print('Contrato 1.0 (motor: {}) en http://{}:{}'.format(
         args.motor, args.host, args.puerto))
     print('Estaciones cargadas: {}'.format(', '.join(sorted(ESTACIONES))))

@@ -43,6 +43,8 @@ from asignacion import Asignador               # noqa: E402
 VERSION_CONTRATO = '1.0'
 # Lo unico que la autoridad cambia de una alerta. El resto lo decide el motor.
 CAMPOS_GESTION = ('estado', 'responsable')
+# De un reporte ciudadano la autoridad solo cambia su estado.
+CAMPOS_GESTION_REPORTE = ('estado',)
 # Paquetes de la estacion con que se reconstruye el motor en cada lote. Sus
 # ventanas abarcan 24 paquetes (VENTANA_RECIENTE + BRECHA_GUARDA en reglas.py);
 # 200 sobran y cuestan unos milisegundos.
@@ -290,6 +292,31 @@ def crear_app(url=None):
         with almacen.transaccion('alerta:' + c_alerta):
             almacen.actualizar_alerta(nueva)
         return nueva
+
+    @app.patch('/reportes/{c_reporte}')
+    async def gestionar_reporte(c_reporte: str, request: Request):
+        # Misma ruta y mismas respuestas que el mock: el panel de autoridad cambia el estado de un reporte.
+        almacen = ctx()['almacen']
+        if not re.match(r'^RC-[0-9]{8}-[0-9]{4}$', c_reporte):
+            return error(404, {'error': 'ruta no encontrada', 'ruta': '/reportes/' + c_reporte})
+        cuerpo, problema = await leer_cuerpo(request)
+        if problema:
+            return error(400, {'error': problema})
+        if not isinstance(cuerpo, dict):
+            return error(422, {'error': 'se espera un objeto'})
+        ajenos = sorted(set(cuerpo) - set(CAMPOS_GESTION_REPORTE))
+        if ajenos:
+            return error(422, {'error': 'solo se puede cambiar el estado', 'detalles': ajenos})
+        with almacen.transaccion('reportes'):
+            reporte = almacen.reporte(c_reporte)
+            if reporte is None:
+                return error(404, {'error': 'folio no encontrado'})
+            nuevo = dict(reporte, **cuerpo)
+            e = validador.validar(nuevo, ESQ['reporte_ciudadano'])
+            if e:
+                return error(422, {'error': 'contrato no cumplido', 'detalles': e})
+            almacen.actualizar_reporte(nuevo)
+        return {k: v for k, v in nuevo.items() if k != 'correo'}
 
     @app.post('/reportes/analizar-foto')
     async def analizar_foto(request: Request):

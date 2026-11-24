@@ -258,6 +258,11 @@ class Almacen:
         self._q('INSERT INTO reporte (c_reporte, reporte) VALUES (?, ?)',
                 (reporte['c_reporte'], json.dumps(reporte, ensure_ascii=False)))
 
+    def actualizar_reporte(self, reporte):
+        """Llamar dentro de transaccion('reportes')."""
+        self._q('UPDATE reporte SET reporte = ? WHERE c_reporte = ?',
+                (json.dumps(reporte, ensure_ascii=False), reporte['c_reporte']))
+
     def actualizar_alerta(self, alerta):
         """Llamar dentro de transaccion()."""
         self._q('UPDATE alerta SET alerta = ? WHERE c_alerta = ?',

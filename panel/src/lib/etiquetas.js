@@ -25,6 +25,9 @@ export const REPORTE = {
   descarga_visible: 'Descarga visible', espuma: 'Espuma', color_anormal: 'Color anormal', mal_olor: 'Mal olor',
   basura_o_residuos: 'Basura o residuos', peces_muertos: 'Peces muertos', otro: 'Otro',
 };
+// Estados de un reporte ciudadano, en el orden en que avanza la atención.
+export const ESTADOS_REPORTE = ['Recibido', 'Validado', 'En atencion', 'Cerrado', 'Descartado'];
+export const REPORTE_ABIERTO = (e) => !['Cerrado', 'Descartado'].includes(e);
 const CON_ACENTO = { 'En atencion': 'En atención', Critica: 'Crítica' };
 export const txt = (v) => CON_ACENTO[v] || v;
 

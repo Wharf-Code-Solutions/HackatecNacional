@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { Datos, ayudantes } from './lib/contexto.js';
 import { useBackend, useDatosFijos } from './lib/datos.js';
 import { hora, porAtender } from './lib/formato.js';
+import { REPORTE_ABIERTO } from './lib/etiquetas.js';
 import Avisos from './componentes/Avisos.jsx';
 import Expediente from './componentes/Expediente.jsx';
 import ListaAlertas from './componentes/ListaAlertas.jsx';
@@ -11,7 +12,9 @@ import Resumen from './componentes/Resumen.jsx';
 import TablaEstaciones from './componentes/TablaEstaciones.jsx';
 import Tooltip from './componentes/Tooltip.jsx';
 
-const VISTAS = [['alertas', 'Alertas'], ['avisos', 'Avisos técnicos'], ['reportes', 'Reportes ciudadanos']];
+// Dos paneles en uno: lo que mide el prototipo (alertas de las estaciones) y la gestión de lo que reportan las personas.
+const SECCIONES = [['monitoreo', 'Monitoreo del prototipo'], ['reportes', 'Reportes ciudadanos']];
+const VISTAS = [['alertas', 'Alertas'], ['avisos', 'Avisos técnicos']];
 
 // Hora del dato más reciente recibido: es el corte de todo lo que se muestra (I12).
 function corteDe(alertas, veredictos) {
@@ -33,6 +36,7 @@ export default function App() {
   const codigos = useMemo(() => (fijos ? Object.keys(fijos.estaciones).sort() : []), [fijos]);
   const be = useBackend(codigos);
   const ctx = useMemo(() => (fijos ? ayudantes(fijos) : null), [fijos]);
+  const [seccion, setSeccion] = useState('monitoreo');
   const [vista, setVista] = useState('alertas');
   const [sel, setSel] = useState(null);
   const [filtros, setFiltros] = useState({ estado: 'activas', nivel: 'todos', estacion: 'todas' });
@@ -40,7 +44,9 @@ export default function App() {
   const demo = be.origen.modo === 'demo';
   const activas = be.alertas.filter(porAtender).length;
   const nAvisos = contarAvisos(be.veredictos);
-  const conteo = { alertas: activas, avisos: nAvisos, reportes: be.reportes.length };
+  const conteo = { alertas: activas, avisos: nAvisos };
+  const reportesAbiertos = be.reportes.filter((x) => REPORTE_ABIERTO(x.estado)).length;
+  const conteoSeccion = { monitoreo: activas, reportes: reportesAbiertos };
   const corte = corteDe(be.alertas, be.veredictos);
   const alerta = be.alertas.find((a) => a.c_alerta === sel) || null;
 
@@ -67,17 +73,26 @@ export default function App() {
           </div>
           <p className={claseConexion}>{conexion}</p>
         </div>
-      </header>
-
-      <nav className="subnav" aria-label="Secciones">
-        <div className="contenedor">
-          {VISTAS.map(([id, nombre]) => (
-            <button key={id} className={vista === id ? 'activa' : ''} onClick={() => setVista(id)} aria-current={vista === id ? 'page' : undefined}>
-              {nombre} {conteo[id] > 0 && <span>({conteo[id]})</span>}
+        <nav className="secciones contenedor" aria-label="Paneles">
+          {SECCIONES.map(([id, nombre]) => (
+            <button key={id} className={seccion === id ? 'activa' : ''} onClick={() => setSeccion(id)} aria-current={seccion === id ? 'page' : undefined}>
+              {nombre} {conteoSeccion[id] > 0 && <span>({conteoSeccion[id]})</span>}
             </button>
           ))}
-        </div>
-      </nav>
+        </nav>
+      </header>
+
+      {seccion === 'monitoreo' && (
+        <nav className="subnav" aria-label="Vistas del monitoreo">
+          <div className="contenedor">
+            {VISTAS.map(([id, nombre]) => (
+              <button key={id} className={vista === id ? 'activa' : ''} onClick={() => setVista(id)} aria-current={vista === id ? 'page' : undefined}>
+                {nombre} {conteo[id] > 0 && <span>({conteo[id]})</span>}
+              </button>
+            ))}
+          </div>
+        </nav>
+      )}
 
       {demo && be.capturado && (
         <p className="aviso-motor">
@@ -97,7 +112,7 @@ export default function App() {
         {!ctx && !error && <p className="vacio centro">Cargando.</p>}
         {ctx && (
           <Datos.Provider value={ctx}>
-            {vista === 'alertas' && (
+            {seccion === 'monitoreo' && vista === 'alertas' && (
               <section className="vista">
                 <Resumen alertas={be.alertas} veredictos={be.veredictos} totalEstaciones={codigos.length} corte={corte} />
                 <Panorama alertas={be.alertas} veredictos={be.veredictos} corte={corte} />
@@ -111,8 +126,11 @@ export default function App() {
                 </div>
               </section>
             )}
-            {vista === 'avisos' && <Avisos veredictos={be.veredictos} conectado={be.conectado} />}
-            {vista === 'reportes' && <Reportes reportes={be.reportes} prioridades={be.prioridades} conectado={be.conectado} />}
+            {seccion === 'monitoreo' && vista === 'avisos' && <Avisos veredictos={be.veredictos} conectado={be.conectado} />}
+            {seccion === 'reportes' && (
+              <Reportes reportes={be.reportes} prioridades={be.prioridades} huella={be.huella} conectado={be.conectado}
+                guardarReporte={be.guardarReporte} refrescar={be.refrescar} demo={demo} />
+            )}
           </Datos.Provider>
         )}
       </main>

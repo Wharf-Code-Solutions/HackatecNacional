@@ -58,8 +58,9 @@ export function useDatosFijos() {
 export function useBackend(codigos) {
   const origen = useMemo(origenBackend, []);
   const [estado, setEstado] = useState({
-    conectado: null, motor: null, alertas: [], reportes: [], veredictos: {}, capturado: null,
+    conectado: null, motor: null, alertas: [], reportes: [], prioridades: null, huella: null, veredictos: {}, capturado: null,
   });
+  const [version, setVersion] = useState(0);   // sube al cambiar un reporte: vuelve a pedir prioridades y huella
   const clave = codigos.join(',');
   const vivo = useRef(true);
   useEffect(() => () => { vivo.current = false; }, []);
@@ -80,19 +81,20 @@ export function useBackend(codigos) {
       getJSON(origen.url + '/alertas'),
       getJSON(origen.url + '/reportes'),
       getJSON(origen.url + '/prioridades').catch(() => null),   // opcional: un backend sin la ruta no rompe el panel
+      getJSON(origen.url + '/huella').catch(() => null),
       Promise.all(codigos.map((c) => getJSON(origen.url + '/veredictos?c_estacion=' + encodeURIComponent(c)))),
-    ]).then(([salud, al, rep, pri, ver]) => {
+    ]).then(([salud, al, rep, pri, hue, ver]) => {
       if (cancelado) return;
       const veredictos = {};
       // Si el backend no filtra por estación, se reparte aquí; solo es reparto, no análisis.
       codigos.forEach((c, i) => { veredictos[c] = (ver[i].veredictos || []).filter((v) => v.c_estacion === c); });
       setEstado((s) => ({ ...s, conectado: true, motor: salud.motor, alertas: al.alertas || [],
-        reportes: rep.reportes || [], prioridades: pri ? pri.prioridades : null, veredictos }));
+        reportes: rep.reportes || [], prioridades: pri ? pri.prioridades : null, huella: hue, veredictos }));
     }).catch(() => { if (!cancelado) setEstado((s) => ({ ...s, conectado: false })); });
     consulta();
     const id = setInterval(consulta, CADA_MS);
     return () => { cancelado = true; clearInterval(id); };
-  }, [clave, origen]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [clave, origen, version]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Cambia estado y responsable. En demostración solo se cambia en esta pestaña.
   const guardar = useCallback(async (c_alerta, cambios) => {
@@ -110,6 +112,20 @@ export function useBackend(codigos) {
     setEstado((s) => ({ ...s, alertas: s.alertas.map((a) => (a.c_alerta === c_alerta ? { ...a, ...nueva } : a)) }));
     return { ...nueva };
   }, [origen]);
+
+  // Cambia el estado de un reporte ciudadano (Recibido, Validado, En atencion, Cerrado, Descartado).
+  // En demostracion solo se cambia en esta pestaña.
+  const guardarReporte = useCallback(async (c_reporte, estadoNuevo) => {
+    if (origen.modo !== 'demo') {
+      const r = await fetch(origen.url + '/reportes/' + encodeURIComponent(c_reporte), {
+        method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ estado: estadoNuevo }),
+      });
+      const cuerpo = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error((cuerpo.error || 'error ' + r.status) + (cuerpo.detalles ? ': ' + cuerpo.detalles.join('; ') : ''));
+    }
+    setEstado((s) => ({ ...s, reportes: s.reportes.map((x) => (x.c_reporte === c_reporte ? { ...x, estado: estadoNuevo } : x)) }));
+  }, [origen]);
+  const refrescar = useCallback(() => setVersion((n) => n + 1), []);
 
   // Propagacion aguas abajo de una alerta (M3), calculada por el backend. Una alerta no
   // cambia, asi que su prediccion se pide una vez. Devuelve { prediccion } o { motivo }.
@@ -139,7 +155,7 @@ export function useBackend(codigos) {
     return res;
   }, [origen, estado.predicciones]);
 
-  return { ...estado, origen, guardar, prediccion };
+  return { ...estado, origen, guardar, guardarReporte, refrescar, prediccion };
 }
 
 // Ancho real de un elemento, para dibujar las gráficas a su tamaño (el texto no se encoge).
