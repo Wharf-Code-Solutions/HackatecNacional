@@ -4,8 +4,8 @@ import { inicial, porAtender } from '../lib/formato.js';
 
 // El mismo mapa que el modulo del mapa (mapa/mapa.js, M6): MapLibre con la base positron de
 // OpenFreeMap, sus rios y rotulos de calles apagados, y encima las capas del INEGI (contorno de la
-// cuenca con su mascara, subcuencas, red hidrografica por orden, nombres de rios, confluencias), los
-// 219 sitios de CONAGUA y las 5 estaciones con el mismo marcador (negro; rojo con una alerta por
+// cuenca con su mascara, subcuencas, red hidrografica por orden, nombres de rios, confluencias) y
+// las 5 estaciones con el mismo marcador (negro; rojo con una alerta por
 // atender). No importa codigo de mapa/: lee los mismos archivos (D31 y la frontera de modulos).
 const ESTILO = 'https://tiles.openfreemap.org/styles/positron';
 const AGUA = '#1d6fa5', TINTA = '#16222c';
@@ -29,12 +29,12 @@ export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir 
     const base = import.meta.env.BASE_URL + 'datos/';
     Promise.all([
       import('maplibre-gl'),
-      Promise.all(['cuenca', 'subcuencas', 'red_hidrografica', 'confluencias', 'toponimia_hidrografica', 'sitios']
+      Promise.all(['cuenca', 'subcuencas', 'red_hidrografica', 'confluencias', 'toponimia_hidrografica']
         .map((n) => getJSON(base + n + '.geojson'))),
     ]).then(([mod, capas]) => {
       if (!vivo) return;
       const gl = mod.default || mod;
-      const [cuenca, subcuencas, red, confluencias, toponimia, sitios] = capas;
+      const [cuenca, subcuencas, red, confluencias, toponimia] = capas;
       const cods = Object.keys(estaciones).sort();
       const lons = cods.map((c) => estaciones[c].longitud), lats = cods.map((c) => estaciones[c].latitud);
       const m = new gl.Map({
@@ -47,7 +47,7 @@ export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir 
       m.touchZoomRotate.disableRotation();
       m.addControl(new gl.NavigationControl({ showCompass: false }), 'top-left');
       m.addControl(new gl.ScaleControl({ unit: 'metric' }), 'bottom-left');
-      m.addControl(new gl.AttributionControl({ compact: true, customAttribution: 'Ríos y subcuencas: INEGI · Sitios: CONAGUA' }), 'bottom-right');
+      m.addControl(new gl.AttributionControl({ compact: true, customAttribution: 'Ríos y subcuencas: INEGI' }), 'bottom-right');
       m.on('error', (e) => { if (e && e.error && /style|tiles|Failed to fetch/i.test(String(e.error.message))) setFalla(true); });
 
       m.on('load', () => {
@@ -100,14 +100,6 @@ export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir 
           layout: { 'text-field': ['get', 'rotulo'], 'text-font': ITALICA, 'text-size': 11.5, 'text-anchor': 'left', 'text-offset': [0.9, 0] },
           paint: { 'text-color': '#14527a', 'text-halo-color': '#fff', 'text-halo-width': 1.5 } });
 
-        // Sitios oficiales en gris: el semaforo de CONAGUA no distingue entre ellos (D9).
-        sitios.features = sitios.features.filter((f) => f.geometry);
-        m.addSource('sitios', { type: 'geojson', data: sitios });
-        m.addLayer({ id: 'sitios', type: 'circle', source: 'sitios',
-          paint: { 'circle-radius': ['interpolate', ['linear'], ['zoom'], 7, 1.8, 12, 3.5],
-            'circle-color': ['case', ['to-boolean', ['get', 'semaforo_conagua']], '#8a979f', '#ffffff'],
-            'circle-stroke-color': '#6d7b85', 'circle-stroke-width': 0.8 } });
-
         // Ventanas al pasar el cursor, como en mapa/.
         const emergente = (capa, html) => {
           const pop = new gl.Popup({ closeButton: false, closeOnClick: false, offset: 8 });
@@ -116,8 +108,6 @@ export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir 
         };
         emergente('confluencias', (p) => '<b>Confluencia</b><br>' + p.detalle + '<br>Red aguas arriba: ' +
           miles(p.km_red_principal) + ' y ' + miles(p.km_red_afluente) + ' km');
-        emergente('sitios', (p) => '<b>' + (p.nombre || p.c_sitio) + '</b><br>' + inicial(p.cuerpo_agua) + '. ' +
-          inicial(p.municipio) + ', ' + inicial(p.estado));
 
         // Estaciones: el marcador de mapa/ (numero en circulo negro, nombre al acercarse). Un clic
         // filtra las alertas del panel por esa estacion.

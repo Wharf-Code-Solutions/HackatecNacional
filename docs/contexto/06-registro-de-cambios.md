@@ -21,6 +21,17 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · M7: sin sitios de CONAGUA en el mapa de la red de estaciones
+
+**Qué cambió.** `panel/src/graficas/MapaEstaciones.jsx` ya no dibuja los 219 sitios oficiales en gris
+ni su ventana al pasar el cursor; tampoco descarga `sitios.geojson` ni los acredita.
+**Por qué.** Petición del usuario: eran ruido visual sin información (D9) en una vista que solo debe
+mostrar la red de estaciones.
+**Qué arrastró.** Nada más.
+**Impacto en otros módulos.** Ninguno; `mapa/` (M6) sigue mostrando sus sitios.
+
+---
+
 ## 2026-11-24 · M6: el flujo se anima con una imagen de patrón, no con line-dasharray
 
 **Qué cambió.** El flujo es un `line-pattern` con un guion blanco sobre fondo transparente; la imagen
