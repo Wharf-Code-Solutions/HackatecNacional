@@ -316,6 +316,13 @@ for d in peores_t:
 L.append('')
 L.append('## Parametros que suben juntos (pista del tipo de fuente)')
 L.append('')
+L.append('> Cuidado al leer estas correlaciones como capacidad predictiva. Estan '
+         'calculadas sobre valores crudos que recorren varios ordenes de '
+         'magnitud, y en ese caso Pearson queda dominada por los valores '
+         'grandes. Sirven para ver que dos parametros se mueven juntos, no para '
+         'afirmar que uno estima al otro: eso se mide con el error de '
+         'prediccion fuera de muestra, en `16-modelos-proxy.md`.')
+L.append('')
 L.append('| A | B | n | Pearson |')
 L.append('|---|---|---|---|')
 for d in filas_r[:15]:

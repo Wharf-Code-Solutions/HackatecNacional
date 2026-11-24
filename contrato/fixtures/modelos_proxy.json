@@ -1,0 +1,21 @@
+{
+  "version": "1.0",
+  "modelos": [
+    {
+      "sensor": "COND",
+      "parametro_estimado": "SDT",
+      "unidad_sensor": "uS/cm",
+      "unidad_estimada": "mg/L",
+      "forma": "y = a * pow(x, b)",
+      "a": 0.788434,
+      "b": 0.971637,
+      "factor_banda_p10": 0.8257,
+      "factor_banda_p90": 1.2111,
+      "error_mediano": 0.0203,
+      "error_p90": 0.0684,
+      "pares": 2521,
+      "sitios": 152,
+      "nota": "Se reporta como estimacion con banda, nunca como medicion. Validado en sitios que no se usaron para ajustar."
+    }
+  ]
+}

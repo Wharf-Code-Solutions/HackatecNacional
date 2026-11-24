@@ -36,8 +36,16 @@ interfieren y dan lecturas erráticas.
 | Temperatura | 12 – 29 °C | −5 – 50 °C | Compensa las demás sondas. |
 | Turbiedad | 0.7 – 8 610 NTU | 0 – **4 000 NTU** | **Satura** en lluvia fuerte; el simulador lo marca. Es un límite declarado, no un defecto escondido. |
 
-SDT y SST no se miden: se estiman en el backend desde conductividad y turbiedad
-(correlaciones 0.971 y 0.947 en los datos de la Etapa 1).
+SDT no se mide: se estima en el backend desde la conductividad, con un modelo validado
+en sitios que no se usaron para ajustarlo (`SDT = 0.788 x COND^0.972`, error mediano del
+**2 %**, percentil 90 del 7 %). Se reporta con su banda, no como valor puntual.
+
+**SST no se estima.** La correlación de 0.947 entre turbiedad y SST que se citaba antes
+está calculada sobre valores crudos a lo largo de cuatro órdenes de magnitud y sobrevalora
+la relación: el error de predicción real es del **35 %**, con percentil 90 del 135 %, y
+calibrar por sitio apenas lo baja al 27 %. La turbiedad sigue siendo uno de los cinco
+parámetros que la estación vigila, pero no da un número de SST reportable como medición.
+Detalle en [`docs/16-modelos-proxy.md`](../docs/16-modelos-proxy.md).
 
 ## Ciclo del firmware
 

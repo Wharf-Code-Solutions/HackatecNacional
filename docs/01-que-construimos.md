@@ -98,7 +98,9 @@ Conviene tenerlo escrito, porque es lo que evita prometer de más:
   pronostica en el espacio, donde la física da una base.
 - **No sustituye al laboratorio.** Los sensores miden cinco parámetros; la toxicidad, los
   coliformes y la DBO siguen requiriendo análisis. Lo que sí hace es estimar dos
-  parámetros de laboratorio desde sensores baratos, con una correlación medida.
+  los sólidos disueltos desde la conductividad, con un error mediano del 2 % validado en
+  sitios que el modelo no vio. Los sólidos suspendidos **no** se estiman desde la
+  turbiedad: el error real es del 35 %.
 - **No determina responsables.** Señala una fuente probable con un puntaje y su
   evidencia. Quien sanciona es la autoridad.
 - **No es un sistema de monitoreo oficial.** Es un complemento al monitoreo de CONAGUA,

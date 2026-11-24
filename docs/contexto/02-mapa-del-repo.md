@@ -102,6 +102,7 @@ repositorio (`python -m http.server 8000`).
 | `datos/procesados/umbral.csv` | Escalas CONAGUA y límites NOM-001 | `10_construir_tablas.py` | **NO** |
 | `datos/procesados/indicador_sitio_periodo.csv` | Indicadores CONAGUA por sitio | `10_construir_tablas.py` | **NO** |
 | `datos/procesados/diccionario_conagua.csv` | Diccionario oficial de campos | `10_construir_tablas.py` | **NO** |
+| `datos/procesados/proxy_modelos.csv` | Los dos modelos proxy con su validación y si se publican | `90_modelos_proxy.py` | **NO** |
 | `datos/procesados/mapa/*.geojson` | Cauces (orden ≥ 4), subcuencas, contorno de la cuenca, confluencias principales y toponimia hidrográfica, simplificados para el mapa | `60_red_para_mapa.py` | **NO** |
 | `datos/procesados/analisis/*.csv` | Línea base, ranking, temporada, tendencia, cobertura, correlaciones | `20_analisis_exploratorio.py` | **NO** |
 | `datos/procesados/red/tramo.csv` | 65 342 tramos con orden de Strahler, longitud y tramo de aguas abajo. **No se versiona** (8.2 MB) | `70_topologia_red.py` | **NO** |
@@ -136,6 +137,7 @@ El prefijo numérico indica el orden de ejecución. `_comun.py` no se ejecuta so
 | `scripts/80_propagacion.py` | **M3.** Calibra la atenuación con los datos, calcula ventanas de llegada y produce la predicción. **Fuente de verdad de la velocidad supuesta y del alcance útil** | `red/`, `muestreo_nucleo.csv` | `red/atenuacion_observada.csv`, `red/tiempo_viaje.csv`, `contrato/fixtures/prediccion_ejemplo.json`, `docs/14-...` |
 | `motor/reglas.py` | **M2.** `evaluar(paquete) → veredicto`. **Fuente de verdad de los umbrales de deteccion y de la firma de fuente probable** | fixtures, `umbral.csv` | nada en disco |
 | `motor/prueba.py` | Banco de pruebas de M2: mide el criterio de terminado | escenarios | `docs/15-...` |
+| `scripts/90_modelos_proxy.py` | Ajusta y **valida fuera de muestra** los modelos proxy sensor→laboratorio. **Fuente de verdad del criterio de publicación** (`MAX_ERROR_MEDIANO`) | `muestreo_nucleo.csv` | `proxy_modelos.csv`, `contrato/fixtures/modelos_proxy.json`, `docs/16-...` |
 | `scripts/50_verificar_repo.py` | **Revisión de salud del repositorio.** Automatiza nueve comprobaciones de invariantes y sale con código 1 si falla. **Fuente de verdad de los conteos esperados** (`FILAS_ESPERADAS`) | todo | stdout |
 
 **Orden de ejecución.** Reconstruir todo desde las fuentes originales requiere
@@ -219,6 +221,7 @@ debes tocar.
 | Velocidad de flujo supuesta | `VELOCIDAD_MIN_MS` y `VELOCIDAD_MAX_MS` en `scripts/80_propagacion.py` |
 | Cuándo una lectura dispara alerta | `Z_ESCALON`, `BRECHA_GUARDA` y `PERSISTENCIA` en `motor/reglas.py` |
 | Cómo se clasifica la fuente probable | `_fuente_probable()` en `motor/reglas.py` |
+| Si un modelo proxy se publica o no | `MAX_ERROR_MEDIANO` y `MAX_ERROR_P90` en `scripts/90_modelos_proxy.py` |
 | Hasta qué distancia la predicción es útil | `DISTANCIA_UTIL_M` en `scripts/80_propagacion.py` |
 | Los conteos esperados de cada tabla | `FILAS_ESPERADAS` en `scripts/50_verificar_repo.py` |
 | Traducción entre claves CONAGUA y códigos cortos | `datos/procesados/parametro.csv`, columna `c_parametro_std` |

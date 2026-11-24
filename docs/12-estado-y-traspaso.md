@@ -73,6 +73,16 @@ punta (M9).
   sondas), manual breve por tipo de usuario y propuesta de implementación por fases. La ficha del
   dispositivo ya existe: [`dispositivo/ficha-tecnica.md`](../dispositivo/ficha-tecnica.md).
 
+## Modelos proxy
+
+La conductividad estima los sólidos disueltos con un **2 %** de error mediano, validado en
+sitios que el modelo no vio: eso convierte la estación en una que reporta un parámetro de
+laboratorio. Está en `contrato/fixtures/modelos_proxy.json` para que la estación o el
+backend lo apliquen, siempre con su banda.
+
+La turbiedad **no** estima los sólidos suspendidos: 35 % de error mediano y 135 % en el
+percentil 90. Ver [16-modelos-proxy.md](16-modelos-proxy.md).
+
 ## Lo que está a medias o es supuesto
 
 - **Hardware.** Las especificaciones de sondas, el consumo y la cobertura celular son supuestos de

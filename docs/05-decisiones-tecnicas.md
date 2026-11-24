@@ -227,15 +227,18 @@ mediana, 220 en el percentil 90 y hasta 3 294**, con un hueco de densidad entre 
 2024. No es una serie de tiempo, es una colección de visitas espaciadas.
 
 **Dónde sí hay aprendizaje con sustento.** Detección de anomalías multivariada por sitio, y
-dos modelos proxy que son el hallazgo más aprovechable del conjunto de datos:
+un modelo proxy que estima un parámetro de laboratorio desde un sensor barato:
 
-| Se estima | Desde | Correlación | n |
-|---|---|---|---|
-| SST (laboratorio) | turbiedad (sensor) | 0.947 | 2 506 |
-| SDT (laboratorio) | conductividad (sensor) | 0.971 | 2 521 |
+| Se estima | Desde | Error mediano fuera de muestra | p90 | Publicado |
+|---|---|---|---|---|
+| SDT (laboratorio) | conductividad (sensor) | **2 %** | 7 % | sí |
+| SST (laboratorio) | turbiedad (sensor) | **35 %** | 135 % | **no** |
 
-Dos regresiones pequeñas que convierten una estación barata en una que reporta parámetros
-que normalmente exigen laboratorio.
+Aquí la versión inicial de esta decisión se equivocó, y la corrección quedó en
+[16-modelos-proxy.md](16-modelos-proxy.md): citaba correlaciones de 0.947 y 0.971 sobre
+valores crudos, que a lo largo de cuatro órdenes de magnitud quedan dominadas por los
+valores grandes. Validadas fuera de muestra, la de conductividad sustituye una medición de
+laboratorio y la de turbiedad no.
 
 **Consecuencia.** Hay que tener la respuesta lista para el jurado: *no pronosticamos en el
 tiempo porque la cadencia del monitoreo oficial no lo permite; pronosticamos en el espacio,

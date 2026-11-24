@@ -1,0 +1,3 @@
+﻿sensor,parametro_estimado,codigo_contrato,forma,a,b,r_log,sd_log,factor_p10,factor_p90,pares,sitios,error_mediano_fuera_de_muestra,error_p90_fuera_de_muestra,publicado
+CONDUC_CAMPO,SDT,COND,y = a * x^b,0.788434,0.971637,0.9766,0.1494,0.8257,1.2111,2521,152,0.0203,0.0684,si
+TURBIEDAD,SST,TURB,y = a * x^b,2.312083,0.844836,0.852,0.8249,0.3474,2.8781,2506,94,0.3497,1.3538,no

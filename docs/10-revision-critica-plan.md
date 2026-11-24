@@ -276,18 +276,20 @@ implícito. Conviene decidirlo explícitamente, porque hay una trampa evidente.
    nueva. Esto es el núcleo real del aprendizaje del proyecto y resuelve el problema de
    las falsas alarmas de la objeción 4.
 
-2. **Modelos proxy: estimar un parámetro de laboratorio desde un sensor barato.** Este es
-   el hallazgo más aprovechable de la Etapa 1:
+2. **Modelos proxy: estimar un parámetro de laboratorio desde un sensor barato.** Es el
+   puente entre la Etapa 1 y la Etapa 3. Al validarlo fuera de muestra resultó que de los
+   dos candidatos solo uno sirve:
 
-   | Se puede estimar | Desde | Correlación | n |
-   |---|---|---|---|
-   | SST (laboratorio) | turbiedad (sensor) | **0.947** | 2 506 |
-   | SDT (laboratorio) | conductividad (sensor) | **0.971** | 2 521 |
+   | Se puede estimar | Desde | Error mediano fuera de muestra | p90 | Publicado |
+   |---|---|---|---|---|
+   | SDT (laboratorio) | conductividad (sensor) | **2 %** | 7 % | sí |
+   | SST (laboratorio) | turbiedad (sensor) | **35 %** | 135 % | **no** |
 
-   Son dos regresiones pequeñas que convierten una estación de 3 000 pesos en una que
-   reporta parámetros que normalmente exigen laboratorio. Es el puente entre la Etapa 1 y
-   la Etapa 3, es honesto si se reporta el R² y el intervalo de predicción, y es
-   exactamente el tipo de cosa por la que un jurado premia un trabajo de datos.
+   La versión original de esta objeción citaba correlaciones de 0.947 y 0.971, calculadas
+   sobre valores crudos. Esa cifra sobrevalora la relación de la turbiedad: en espacio
+   logarítmico cae a 0.852 y el error de predicción es del 35 %. La conductividad sí
+   convierte una estación de pocos miles de pesos en una que reporta un parámetro que
+   normalmente exige laboratorio. Ver [16-modelos-proxy.md](16-modelos-proxy.md).
 
 3. **Clasificación de la fuente probable** con el puntaje de la objeción 5, validado
    contra los sitios donde el nombre ya dice qué hay aguas arriba (son etiquetas débiles,
@@ -380,7 +382,7 @@ cauce, y conseguir el criterio por uso (F19) para que la capa ciudadana tenga re
 | 2.4 | La tabla de fuente probable se vuelve un **puntaje con evidencia**. Incorporar la razón DQO/DBO como discriminador. |
 | 2.5 | Sustituir Streeter-Phelps por **transporte advectivo con decaimiento**, con velocidad como intervalo y distinción entre contaminante degradable y conservativo. |
 | 2.7 | Agregar el esquema **`veredicto`** (la salida del motor de reglas), que era el que faltaba y es el más compartido. Ya está en `contrato/esquemas/`. |
-| 3.1 | Los cinco parámetros de campo quedan confirmados por los datos: SDT y turbiedad tienen línea base en 80 sitios; OD, pH, conductividad y temperatura del agua en 69. Agregar los **modelos proxy** turbiedad→SST y conductividad→SDT como funcionalidad del dispositivo. |
+| 3.1 | Los cinco parámetros de campo quedan confirmados por los datos: SDT y turbiedad tienen línea base en 80 sitios; OD, pH, conductividad y temperatura del agua en 69. Agregar el **modelo proxy** conductividad→SDT como funcionalidad del dispositivo; el de turbiedad→SST no pasó la validación. |
 | 4.3 | Toda cifra en pantalla lleva su `n` y su fecha. "Sin dato" es un estado visible. El criterio aplicado se nombra explícitamente. |
 | 5.2 | `exif_removido` obligatorio, coordenada redondeada en el mapa público, correo fuera de la API pública. |
 | 6.2 | Reportar las falsas alarmas **contra la línea base medida del stub** (31 alertas en el día de control). Es una comparación concreta en lugar de un porcentaje abstracto. |

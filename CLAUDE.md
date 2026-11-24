@@ -36,6 +36,7 @@ después el **análisis**. Las vistas actuales no anuncian el análisis en panta
 | M2 motor de reglas | **Construido** (`motor/reglas.py`): 0 alertas en el día de control contra 31 del stub, 0 ambientales con el sensor roto, los tres eventos detectados antes de su intensidad plena y su fuente bien clasificada. `servidor_mock.py --motor real` lo usa |
 | M3 propagación | **Construida** (`scripts/80_propagacion.py`): transporte conservativo con k = 0, porque la razón medida abajo/arriba en 90 tramos tiene mediana 1.00. Ventana de llegada por velocidad declarada 0.3-1.0 m/s; valor como banda p10-p90; cobertura 78 % fuera de muestra |
 | M7 panel de autoridad | **Prototipo** (`panel/`): alertas con evidencia y gráficas, estado y responsable vía `PATCH /alertas/<c_alerta>`; aún no muestra la predicción de M3 ni pide sesión |
+| Modelos proxy | Conductividad→SDT **publicado** (2 % de error fuera de muestra); turbiedad→SST **descartado** (35 %) |
 | M5 backend, M8 app, M9, M10 | Pendientes |
 
 No conviertas "pendiente" en "construido" sin verificarlo contra el repo.

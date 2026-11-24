@@ -21,6 +21,42 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Modelos proxy: uno sirve, el otro no, y una correccion
+
+**Qué cambió.** Nuevo `scripts/90_modelos_proxy.py`. Ajusta las dos relaciones
+sensor→laboratorio como leyes de potencia en espacio logarítmico y las **valida fuera de
+muestra** de dos formas: ajustando con la mitad de los sitios y probando en los otros, y
+calibrando por sitio para probar en fechas posteriores. Escribe
+`datos/procesados/proxy_modelos.csv`, `contrato/fixtures/modelos_proxy.json` y
+`docs/16-modelos-proxy.md`.
+
+**Resultado.** `SDT = 0.788 × COND^0.972`: **2 %** de error mediano en sitios que el modelo
+no vio, 7 % en el percentil 90. Es un sustituto real de una medición de laboratorio y se
+publica. `SST` desde turbiedad: **35 %** de error mediano y 135 % en el percentil 90.
+Calibrar por sitio apenas lo baja al 27 %, así que la dispersión es ruido dentro de cada
+sitio y no un sesgo corregible. **No se publica.**
+
+**La corrección.** El análisis exploratorio reportó correlaciones de 0.947 y 0.971 y yo las
+cité repetidamente como evidencia de que ambos proxy servían. Esa cifra sobrevalora la
+relación: está calculada sobre valores crudos que recorren cuatro órdenes de magnitud, donde
+Pearson queda dominada por los valores grandes. En espacio logarítmico la de turbiedad cae a
+0.852. Tiene sentido físico: la turbiedad responde al tamaño y al color de las partículas,
+no solo a su masa, así que un arrastre de arcilla y una descarga orgánica con la misma
+turbiedad llevan masas muy distintas.
+
+**Qué arrastró.** Se corrigieron las afirmaciones en `docs/05-decisiones-tecnicas.md` (D12),
+`docs/10-revision-critica-plan.md` (objeción 6 y la tabla de cambios a la etapa 3.1),
+`docs/01-que-construimos.md` y **`dispositivo/ficha-tecnica.md`**, que decía que SST se
+estimaría en el backend. El script `20_analisis_exploratorio.py` ahora imprime una
+advertencia junto a su tabla de correlaciones para que nadie vuelva a leerla como capacidad
+predictiva. Más `docs/README.md`, `docs/contexto/02-mapa-del-repo.md`,
+`docs/12-estado-y-traspaso.md` y `CLAUDE.md`.
+
+**Impacto en otros módulos.** M4 ya no debe anunciar SST entre lo que reporta la estación.
+M5 puede aplicar el modelo de SDT desde `modelos_proxy.json`, siempre con su banda. El
+criterio de publicación quedó escrito en el script: un modelo no entra al contrato solo
+porque exista.
+
 ## 2026-11-24 · M6: el token de Mapbox se toma del .env
 
 **Qué cambió.** Nuevo `mapa/generar_config.py`: lee `MAPBOX_ACCESS_TOKEN` del `.env` de la raíz y
