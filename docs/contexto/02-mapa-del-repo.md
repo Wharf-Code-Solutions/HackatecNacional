@@ -63,15 +63,16 @@ estaciones leyendo `GET /alertas` del backend. Se sirve desde la raíz del repo.
 
 | Ruta | Qué es | Editable |
 |---|---|---|
-| `panel/src/` | Aplicación React (Vite): `App.jsx`, `componentes/` (resumen, lista, expediente, avisos, reportes), `graficas/` (SVG a mano), `lib/` (datos, formato, etiquetas) | sí |
+| `panel/src/` | Aplicación React (Vite): `App.jsx`, `componentes/` (resumen, lista, expediente, avisos, `Reportes.jsx` y `MapaReportes.jsx`: gestión de reportes con mapa), `graficas/` (SVG a mano), `lib/` (datos, formato, etiquetas) | sí |
 | `panel/scripts/copiar-datos.mjs` | Copia las tablas que el panel lee a `panel/public/datos/` antes de `dev` y `build` | sí |
 | `panel/public/datos/` | Copia de `contrato/fixtures/` y `datos/procesados/red/` | **NO** (generado, no versionado) |
 | `panel/scripts/capturar-demo.mjs` | Captura la foto del backend para el modo demostración | sí |
 | `panel/public/demo/foto.json` | Respuestas del mock con `--motor real` sobre `descarga_industrial` | **NO**: se regenera con `npm run capturar-demo` |
 | `panel/package.json` | Dependencias y scripts del panel | sí |
 
-El panel **no evalúa nada**: lee `GET /alertas`, `GET /veredictos`, `GET /reportes` y escribe
-con `PATCH /alertas/<c_alerta>`. Por su cuenta solo lee tablas publicadas. Se corre con
+El panel **no evalúa nada**: lee `GET /alertas`, `GET /veredictos`, `GET /reportes`, `GET /prioridades` y
+`GET /huella`, y escribe con `PATCH /alertas/<c_alerta>` y `PATCH /reportes/<c_reporte>`. Tiene dos secciones: el
+monitoreo del prototipo (alertas y avisos) y la gestión de los reportes de las personas (D30). Por su cuenta solo lee tablas publicadas. Se corre con
 `npm run dev` dentro de `panel/` (D23).
 
 ---

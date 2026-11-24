@@ -672,7 +672,10 @@ peces muertos 5, descarga 4, color 3, espuma 3, basura 2, mal olor 2; sensor +3 
 del motor en el mismo sitio a ≤24 h y +2 si está aguas abajo dentro de la ventana de llegada de M3;
 fuente +1 si el DENUE tiene un establecimiento compatible a ≤5 km aguas arriba; calidad 1.0 con foto
 validada, 0.9 sin validar, 0.8 sin foto, ×0.9 con GPS peor que 100 m. Bandas: ≥7 alta, 4-6 media.
-`GET /huella` es pública; `GET /prioridades` va al panel con el desglose completo.
+`GET /huella` es pública; `GET /prioridades` va al panel con el desglose completo. El panel de autoridad queda en
+dos secciones, monitoreo del prototipo y gestión de reportes ciudadanos: esta última muestra la huella y los focos
+en un mapa, deja ver las fotos y cambia el estado de un foco o de un reporte con `PATCH /reportes/<c_reporte>`
+(solo el campo `estado`). Un foco cerrado o descartado sale de «Qué atender».
 
 **Por qué.** La fórmula de SIGRIV (`base + (reportes − 1) + entorno`) se infla con spam (no hay cuentas),
 mide en línea recta (barrancas que no se comunican) y no usa lo que distingue al proyecto. No se usa el

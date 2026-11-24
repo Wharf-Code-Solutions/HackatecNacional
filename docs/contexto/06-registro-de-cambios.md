@@ -21,6 +21,20 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · M7: el panel se divide en monitoreo y gestión de reportes ciudadanos
+
+**Qué cambió.** El panel de autoridad tiene dos secciones. «Monitoreo del prototipo» conserva las alertas y los avisos
+técnicos. «Reportes ciudadanos» pasa de una tabla de lectura a gestión: mapa con la huella de calor y un pin por foco
+(MapLibre, se descarga al abrir la sección), tabla de «Qué atender» con el desglose de la prioridad, fotos y selector
+de estado por foco y por reporte. Nueva ruta `PATCH /reportes/<c_reporte>` (solo `estado`) en el mock y el backend
+(D30). El mock ya no deja que dos instancias compartan el puerto en Windows.
+**Por qué.** El usuario pidió separar lo que mide el prototipo de lo que gestiona la autoridad con los reportes de las
+personas; sin poder cambiar el estado, la autoridad no podía atender nada.
+**Qué arrastró.** `contrato/README.md` (ruta), `02-mapa-del-repo.md`, `CLAUDE.md`, `12-estado-y-traspaso.md`, D30,
+`backend/prueba.py` (5 comprobaciones), `panel/package.json` (maplibre-gl 4.7.1).
+**Impacto en otros módulos.** El panel lee `/prioridades` y `/huella` si existen y sigue funcionando sin ellas. En
+Vercel, el panel necesita internet para la base del mapa. Sin inicio de sesión: cualquiera con la URL cambia estados.
+
 ## 2026-11-24 · M8: huella de calor y prioridad de reportes; el panel muestra qué atender primero
 
 **Qué cambió.** `contrato/prioridad_huella.py` y las rutas `GET /huella` y `GET /prioridades` en el mock y el
