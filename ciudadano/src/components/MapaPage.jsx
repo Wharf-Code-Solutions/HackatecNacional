@@ -10,6 +10,11 @@ import { dentroDeVentana, haversine, posicion, textoErrorUbicacion } from '../li
 
 const REFRESCO_MS = 60000;
 
+// Preferencia de ver los ríos, solo de este teléfono. Si el navegador no deja guardar, se ven.
+const CLAVE_RIOS = 'atoyac.rios';
+const leerRios = () => { try { return localStorage.getItem(CLAVE_RIOS) !== 'no'; } catch { return true; } };
+const guardarRios = (v) => { try { localStorage.setItem(CLAVE_RIOS, v ? 'si' : 'no'); } catch { /* sin almacenamiento */ } };
+
 // Pantalla principal, como SIGRIV: mapa a pantalla completa con el pin al centro, «Ubicarme» y «Generar Reporte».
 export default function MapaPage({ origen, datos, conectado, pendientes, setPendientes, ir }) {
   const mapa = useRef(null);
@@ -21,9 +26,19 @@ export default function MapaPage({ origen, datos, conectado, pendientes, setPend
   const [aviso, setAviso] = useState(null);
   const [terminos, setTerminos] = useState(avisoAceptado);
   const [tick, setTick] = useState(0);
+  const [rios, setRios] = useState(leerRios);
+  const alternarRios = () => setRios((v) => { guardarRios(!v); return !v; });
   const cerrarAviso = useCallback(() => setAviso(null), []);
 
-  // Los pines de reportes son informativos: si falla la carga, el mapa sigue siendo usable
+  // Los pines de reportes son informativos: si falla la carga, el mapa sigue siendo usable.
+  // Se vuelven a pedir cada minuto y cuando regresa la conexión; no cuando la primera comprobación
+  // confirma que hay backend (eso duplicaba las dos peticiones al abrir).
+  const conectadoAntes = useRef(conectado);
+  const [recargaPorConexion, setRecargaPorConexion] = useState(0);
+  useEffect(() => {
+    if (conectado === true && conectadoAntes.current === false) setRecargaPorConexion((n) => n + 1);
+    conectadoAntes.current = conectado;
+  }, [conectado]);
   useEffect(() => {
     let vigente = true;
     const carga = origen.modo === 'demo' ? fotoDemo().then((f) => f.reportes || []) : getJSON(origen.url + '/reportes').then((j) => j.reportes || []);
@@ -31,7 +46,7 @@ export default function MapaPage({ origen, datos, conectado, pendientes, setPend
     // La huella de calor la calcula el backend; en demostración o sin ruta simplemente no hay
     if (origen.modo === 'api') getJSON(origen.url + '/huella').then((h) => vigente && setHuella(h)).catch(() => {});
     return () => { vigente = false; };
-  }, [origen, tick, conectado]);
+  }, [origen, tick, recargaPorConexion]);
   useEffect(() => {
     const t = setInterval(() => setTick((n) => n + 1), REFRESCO_MS);
     return () => clearInterval(t);
@@ -71,6 +86,7 @@ export default function MapaPage({ origen, datos, conectado, pendientes, setPend
         cuenca={datos && datos.cuenca}
         huella={huella}
         reportes={reportes}
+        rios={rios}
         onCentro={(c) => { centro.current = c; }}
         onUsuarioMovio={() => {}}
         onReporte={(reporte) => setHoja({ tipo: 'reporte', reporte })}
@@ -89,6 +105,13 @@ export default function MapaPage({ origen, datos, conectado, pendientes, setPend
           <circle cx="12" cy="12" r="3" /><path d="M19 12h2M3 12h2M12 19v2M12 3v2" />
         </svg>
         Ubicarme
+      </button>
+      <button className={'btn-capa' + (rios ? ' activo' : '')} onClick={alternarRios} aria-pressed={rios}
+        title={rios ? 'Ocultar los ríos' : 'Mostrar los ríos'}>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
+          <path d="M2 8c2.5-2 4.5-2 7 0s4.5 2 7 0 4.5-2 6 0M2 15c2.5-2 4.5-2 7 0s4.5 2 7 0 4.5-2 6 0" />
+        </svg>
+        Ríos
       </button>
       <Toast aviso={aviso} onClose={cerrarAviso} />
 

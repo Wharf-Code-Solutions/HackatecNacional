@@ -83,7 +83,7 @@ monitoreo del prototipo (alertas y avisos) y la gestión de los reportes de las 
 | Ruta | Qué es | Editable |
 |---|---|---|
 | `ciudadano/src/` | PWA en React (Vite): `App.jsx`, `components/` (mapa, hoja inferior, formulario, rastreo, términos), `lib/` (backend, foto, ubicación, almacén local, etiquetas) | sí |
-| `ciudadano/scripts/copiar-datos.mjs` | Copia `sitios.geojson` y `cuenca.geojson` a `ciudadano/public/datos/` antes de `dev` y `build` | sí |
+| `ciudadano/scripts/copiar-datos.mjs` | Copia `sitios.geojson`, `cuenca.geojson` y `rios_orden3.json` a `ciudadano/public/datos/` y compacta los ríos de orden ≥ 4 en `rios.json`, antes de `dev` y `build` | sí |
 | `ciudadano/public/datos/` | Copia de lo anterior | **NO** (generado, no versionado) |
 | `ciudadano/public/demo/foto.json` | Reportes de ejemplo para el modo demostración (no son reales) | sí |
 | `ciudadano/public/sw.js`, `manifest.webmanifest` | Service worker mínimo e instalación | sí |
@@ -152,6 +152,7 @@ repositorio (`python -m http.server 8000`).
 | `datos/procesados/diccionario_conagua.csv` | Diccionario oficial de campos | `10_construir_tablas.py` | **NO** |
 | `datos/procesados/proxy_modelos.csv` | Los dos modelos proxy con su validación y si se publican | `90_modelos_proxy.py` | **NO** |
 | `datos/procesados/mapa/red_vigilada.geojson` | Los tramos del mapa que vigila cada estación (20 km aguas arriba), con su `estacion` | `96_red_estaciones.py` | **NO** |
+| `datos/procesados/mapa/rios_orden3.json` | Cauces de orden 3 (barrancas) para el mapa de la app ciudadana, que los pide solo al acercar | `61_rios_menores_para_app.py` | **NO** |
 | `datos/procesados/mapa/*.geojson` (el resto) | Cauces (orden ≥ 4), subcuencas, contorno de la cuenca, confluencias principales y toponimia hidrográfica, simplificados para el mapa | `60_red_para_mapa.py` | **NO** |
 | `datos/procesados/analisis/*.csv` | Línea base, ranking, temporada, tendencia, cobertura, correlaciones | `20_analisis_exploratorio.py` | **NO** |
 | `datos/procesados/red/tramo.csv` | 65 342 tramos con orden de Strahler, longitud y tramo de aguas abajo. **No se versiona** (8.2 MB) | `70_topologia_red.py` | **NO** |
@@ -184,6 +185,7 @@ El prefijo numérico indica el orden de ejecución. `_comun.py` no se ejecuta so
 | `scripts/30_verificacion_datos.py` | Verifica integridad y emite veredictos | `datos/crudos/`, `datos/procesados/` | `docs/08-...` |
 | `scripts/40_generar_fixtures.py` | Genera los fixtures del contrato | `datos/procesados/` | `contrato/fixtures/` |
 | `scripts/60_red_para_mapa.py` | Lee las capas de la red hidrográfica y las simplifica para pintar el mapa. **Fuente de verdad de** qué orden de cauce se dibuja (`ORDEN_MINIMO`) y de las tolerancias de simplificación. Calcula el contorno de la cuenca y las confluencias por longitud de red acumulada; **no** ordena los sitios (eso es M1, `70_topologia_red.py`) | `datos/geo/F08_red_hidrografica/` | `datos/procesados/mapa/` |
+| `scripts/61_rios_menores_para_app.py` | Saca los cauces de orden 3 de la red del INEGI para la app ciudadana; reutiliza la lectura y la simplificación de `60_red_para_mapa.py` | `datos/geo/F08_red_hidrografica/` | `datos/procesados/mapa/rios_orden3.json` |
 | `scripts/70_topologia_red.py` | **M1.** Engancha los sitios a la red del INEGI, orienta los tramos y calcula el siguiente sitio aguas abajo. **Fuente de verdad de la topología** | `datos/geo/`, `sitio.csv` | `datos/procesados/red/`, `docs/13-...` |
 | `scripts/80_propagacion.py` | **M3.** Calibra la atenuación con los datos, calcula ventanas de llegada y produce la predicción. **Fuente de verdad de la velocidad supuesta y del alcance útil** | `red/`, `muestreo_nucleo.csv` | `red/atenuacion_observada.csv`, `red/tiempo_viaje.csv`, `contrato/fixtures/prediccion_ejemplo.json`, `docs/14-...` |
 | `motor/reglas.py` | **M2.** `evaluar(paquete) → veredicto`. **Fuente de verdad de los umbrales de deteccion y de la firma de fuente probable** | fixtures, `umbral.csv` | nada en disco |
@@ -218,6 +220,10 @@ python -I scripts/40_generar_fixtures.py
 
 ```powershell
 python -I scripts/60_red_para_mapa.py
+```
+
+```powershell
+python -I scripts/61_rios_menores_para_app.py
 ```
 
 ```powershell

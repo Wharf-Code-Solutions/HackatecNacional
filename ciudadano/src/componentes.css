@@ -37,6 +37,14 @@
   font-weight: 600; font-size: 14px; padding: 10px 16px; border: 1px solid var(--gob-dorado); border-radius: 30px; cursor: pointer;
   box-shadow: 0 4px 6px rgba(0,0,0,.2); z-index: 20; display: flex; align-items: center; gap: 8px; }
 @media (hover: hover) { .btn-ubicarme:hover { background: var(--gob-gris-claro); transform: scale(1.05); } }
+/* «Ríos»: mismo botón que «Ubicarme», debajo. Encendido, el icono en el azul de los ríos; apagado, gris. */
+.btn-capa { position: absolute; top: 72px; right: 20px; background: #fff; color: var(--gob-gris-oscuro); font-family: var(--font-gob);
+  font-weight: 600; font-size: 14px; padding: 10px 16px; border: 1px solid var(--gob-dorado); border-radius: 30px; cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0,0,0,.2); z-index: 20; display: flex; align-items: center; gap: 8px; }
+.btn-capa svg { stroke: #98989a; }
+.btn-capa.activo svg { stroke: #1d6fa5; }
+@media (hover: hover) { .btn-capa:hover { background: var(--gob-gris-claro); } }
+.banda ~ .btn-capa { top: 98px; }
 .map-container .toast-aviso { top: 128px; }
 
 /* Pines: gota de SIGRIV. Reportes en guinda (abiertos) o gris (cerrados) */

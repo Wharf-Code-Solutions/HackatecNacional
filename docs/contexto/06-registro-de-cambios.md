@@ -21,6 +21,25 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · M8: ríos del INEGI en el mapa de la app ciudadana, botón «Ríos» y carga sin esperas en cadena
+
+**Qué cambió.** La app dibuja encima de la base los ríos de orden ≥ 4 (los de `mapa/`, compactados al compilar en
+`rios.json`) y, desde zoom 12, los cauces de orden 3 (`rios_orden3.json`, nuevo, de `61_rios_menores_para_app.py`).
+El flujo animado aguas abajo solo corre desde zoom 14. Botón «Ríos» para ocultarlos (recordado por navegador); los
+cauces de la base se apagan mientras se ven los nuestros. Se ocultan los rótulos de comercios, transporte, números
+de casa y aeropuertos de la base. Se quita `maxBounds`. La biblioteca del mapa se importa fija (alias
+`biblioteca-mapa` en `vite.config.js`), con precarga, y los ríos se piden al terminar de dibujarse la base.
+**Por qué.** En la base el cauce se pierde y la persona tiene que poner el pin sobre él. Con `maxBounds` a 0.5° de
+la ventana, a zoom ≤ 8 el mapa no se dejaba arrastrar (a zoom 7 se movía 0 y saltaba a 7.68). En producción el
+mapa tardaba ~7.5 s con una red irregular: la biblioteca se pedía hasta que la app ya había llegado y arrancado
+(~1.3 s más en cadena), y los reportes y la huella se pedían dos veces al abrir. Medido en local: con y sin ríos,
+60 cuadros por segundo al mover y sin bloqueos; por debajo de zoom 14 el mapa no redibuja nada.
+**Qué arrastró.** `02-mapa-del-repo.md`, `CLAUDE.md`. Pesos: 215 KB comprimidos al abrir y ~240 KB más al acercar.
+**Impacto en otros módulos.** Ninguno. `rios_orden3.json` sale de la red completa del INEGI (`datos/geo/`, no
+versionada): si cambia el criterio, se regenera con el script, no se edita.
+
+---
+
 ## 2026-11-24 · M7: el mapa vuelve a la mitad, junto al estado de las estaciones
 
 **Qué cambió.** Corrige el orden de la entrada "orden de la vista de alertas": resumen; mapa y "Cómo están
