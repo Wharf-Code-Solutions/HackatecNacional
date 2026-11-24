@@ -79,14 +79,15 @@ export function useBackend(codigos) {
       getJSON(origen.url + '/salud'),
       getJSON(origen.url + '/alertas'),
       getJSON(origen.url + '/reportes'),
+      getJSON(origen.url + '/prioridades').catch(() => null),   // opcional: un backend sin la ruta no rompe el panel
       Promise.all(codigos.map((c) => getJSON(origen.url + '/veredictos?c_estacion=' + encodeURIComponent(c)))),
-    ]).then(([salud, al, rep, ver]) => {
+    ]).then(([salud, al, rep, pri, ver]) => {
       if (cancelado) return;
       const veredictos = {};
       // Si el backend no filtra por estación, se reparte aquí; solo es reparto, no análisis.
       codigos.forEach((c, i) => { veredictos[c] = (ver[i].veredictos || []).filter((v) => v.c_estacion === c); });
       setEstado((s) => ({ ...s, conectado: true, motor: salud.motor, alertas: al.alertas || [],
-        reportes: rep.reportes || [], veredictos }));
+        reportes: rep.reportes || [], prioridades: pri ? pri.prioridades : null, veredictos }));
     }).catch(() => { if (!cancelado) setEstado((s) => ({ ...s, conectado: false })); });
     consulta();
     const id = setInterval(consulta, CADA_MS);

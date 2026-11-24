@@ -16,6 +16,7 @@ export default function MapaPage({ origen, datos, conectado, pendientes, setPend
   const centro = useRef(null);
   const gps = useRef(null);                       // última posición GPS; vale mientras el pin no se aleje
   const [reportes, setReportes] = useState([]);
+  const [huella, setHuella] = useState(null);
   const [hoja, setHoja] = useState(null);         
   const [aviso, setAviso] = useState(null);
   const [terminos, setTerminos] = useState(avisoAceptado);
@@ -27,6 +28,8 @@ export default function MapaPage({ origen, datos, conectado, pendientes, setPend
     let vigente = true;
     const carga = origen.modo === 'demo' ? fotoDemo().then((f) => f.reportes || []) : getJSON(origen.url + '/reportes').then((j) => j.reportes || []);
     carga.then((r) => vigente && setReportes(r)).catch(() => {});
+    // La huella de calor la calcula el backend; en demostración o sin ruta simplemente no hay
+    if (origen.modo === 'api') getJSON(origen.url + '/huella').then((h) => vigente && setHuella(h)).catch(() => {});
     return () => { vigente = false; };
   }, [origen, tick, conectado]);
   useEffect(() => {
@@ -66,6 +69,7 @@ export default function MapaPage({ origen, datos, conectado, pendientes, setPend
       <Mapa
         ref={mapa}
         cuenca={datos && datos.cuenca}
+        huella={huella}
         reportes={reportes}
         onCentro={(c) => { centro.current = c; }}
         onUsuarioMovio={() => {}}

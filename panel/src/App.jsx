@@ -112,7 +112,7 @@ export default function App() {
               </section>
             )}
             {vista === 'avisos' && <Avisos veredictos={be.veredictos} conectado={be.conectado} />}
-            {vista === 'reportes' && <Reportes reportes={be.reportes} conectado={be.conectado} />}
+            {vista === 'reportes' && <Reportes reportes={be.reportes} prioridades={be.prioridades} conectado={be.conectado} />}
           </Datos.Provider>
         )}
       </main>

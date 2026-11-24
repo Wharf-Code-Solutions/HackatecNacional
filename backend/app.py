@@ -59,6 +59,7 @@ def _cargar(nombre, ruta):
 
 validador = _cargar('validador', os.path.join(RAIZ, 'contrato', 'validador.py'))
 analisis_foto = _cargar('analisis_foto', os.path.join(RAIZ, 'contrato', 'analisis_foto.py'))
+prioridad_huella = _cargar('prioridad_huella', os.path.join(RAIZ, 'contrato', 'prioridad_huella.py'))
 reglas = _cargar('reglas', os.path.join(RAIZ, 'motor', 'reglas.py'))
 ESQ = {n: validador.cargar_esquema(n) for n in ('lectura', 'reporte_ciudadano', 'alerta', 'prediccion_propagacion')}
 # Tablas que el motor lee al construirse: se cargan una vez por proceso.
@@ -202,6 +203,17 @@ def crear_app(url=None):
     def get_reportes():
         # El correo es solo para avisar del cierre: nunca sale por la API publica.
         return {'reportes': [{k: v for k, v in r.items() if k != 'correo'} for r in ctx()['almacen'].reportes()]}
+
+    @app.get('/huella')
+    def get_huella():
+        # Calor sobre el rio por densidad de reportes abiertos. Publica; misma salida que el mock.
+        return prioridad_huella.huella(ctx()['almacen'].reportes())
+
+    @app.get('/prioridades')
+    def get_prioridades():
+        # Para la autoridad: focos de reportes con prioridad de 1 a 10 y su desglose.
+        a = ctx()['almacen']
+        return prioridad_huella.prioridades(a.reportes(), a.alertas())
 
     @app.get('/reportes/{c_reporte}')
     def get_reporte(c_reporte: str):

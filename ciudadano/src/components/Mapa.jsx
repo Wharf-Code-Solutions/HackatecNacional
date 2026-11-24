@@ -25,7 +25,7 @@ function boton(clase, etiqueta, alClick) {
   return caja;
 }
 
-const Mapa = forwardRef(function Mapa({ cuenca, reportes, onCentro, onUsuarioMovio, onReporte, onListo, onError }, ref) {
+const Mapa = forwardRef(function Mapa({ cuenca, huella, reportes, onCentro, onUsuarioMovio, onReporte, onListo, onError }, ref) {
   const contenedor = useRef(null);
   const mapa = useRef(null);
   const gl = useRef(null);
@@ -80,6 +80,25 @@ const Mapa = forwardRef(function Mapa({ cuenca, reportes, onCentro, onUsuarioMov
     poner();
     return undefined;
   }, [cuenca, lista]);
+
+  // Huella de calor: el propio río coloreado por la densidad de reportes (la calcula el backend, GET /huella).
+  // Solo trae tramos donde hay evidencia suficiente; sin ellos no se dibuja nada.
+  useEffect(() => {
+    const m = mapa.current;
+    if (!m || !lista) return;
+    const datos = huella && huella.features ? huella : { type: 'FeatureCollection', features: [] };
+    const fuente = m.getSource('huella');
+    if (fuente) { fuente.setData(datos); return; }
+    m.addSource('huella', { type: 'geojson', data: datos });
+    m.addLayer({
+      id: 'huella-linea', type: 'line', source: 'huella', layout: { 'line-cap': 'round', 'line-join': 'round' },
+      paint: {
+        'line-color': ['interpolate', ['linear'], ['get', 'intensidad'], 0, '#E3C99A', 0.5, '#C2557A', 1, '#611232'],
+        'line-width': ['interpolate', ['linear'], ['zoom'], 8, 2, 12, 4, 16, 7],
+        'line-opacity': 0.85,
+      },
+    });
+  }, [huella, lista]);
 
   // Pines: reportes de otras personas
   useEffect(() => {

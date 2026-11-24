@@ -123,8 +123,11 @@ for fn in ('parse_valor', 'sin_acentos', 'serial_a_fecha', 'leer_xlsb', 'buscar_
 print('\n5) El contrato corre sin dependencias (invariante I9)')
 ESTANDAR = {'argparse', 'collections', 'csv', 'datetime', 'http', 'json', 'os',
             're', 'sys', 'time', 'urllib', 'unicodedata', 'importlib',
-            'validador', 'statistics', 'random', 'math', 'pathlib', 'typing'}
+            'statistics', 'random', 'math', 'pathlib', 'typing', 'base64', 'threading'}
 carpeta = os.path.join(RAIZ, 'contrato')
+# Los modulos del propio contrato (validador, analisis_foto, prioridad_huella...) tambien valen: se
+# comparten entre el mock y el backend sin que uno importe al otro.
+ESTANDAR |= {a[:-3] for a in os.listdir(carpeta) if a.endswith('.py')}
 externas = []
 for a in sorted(os.listdir(carpeta)):
     if not a.endswith('.py'):

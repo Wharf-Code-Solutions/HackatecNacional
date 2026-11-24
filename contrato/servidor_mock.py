@@ -28,6 +28,8 @@ Rutas:
     POST /reportes                   reporte ciudadano
     POST /reportes/analizar-foto     la foto corresponde a algun tipo? (Gemini; ver analisis_foto.py)
     GET  /reportes
+    GET  /huella                     calor sobre el rio por densidad de reportes (publica)
+    GET  /prioridades                focos de reportes con prioridad y desglose (autoridad)
 """
 import argparse
 import json
@@ -44,6 +46,7 @@ FIX = os.path.join(AQUI, 'fixtures')
 sys.path.insert(0, AQUI)
 from validador import cargar_esquema, validar          # noqa: E402
 import analisis_foto                                   # noqa: E402
+import prioridad_huella                                # noqa: E402
 
 ESQ_LECTURA = cargar_esquema('lectura')
 ESQ_REPORTE = cargar_esquema('reporte_ciudadano')
@@ -223,6 +226,12 @@ class Manejador(BaseHTTPRequestHandler):
         if ruta == '/reportes':
             publico = [{k: v for k, v in r.items() if k != 'correo'} for r in REPORTES]
             return self._responder(200, {'reportes': publico})
+        if ruta == '/huella':
+            # Calor sobre el rio segun la densidad de reportes abiertos (publica; ver prioridad_huella.py)
+            return self._responder(200, prioridad_huella.huella(REPORTES))
+        if ruta == '/prioridades':
+            # Para la autoridad: foco por foco, con prioridad de 1 a 10 y su desglose
+            return self._responder(200, prioridad_huella.prioridades(REPORTES, ALERTAS))
         m = re.match(r'^/reportes/(RC-[0-9]{8}-[0-9]{4})$', ruta)
         if m:
             # Consulta de folio para la app ciudadana (M8). Sin el correo.
