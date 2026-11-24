@@ -59,4 +59,5 @@ usa Mapbox GL JS con el estilo claro de Mapbox. La casilla "Satélite" (Esri Wor
 llave) funciona con o sin token. Sin él, usa MapLibre GL
 con la base vectorial de OpenFreeMap, sin llave; se apagan sus ríos para que la
 red del INEGI sea la única agua. El relieve es opcional (casilla "Relieve"). La barra lateral es
-solo la lista de estaciones y dos casillas; las fuentes están en el botón de atribución.
+solo la lista de estaciones y las casillas, y se pliega con el botón junto al título (al abrir una
+estación se pliega sola para dar lugar a la zona y al simulador); las fuentes están en el botón de atribución.

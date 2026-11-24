@@ -350,9 +350,6 @@
 
     construyeVegetacion();
 
-    // Un volcán al fondo, apagado por la niebla: la cuenca está entre la Malinche y la Sierra Nevada.
-    var volcan = new T.Mesh(new T.ConeGeometry(30, 11, 9, 1, true), mate(0xd3d9dc, { flatShading: true, roughness: 1 }));
-    volcan.position.set(-14, 3.5, -95); volcan.userData.sinSombra = true; G.escena.add(volcan);
   }
 
   // ------------------------------------------------------------ rótulos HTML

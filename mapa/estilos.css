@@ -18,7 +18,23 @@ h1 { font-size: 18px; font-weight: 700; line-height: 1.25; margin-bottom: 14px; 
 :focus-visible { outline: 2px solid var(--agua); outline-offset: 2px; }
 
 .app { display: flex; height: 100%; }
-.lateral { flex: 0 0 240px; overflow-y: auto; background: var(--superficie); border-right: 1px solid var(--linea); padding: 18px 16px; display: flex; flex-direction: column; }
+.lateral { flex: 0 0 240px; overflow-y: auto; overflow-x: hidden; background: var(--superficie); border-right: 1px solid var(--linea);
+  padding: 18px 16px; display: flex; flex-direction: column; transition: flex-basis 0.22s ease, padding 0.22s ease; }
+.lat-cabeza { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 14px; }
+.lat-cabeza h1 { margin: 0; flex: 1; }
+.plegar { flex: none; width: 28px; height: 28px; display: grid; place-items: center; padding: 0; cursor: pointer;
+  background: none; border: 1px solid transparent; border-radius: 3px; color: var(--tenue); }
+.plegar:hover { border-color: var(--linea); color: var(--tinta); }
+.plegar svg { transition: transform 0.22s ease; }
+
+/* menú plegado: solo los números de las estaciones, que siguen abriendo cada una */
+.app.menu-cerrado .lateral { flex-basis: 52px; padding: 12px 8px; }
+.app.menu-cerrado .lat-cabeza { justify-content: center; }
+.app.menu-cerrado .lat-cabeza h1, .app.menu-cerrado .estaciones b, .app.menu-cerrado .estaciones .det,
+.app.menu-cerrado .capas { display: none; }
+.app.menu-cerrado .plegar svg { transform: rotate(180deg); }
+.app.menu-cerrado .estaciones li + li { border-top: 0; }
+.app.menu-cerrado .estaciones button { grid-template-columns: 26px; justify-content: center; padding: 6px 0; }
 
 .estaciones { list-style: none; }
 .estaciones li + li { border-top: 1px solid #e4e9ec; }
@@ -56,16 +72,16 @@ h1 { font-size: 18px; font-weight: 700; line-height: 1.25; margin-bottom: 14px; 
 #mapa.zoom-cerca .est-marca .nombre { display: block; }
 
 /* detalle: el simulador de la estación */
-.detalle { flex: 0 0 0; width: 0; overflow: hidden; background: var(--papel); border-left: 1px solid var(--linea); display: flex; flex-direction: column; }
-.app.abierto .detalle { flex: 0 0 62%; width: auto; }
-.app.abierto .lateral { flex-basis: 220px; }
+.detalle { flex: 0 0 0; width: 0; overflow: hidden; background: var(--papel); border-left: 1px solid var(--linea); display: flex; flex-direction: column;
+  transition: flex-basis 0.22s ease; }
+/* con una estación abierta: la zona en el mapa a la izquierda (≈ 40 %) y su simulador a la derecha */
+.app.abierto .detalle { flex: 0 0 58%; width: auto; }
 .detalle header { display: flex; align-items: center; gap: 14px; padding: 8px 14px; background: var(--superficie); border-bottom: 1px solid var(--linea); flex: none; }
 .detalle h2 { font-size: 15px; font-weight: 600; }
 .detalle iframe { flex: 1; border: 0; width: 100%; background: var(--papel); }
 
 @media (max-width: 900px) {
-  .lateral { display: none; }
-  .app.abierto .detalle { flex-basis: 100%; }
+  .app.abierto .detalle { flex-basis: calc(100% - 52px); }
   .app.abierto .mapa-col { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }

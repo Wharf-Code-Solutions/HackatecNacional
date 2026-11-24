@@ -37,7 +37,8 @@
   var CSS = MB ? 'mapboxgl' : 'maplibregl';
   var ITALICA = MB ? ['DIN Pro Italic', 'Arial Unicode MS Regular'] : ['Noto Sans Italic'];
   var NOMBRE_ES = MB ? 'name_es' : 'name:es';
-  function get(url) { return fetch(url).then(function (r) { if (!r.ok) throw new Error(url + ' ' + r.status); return r.json(); }); }
+  // no-cache: revalida con el servidor, para que un fixture regenerado se vea sin vaciar la caché
+  function get(url) { return fetch(url, { cache: 'no-cache' }).then(function (r) { if (!r.ok) throw new Error(url + ' ' + r.status); return r.json(); }); }
 
   var opciones = {
     container: 'mapa',
@@ -229,23 +230,53 @@
     });
   }
 
+  // ---------------------------------------------------------------- menú plegable
+  // El botón pliega la barra a una columna con los números de las estaciones. Al abrir una
+  // estación se pliega sola para dar lugar a la zona y al simulador; al cerrar vuelve como estaba.
+  var menuElegido = window.innerWidth >= 900;     // abierto por defecto, salvo en pantallas angostas
+  function menu(abiertoMenu) {
+    $('app').classList.toggle('menu-cerrado', !abiertoMenu);
+    $('btnMenu').setAttribute('aria-expanded', String(abiertoMenu));
+    $('btnMenu').title = abiertoMenu ? 'Plegar el menú' : 'Desplegar el menú';
+  }
+  menu(menuElegido);
+  $('btnMenu').onclick = function () {
+    menuElegido = $('app').classList.contains('menu-cerrado');
+    menu(menuElegido);
+  };
+  // El mapa se redimensiona y se reencuadra cuando termina de moverse el diseño (transición de 0.22 s).
+  var encuadre = null;
+  function reencuadra() {
+    mapa.resize();
+    if (encuadre) encuadre();
+  }
+  ['lateral', 'detalle'].forEach(function (id) {
+    $(id).addEventListener('transitionend', function (ev) { if (ev.target === this && ev.propertyName === 'flex-basis') reencuadra(); });
+  });
+
   function abre(e) {
+    var yaAbierta = !!abierta;
     abierta = e;
     $('detTitulo').textContent = e.c_estacion + ' · ' + inicial(e.cuerpo_agua) + ', ' + inicial(e.municipio);
     $('marco').src = '../dispositivo/simulador/index.html?incrustado=1&vel=300&estacion=' + encodeURIComponent(e.c_estacion) +
       (MOCK ? '&backend=' + encodeURIComponent(MOCK) : '');
     $('app').classList.add('abierto');
     $('detalle').setAttribute('aria-hidden', 'false');
+    menu(false);
     marcaActiva(e.c_estacion);
-    setTimeout(function () { mapa.resize(); mapa.flyTo({ center: [e.longitud, e.latitud], zoom: 13.5, duration: 1200 }); }, 60);
+    // la zona: la estación al centro de la columna del mapa, a una escala que deja ver el tramo de río
+    encuadre = function () { mapa.flyTo({ center: [e.longitud, e.latitud], zoom: 12.6, duration: 1100 }); };
+    if (yaAbierta) reencuadra(); else setTimeout(reencuadra, 260);   // respaldo si no hay transición
   }
   function cierra() {
     abierta = null;
     $('app').classList.remove('abierto');
     $('detalle').setAttribute('aria-hidden', 'true');
     $('marco').removeAttribute('src');
+    menu(menuElegido);
     marcaActiva(null);
-    setTimeout(function () { mapa.resize(); if (vistaCuenca) mapa.fitBounds(vistaCuenca, { padding: 30, duration: 1000 }); }, 60);
+    encuadre = function () { if (vistaCuenca) mapa.fitBounds(vistaCuenca, { padding: 30, duration: 1000 }); };
+    setTimeout(reencuadra, 260);
   }
   $('btnVolver').onclick = cierra;
   document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape' && abierta) cierra(); });

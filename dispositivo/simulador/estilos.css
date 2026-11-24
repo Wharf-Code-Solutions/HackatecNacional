@@ -76,5 +76,8 @@ select { font: inherit; font-size: 13px; color: var(--tinta); background: var(--
 .incrustado .cabecera { display: none; }
 .incrustado .pagina { max-width: none; padding: 12px 16px 24px; }
 .incrustado .probar { padding: 8px 16px; }
+/* en el marco del mapa la figura completa cabe a la vista: su alto se limita al del marco menos las
+   pruebas y la fila de valores; la cámara ajusta su proporción. */
+.incrustado .escena3d { max-height: calc(100vh - 150px); min-height: 260px; }
 @media (max-width: 700px) { .pagina, .cabecera, .probar { padding-left: 16px; padding-right: 16px; } }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }

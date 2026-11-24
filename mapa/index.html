@@ -6,12 +6,17 @@
 <title>Cuenca del Alto Atoyac · estaciones</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="estilos.css?v=6">
+<link rel="stylesheet" href="estilos.css?v=7">
 </head>
 <body>
 <div class="app" id="app">
-  <aside class="lateral">
-    <h1>Cuenca del Alto Atoyac</h1>
+  <aside class="lateral" id="lateral">
+    <div class="lat-cabeza">
+      <h1>Cuenca del Alto Atoyac</h1>
+      <button type="button" class="plegar" id="btnMenu" aria-expanded="true" aria-controls="lateral" title="Plegar el menú">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+      </button>
+    </div>
     <ol class="estaciones" id="listaEstaciones"></ol>
     <div class="capas">
       <label class="check" id="capaSatelite"><input type="checkbox" id="chkSatelite"> Satélite</label>
@@ -41,7 +46,7 @@
   var js = mb ? 'https://api.mapbox.com/mapbox-gl-js/v3.8.0/mapbox-gl.js' : 'https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js';
   var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = css; document.head.appendChild(l);
   var s = document.createElement('script'); s.src = js;
-  s.onload = function () { var m = document.createElement('script'); m.src = 'mapa.js?v=8'; document.body.appendChild(m); };
+  s.onload = function () { var m = document.createElement('script'); m.src = 'mapa.js?v=10'; document.body.appendChild(m); };
   document.body.appendChild(s);
 })();
 </script>
