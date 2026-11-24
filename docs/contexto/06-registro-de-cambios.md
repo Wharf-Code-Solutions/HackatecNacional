@@ -21,6 +21,20 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Cambio de rumbo: escuelas rurales vulnerables (reto CAPCEE)
+
+**Qué cambió.** Nuevo `docs/19-cambio-de-rumbo-capcee.md`: el proyecto pasa a prevenir contaminación y derrumbes
+en comunidades rurales con escuelas vulnerables; lleva el reto el CAPCEE y los mecanismos deben contemplar
+autorizaciones de CEASPUE. Define el contrato común (`escuelas.json`, `zonas_riesgo.geojson`, autorizaciones,
+cambios v2.0 a alerta, reporte y estación) y reparte tres módulos independientes.
+**Por qué.** Cambio de reto; los módulos de análisis del agua, alertas y participación ciudadana se conservan
+con enfoque en infraestructura y urbanización.
+**Qué arrastró.** Solo el documento nuevo. `CLAUDE.md`, esquemas y fixtures aún no cambian.
+**Impacto en otros módulos.** Reubicación (Manuel), dashboard en `panel/` (Evaristo) y reportes en `ciudadano/`
+(Carlos) trabajan contra los fixtures de §4 del documento, sin importar código entre sí.
+
+---
+
 ## 2026-11-24 · M5 y M8: freno a los reportes repetidos de una misma persona
 
 **Qué cambió.** `backend/antispam.py` y la tabla `envio`. Por persona (huella SHA-256 de la IP con sal secreta; la IP no se
