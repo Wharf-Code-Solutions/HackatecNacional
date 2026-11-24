@@ -33,34 +33,48 @@ h1, h2, h3 { color: var(--titulo); }
 :focus-visible { outline: 3px solid var(--dorado600); outline-offset: 2px; }
 [hidden] { display: none !important; }
 #raiz { flex: 1; display: flex; flex-direction: column; }
+/* La hoja del SND fija html y body a height: 100% y body a overflow-x: hidden: body se vuelve su
+   propia caja de desplazamiento de 768 px, la ventana deja de desplazarse y la lista fija (sticky)
+   deja de funcionar. Se anulan con mas especificidad para no depender del orden de las hojas. */
+html:root, html:root body { height: auto; }
+html:root body { overflow-x: clip; overflow-y: visible; max-width: none; min-height: 100vh; }
+html:root main { height: auto; }
 .contenedor { width: 100%; max-width: 1360px; margin: 0 auto; padding: 0 24px; }
 .nota { color: var(--tenue); font-size: 13px; }
 .tenue { color: var(--tenue); }
 .vacio { color: var(--tenue); }
 .centro { text-align: center; }
 
-/* ---------------------------------------------------------------- cabecera */
-.cabecera { background: var(--principal); color: #fff; }
-.cabecera-fila { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 72px; padding-top: 12px; padding-bottom: 12px; }
-.cabecera h1 { color: #fff; font-size: 22px; font-weight: 600; line-height: 1.2; }
-.sobretitulo { font-size: 13px; color: var(--pguinda100); }
+/* ---------------------------------------------------------------- cabecera (SND, tema guinda) */
+/* Barra como el encabezado del SND: 72 px en guinda 900 a todo lo ancho, contenido centrado. */
+.cabecera { background: var(--pguinda900); color: #fff; }
+.cabecera-fila { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 72px; padding-top: 10px; padding-bottom: 10px; }
+.marca { display: flex; flex-direction: column; line-height: 1.15; }
+.marca-nombre { font-family: Patria, "Noto Sans", serif; font-size: 22px; font-weight: 700; color: #fff; }
+.marca-sub { font-size: 13px; color: var(--pguinda100); margin-top: 3px; }
 .conexion { font-size: 13px; color: var(--pguinda100); text-align: right; display: flex; align-items: center; gap: 8px; }
 .conexion::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--neutro500); flex: none; }
 .conexion.ok::before { background: #7fd18b; }
 .conexion.mal::before { background: #ff9c9c; }
 
-.subnav { background: var(--superficie); border-bottom: 1px solid var(--linea); }
-.subnav .contenedor { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
-.subnav .contenedor::-webkit-scrollbar { display: none; }
+/* Título de página: Patria, como los títulos del SND, con el filete dorado. */
+.encabezado-pagina { background: var(--superficie); border-bottom: 1px solid var(--linea); padding-top: 28px; }
+.titulo-panel { font-family: Patria, "Noto Sans", serif; font-size: 36px; line-height: 1.15; margin: 0; color: var(--titulo); }
+.titulo-panel::after { content: ""; display: block; width: 48px; height: 5px; background: var(--dorado600); margin-top: 12px; }
+.bajada { margin-top: 14px; max-width: 760px; color: var(--texto); font-size: 16px; }
+
+.subnav { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin-top: 18px; }
+.subnav::-webkit-scrollbar { display: none; }
 .subnav button { font: inherit; font-size: 15px; color: var(--texto); background: none; border: 0;
-  border-bottom: 3px solid transparent; padding: 14px 12px 11px; cursor: pointer; white-space: nowrap; }
+  border-bottom: 3px solid transparent; padding: 12px 14px 11px; cursor: pointer; white-space: nowrap; }
 .subnav button:hover { color: var(--principal); }
 .subnav button.activa { color: var(--principal); font-weight: 600; border-bottom-color: var(--principal); }
-.subnav span { color: var(--tenue); font-weight: 400; }
+.contador { color: var(--tenue); font-weight: 400; margin-left: 2px; }
+.contador::before { content: "("; } .contador::after { content: ")"; }
 
-.aviso-motor { background: var(--amarillo100); color: var(--amarillo500); font-size: 14px; padding: 10px 24px; text-align: center; }
+.aviso-contenedor { margin-top: 20px; }
 
-main { flex: 1; padding-top: 24px; padding-bottom: 40px; }
+main { flex: 1; padding-top: 24px; padding-bottom: 48px; height: auto; }
 .titulo-seccion { font-size: 17px; font-weight: 600; }
 .titulo-pagina { font-size: 24px; font-weight: 600; margin-bottom: 4px; }
 .titulo-pagina::after, .exp-cabeza::after { content: ""; display: block; width: 40px; height: 4px; background: var(--dorado600); margin-top: 10px; }
@@ -204,7 +218,26 @@ ul.lista { margin: 8px 0 0; padding-left: 20px; font-size: 14px; }
 .bloque table { border: 1px solid var(--linea); }
 .bloque .nota { margin-top: 8px; }
 
-.pie { background: var(--superficie); border-top: 1px solid var(--linea); color: var(--tenue); font-size: 12.5px; padding: 16px 0; }
+/* Pie como el del SND: guinda oscuro a todo lo ancho, texto blanco, en columnas. */
+.pie { background: var(--pguinda900); color: var(--pguinda100); font-size: 13.5px; padding: 32px 0 36px; }
+.pie-rejilla { display: grid; grid-template-columns: 2fr 1.4fr 1fr; gap: 24px 40px; }
+.pie-titulo { font-family: Patria, "Noto Sans", serif; color: #fff; font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+.pie ul { margin: 0; padding-left: 18px; }
+.pie li + li { margin-top: 4px; }
+
+/* SND: los mensajes informativos y el botón primario vienen de su hoja; aquí solo el espacio. */
+.mensajeInformativo { font-size: 14px; }
+.gestion .boton__primario { align-self: end; }
+
+/* ---------------------------------------------------------------- mapa y huella */
+.subtitulo-seccion { font-size: 13.5px; color: var(--tenue); margin: -4px 0 10px; }
+.mapa-red svg { display: block; max-width: 100%; height: auto; }
+.lienzo svg text.num-estacion { fill: #fff; font-size: 11px; font-weight: 700; }
+.lienzo svg text.etq-mapa { fill: var(--titulo); font-size: 12px; font-weight: 600; paint-order: stroke;
+  stroke: #F9F9F9; stroke-width: 3px; }
+.lienzo svg text.etq-chica { fill: var(--tenue); font-size: 10px; }
+.escala-z { display: grid; grid-template-columns: repeat(7, 1fr); height: 10px; border-radius: 2px; overflow: hidden; max-width: 360px; }
+.escala-z-txt { display: flex; justify-content: space-between; max-width: 360px; font-size: 12px; color: var(--tenue); margin: 4px 0 10px; }
 
 /* ---------------------------------------------------------------- teléfono y tableta */
 @media (max-width: 1000px) {
@@ -217,6 +250,8 @@ ul.lista { margin: 8px 0 0; padding-left: 20px; font-size: 14px; }
   .contenedor { padding: 0 16px; }
   .cabecera-fila { flex-direction: column; align-items: flex-start; gap: 6px; }
   .conexion { text-align: left; }
+  .titulo-panel { font-size: 28px; }
+  .pie-rejilla { grid-template-columns: 1fr; }
   .resumen { grid-template-columns: 1fr 1fr; }
   .cifra:nth-child(3) { border-left: 0; }
   .cifra:nth-child(n+3) { border-top: 1px solid var(--linea); }
@@ -269,3 +304,4 @@ ul.lista { margin: 8px 0 0; padding-left: 20px; font-size: 14px; }
 .msg-gestion.mal { color: var(--rojo500); }
 button.enlace { background: none; border: 0; padding: 0; color: var(--principal); text-decoration: underline; cursor: pointer; font: inherit; font-size: 13px; }
 .tabla-desliza select { min-width: 9em; }
+.subnav-vacio { height: 20px; }

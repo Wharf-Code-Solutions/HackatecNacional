@@ -4,19 +4,22 @@ import { inicial, porAtender } from '../lib/formato.js';
 import BarraAtencion from '../graficas/BarraAtencion.jsx';
 import BarrasH from '../graficas/BarrasH.jsx';
 import GraficaHoras from '../graficas/GraficaHoras.jsx';
+import Huella from '../graficas/Huella.jsx';
+import MapaRed from '../graficas/MapaRed.jsx';
 import MatrizEstaciones from '../graficas/MatrizEstaciones.jsx';
 
-function Tarjeta({ titulo, ancha, children }) {
+function Tarjeta({ titulo, subtitulo, ancha, children }) {
   return (
     <figure className={'tarjeta' + (ancha ? ' ancha' : '')}>
       <h2 className="titulo-seccion">{titulo}</h2>
+      {subtitulo && <p className="subtitulo-seccion">{subtitulo}</p>}
       {children}
     </figure>
   );
 }
 
 export default function Panorama({ alertas, veredictos, corte }) {
-  const { estaciones, lineaBase } = useDatos();
+  const { estaciones, lineaBase, sitios, rios } = useDatos();
   const porEstacion = Object.keys(estaciones).sort().map((c) => {
     const partes = {};
     let total = 0;
@@ -32,10 +35,16 @@ export default function Panorama({ alertas, veredictos, corte }) {
 
   return (
     <div className="panorama">
-      <Tarjeta titulo="Alertas por hora" ancha><GraficaHoras alertas={alertas} /></Tarjeta>
-      <Tarjeta titulo="Cómo están las estaciones ahora">
+      <Tarjeta titulo="La red de estaciones" subtitulo="Ríos principales (INEGI), sitios oficiales de CONAGUA y las 5 estaciones con su alerta más grave abierta.">
+        <MapaRed estaciones={estaciones} sitios={sitios} rios={rios} alertas={alertas} />
+      </Tarjeta>
+      <Tarjeta titulo="Cómo están las estaciones ahora" subtitulo="Última lectura de cada sonda frente a la historia de su sitio.">
         <MatrizEstaciones estaciones={estaciones} lineaBase={lineaBase} veredictos={veredictos} corte={corte} />
       </Tarjeta>
+      <Tarjeta titulo="Huella de las últimas horas" subtitulo="Dónde y cuándo se salió cada sonda de lo habitual." ancha>
+        <Huella estaciones={estaciones} veredictos={veredictos} />
+      </Tarjeta>
+      <Tarjeta titulo="Alertas por hora" ancha><GraficaHoras alertas={alertas} /></Tarjeta>
       <Tarjeta titulo="Alertas por atender, por estación">
         <BarrasH filas={porEstacion} claves={NIVELES} colores={COLOR_NIVEL} nombreClave={txt} plural
           nota="Solo alertas por atender (abiertas y en atención)." />
@@ -44,7 +53,7 @@ export default function Panorama({ alertas, veredictos, corte }) {
         <BarrasH filas={porParametro} claves={['n']} colores={{ n: '#9B2247' }} nombreClave={() => 'alertas'}
           nota="Todas las alertas, por el parámetro que las disparó." />
       </Tarjeta>
-      <Tarjeta titulo="Avance de la atención"><BarraAtencion alertas={alertas} /></Tarjeta>
+      <Tarjeta titulo="Avance de la atención" ancha><BarraAtencion alertas={alertas} /></Tarjeta>
     </div>
   );
 }

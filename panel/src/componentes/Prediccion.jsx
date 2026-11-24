@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { horaCorta, inicial, km, num } from '../lib/formato.js';
+import { useDatos } from '../lib/contexto.js';
 import Llegadas, { COLOR_CONFIANZA } from '../graficas/Llegadas.jsx';
+import MapaRed from '../graficas/MapaRed.jsx';
 import { Mensaje } from '../graficas/marcas.jsx';
 
 // Mas alla de esta distancia M3 marca la prediccion como fuera del alcance util
@@ -16,6 +18,7 @@ function horasDesde(iso, t0) {
 // Propagacion aguas abajo de la alerta (M3). El panel no calcula nada: lo pide al
 // backend (GET /alertas/<c_alerta>/prediccion). Si no la hay, muestra la topologia.
 export default function Prediccion({ alerta, unidad, obtener, sinPrediccion }) {
+  const { estaciones, sitios, rios } = useDatos();
   const [res, setRes] = useState(null);
   const [todos, setTodos] = useState(false);
   useEffect(() => {
@@ -67,6 +70,13 @@ export default function Prediccion({ alerta, unidad, obtener, sinPrediccion }) {
         <div><b>{utiles.length}</b><span>Sitios a menos de {ALCANCE_UTIL_M / 1000} km · {destinos.length} en total</span></div>
         <div><b>{banda(primero)}</b><span>Valor esperado en el primer sitio (p10 a p90)</span></div>
       </div>
+
+      <figure className="grafica" style={{ marginTop: 16 }}>
+        <MapaRed estaciones={estaciones} sitios={sitios} rios={rios} alertas={[]}
+          pluma={{ destinos: utiles.length ? utiles : destinos.slice(0, EN_GRAFICA), inicio: alerta.fecha_hora }}
+          origen={estaciones[alerta.c_estacion]} alto={300} />
+        <p className="pie-graf">Sitios a menos de {ALCANCE_UTIL_M / 1000} km aguas abajo, por cuándo llegaría la contaminación. El punto negro es la estación de la alerta.</p>
+      </figure>
 
       <figure className="grafica" style={{ marginTop: 16 }}>
         <Llegadas destinos={enGrafica} inicio={alerta.fecha_hora} unidad={unidad} />

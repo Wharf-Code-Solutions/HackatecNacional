@@ -136,6 +136,12 @@ En Vercel el backend corre como función de Python (`api/index.py`) y guarda en 
 con la base, habla con el backend. En local se prueba contra un Postgres 17 de prueba con
 `PRUEBA_POSTGRES`. Decisiones D25 y D26.
 
+### Hoja de estilos del Sistema Nacional de Diseño (panel)
+
+El panel enlaza `snd-guinda.css` del CDN del gobierno (`framework-gb.cdn.gob.mx/snd/v1/`) con su huella
+`integrity`. Trae Noto Sans y Patria y las clases de componentes del SND. No se usa su cargador
+`carga.js`, que inserta el encabezado oficial del Gobierno de México (D31).
+
 ### React 18 y Vite para el panel de autoridad (M7)
 
 `panel/` es una aplicación React (JavaScript, sin TypeScript) construida con Vite. Se eligió

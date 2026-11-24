@@ -4,8 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Panel de autoridad · Río Atoyac</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&display=swap">
+<!-- Hoja de estilos del Sistema Nacional de Diseño, tema guinda (snd.gob.mx): colores, tipografía
+     (Noto Sans y Patria), iconos y clases de componentes. Se enlaza la hoja y NO el cargador
+     carga.js: el cargador inserta siempre el encabezado oficial del Gobierno de México, y esto es un
+     prototipo de HackaTec, no un sitio oficial (D31). La huella sale del manifiesto oficial
+     (snd/v1/manifiesto-v1.json, version 1.15.0); si el CDN cambia el archivo, el navegador lo ignora y
+     el panel sigue con src/estilos.css, que define las mismas variables. -->
+<link rel="stylesheet" href="https://framework-gb.cdn.gob.mx/snd/v1/snd-guinda.css"
+  integrity="sha384-lclXWxqKGfepuIErZdVgKAK2bM7o+tsHGhYfA4QtCRkL768x5Ffo1u7rP01oCUfd"
+  crossorigin="anonymous">
 </head>
 <body>
 <div id="raiz"></div>

@@ -42,7 +42,7 @@ function Gestion({ alerta, guardar, demo }) {
         <input type="text" maxLength={120} placeholder="Nombre o área" value={responsable}
           onChange={(e) => setResponsable(e.target.value)} />
       </label>
-      <button className="boton primario" type="submit" disabled={ocupado}>Guardar</button>
+      <button className="boton__primario" type="submit" disabled={ocupado}>Guardar</button>
       <p className={'nota ' + msg.clase} role="status">{msg.texto}</p>
     </form>
   );
@@ -182,10 +182,9 @@ export default function Expediente({ alerta, veredictos, motor, guardar, predicc
         <Miniaturas alerta={a} estacion={e} lineaBase={lineaBase} veredictos={veredictos} />
       </section>
 
-      <div className="dos-col">
-        <section className="bloque"><h3>Fuente probable</h3><Fuente f={a.fuente_probable} motor={motor} /></section>
-        <section className="bloque"><h3>Medidas sugeridas</h3><Medidas ms={a.medidas_sugeridas} /></section>
-      </div>
+      {/* A todo lo ancho: con los candidatos del DENUE la tabla no cabe en media columna. */}
+      <section className="bloque"><h3>Fuente probable</h3><Fuente f={a.fuente_probable} motor={motor} /></section>
+      <section className="bloque"><h3>Medidas sugeridas</h3><Medidas ms={a.medidas_sugeridas} /></section>
 
       <section className="bloque">
         <h3>Hasta dónde llega</h3>

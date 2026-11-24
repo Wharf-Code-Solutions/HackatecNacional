@@ -29,4 +29,8 @@ export function Leyenda({ items }) {
   );
 }
 
-export const Mensaje = ({ children, tipo }) => <p className={'mensaje' + (tipo ? ' ' + tipo : '')}>{children}</p>;
+// Mensajes con el componente del SND (snd.gob.mx/componentes/mensajes-informativos). Sin tipo, un
+// aviso neutro (un "sin dato" no es una advertencia).
+export const Mensaje = ({ children, tipo }) => (tipo === 'info'
+  ? <div className="mensajeInformativo mensajeInformativo--informativo" role="note">{children}</div>
+  : <p className="mensaje">{children}</p>);

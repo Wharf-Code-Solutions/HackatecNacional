@@ -157,7 +157,8 @@ El usuario rechazó explícitamente el diseño con aspecto "hecho por IA" y lo h
   con el dato.
 - Le gusta ver los componentes del dispositivo descritos dentro de la figura, sin separarlos en otra sección.
 - **Excepción, el panel de autoridad (`panel/`)**: usa el Sistema Nacional de Diseño del gobierno (snd.gob.mx),
-  tema guinda, Noto Sans; los niveles de alerta van en rojo, amarillo y azul semánticos del SND (D22).
+  tema guinda, Noto Sans; los niveles de alerta van en rojo, amarillo y azul semánticos del SND (D22). Enlaza la
+  hoja `snd-guinda.css` del CDN del SND pero no su cargador ni su encabezado oficial: es un prototipo (D31).
 - **Excepción, la app ciudadana (`ciudadano/`)**: replica el aspecto de SIGRIV a pedido del usuario: kit gob.mx v3,
   Montserrat y Noto Sans, guinda y dorado, barra verde oscuro con el logotipo del Gobierno de México, mapa a
   pantalla completa y hoja inferior (D28). Ahí sí hay botones redondeados y sombras.
@@ -215,5 +216,5 @@ Ya hay datos (M0), sensor simulado (M4), mapa (M6), topología (M1), motor de re
 - Rama `main` del remoto del equipo. Sin líneas de coautor en los commits.
 - El estado para traspaso vive en `docs/12-estado-y-traspaso.md`: se actualiza al hacer push, no en cada cambio.
 - Commit y push solo cuando el usuario lo pide. Remoto: `Wharf-Code-Solutions/HackatecNacional`.
-- Decisiones técnicas numeradas en `docs/05-decisiones-tecnicas.md` (hoy D1 a D30).
+- Decisiones técnicas numeradas en `docs/05-decisiones-tecnicas.md` (hoy D1 a D31).
 - Cada cifra de la documentación sale de un archivo o de una corrida; si no puedes rastrearla, verifícala.

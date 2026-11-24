@@ -44,11 +44,16 @@ for (const a of alertas) {
 if (alertas.length && !Object.keys(predicciones).length) {
   console.warn('Este backend no calcula la predicción (¿es el mock?): la foto sale sin ella.');
 }
+// Gestión de reportes ciudadanos: rutas opcionales; un backend sin ellas deja la foto sin prioridades.
+const opcional = (ruta) => fetch(API + ruta).then((r) => (r.ok ? r.json() : null)).catch(() => null);
+const pri = await opcional('/prioridades');
+const huella = await opcional('/huella');
 mkdirSync(dirname(DESTINO), { recursive: true });
 writeFileSync(DESTINO, JSON.stringify({
   capturado: new Date().toISOString(),
   origen: salud.persistencia ? 'backend M5 (' + salud.persistencia + ')' : 'servidor_mock.py --motor real',
   salud, alertas, reportes, veredictos, predicciones,
+  prioridades: pri ? pri.prioridades : null, huella,
 }) + '\n');
 console.log('Foto guardada en public/demo/foto.json: ' + alertas.length + ' alertas, ' + reportes.length +
-  ' reportes, ' + Object.keys(predicciones).length + ' predicciones.');
+  ' reportes, ' + Object.keys(predicciones).length + ' predicciones, ' + (pri ? pri.prioridades.length : 0) + ' focos.');

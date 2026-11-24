@@ -103,10 +103,12 @@ scripts/capturar-demo.mjs  foto del backend a public/demo/foto.json
 
 ## Diseño
 
-Paleta y tipografía del Sistema Nacional de Diseño del Gobierno de México (snd.gob.mx), tema
-guinda, Noto Sans. Las variables están al inicio de `src/estilos.css` con los nombres del SND
-(`--pguinda900`, `--rojo500`…). Por qué y qué se descartó: decisión D22 en
-`docs/05-decisiones-tecnicas.md`.
+Hoja de estilos del Sistema Nacional de Diseño del Gobierno de México (snd.gob.mx), tema guinda,
+enlazada desde su CDN en `index.html`: colores, Noto Sans y Patria, iconos y clases de componentes
+(`boton__primario`, `mensajeInformativo`, `h0b`, `b1`). No se usa el encabezado ni el pie oficiales: esto
+es un prototipo, no un sitio oficial (D31). `src/estilos.css` define las mismas variables, así que el
+panel se ve igual si la hoja del CDN no carga, y anula dos reglas globales del SND que rompían el
+desplazamiento. Paleta de las gráficas: D22.
 
 ## Fronteras
 

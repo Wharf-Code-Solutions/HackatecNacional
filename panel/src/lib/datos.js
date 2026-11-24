@@ -38,7 +38,9 @@ export function useDatosFijos() {
       getJSON(base + 'linea_base.json'),
       fetch(base + 'sitio_aguas_abajo.csv').then((r) => r.text()),
       fetch(base + 'sitio_pares.csv').then((r) => r.text()),
-    ]).then(([est, lb, abajo, pares]) => {
+      getJSON(base + 'sitios.geojson'),
+      getJSON(base + 'rios.json'),
+    ]).then(([est, lb, abajo, pares, geo, rios]) => {
       const estaciones = Object.fromEntries(est.estaciones.map((e) => [e.c_estacion, e]));
       const lineaBase = {};
       lb.linea_base.forEach((r) => {
@@ -49,7 +51,10 @@ export function useDatosFijos() {
       const listaPares = leeCSV(pares).map((r) => ({
         arriba: r.c_sitio_arriba, abajo: r.c_sitio_abajo, m: parseFloat(r.distancia_cauce_m), revisar: r.revisar,
       }));
-      setDatos({ estaciones, lineaBase, nombresSitio, pares: listaPares });
+      // Coordenadas de los 219 sitios oficiales, para el mapa y la pluma.
+      const sitios = Object.fromEntries(geo.features.map((f) => [f.properties.c_sitio,
+        { lon: f.geometry.coordinates[0], lat: f.geometry.coordinates[1], nombre: f.properties.nombre }]));
+      setDatos({ estaciones, lineaBase, nombresSitio, pares: listaPares, sitios, rios: rios.lineas });
     }).catch((e) => setError(e.message));
   }, []);
   return { datos, error };
@@ -71,7 +76,8 @@ export function useBackend(codigos) {
       getJSON(import.meta.env.BASE_URL + 'demo/foto.json').then((f) => {
         if (!vivo.current) return;
         setEstado({ conectado: true, motor: f.salud.motor, alertas: f.alertas, reportes: f.reportes,
-          veredictos: f.veredictos, capturado: f.capturado, predicciones: f.predicciones || {} });
+          veredictos: f.veredictos, capturado: f.capturado, predicciones: f.predicciones || {},
+          prioridades: f.prioridades || null, huella: f.huella || null });
       }).catch(() => setEstado((s) => ({ ...s, conectado: false })));
       return undefined;
     }

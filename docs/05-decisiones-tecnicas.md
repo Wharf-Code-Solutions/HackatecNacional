@@ -688,3 +688,29 @@ escuelas, tomas de agua) como bono de entorno: faltan REPDA y los datos de tomas
 constantes arriba del módulo. La red publicada no trae los enlaces entre tramos: la distancia sobre el
 cauce se aproxima con los metros al sitio y puede quedar algo corta entre afluentes (el factor de
 cercanía en línea recta la limita). Un reporte lejos de todo cauce se prioriza igual y se marca.
+
+## D31 · El panel usa la hoja de estilos del SND, sin su encabezado ni su pie oficiales
+
+**Decisión.** `panel/index.html` enlaza la hoja `snd-guinda.css` del CDN del Sistema Nacional de
+Diseño (`framework-gb.cdn.gob.mx/snd/v1/`, con su huella `integrity` del manifiesto oficial,
+versión 1.15.0). Con ella vienen los colores, Noto Sans y Patria, los iconos y las clases de
+componentes que el panel usa: `boton__primario`, `mensajeInformativo`, `h0b` y `b1`. No se carga
+`carga.js` ni se usan `<snd-header>` ni `<snd-footer>`. El encabezado y el pie son propios, con la gama
+guinda del SND, y el pie dice que es un prototipo y no un sitio oficial.
+
+**Por qué.** El equipo pidió seguir la plantilla del gobierno. El cargador `carga.js` inserta
+siempre el encabezado oficial del Gobierno de México (logotipo, enlaces a gob.mx), aunque la página no
+lo pida: se comprobó al probarlo. Este es un prototipo de HackaTec en una URL pública; con la identidad
+oficial parecería un sitio del gobierno. Enlazar la hoja da el sistema visual sin esa identidad.
+
+**Alternativa descartada.** El cargador con `<snd-header>` y `<snd-footer>` (la plantilla completa):
+correcto para un sitio oficial, no para un prototipo. Copiar los colores a mano (como hacía D22): se
+desincroniza del SND y no trae sus componentes ni sus fuentes.
+
+**Consecuencia.** La hoja del SND trae reglas globales que hubo que anular en `panel/src/estilos.css`:
+`html, body { height: 100% }` con `body { overflow-x: hidden }` volvían a `body` su propia caja de
+desplazamiento de 768 px (la ventana no se desplazaba y la lista fija dejaba de funcionar). También
+impone `scroll-behavior: smooth`. Si el CDN cambia el archivo y la huella deja de coincidir, el
+navegador lo ignora y el panel sigue con `estilos.css`, que define las mismas variables. Si la
+autoridad adopta el panel, pasar al encabezado oficial es cambiar el enlace por el cargador.
+

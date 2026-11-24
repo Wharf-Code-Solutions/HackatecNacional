@@ -65,12 +65,14 @@ export default function App() {
 
   return (
     <>
+      {/* Barra institucional con la gama guinda del SND. No es el encabezado oficial del Gobierno de
+          Mexico (<snd-header>): esto es un prototipo, no un sitio oficial (D31). */}
       <header className="cabecera">
         <div className="contenedor cabecera-fila">
-          <div>
-            <p className="sobretitulo">Monitoreo del río Atoyac</p>
-            <h1>Panel de autoridad</h1>
-          </div>
+          <p className="marca">
+            <span className="marca-nombre">Monitoreo del río Atoyac</span>
+            <span className="marca-sub">Alto Atoyac · Puebla y Tlaxcala</span>
+          </p>
           <p className={claseConexion}>{conexion}</p>
         </div>
         <nav className="secciones contenedor" aria-label="Paneles">
@@ -82,29 +84,43 @@ export default function App() {
         </nav>
       </header>
 
-      {seccion === 'monitoreo' && (
-        <nav className="subnav" aria-label="Vistas del monitoreo">
-          <div className="contenedor">
-            {VISTAS.map(([id, nombre]) => (
-              <button key={id} className={vista === id ? 'activa' : ''} onClick={() => setVista(id)} aria-current={vista === id ? 'page' : undefined}>
-                {nombre} {conteo[id] > 0 && <span>({conteo[id]})</span>}
-              </button>
-            ))}
-          </div>
-        </nav>
-      )}
+      <div className="encabezado-pagina">
+        <div className="contenedor">
+          <h1 className="h0b titulo-panel">Panel de autoridad</h1>
+          <p className="b1 bajada">
+            {seccion === 'monitoreo'
+              ? <>Alertas de las {codigos.length || 5} estaciones del Alto Atoyac: qué se midió, de dónde pudo venir, hasta dónde
+                llega y quién la atiende.{corte && <> Datos al {hora(corte)}</>}</>
+              : <>Lo que reportan las personas desde la app ciudadana: dónde se concentra, qué tan urgente es cada foco y en
+                qué va su atención.</>}
+          </p>
+          {seccion === 'monitoreo' ? (
+            <nav className="subnav" aria-label="Vistas del monitoreo">
+              {VISTAS.map(([id, nombre]) => (
+                <button key={id} className={vista === id ? 'activa' : ''} onClick={() => setVista(id)} aria-current={vista === id ? 'page' : undefined}>
+                  {nombre} {conteo[id] > 0 && <span className="contador">{conteo[id]}</span>}
+                </button>
+              ))}
+            </nav>
+          ) : <div className="subnav-vacio" />}
+        </div>
+      </div>
 
       {demo && be.capturado && (
-        <p className="aviso-motor">
-          Demostración: datos reales del motor de reglas capturados el {hora(be.capturado)} sobre el escenario de
-          descarga industrial. Los cambios de estado y responsable no se guardan.
-        </p>
+        <div className="contenedor aviso-contenedor">
+          <div className="mensajeInformativo mensajeInformativo--advertencia" role="note">
+            Datos de demostración: lo que respondió el motor de reglas el {hora(be.capturado)} en el escenario de
+            descarga industrial. Los cambios de estado y responsable no se guardan.
+          </div>
+        </div>
       )}
       {!demo && be.motor === 'stub' && (
-        <p className="aviso-motor">
-          Motor de reglas provisional: genera alertas sin discriminar eventos reales. Arranca el backend con
-          --motor real para ver el análisis de verdad.
-        </p>
+        <div className="contenedor aviso-contenedor">
+          <div className="mensajeInformativo mensajeInformativo--advertencia" role="note">
+            Motor de reglas provisional: genera alertas sin distinguir eventos reales. Arranca el backend con el
+            motor real para ver el análisis.
+          </div>
+        </div>
       )}
 
       <main className="contenedor">
@@ -136,9 +152,23 @@ export default function App() {
       </main>
 
       <footer className="pie">
-        <div className="contenedor">
-          Datos históricos: CONAGUA, Red Nacional de Medición de Calidad del Agua. Red hidrográfica: INEGI 1:50 000.
-          Colores y tipografía: Sistema Nacional de Diseño, tema guinda.
+        <div className="contenedor pie-rejilla">
+          <div>
+            <p className="pie-titulo">Monitoreo del río Atoyac</p>
+            <p>Sistema de alerta por contaminación para la cuenca del Alto Atoyac. Prototipo para el HackaTec 2026,
+              reto SECIHTI Puebla. No es un sitio oficial del Gobierno de México.</p>
+          </div>
+          <div>
+            <p className="pie-titulo">Fuentes de datos</p>
+            <ul>
+              <li>CONAGUA, Red Nacional de Medición de Calidad del Agua, 2012 a 2025</li>
+              <li>INEGI, Red hidrográfica 1:50 000 y DENUE</li>
+            </ul>
+          </div>
+          <div>
+            <p className="pie-titulo">Diseño</p>
+            <p>Colores, tipografía y componentes del Sistema Nacional de Diseño, tema guinda.</p>
+          </div>
         </div>
       </footer>
       <Tooltip />

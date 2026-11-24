@@ -21,6 +21,30 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · M7: plantilla del SND y más gráficas en el panel
+
+**Qué cambió.** El panel enlaza la hoja de estilos del Sistema Nacional de Diseño, tema guinda (D31):
+títulos en Patria, Noto Sans, botón primario y mensajes informativos del SND, encabezado y pie propios
+en guinda (el pie dice que es un prototipo). Tres gráficas nuevas: mapa de la red (ríos de orden ≥ 5
+del INEGI, los 219 sitios de CONAGUA y las 5 estaciones con su alerta más grave abierta), huella de las
+últimas horas (cada sonda de cada estación por lectura, coloreada por el z robusto del motor en 7
+pasos con los cortes del motor, 2, 3.5 y 6) y mapa de la pluma en "Hasta dónde llega" (sitios aguas
+abajo por hora de llegada). "Fuente probable" va a todo lo ancho para la tabla de candidatos del DENUE.
+`scripts/copiar-datos.mjs` copia `sitios.geojson` y recorta la red hidrográfica a `rios.json` (1 030
+tramos, 134 kB). La foto de demostración se recapturó con las estaciones nuevas (D27), los candidatos
+del DENUE, las predicciones y las prioridades de reportes.
+
+**Por qué.** El equipo pidió la plantilla del gobierno y un tablero más visual.
+
+**Verificación.** Escritorio y 375 px sin desborde; modo demostración sin llamadas al backend, con las
+dos secciones (monitoreo y reportes); los colores nuevos pasan el validador de paletas (los dos brazos
+de la escala divergente y la pluma como escalas ordinales). Al integrar se combinó con la división del
+panel en dos secciones: sus pestañas quedan en la barra guinda.
+
+**Qué arrastró.** D31, `panel/README.md`, `02-mapa-del-repo.md`, `03-tecnologias.md`.
+
+---
+
 ## 2026-11-24 · M7: el panel se divide en monitoreo y gestión de reportes ciudadanos
 
 **Qué cambió.** El panel de autoridad tiene dos secciones. «Monitoreo del prototipo» conserva las alertas y los avisos
