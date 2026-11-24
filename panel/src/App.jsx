@@ -85,6 +85,7 @@ export default function App() {
         </div>
       </header>
 
+      {seccion === 'monitoreo' && (
       <div className="encabezado-pagina">
         <div className="contenedor">
           <p className={claseConexion}>{conexion}</p>
@@ -107,8 +108,9 @@ export default function App() {
           ) : <div className="subnav-vacio" />}
         </div>
       </div>
+      )}
 
-      {demo && be.capturado && (
+      {seccion === 'monitoreo' && demo && be.capturado && (
         <div className="contenedor aviso-contenedor">
           <div className="aviso aviso-advertencia" role="note">
             Datos de demostración: lo que respondió el motor de reglas el {hora(be.capturado)} en el escenario de
@@ -116,7 +118,8 @@ export default function App() {
           </div>
         </div>
       )}
-      {!demo && be.motor === 'stub' && (
+      {/* Solo en monitoreo: habla del motor de alertas, no de los reportes, y en reportes empujaba el tablero */}
+      {seccion === 'monitoreo' && !demo && be.motor === 'stub' && (
         <div className="contenedor aviso-contenedor">
           <div className="aviso aviso-advertencia" role="note">
             Motor de reglas provisional: genera alertas sin distinguir eventos reales. Arranca el backend con el
@@ -125,7 +128,7 @@ export default function App() {
         </div>
       )}
 
-      <main className="contenedor">
+      <main className={seccion === 'reportes' ? 'tablero-main' : 'contenedor'}>
         {error && <p className="mensaje">No se pudieron leer los datos del panel ({error}). Corre npm run datos.</p>}
         {!ctx && !error && <p className="vacio centro">Cargando.</p>}
         {ctx && (
@@ -155,6 +158,7 @@ export default function App() {
         )}
       </main>
 
+      {seccion === 'monitoreo' && (
       <footer className="pie">
         <div className="contenedor pie-rejilla">
           <div>
@@ -175,6 +179,7 @@ export default function App() {
           </div>
         </div>
       </footer>
+      )}
       <Tooltip />
     </>
   );

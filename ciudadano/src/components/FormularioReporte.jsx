@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import BottomSheet from './BottomSheet.jsx';
 import CategoriaIcono from './CategoriaIcono.jsx';
 import { encolar, guardarFolio } from '../lib/almacen.js';
@@ -54,6 +54,11 @@ export default function FormularioReporte({ lat, lon, precision, origen, datos, 
   // La foto no se puede enviar si se está revisando o si no corresponde a ninguno de los tipos
   const revisando = !!foto && analisis && analisis.estado === 'analizando';
   const fotoInvalida = !!foto && analisis && analisis.estado === 'ok' && !analisis.valida;
+  // La foto va antes que los tipos: si la revisión reconoce uno y la persona aún no elige, se preselecciona
+  // (lo puede cambiar). Si ya eligió otro, se le sugiere con un botón.
+  useEffect(() => {
+    if (analisis && analisis.estado === 'ok' && analisis.valida && analisis.tipo && !tipo) setTipo(analisis.tipo);
+  }, [analisis]); // eslint-disable-line react-hooks/exhaustive-deps
   const sugerido = analisis && analisis.estado === 'ok' && analisis.valida && analisis.tipo !== tipo ? analisis.tipo : null;
 
   const enviar = async (e) => {
@@ -149,20 +154,6 @@ export default function FormularioReporte({ lat, lon, precision, origen, datos, 
         <p className="report-form__meta">Ubicación aproximada del reporte: {redondeada(lat)}, {redondeada(lon)}{precision ? ' · GPS ±' + precision + ' m' : ''}</p>
         {errores.ubicacion && <div className="alert alert-danger mb-3" role="alert">{errores.ubicacion}</div>}
 
-        <fieldset className="categorias">
-          <legend>¿Qué ves?</legend>
-          <div className="categorias__grid">
-            {TIPOS.map(([c, nombre]) => (
-              <label key={c} className={'categoria' + (tipo === c ? ' is-selected' : '')}>
-                <input type="radio" name="tipo" value={c} checked={tipo === c} onChange={() => setTipo(c)} aria-invalid={!!errores.tipo} />
-                <CategoriaIcono tipo={c} />
-                <span>{nombre}</span>
-              </label>
-            ))}
-          </div>
-          {errores.tipo && <div className="rf-error" role="alert">{errores.tipo}</div>}
-        </fieldset>
-
         <div className="mb-3">
           <span className="form-label">Foto <small>(opcional)</small></span>
           {errores.foto && <div className="rf-error" role="alert">{errores.foto}</div>}
@@ -207,6 +198,20 @@ export default function FormularioReporte({ lat, lon, precision, origen, datos, 
             </div>
           )}
         </div>
+
+        <fieldset className="categorias">
+          <legend>¿Qué ves?</legend>
+          <div className="categorias__grid">
+            {TIPOS.map(([c, nombre]) => (
+              <label key={c} className={'categoria' + (tipo === c ? ' is-selected' : '')}>
+                <input type="radio" name="tipo" value={c} checked={tipo === c} onChange={() => setTipo(c)} aria-invalid={!!errores.tipo} />
+                <CategoriaIcono tipo={c} />
+                <span>{nombre}</span>
+              </label>
+            ))}
+          </div>
+          {errores.tipo && <div className="rf-error" role="alert">{errores.tipo}</div>}
+        </fieldset>
 
         <div className="mb-3">
           <label className="form-label" htmlFor="rf-desc">Descripción <small>(opcional)</small></label>

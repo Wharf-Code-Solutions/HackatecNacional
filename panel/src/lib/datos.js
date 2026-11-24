@@ -53,7 +53,7 @@ export function useDatosFijos() {
       }));
       // Coordenadas de los 219 sitios oficiales, para el mapa y la pluma.
       const sitios = Object.fromEntries(geo.features.map((f) => [f.properties.c_sitio,
-        { lon: f.geometry.coordinates[0], lat: f.geometry.coordinates[1], nombre: f.properties.nombre }]));
+        { lon: f.geometry.coordinates[0], lat: f.geometry.coordinates[1], nombre: f.properties.nombre, municipio: f.properties.municipio }]));
       setDatos({ estaciones, lineaBase, nombresSitio, pares: listaPares, sitios, rios: rios.lineas });
     }).catch((e) => setError(e.message));
   }, []);

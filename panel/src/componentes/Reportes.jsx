@@ -1,211 +1,386 @@
-import { Fragment, lazy, Suspense, useMemo, useState } from 'react';
-import { ESTADOS_REPORTE, REPORTE, REPORTE_ABIERTO, txt } from '../lib/etiquetas.js';
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
+import { REPORTE, txt } from '../lib/etiquetas.js';
 import { hora } from '../lib/formato.js';
-import BarrasH from '../graficas/BarrasH.jsx';
-import { Mensaje } from '../graficas/marcas.jsx';
+import { useDatos } from '../lib/contexto.js';
+
+// Gestión de los reportes de las personas, con la misma forma que el dashboard de SIGRIV
+// (Wharf-Code-Solutions/HackatecRegional, src/components/Dashboard.jsx e IncidentDetails.jsx):
+// barra lateral con pestañas, filtros y tarjetas; el mapa a la derecha con el calor; el detalle se abre
+// encima del mapa con los pasos de atención y las acciones.
+//
+// Diferencias con SIGRIV, por los datos de este proyecto: una «incidencia» es un foco de GET /prioridades
+// (mismo tipo, a menos de 150 m y 24 h); el calor es la huella sobre el río (D30), no puntos; el correo de
+// quien reporta no sale de la API, así que no se listan personas sino sus reportes; y PATCH /reportes solo
+// cambia el estado, así que el descarte no lleva motivo.
 
 // El mapa (MapLibre) pesa ~800 KB: se descarga solo al abrir esta sección
 const MapaReportes = lazy(() => import('./MapaReportes.jsx'));
+const DashboardReportes = lazy(() => import('./DashboardReportes.jsx'));
 
-// Cómo se armó la prioridad de un foco, en una línea: (gravedad + corroboración) × calidad + sensor + fuente
-function desglose(d) {
-  const partes = ['(' + d.gravedad_del_tipo + ' tipo + ' + d.corroboracion_ciudadana + ' reportes) × ' + d.factor_de_calidad + ' calidad'];
-  if (d.sensor) partes.push('+ ' + d.sensor + ' sensor');
-  if (d.fuente_probable) partes.push('+ ' + d.fuente_probable + ' fuente');
-  return partes.join(' ');
+const PESTANAS = [
+  { id: 'activas', etiqueta: 'Activas' },
+  { id: 'Cerrado', etiqueta: 'Cerrados' },
+  { id: 'Descartado', etiqueta: 'Descartados' },
+];
+const PASOS = ['Recibido', 'Validado', 'En atencion', 'Cerrado'];
+const ABIERTOS = ['Recibido', 'Validado', 'En atencion'];
+const NIVEL = { Alta: 'alta', Media: 'media', Baja: 'baja' };
+const ETIQUETA_NIVEL = { alta: 'Prioridad alta', media: 'Prioridad media', baja: 'Prioridad baja' };
+
+function hace(iso) {
+  const min = Math.max(0, Math.round((Date.now() - new Date(iso).getTime()) / 60000));
+  if (min < 1) return 'Hace un momento';
+  if (min < 60) return 'Hace ' + min + ' min';
+  if (min < 1440) return 'Hace ' + Math.round(min / 60) + ' h';
+  return 'Hace ' + Math.round(min / 1440) + ' d';
+}
+const coordenadas = (lat, lon) => lat.toFixed(5) + ', ' + lon.toFixed(5);
+
+// El estado de un foco: si sus reportes difieren, el menos avanzado (lo que falta por hacer)
+function estadoDeFoco(estados) {
+  const abiertos = estados.filter((e) => ABIERTOS.includes(e));
+  if (abiertos.length) return ABIERTOS.find((e) => abiertos.includes(e));
+  return estados[0] || 'Recibido';
 }
 
-const Prioridad = ({ p }) => <span className={'prioridad ' + p.banda}><b>{p.prioridad}</b> {p.banda}</span>;
-
-// Un selector de estado. Con valor nulo (reportes del foco en estados distintos) muestra «Mixto».
-function SelectorEstado({ valor, onCambiar, ocupado, etiqueta }) {
-  return (
-    <select aria-label={etiqueta} value={valor || ''} disabled={ocupado} onChange={(e) => onCambiar(e.target.value)}>
-      {!valor && <option value="" disabled>Mixto</option>}
-      {ESTADOS_REPORTE.map((e) => <option key={e} value={e}>{txt(e)}</option>)}
-    </select>
-  );
+// Activas: un elemento por foco (con prioridad). Cerrados y descartados: un elemento por reporte.
+function elementos(pestana, reportes, prioridades) {
+  const porFolio = Object.fromEntries(reportes.map((r) => [r.c_reporte, r]));
+  if (pestana === 'activas') {
+    return (prioridades || []).map((p) => {
+      const rs = p.c_reportes.map((c) => porFolio[c]).filter(Boolean);
+      return {
+        id: p.c_foco, tipo: p.tipo, nivel: NIVEL[p.banda] || 'baja', prioridad: p.prioridad, desglose: p.desglose,
+        lat: p.latitud, lon: p.longitud, c_sitio: p.c_sitio, distancia: p.distancia_al_cauce_m, fecha: p.ultimo_reporte,
+        zona: p.zona_de_calor, reportes: rs, estado: estadoDeFoco(rs.map((r) => r.estado)),
+      };
+    });
+  }
+  return reportes.filter((r) => r.estado === pestana)
+    .sort((a, b) => (b.fecha_hora < a.fecha_hora ? -1 : 1))
+    .map((r) => ({
+      id: r.c_reporte, tipo: r.tipo, nivel: 'baja', prioridad: null, lat: r.latitud, lon: r.longitud,
+      c_sitio: r.c_sitio_asignado, distancia: r.distancia_al_cauce_m, fecha: r.fecha_hora, reportes: [r], estado: r.estado,
+    }));
 }
 
-function Detalle({ reportes }) {
+function Foto({ url, alt }) {
+  const [fallo, setFallo] = useState(false);
+  if (!url || fallo) return <div className="incidente-foto sin-foto">{url ? 'No se pudo cargar la foto' : 'Sin foto'}</div>;
+  return <a href={url} target="_blank" rel="noreferrer"><img src={url} alt={alt} className="incidente-foto" onError={() => setFallo(true)} /></a>;
+}
+
+function Tarjeta({ it, elegido, onVer, nombreSitio }) {
+  const n = it.reportes.length;
   return (
-    <div className="detalle-foco">
-      {reportes.map((r) => (
-        <div key={r.c_reporte} className="detalle-reporte">
-          {r.foto_url ? <img src={r.foto_url} alt={'Foto del reporte ' + r.c_reporte} /> : <div className="sin-foto">Sin foto</div>}
-          <div>
-            <b>{r.c_reporte}</b> · {hora(r.fecha_hora)}
-            <p>{r.descripcion || 'sin descripción'}</p>
-            <p className="tenue">
-              {r.precision_ubicacion_m != null ? 'GPS ±' + r.precision_ubicacion_m + ' m' : 'ubicación elegida en el mapa'}
-              {r.clasificacion_automatica && ' · la foto parece «' + (REPORTE[r.clasificacion_automatica.etiqueta] || r.clasificacion_automatica.etiqueta) +
-                '» (' + Math.round(r.clasificacion_automatica.confianza * 100) + ' %)'}
-            </p>
-          </div>
+    <div className={'reporte-tarjeta prioridad-' + it.nivel + (elegido ? ' seleccionada' : '')}>
+      <div className="tarjeta-cabeza">
+        <h3>
+          <span className={'punto punto-' + it.nivel} aria-hidden="true">●</span>
+          {REPORTE[it.tipo] || it.tipo}
+          {it.prioridad != null && <span className="tarjeta-prioridad">{it.prioridad}</span>}
+        </h3>
+        <span className="tarjeta-hora">{hace(it.fecha)}</span>
+      </div>
+      <div className="tarjeta-lugar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" />
+        </svg>
+        <div className="tarjeta-lugar-texto">
+          <span className="tarjeta-sitio" title={nombreSitio(it.c_sitio)}>{nombreSitio(it.c_sitio)}</span>
+          <span className="tarjeta-coords">
+            {it.distancia != null ? 'a ' + Math.round(it.distancia) + ' m del cauce · ' : ''}{coordenadas(it.lat, it.lon)}
+          </span>
         </div>
-      ))}
+      </div>
+      <div className="tarjeta-pie">
+        <span className={n > 1 ? 'tag-agrupado' : 'tag-normal'}>
+          {n > 1 ? 'Agrupado: ' + n + ' reportes' : '1 reporte'}
+          {it.estado !== 'Recibido' && ABIERTOS.includes(it.estado) ? ' · ' + txt(it.estado) : ''}
+        </span>
+        <div className="tarjeta-acciones">
+          <span className="tarjeta-folio">{it.reportes[0] ? it.reportes[0].c_reporte : it.id}</span>
+          <button type="button" className="btn-ver" onClick={onVer}>Ver</button>
+        </div>
+      </div>
     </div>
   );
 }
 
-function QueAtender({ reportes, prioridades, huella, guardarReporte, refrescar, demo, conectado }) {
-  const [elegido, setElegido] = useState(null);
-  const [ocupado, setOcupado] = useState(false);
-  const [msg, setMsg] = useState(null);
-  const porFolio = useMemo(() => Object.fromEntries(reportes.map((r) => [r.c_reporte, r])), [reportes]);
-
-  if (!prioridades) {
-    return <Mensaje>{demo ? 'La demostración no trae la prioridad de los reportes: conecta el backend o el mock.'
-      : conectado === false ? 'Sin conexión con el backend.' : 'El backend no entregó prioridades (¿es una versión sin GET /prioridades?).'}</Mensaje>;
-  }
-  if (!prioridades.length) return <Mensaje>Sin reportes abiertos que atender.</Mensaje>;
-
-  const estadoDe = (f) => {
-    const e = new Set(f.c_reportes.map((c) => (porFolio[c] || {}).estado));
-    return e.size === 1 ? [...e][0] : null;
-  };
-  const cambiar = async (f, nuevo) => {
-    setOcupado(true); setMsg(null);
-    try {
-      await Promise.all(f.c_reportes.map((c) => guardarReporte(c, nuevo)));
-      setMsg({ clase: 'bien', texto: 'Guardado: ' + f.n_reportes + (f.n_reportes === 1 ? ' reporte' : ' reportes') + ' en «' + txt(nuevo) + '».' +
-        (demo ? ' Demostración: el cambio solo vive en esta pestaña.' : '') });
-      if (!demo) refrescar();
-    } catch (err) {
-      setMsg({ clase: 'mal', texto: 'No se guardó: ' + err.message });
-    }
-    setOcupado(false);
-  };
-  const elegir = (id) => {
-    setElegido(id);
-    setTimeout(() => document.getElementById('foco-' + id)?.scrollIntoView({ block: 'nearest' }), 0);
-  };
-
+function Pasos({ estado }) {
+  const actual = PASOS.indexOf(estado);
   return (
-    <>
-      <p className="intro">
-        Focos de reportes (mismo tipo, a menos de 150 m y 24 h) ordenados por prioridad de 1 a 10. El mapa muestra la huella de calor sobre el río,
-        que solo aparece donde hay al menos tres reportes. Los pesos son hipótesis de diseño, sin reportes reales con que calibrarlos.
-      </p>
-      <Suspense fallback={<p className="vacio centro">Cargando el mapa.</p>}>
-        <MapaReportes focos={prioridades} huella={huella} elegido={elegido} onElegir={elegir} />
-      </Suspense>
-      {msg && <p className={'msg-gestion ' + msg.clase} role="status">{msg.texto}</p>}
-      <div className="tabla-desliza">
-        <table>
-          <thead>
-            <tr><th>Prioridad</th><th>Tipo</th><th>Reportes</th><th>Último</th><th>Punto aguas abajo</th><th>Cómo se calculó</th><th>Estado</th></tr>
-          </thead>
-          <tbody>
-            {prioridades.map((p) => (
-              <Fragment key={p.c_foco}>
-                <tr id={'foco-' + p.c_foco} className={elegido === p.c_foco ? 'fila-elegida' : ''}>
-                  <td><Prioridad p={p} />{p.zona_de_calor && <><br /><span className="tenue">en zona de calor</span></>}</td>
-                  <td>{REPORTE[p.tipo] || p.tipo}</td>
-                  <td>
-                    {p.n_reportes}<br />
-                    <button className="enlace" onClick={() => setElegido(elegido === p.c_foco ? null : p.c_foco)}>
-                      {elegido === p.c_foco ? 'Ocultar' : 'Ver fotos'}
-                    </button>
-                  </td>
-                  <td>{hora(p.ultimo_reporte)}</td>
-                  <td>{p.c_sitio || 'sin cauce cerca'}{p.distancia_al_cauce_m != null && <><br /><span className="tenue">a {p.distancia_al_cauce_m} m del cauce</span></>}</td>
-                  <td>
-                    {desglose(p.desglose)}
-                    {p.desglose.sensor_motivo && <><br /><span className="tenue">{p.desglose.sensor_motivo}</span></>}
-                    {p.desglose.fuente_motivo && <><br /><span className="tenue">{p.desglose.fuente_motivo}</span></>}
-                  </td>
-                  <td>
-                    <SelectorEstado valor={estadoDe(p)} etiqueta={'Estado del foco ' + p.c_foco} ocupado={ocupado} onCambiar={(e) => cambiar(p, e)} />
-                  </td>
-                </tr>
-                {elegido === p.c_foco && (
-                  <tr className="fila-detalle"><td colSpan="7"><Detalle reportes={p.c_reportes.map((c) => porFolio[c]).filter(Boolean)} /></td></tr>
-                )}
-              </Fragment>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </>
-  );
-}
-
-function Todos({ reportes, guardarReporte, refrescar, demo }) {
-  const [ocupado, setOcupado] = useState(false);
-  const [msg, setMsg] = useState(null);
-  const r = [...reportes].sort((x, y) => (y.fecha_hora < x.fecha_hora ? -1 : 1));
-  const c = {};
-  r.forEach((x) => { c[x.tipo] = (c[x.tipo] || 0) + 1; });
-  const filas = Object.keys(c).sort((a, b) => c[b] - c[a]).map((k) => ({ nombre: REPORTE[k] || k, partes: { n: c[k] }, total: c[k] }));
-  const cambiar = async (x, nuevo) => {
-    setOcupado(true); setMsg(null);
-    try {
-      await guardarReporte(x.c_reporte, nuevo);
-      setMsg({ clase: 'bien', texto: x.c_reporte + ': «' + txt(nuevo) + '».' + (demo ? ' Demostración: el cambio solo vive en esta pestaña.' : '') });
-      if (!demo) refrescar();
-    } catch (err) {
-      setMsg({ clase: 'mal', texto: 'No se guardó: ' + err.message });
-    }
-    setOcupado(false);
-  };
-  return (
-    <>
-      <figure className="tarjeta">
-        <BarrasH filas={filas} claves={['n']} colores={{ n: '#9B2247' }} nombreClave={() => 'reportes'} nota="Reportes recibidos por tipo." />
-      </figure>
-      {msg && <p className={'msg-gestion ' + msg.clase} role="status">{msg.texto}</p>}
-      <div className="tabla-desliza">
-        <table>
-          <thead>
-            <tr><th>Folio</th><th>Fecha</th><th>Tipo</th><th>Descripción</th><th>Foto</th><th>Sitio asignado</th><th>Estado</th></tr>
-          </thead>
-          <tbody>
-            {r.map((x) => (
-              <tr key={x.c_reporte}>
-                <td>{x.c_reporte}</td>
-                <td>{hora(x.fecha_hora)}</td>
-                <td>{REPORTE[x.tipo] || x.tipo}</td>
-                <td>{x.descripcion || 'sin descripción'}</td>
-                <td>{x.foto_url ? <img className="mini-foto" src={x.foto_url} alt={'Foto del reporte ' + x.c_reporte} /> : <span className="tenue">sin foto</span>}</td>
-                <td>
-                  {x.c_sitio_asignado || 'sin asignar'}
-                  {x.c_alerta_relacionada && <><br /><span className="tenue">alerta {x.c_alerta_relacionada}</span></>}
-                </td>
-                <td><SelectorEstado valor={x.estado} etiqueta={'Estado de ' + x.c_reporte} ocupado={ocupado} onCambiar={(e) => cambiar(x, e)} /></td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </>
-  );
-}
-
-// Gestión de los reportes de las personas: qué atender primero, con su mapa, y la lista completa.
-export default function Reportes(props) {
-  const { reportes, prioridades, conectado } = props;
-  const [sub, setSub] = useState('atender');
-  const abiertos = prioridades ? prioridades.length : reportes.filter((x) => REPORTE_ABIERTO(x.estado)).length;
-  return (
-    <section className="vista">
-      <h2 className="titulo-pagina">Reportes ciudadanos</h2>
-      <p className="intro">Recibidos por la app ciudadana. El correo de quien reporta no se muestra.</p>
-      {!reportes.length ? (
-        <Mensaje>{conectado === false ? 'Sin conexión con el backend.' : 'Sin reportes ciudadanos.'}</Mensaje>
-      ) : (
-        <>
-          <div className="pestanas" role="tablist">
-            <button role="tab" aria-selected={sub === 'atender'} className={sub === 'atender' ? 'activa' : ''} onClick={() => setSub('atender')}>
-              Qué atender {abiertos > 0 && <span>({abiertos})</span>}
-            </button>
-            <button role="tab" aria-selected={sub === 'todos'} className={sub === 'todos' ? 'activa' : ''} onClick={() => setSub('todos')}>
-              Todos los reportes <span>({reportes.length})</span>
-            </button>
+    <div className="pasos">
+      {PASOS.map((p, i) => {
+        const clase = estado === 'Cerrado' || i < actual ? 'hecho' : i === actual ? 'actual' : 'pendiente';
+        return (
+          <div key={p} className={'paso ' + clase}>
+            <div className="paso-icono">{clase === 'hecho' ? '✓' : i + 1}</div>
+            <div className="paso-etiqueta">{txt(p)}</div>
           </div>
-          {sub === 'atender' ? <QueAtender {...props} /> : <Todos {...props} />}
-        </>
+        );
+      })}
+    </div>
+  );
+}
+
+// Qué se puede hacer desde cada estado. «Cerrar» y «Descartar» piden confirmación, como en SIGRIV.
+const ACCIONES = {
+  Recibido: [['Validado', 'Validar'], ['Descartado', 'Descartar']],
+  Validado: [['En atencion', 'Marcar en atención'], ['Descartado', 'Descartar']],
+  'En atencion': [['Cerrado', 'Cerrar'], ['Descartado', 'Descartar']],
+  Descartado: [['Recibido', 'Restaurar como recibido']],
+  Cerrado: [],
+};
+const CONFIRMAR = {
+  Cerrado: (n) => '¿Marcar como cerrado? ' + (n > 1 ? 'Los ' + n + ' reportes salen' : 'El reporte sale') + ' de la lista de activos y quien reportó lo verá cerrado en su folio.',
+  Descartado: (n) => '¿Descartar? ' + (n > 1 ? 'Los ' + n + ' reportes dejan' : 'El reporte deja') + ' de contar para la prioridad y el calor. Se puede restaurar después.',
+};
+
+function Detalle({ it, nombreSitio, onCerrar, cambiar, ocupado }) {
+  const [confirmando, setConfirmando] = useState(null);
+  useEffect(() => setConfirmando(null), [it.id, it.estado]);
+  const foto = it.reportes.find((r) => r.foto_url);
+  const d = it.desglose;
+  const n = it.reportes.length;
+  return (
+    <div className="incidente-panel" role="dialog" aria-label="Detalle del reporte">
+      <div className="incidente-cabeza">
+        <div className="incidente-etiquetas">
+          <span className="tag-folio">FOLIO {it.reportes[0] ? it.reportes[0].c_reporte : it.id}</span>
+          {it.prioridad != null && <span className={'tag-prioridad tag-' + it.nivel}>{ETIQUETA_NIVEL[it.nivel]}</span>}
+        </div>
+        <button type="button" className="btn-cerrar" onClick={onCerrar} aria-label="Cerrar detalle">✕</button>
+      </div>
+
+      <div className="incidente-contenido">
+        <div className="incidente-estado">{txt(it.estado)}</div>
+        <h2 className="incidente-titulo">{REPORTE[it.tipo] || it.tipo}</h2>
+        <Foto key={foto ? foto.foto_url.slice(-40) : 'sin'} url={foto && foto.foto_url} alt={'Foto del reporte: ' + (REPORTE[it.tipo] || it.tipo)} />
+
+        <div className="caja-info">
+          <div className="rejilla-info">
+            <div><div className="info-etiqueta">Coordenadas</div><div className="info-valor">{coordenadas(it.lat, it.lon)}</div></div>
+            <div><div className="info-etiqueta">{n > 1 ? 'Último reporte' : 'Fecha y hora'}</div><div className="info-valor">{hora(it.fecha)}</div></div>
+          </div>
+          <div className="info-linea"><strong>{nombreSitio(it.c_sitio)}</strong></div>
+          <div className="info-linea">
+            {it.c_sitio ? 'Punto de monitoreo aguas abajo: ' + it.c_sitio : 'Sin cauce a menos de 1.5 km'}
+            {it.distancia != null && ' · a ' + Math.round(it.distancia) + ' m del cauce'}
+          </div>
+        </div>
+
+        {d && (
+          <div className="caja-info">
+            <div className="caja-cabeza"><span>Prioridad {it.prioridad}/10</span>{it.zona && <span className="texto-suave">en zona de calor</span>}</div>
+            <ul className="desglose">
+              <li><span>Tipo de problema</span><strong>+{d.gravedad_del_tipo}</strong></li>
+              <li><span>Otros reportes del foco</span><strong>+{d.corroboracion_ciudadana}</strong></li>
+              <li><span>Calidad (foto y GPS)</span><strong>× {d.factor_de_calidad}</strong></li>
+              <li><span>Alerta de una estación</span><strong>+{d.sensor}</strong></li>
+              <li><span>Fuente probable aguas arriba</span><strong>+{d.fuente_probable}</strong></li>
+            </ul>
+            {d.sensor_motivo && <div className="info-linea">{d.sensor_motivo}</div>}
+            {d.fuente_motivo && <div className="info-linea">Cerca de: {d.fuente_motivo}</div>}
+          </div>
+        )}
+
+        <div className="caja-info">
+          <div className="caja-cabeza"><span>Estado de atención</span></div>
+          {it.estado === 'Descartado'
+            ? <div className="aviso aviso-peligro"><strong>Descartado.</strong> No cuenta para la prioridad ni para el calor.</div>
+            : <Pasos estado={it.estado} />}
+        </div>
+
+        <div className="caja-info">
+          <div className="caja-cabeza"><span>Impacto ciudadano</span></div>
+          <div className="impacto">
+            <div className="impacto-numero">{n}</div>
+            <div className="impacto-etiqueta">{n === 1 ? 'Reporte' : 'Reportes agrupados'}</div>
+          </div>
+          <div className="lista-vinculados">
+            <div className="caja-cabeza"><span>Reportes vinculados</span><span className="texto-suave">el correo no se muestra</span></div>
+            {it.reportes.map((r, i) => (
+              <div key={r.c_reporte} className="vinculado">
+                <div>
+                  <strong>{r.c_reporte}</strong> <span className="texto-suave">· {txt(r.estado)}</span>
+                  {r.descripcion && <div className="vinculado-desc">{r.descripcion}</div>}
+                  <div className="texto-suave">
+                    {r.precision_ubicacion_m != null ? 'GPS ±' + Math.round(r.precision_ubicacion_m) + ' m' : 'punto elegido en el mapa'}
+                    {r.clasificacion_automatica && ' · la foto parece «' + (REPORTE[r.clasificacion_automatica.etiqueta] || r.clasificacion_automatica.etiqueta) +
+                      '» (' + Math.round(r.clasificacion_automatica.confianza * 100) + ' %)'}
+                  </div>
+                  {r.foto_url && <a href={r.foto_url} target="_blank" rel="noreferrer" className="texto-suave">Ver foto</a>}
+                </div>
+                <span className="vinculado-rol">{i === 0 ? 'Primer reporte' : 'Coincidente'} · {hora(r.fecha_hora)}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {(ACCIONES[it.estado] || []).length > 0 && (
+        <div className="incidente-pie">
+          {confirmando ? (
+            <div className="aviso aviso-advertencia">
+              {CONFIRMAR[confirmando](n)}
+              <div className="pie-botones">
+                <button type="button" className="boton primario" disabled={ocupado} onClick={() => cambiar(it, confirmando)}>
+                  {ocupado ? 'Guardando…' : 'Confirmar'}
+                </button>
+                <button type="button" className="boton" disabled={ocupado} onClick={() => setConfirmando(null)}>Cancelar</button>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="pie-botones">
+                {ACCIONES[it.estado].map(([destino, etiqueta]) => (
+                  <button key={destino} type="button" disabled={ocupado}
+                    className={destino === 'Descartado' ? 'boton peligro' : 'boton primario'}
+                    onClick={() => (CONFIRMAR[destino] ? setConfirmando(destino) : cambiar(it, destino))}>
+                    {ocupado ? 'Guardando…' : etiqueta}
+                  </button>
+                ))}
+              </div>
+              {it.estado === 'Recibido' && <p className="pie-nota">Para cerrarlo, primero valídalo y márcalo en atención.</p>}
+            </>
+          )}
+        </div>
       )}
-    </section>
+    </div>
+  );
+}
+
+export default function Reportes({ reportes, prioridades, huella, conectado, guardarReporte, refrescar, demo }) {
+  const { nombresSitio } = useDatos();
+  const nombreSitio = (c) => (c && nombresSitio[c] ? nombresSitio[c] : c ? c : 'Sin cauce cerca');
+  const [pestana, setPestana] = useState('activas');
+  const [filtro, setFiltro] = useState('todos');        // todos | urgentes | tipo de reporte
+  const [vista, setVista] = useState('lista');          // lista | mapa (solo en pantallas chicas)
+  const [elegidoId, setElegidoId] = useState(null);
+  const [calor, setCalor] = useState(true);
+  const [ocupado, setOcupado] = useState(false);
+  const [aviso, setAviso] = useState(null);
+  const [pagina, setPagina] = useState('incidencias');   // incidencias | dashboard, como /admin y /admin/dashboard de SIGRIV
+
+  const items = useMemo(() => elementos(pestana, reportes, prioridades), [pestana, reportes, prioridades]);
+  const tipos = useMemo(() => {
+    const c = {};
+    items.forEach((i) => { c[i.tipo] = (c[i.tipo] || 0) + 1; });
+    return Object.keys(c).sort((a, b) => c[b] - c[a]);
+  }, [items]);
+  const urgentes = items.filter((i) => i.nivel === 'alta').length;
+  const visibles = items.filter((i) => filtro === 'todos' || (filtro === 'urgentes' ? i.nivel === 'alta' : i.tipo === filtro));
+  const elegido = items.find((i) => i.id === elegidoId) || null;
+
+  useEffect(() => { if (!aviso) return undefined; const t = setTimeout(() => setAviso(null), 6000); return () => clearTimeout(t); }, [aviso]);
+
+  const cambiarPestana = (id) => { setPestana(id); setFiltro('todos'); setElegidoId(null); };
+  const ver = (it) => { setElegidoId(it.id); setVista('mapa'); };
+
+  const cambiar = async (it, nuevo) => {
+    setOcupado(true);
+    try {
+      await Promise.all(it.reportes.map((r) => guardarReporte(r.c_reporte, nuevo)));
+      const n = it.reportes.length;
+      setAviso({ tipo: 'bien', texto: (n > 1 ? n + ' reportes' : 'Reporte ' + it.reportes[0].c_reporte) + ' en «' + txt(nuevo) + '».' +
+        (demo ? ' Demostración: el cambio solo vive en esta pestaña.' : '') });
+      if (!ABIERTOS.includes(nuevo) || nuevo === 'Recibido') setElegidoId(null);   // sale de esta lista
+      if (!demo) refrescar();
+    } catch (err) {
+      setAviso({ tipo: 'mal', texto: 'No se guardó: ' + err.message });
+    }
+    setOcupado(false);
+  };
+
+  let vacio = null;
+  if (pestana === 'activas' && !prioridades) {
+    vacio = demo ? 'La demostración no trae la prioridad de los reportes.'
+      : conectado === false ? 'Sin conexión con el backend.' : 'Cargando reportes…';
+  } else if (!visibles.length) vacio = 'No hay reportes en esta lista.';
+
+  if (pagina === 'dashboard') {
+    return (
+      <div className="tablero">
+        <Suspense fallback={<p className="lista-vacia">Cargando…</p>}>
+          <DashboardReportes reportes={reportes} prioridades={prioridades} onVolver={() => setPagina('incidencias')} />
+        </Suspense>
+      </div>
+    );
+  }
+
+  return (
+    <div className="tablero">
+      <div className="tablero-vista" role="tablist" aria-label="Vista">
+        <button type="button" role="tab" aria-selected={vista === 'lista'} className={vista === 'lista' ? 'activa' : ''} onClick={() => setVista('lista')}>Lista</button>
+        <button type="button" role="tab" aria-selected={vista === 'mapa'} className={vista === 'mapa' ? 'activa' : ''} onClick={() => setVista('mapa')}>Mapa</button>
+      </div>
+
+      <aside className={'tablero-lateral' + (vista === 'mapa' ? ' oculto-movil' : '')}>
+        <div className="lateral-cabeza">
+          <div className="lateral-titulo">
+            <div>
+              <h2>Reportes ciudadanos</h2>
+              <p>Recibidos por la app ciudadana</p>
+            </div>
+            <div className="lateral-derecha">
+              <div className="contador-total">{items.length} {pestana === 'activas' ? (items.length === 1 ? 'activo' : 'activos') : 'en esta lista'}</div>
+              <button type="button" className="btn-dashboard" onClick={() => setPagina('dashboard')}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
+                  <path d="M4 20V10M10 20V4M16 20v-7M22 20H2" />
+                </svg>
+                Dashboard
+              </button>
+            </div>
+          </div>
+          <div className="pestanas-sigriv" role="tablist">
+            {PESTANAS.map((p) => (
+              <button key={p.id} type="button" role="tab" aria-selected={pestana === p.id}
+                className={pestana === p.id ? 'activa' : ''} onClick={() => cambiarPestana(p.id)}>{p.etiqueta}</button>
+            ))}
+          </div>
+        </div>
+
+        <div className="lateral-filtros">
+          <button type="button" className={'filtro' + (filtro === 'todos' ? ' activo' : '')} onClick={() => setFiltro('todos')}>Todos ({items.length})</button>
+          {pestana === 'activas' && (
+            <button type="button" className={'filtro' + (filtro === 'urgentes' ? ' activo' : '')} onClick={() => setFiltro('urgentes')}>Urgentes ({urgentes})</button>
+          )}
+          {tipos.map((t) => (
+            <button key={t} type="button" className={'filtro' + (filtro === t ? ' activo' : '')} onClick={() => setFiltro(t)}>{REPORTE[t] || t}</button>
+          ))}
+          <button type="button" className="filtro filtro-actualizar" onClick={refrescar}>Actualizar</button>
+        </div>
+
+        <div className="lateral-lista">
+          {vacio ? <p className="lista-vacia">{vacio}</p> : visibles.map((it) => (
+            <Tarjeta key={it.id} it={it} elegido={it.id === elegidoId} nombreSitio={nombreSitio} onVer={() => ver(it)} />
+          ))}
+        </div>
+      </aside>
+
+      <section className={'tablero-mapa' + (vista === 'lista' ? ' oculto-movil' : '')}>
+        <Suspense fallback={<p className="lista-vacia">Cargando el mapa…</p>}>
+          <MapaReportes focos={visibles} huella={huella} calor={calor} elegido={elegidoId} vista={vista}
+            onElegir={(id) => { const it = items.find((x) => x.id === id); if (it) ver(it); }} />
+        </Suspense>
+        <div className="mapa-controles">
+          <button type="button" className={'btn-calor' + (calor ? ' activo' : '')} aria-pressed={calor} onClick={() => setCalor((v) => !v)}>
+            Mapa de calor
+          </button>
+        </div>
+        {calor && (
+          <div className="leyenda-calor" aria-label="Leyenda del mapa de calor">
+            <span>Menos reportes</span><i className="leyenda-calor-barra" /><span>Más reportes</span>
+          </div>
+        )}
+      </section>
+
+      {aviso && <div className={'toast-tablero ' + aviso.tipo} role="status">{aviso.texto}</div>}
+
+      {elegido && (
+        <Detalle it={elegido} nombreSitio={nombreSitio} onCerrar={() => setElegidoId(null)} cambiar={cambiar} ocupado={ocupado} />
+      )}
+    </div>
   );
 }

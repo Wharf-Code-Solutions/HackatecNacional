@@ -21,6 +21,28 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · M7 y M8: reportes ciudadanos con la forma del dashboard de SIGRIV; la foto antes del tipo
+
+**Qué cambió.** La sección de reportes del panel replica el dashboard de SIGRIV (Wharf-Code-Solutions/HackatecRegional,
+`Dashboard.jsx`, `IncidentDetails.jsx`, `DashboardInfo.jsx`): a toda la altura bajo la barra, lista con pestañas
+Activas/Cerrados/Descartados, filtros (Todos, Urgentes, por tipo, Actualizar) y tarjetas con borde por prioridad; mapa con
+pines en gota, botón «Mapa de calor» y leyenda; detalle encima del mapa con foto, desglose de la prioridad, pasos Recibido →
+Validado → En atención → Cerrado y acciones (cerrar y descartar con confirmación, restaurar). Botón «Dashboard» a una página de
+estadísticas: periodo 7/30/90 días o todo, municipio y tipo, indicadores, dona por estado y barras por tipo y por punto de
+monitoreo. Los avisos de demostración y de motor provisional solo salen en Monitoreo. En la app ciudadana, la foto va antes de
+«¿Qué ves?»; si la revisión de la foto reconoce un tipo y no se ha elegido ninguno, se preselecciona.
+**Por qué.** Lo pidió el equipo: que la gestión de reportes se vea como SIGRIV. El aviso del motor provisional empujaba el
+tablero fuera de la pantalla.
+**Qué arrastró.** `CLAUDE.md`, `02-mapa-del-repo.md`, `12-estado-y-traspaso.md`. Diferencias con SIGRIV por los datos: la
+incidencia es un foco de `/prioridades`; el calor es la huella sobre el río (D30); no se listan personas porque el correo no sale
+de la API; el descarte no lleva motivo porque `PATCH /reportes` solo cambia el estado; «colonias» son puntos de monitoreo (el
+municipio sale de `sitios.geojson`); en lugar del tiempo de atención, que el backend no guarda, van los focos con alerta de una
+estación. Se quitó la tabla «Todos los reportes».
+**Impacto en otros módulos.** Ninguno en el contrato. Probado contra un backend local con 7 reportes: agrupación, flujo de
+estados, filtros de periodo y municipio, y ancho de teléfono.
+
+---
+
 ## 2026-11-24 · M7: el panel toma el aspecto de la app ciudadana y deja de amontonar consultas
 
 **Qué cambió.** El panel deja la hoja del SND y usa el aspecto de la app ciudadana (kit gob.mx v3 como SIGRIV):
