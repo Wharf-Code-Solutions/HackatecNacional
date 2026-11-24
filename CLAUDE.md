@@ -176,6 +176,15 @@ Ya hay datos (M0), sensor simulado (M4), mapa (M6), topología (M1), motor de re
   al registro de cambios (`docs/contexto/06-registro-de-cambios.md`), no al mensaje del commit.
 - El `README.md` es una descripción general del proyecto para quien llega. Las instrucciones
   para agentes de IA van en este archivo y en `docs/contexto/`, no ahí.
+- **No editar `README.md` hasta el cierre del proyecto.** Cambiaba en cada iteración, lo que
+  volvía su historial ruido. Se actualiza una vez, al final, cuando el estado de los módulos
+  ya no se mueva. El estado vivo se lleva en `docs/12-estado-y-traspaso.md` y en la tabla de
+  módulos de este archivo.
+- **No hacer `commit` ni `push` sin preguntar al usuario.** Dejar el trabajo listo y
+  verificado en el árbol, decir qué cambió, y esperar.
+- Ante una decisión técnica con dos caminos razonables, **elegir el más coherente y
+  justificable y explicar por qué**, en lugar de devolverle la elección al usuario. Las
+  preguntas se reservan para lo que de verdad es su decisión: alcance, prioridad y permiso.
 - Rama `main` del remoto del equipo. Sin líneas de coautor en los commits.
 - El estado para traspaso a compañeros vive en `docs/12-estado-y-traspaso.md`: actualízalo al
   terminar un módulo.
