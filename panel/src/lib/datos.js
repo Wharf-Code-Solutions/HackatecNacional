@@ -28,6 +28,22 @@ async function getJSON(url) {
   return r.json();
 }
 
+// El reto pide la cuenca: solo escuelas de Puebla (CCT 21...) dentro del contorno de la cuenca
+// (datos/procesados/mapa/cuenca.geojson). Punto en poligono por paridad de cruces.
+function dentroDe(anillo, x, y) {
+  let r = false;
+  for (let i = 0, j = anillo.length - 1; i < anillo.length; j = i++) {
+    const [xi, yi] = anillo[i], [xj, yj] = anillo[j];
+    if ((yi > y) !== (yj > y) && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) r = !r;
+  }
+  return r;
+}
+function anillosDe(geo) {
+  const g = geo && geo.features && geo.features[0] && geo.features[0].geometry;
+  if (!g) return [];
+  return g.type === 'MultiPolygon' ? g.coordinates.map((p) => p[0]) : [g.coordinates[0]];
+}
+
 export function useDatosFijos() {
   const [datos, setDatos] = useState(null);
   const [error, setError] = useState(null);
@@ -43,7 +59,8 @@ export function useDatosFijos() {
       // Escuelas y zonas (docs/19 §4): si faltan, el panel sigue con listas vacias.
       getJSON(base + 'escuelas.json').catch(() => []),
       getJSON(base + 'zonas_riesgo.geojson').catch(() => ({ type: 'FeatureCollection', features: [] })),
-    ]).then(([est, lb, abajo, pares, geo, rios, esc, zonas]) => {
+      getJSON(base + 'cuenca.geojson').catch(() => null),
+    ]).then(([est, lb, abajo, pares, geo, rios, esc, zonas, cuenca]) => {
       const estaciones = Object.fromEntries(est.estaciones.map((e) => [e.c_estacion, e]));
       const lineaBase = {};
       lb.linea_base.forEach((r) => {
@@ -57,7 +74,10 @@ export function useDatosFijos() {
       // Coordenadas de los 219 sitios oficiales, para el mapa y la pluma.
       const sitios = Object.fromEntries(geo.features.map((f) => [f.properties.c_sitio,
         { lon: f.geometry.coordinates[0], lat: f.geometry.coordinates[1], nombre: f.properties.nombre, municipio: f.properties.municipio }]));
-      const escuelas = (Array.isArray(esc) ? esc : esc.escuelas || []).filter((e) => e && e.cct);
+      const anillos = anillosDe(cuenca);
+      const escuelas = (Array.isArray(esc) ? esc : esc.escuelas || []).filter((e) => e && e.cct
+        && String(e.cct).startsWith('21') && e.longitud != null && e.latitud != null
+        && (!anillos.length || anillos.some((a) => dentroDe(a, e.longitud, e.latitud))));
       setDatos({ estaciones, lineaBase, nombresSitio, pares: listaPares, sitios, rios: rios.lineas, escuelas, zonas });
     }).catch((e) => setError(e.message));
   }, []);

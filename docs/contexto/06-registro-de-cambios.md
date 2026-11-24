@@ -21,6 +21,18 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Módulo B: el panel solo muestra escuelas de la cuenca
+
+**Qué cambió.** `panel/src/lib/datos.js` filtra `escuelas.json` a las escuelas de Puebla (CCT 21…) dentro del
+contorno de `cuenca.geojson`: 43 de 330 (10 de riesgo alto, 30 medio, 3 bajo; las 7 con mecanismo quedan dentro). Aplica
+al mapa, la lista de escuelas y las autorizaciones; el mapa abre centrado en la cuenca.
+**Por qué.** Petición del usuario: el reto se centra en la cuenca.
+**Qué arrastró.** Nada más; `escuelas.json` no se toca.
+**Impacto en otros módulos.** A: si todo el proyecto se limita a la cuenca, conviene filtrar en `97_escuelas_riesgo.py`
+para que la app ciudadana y el mapa usen las mismas escuelas.
+
+---
+
 ## 2026-11-24 · Módulo A: diseño del mecanismo de derrumbes (docs/20)
 
 **Qué cambió.** Nuevo `docs/20-mecanismo-derrumbes.md`: responde la pregunta abierta de docs/19 §5. El derrumbe se vigila con
