@@ -1,4 +1,5 @@
 # HackaTec 2026 — Reto SECIHTI Puebla
+# Proyecto Centinela Atoyac
 
 Sistema de monitoreo y alertamiento de contaminación del agua en la cuenca del **Alto
 Atoyac**, entre Puebla y Tlaxcala.
