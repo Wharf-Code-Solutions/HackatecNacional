@@ -45,6 +45,36 @@ Los fixtures los genera `scripts/40_generar_fixtures.py`.
 
 ---
 
+## `mapa/` — prototipo de M6
+
+| Ruta | Qué es | Editable |
+|---|---|---|
+| `mapa/index.html`, `mapa.js`, `estilos.css` | Mapa de la cuenca con ríos, subcuencas, 219 sitios y 5 estaciones. Al hacer clic en una estación se acerca y muestra el simulador en un marco | sí |
+
+El mapa **no importa código** del simulador: lo muestra por URL
+(`dispositivo/simulador/index.html?incrustado=1&estacion=...`) y se entera del estado de las
+estaciones leyendo `GET /alertas` del backend. Se sirve desde la raíz del repo.
+
+---
+
+## `dispositivo/` — módulo M4
+
+| Ruta | Qué es | Fuente de verdad de | Editable |
+|---|---|---|---|
+| `dispositivo/README.md` | Cómo correr y probar el simulador | — | sí |
+| `dispositivo/ficha-tecnica.md` | Bloques, rangos, ciclo, consumos, lo medido y lo pendiente | **las especificaciones de diseño del dispositivo** | sí |
+| `dispositivo/simulador/modelo.js` | El agua, las sondas (`ESPEC`), la energía y el enlace | los rangos y errores de sonda, los eventos inyectables | sí |
+| `dispositivo/simulador/firmware.js` | Máquina de estados del ESP32 | el ciclo, los umbrales de muestreo adaptativo y los consumos por fase (`CFG`, `CARGA`) | sí |
+| `dispositivo/simulador/montaje.js` | Arma una estación desde los fixtures | el RSSI supuesto por estación | sí |
+| `dispositivo/simulador/prueba.js` | Siete pruebas del firmware en Node | — | sí |
+| `dispositivo/simulador/escena.js` | Figura: sonda en el río, estación y plataforma con su resultado (alarma o no) | — | sí |
+| `dispositivo/simulador/index.html`, `ui.js`, `estilos.css` | Interfaz del simulador | — | sí |
+
+El simulador **lee** `contrato/fixtures/` y no los duplica. Se sirve desde la raíz del
+repositorio (`python -m http.server 8000`).
+
+---
+
 ## `datos/`
 
 | Ruta | Qué es | Lo genera | Editable |
@@ -60,6 +90,7 @@ Los fixtures los genera `scripts/40_generar_fixtures.py`.
 | `datos/procesados/umbral.csv` | Escalas CONAGUA y límites NOM-001 | `10_construir_tablas.py` | **NO** |
 | `datos/procesados/indicador_sitio_periodo.csv` | Indicadores CONAGUA por sitio | `10_construir_tablas.py` | **NO** |
 | `datos/procesados/diccionario_conagua.csv` | Diccionario oficial de campos | `10_construir_tablas.py` | **NO** |
+| `datos/procesados/mapa/*.geojson` | Cauces (orden ≥ 4), subcuencas y toponimia hidrográfica, simplificados para el mapa | `60_red_para_mapa.py` | **NO** |
 | `datos/procesados/analisis/*.csv` | Línea base, ranking, temporada, tendencia, cobertura, correlaciones | `20_analisis_exploratorio.py` | **NO** |
 
 `muestreo.csv` y `muestreo_nucleo.csv` están en `.gitignore` por tamaño: quien clona debe
@@ -81,6 +112,7 @@ El prefijo numérico indica el orden de ejecución. `_comun.py` no se ejecuta so
 | `scripts/20_analisis_exploratorio.py` | Línea base y análisis | `datos/procesados/` | `datos/procesados/analisis/`, `documentacion/09-...` |
 | `scripts/30_verificacion_datos.py` | Verifica integridad y emite veredictos | `datos/crudos/`, `datos/procesados/` | `documentacion/08-...` |
 | `scripts/40_generar_fixtures.py` | Genera los fixtures del contrato | `datos/procesados/` | `contrato/fixtures/` |
+| `scripts/60_red_para_mapa.py` | Lee las capas de la red hidrográfica y las simplifica para pintar el mapa. **Fuente de verdad de** qué orden de cauce se dibuja (`ORDEN_MINIMO`) y de las tolerancias de simplificación. No calcula topología | `datos/geo/F08_red_hidrografica/` | `datos/procesados/mapa/` |
 | `scripts/50_verificar_repo.py` | **Revisión de salud del repositorio.** Automatiza nueve comprobaciones de invariantes y sale con código 1 si falla. **Fuente de verdad de los conteos esperados** (`FILAS_ESPERADAS`) | todo | stdout |
 
 **Orden de dependencia:** 00 → 10 → 20 → 30 y 40. El 30 y el 40 dependen del 20 porque
@@ -97,13 +129,14 @@ usan la línea base.
 | `documentacion/02-arquitectura.md` | Cómo encajan las piezas, recorrido de un dato | sí |
 | `documentacion/03-tecnologias.md` | Stack con justificación, lo descartado | sí |
 | `documentacion/04-fuentes-de-datos.md` | De dónde, cómo y por qué cada fuente | sí |
-| `documentacion/05-decisiones-tecnicas.md` | D1 a D16 con justificación y consecuencia | sí |
+| `documentacion/05-decisiones-tecnicas.md` | D1 a D18 con justificación y consecuencia | sí |
 | `documentacion/06-glosario.md` | Términos del dominio y del proyecto | sí |
 | `documentacion/07-plan-recoleccion-datos.md` | Plan original de la Etapa 1 | **histórico** |
 | `documentacion/08-verificacion-datos.md` | Estado del conjunto de datos | **NO** (script 30) |
 | `documentacion/09-hallazgos-exploratorio.md` | Qué dicen los datos | **NO** (script 20) |
 | `documentacion/10-revision-critica-plan.md` | Seis objeciones al plan, con alternativas | sí |
 | `documentacion/11-metodologia-modulos.md` | Módulos, criterios de terminado, degradación | sí |
+| `documentacion/12-estado-y-traspaso.md` | Estado por módulo y qué puede tomarse hoy | sí |
 | `documentacion/contexto/**` | Esta carpeta | sí, salvo el registro, que es de solo añadir |
 
 ---
@@ -129,5 +162,6 @@ debes tocar.
 | Selección de las 5 estaciones del piloto | `scripts/40_generar_fixtures.py` |
 | Firma de cada escenario | funciones `f_organica`, `f_industrial`, `f_lluvia` en `scripts/40_generar_fixtures.py` |
 | URL de cada fuente de datos | `scripts/00_descargar_fuentes.py`, registradas en `datos/bitacora.md` |
+| Rangos y errores de las sondas, ciclo y consumos del dispositivo | `ESPEC` en `dispositivo/simulador/modelo.js`, `CFG` y `CARGA` en `dispositivo/simulador/firmware.js`; descritos en `dispositivo/ficha-tecnica.md` |
 | Criterio de terminado de cada módulo | `documentacion/11-metodologia-modulos.md` |
 | Justificación de una decisión | `documentacion/05-decisiones-tecnicas.md` |

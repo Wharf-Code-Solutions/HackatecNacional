@@ -63,9 +63,11 @@ Lo necesario para que un cambio tenga sentido. Si necesitas más, la sección 1 
 - **Qué es.** Sistema de monitoreo y alertamiento de contaminación del río Atoyac, entre
   Puebla y Tlaxcala, para el reto SECIHTI de HackaTec 2026.
 - **Qué está construido.** El conjunto de datos (219 sitios, 145 703 resultados,
-  2012–2025), el contrato de datos v1.0 con sus fixtures, y un servidor mock funcionando.
-- **Qué falta.** Los módulos M1 a M8: topología del río, motor de reglas, propagación,
-  dispositivo, backend y los tres frontends.
+  2012–2025), el contrato de datos v1.0 con sus fixtures, un servidor mock funcionando, el
+  simulador del dispositivo (M4, sin hardware) y un prototipo del mapa (M6).
+- **Qué falta.** Topología del río (M1), motor de reglas (M2), propagación (M3), backend
+  (M5), panel y app (M7, M8). El estado al día y qué puede tomarse hoy están en
+  [`../12-estado-y-traspaso.md`](../12-estado-y-traspaso.md).
 - **La idea central.** En un río que ya está permanentemente fuera de norma, un umbral fijo
   está encendido desde 2012 y no informa nada. **Lo que detecta un evento nuevo es la
   desviación respecto de la historia del propio punto.** Por eso la línea base no es

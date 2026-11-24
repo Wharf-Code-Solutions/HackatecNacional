@@ -321,3 +321,25 @@ volvería lento para todo el equipo, y git no comprime bien un `.xlsb`.
 correr `scripts/10_construir_tablas.py` hasta ejecutar
 `scripts/00_descargar_fuentes.py`. Las tablas procesadas sí están versionadas, así que
 quien solo las consume no necesita descargar nada.
+
+---
+
+## D18 · El mecanismo se demuestra con un simulador web, no con Wokwi ni con hardware
+
+**Decisión.** El MVP de M4 es un simulador en JavaScript plano (`dispositivo/simulador/`)
+cuyo firmware es una máquina de estados pura, probada en Node y animada en el navegador.
+Emite paquetes del contrato v1.0 y puede enviarlos al backend con `POST /lecturas`.
+
+**Por qué.** El mecanismo tiene que mostrarse dentro de una interfaz web propia y
+comunicarse después con los demás módulos. Wokwi vive en otro sitio y no trae modelos de las
+sondas de OD, pH ni conductividad. Un simulador propio permite además inyectar incidentes,
+cortes de red, fallas y deriva, que es lo que demuestra el diseño. Y no exige comprar nada
+antes de validar la arquitectura.
+
+**Alternativa descartada.** Wokwi con potenciómetros (no modela el comportamiento real de
+una sonda) y un prototipo físico en banco (requiere comprar hardware antes de tener el
+diseño validado). El prototipo físico sigue siendo el paso siguiente natural.
+
+**Consecuencia.** Las especificaciones de las sondas y los consumos son **supuestos de
+diseño** y la ficha técnica los declara así. Una autoridad puede revisar la lógica del
+firmware, no el desempeño de un componente que nadie ha medido.

@@ -34,6 +34,15 @@ Las tres dependencias existen solo en los scripts de datos, que corre una person
 | `pyxlsb` | leer `RESULTADOS-PUEBLA.xlsb` | CONAGUA publica algunos estados en **Excel binario**. `pyxlsb` es prácticamente el único lector de ese formato en Python |
 | `pypdf` | extraer los hipervínculos del PDF de transparencia | los enlaces de descarga de la fuente F01 **no están en el texto del PDF**, son anotaciones `/URI`. Sin leer las anotaciones, esos archivos son inencontrables |
 
+### JavaScript plano y Node para el simulador del dispositivo
+
+`dispositivo/simulador/`: modelo, firmware y montaje sin dependencias ni paso de compilación;
+una interfaz web que los anima y `prueba.js`, que los prueba en Node (probado en Node 24).
+
+**Por qué:** el firmware es una máquina de estados pura, así que el mismo archivo se prueba
+sin navegador y se anima con él. Y no instala nada, por la misma razón que el contrato.
+La decisión está en D18.
+
 ### CSV para las tablas procesadas
 
 `datos/procesados/*.csv`, codificados en **UTF-8 con BOM** (`utf-8-sig`).
@@ -79,6 +88,20 @@ Es el formato en que el INEGI publica la Red Hidrográfica 1:50 000 edición 2.0
 elige: se recibe. Las capas que importan son `_hl` (líneas de flujo, que traen la
 dirección del escurrimiento), `_subc` (divisorias de subcuenca) y `_ha` (cuerpos de agua).
 
+### Leaflet y relieve sombreado de Esri para el mapa
+
+`mapa/`. Leaflet 1.9.4 se carga desde unpkg (con hash de integridad). El fondo son dos capas de
+teselas de Esri en `server.arcgisonline.com`: relieve sombreado (`World_Hillshade`) aclarado y,
+encima, solo los nombres de lugares (`World_Light_Gray_Reference`). **No piden llave ni cuenta.**
+El relieve no trae calles ni ríos propios, así que la red del INEGI es lo único que se lee como
+agua.
+
+**Por qué:** es lo que lee GeoJSON sin conversión y permite el zoom animado a una estación.
+**Costo conocido:** el mapa base necesita internet. Sin red, los ríos, subcuencas y sitios se
+siguen viendo (son nuestros) y solo desaparece el fondo. El uso sin cuenta de las teselas de Esri
+es para desarrollo y demostración: para la defensa sobra; para uso público habría que contratar un
+proveedor.
+
 ### Git y GitHub
 
 Con una regla que se verifica: `datos/crudos/` y `datos/geo/` **no se versionan**. Son
@@ -98,7 +121,6 @@ documentarlo como construido.
 | **PostgreSQL + PostGIS** | base de datos del backend (M5) | **No instalado.** Se eligió porque las consultas del sistema son geoespaciales por naturaleza —qué está aguas arriba, qué sitio es el más cercano sobre el cauce, qué reportes caen en un tramo— y PostGIS las resuelve en SQL. El equipo ya tiene experiencia de SIGRIV. |
 | **ESP32** | microcontrolador de la estación (M4) | **No comprado.** Trae WiFi y Bluetooth integrados, consume poco, tiene convertidor analógico-digital suficiente para sondas industriales y cuesta una fracción de un datalogger comercial. |
 | **LoRa / LoRaWAN** | comunicación en sitios sin cobertura celular | **No evaluado en campo.** Varios sitios del Atoyac están en barrancas donde la señal celular es mala. La decisión real depende de medir cobertura punto por punto, y eso no se puede hacer desde una computadora. |
-| **Wokwi** | simulador del circuito (M4) | **No armado.** Corre en el navegador, no requiere hardware y permite mostrar el firmware funcionando en el pitch. |
 | **Panel solar + batería** | energía de la estación | **No dimensionado.** Un sitio en barranca no tiene toma de corriente. La autonomía hay que calcularla, no suponerla. |
 
 ### Sin decidir
@@ -107,7 +129,6 @@ documentarlo como construido.
   consume el contrato por HTTP, así que puede ser React, Svelte, Vue o HTML con
   JavaScript a secas. Quien lo desarrolle elige lo que domine; es la clase de libertad que
   el contrato permite y que acelera a un equipo que no comparte el mismo stack.
-- **Librería de mapas.** Cualquiera que lea GeoJSON.
 - **Hospedaje.** Depende de M5.
 
 ---
@@ -122,6 +143,9 @@ documentarlo como construido.
 | **SQLite o Parquet para las tablas procesadas** | Habrían ganado velocidad que nadie necesita y perdido la revisabilidad en git y la apertura en Excel. |
 | **Modelos de pronóstico temporal (LSTM, Prophet)** | Los datos no lo soportan: 49 días de mediana entre muestreos consecutivos del mismo sitio, con un hueco de densidad entre 2019 y 2024. No es una serie de tiempo. El razonamiento completo está en [10-revision-critica-plan.md](10-revision-critica-plan.md). |
 | **Streeter-Phelps como modelo de propagación** | Requiere constantes calibradas contra un tramo donde el oxígeno caiga y se recupere, y aquí el río está en hipoxia permanente. Se sustituyó por transporte advectivo con decaimiento. |
+| **Teselas de CARTO (Dark Matter)** | Se probaron primero y ahora devuelven "API KEY REQUIRED". Se sustituyeron por OpenStreetMap, que no pide llave. |
+| **Teselas de OpenStreetMap** | Sus calles, manchas urbanas y ríos propios competían con la red del INEGI aun en gris. Se sustituyeron por el relieve sombreado de Esri. |
+| **Wokwi para simular el dispositivo** | No trae modelos de sondas de OD, pH ni conductividad, vive fuera de nuestra interfaz y no permite inyectar incidentes ni deriva. Se sustituyó por un simulador propio (D18). |
 | **Base de datos desde el inicio** | Habría hecho que nadie pudiera correr el proyecto sin instalar y poblar un servidor. Con CSV y JSON, se clona y funciona. |
 
 ---

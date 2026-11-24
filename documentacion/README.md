@@ -14,8 +14,10 @@ Esta carpeta tiene **dos secciones con propósitos distintos**. Conviene no conf
 
 ## Sección 1: el prototipo
 
+**¿Te incorporas o vas a tomar un módulo?** Empieza por [12-estado-y-traspaso.md](12-estado-y-traspaso.md).
+
 Orden de lectura recomendado. Los primeros seis documentos se mantienen a mano; los
-últimos cinco son documentos de trabajo, dos de ellos generados por scripts.
+últimos seis son documentos de trabajo, dos de ellos generados por scripts.
 
 | # | Documento | Qué responde | Origen |
 |---|---|---|---|
@@ -30,6 +32,7 @@ Orden de lectura recomendado. Los primeros seis documentos se mantienen a mano; 
 | 09 | [Hallazgos del exploratorio](09-hallazgos-exploratorio.md) | Qué dicen los datos | **generado** por `scripts/20_analisis_exploratorio.py` |
 | 10 | [Revisión crítica del plan](10-revision-critica-plan.md) | Seis objeciones al plan de etapas 2 a 8, con alternativas | a mano |
 | 11 | [Metodología de módulos](11-metodologia-modulos.md) | Cómo se reparte el trabajo sin cuellos de botella | a mano |
+| 12 | [Estado actual y traspaso](12-estado-y-traspaso.md) | Qué hay, qué falta y qué puede tomar alguien hoy sin esperar a nadie | a mano |
 
 > Los documentos **08 y 09 se sobrescriben** cada vez que corre su script. No los edites a
 > mano: el cambio se pierde en la siguiente corrida. Si algo está mal ahí, se corrige en
@@ -59,7 +62,7 @@ Lo que ya está escrito y de dónde tomarlo:
 | Arquitectura general | [02-arquitectura.md](02-arquitectura.md) |
 | Contrato de datos y modelo de base de datos | [`contrato/README.md`](../contrato/README.md) y [`datos/README.md`](../datos/README.md) |
 | Reglas y modelos con supuestos y limitaciones | [10-revision-critica-plan.md](10-revision-critica-plan.md) y la sección de limitaciones de [`datos/README.md`](../datos/README.md) |
-| Ficha del dispositivo | **pendiente**, lo produce el módulo M4 |
+| Ficha del dispositivo | [`dispositivo/ficha-tecnica.md`](../dispositivo/ficha-tecnica.md) (diseño y simulador; sin hardware) |
 | Manual breve por tipo de usuario | **pendiente** |
 | Resultados obtenidos | [08](08-verificacion-datos.md), [09](09-hallazgos-exploratorio.md) y la tabla del stub en [`contrato/README.md`](../contrato/README.md) |
 | Estimación de costos | **pendiente**, ver la advertencia sobre calibración en [05-decisiones-tecnicas.md](05-decisiones-tecnicas.md) |

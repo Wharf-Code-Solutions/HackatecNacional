@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estación centinela · simulador</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+<header class="cabecera">
+  <div class="identidad">
+    <h1 id="titulo">Estación centinela</h1>
+    <p id="subtitulo"></p>
+  </div>
+  <label class="campo">Estación <select id="selEstacion"></select></label>
+  <label class="campo">Velocidad <select id="selVel"></select></label>
+  <span class="reloj"><span id="relojFecha"></span> <b id="relojHora"></b></span>
+  <button id="btnPausa" class="boton">Pausar</button>
+</header>
+
+<div id="aviso" class="aviso" hidden></div>
+
+<div class="probar">
+  <span>Probar</span>
+  <button class="boton ev" data-ev="descarga_industrial">Descarga industrial</button>
+  <button class="boton ev" data-ev="descarga_organica">Descarga orgánica</button>
+  <button class="boton ev" data-ev="lluvia">Lluvia</button>
+  <button class="boton" id="btnCorte">Cortar enlace</button>
+</div>
+
+<main class="pagina">
+  <p class="fase" id="faseTexto">—</p>
+  <svg id="lienzo" viewBox="0 0 800 330" role="img"
+       aria-label="Las sondas en el río mandan sus lecturas al controlador de la estación; el módem LTE-M las envía a la plataforma, donde se decide si hay alarma. Un panel solar y dos baterías alimentan la estación."></svg>
+
+  <section>
+    <h2>Lo que mide la estación</h2>
+    <table class="lecturas" id="lecturas">
+      <thead>
+        <tr><th>Parámetro</th><th class="d">Valor</th><th class="d">Rango habitual del sitio</th><th>Análisis de la plataforma</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <p class="nota" id="notaAnalisis"></p>
+  </section>
+
+  <details class="mas">
+    <summary>Más pruebas y paquete enviado</summary>
+    <div class="mas-cuerpo">
+      <div>
+        <h3>Falla de sonda</h3>
+        <div class="fallas" id="fallas"></div>
+      </div>
+      <div>
+        <h3>Mantenimiento</h3>
+        <div class="botones">
+          <button class="boton" id="btnEnvejecer">Pasar 30 días sin mantenimiento</button>
+          <button class="boton" id="btnCalibrar">Calibrar sondas</button>
+          <button class="boton" id="btnLimpiar">Limpiar turbiedad y oxígeno</button>
+        </div>
+        <p class="nota" id="notaMant"></p>
+        <h3>Clima</h3>
+        <select id="selClima">
+          <option value="1">Soleado</option>
+          <option value="0.25">Nublado</option>
+          <option value="0.08">Muy nublado</option>
+          <option value="0">Sin sol</option>
+        </select>
+      </div>
+      <div>
+        <h3>Backend</h3>
+        <label class="check"><input type="checkbox" id="chkBackend"> Enviar cada lote a la plataforma</label>
+        <input id="urlBackend" class="texto" value="http://127.0.0.1:8080" spellcheck="false" aria-label="Dirección del backend">
+        <p class="nota" id="estadoBackend"></p>
+        <h3>Último paquete (contrato v1.0)</h3>
+        <pre id="paquete" class="codigo">—</pre>
+      </div>
+    </div>
+  </details>
+</main>
+
+<script src="modelo.js"></script>
+<script src="firmware.js"></script>
+<script src="montaje.js"></script>
+<script src="escena.js"></script>
+<script src="ui.js"></script>
+</body>
+</html>

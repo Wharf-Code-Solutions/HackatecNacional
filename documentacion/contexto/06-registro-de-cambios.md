@@ -21,6 +21,132 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Documento de estado y traspaso
+
+**Qué cambió.** Nuevo `documentacion/12-estado-y-traspaso.md`: estado por módulo, lo que puede
+tomarse hoy sin esperar a nadie (M2, M1, M5, M10) con sus entradas, su criterio y cómo probar, y lo
+que sigue siendo supuesto.
+**Por qué.** Que un compañero pueda avanzar en otro módulo sin reconstruir el contexto.
+**Qué arrastró.** `documentacion/README.md` (índice y ficha del dispositivo ya no pendiente),
+`contexto/02-mapa-del-repo.md`, `contexto/00-LEEME-PRIMERO.md` (qué está construido),
+`11-metodologia-modulos.md` (M4 y M6 hechos), `CLAUDE.md`.
+**Impacto en otros módulos.** Ninguno.
+
+## 2026-11-24 · Fondo de relieve en el mapa y componentes en la figura del simulador
+
+**Qué cambió.** El mapa usa como fondo el relieve sombreado de Esri con los nombres de lugares encima, en lugar
+de OpenStreetMap. En la figura del simulador, la caja "Estación" muestra sus tres componentes en renglones
+separados por filetes: controlador (ESP32, reloj y SD: estado y paquetes en la SD), comunicación (módem
+LTE-M: señal en dBm o "sin red") y energía (panel 5 W y 2 × 18650: batería y potencia solar), más un panel
+solar y una antena dibujados en línea fina que solo cambian con el dato.
+
+**Por qué.** El fondo de OpenStreetMap, aun en gris, tenía calles, manchas urbanas y ríos propios que
+competían con la red del INEGI. En la figura, el usuario prefería ver los componentes descritos, dentro de
+la misma figura y sin ruido.
+
+**Qué arrastró.** `mapa/mapa.js`, `mapa/estilos.css`, `mapa/index.html`, `mapa/README.md`,
+`dispositivo/simulador/escena.js`, `dispositivo/simulador/index.html` (`aria-label`),
+`dispositivo/README.md`, `documentacion/03-tecnologias.md`, `CLAUDE.md`.
+
+**Impacto en otros módulos.** Ninguno: no cambia el contrato ni los datos.
+
+## 2026-11-24 · Simulador reducido a lo esencial
+
+**Qué cambió.** La pantalla del simulador muestra ahora solo tres cosas: qué mide la estación, qué
+análisis devuelve la plataforma y si hay alarma. Una figura (sonda en el río → estación →
+plataforma), una tabla de cinco filas (valor, rango habitual del sitio con su `n` y su fecha, y el
+análisis) y la franja de pruebas. El principio de medición de cada sonda queda plegado en su fila,
+y las fallas de sonda, el mantenimiento, el clima, la dirección del backend y el último paquete
+están en un bloque plegado. Se quitaron la gráfica, el registro del firmware, la barra de fases y
+las ilustraciones por sonda.
+
+**Por qué.** Las vistas existen para mostrar el funcionamiento del dispositivo mientras no hay
+prototipo físico. Lo que hay que ver es qué analiza el sensor y si se envía una alarma, no la
+documentación del dispositivo, que ya está en `dispositivo/ficha-tecnica.md`.
+
+**Qué arrastró.** `dispositivo/simulador/` (`index.html`, `estilos.css`, `escena.js`, `ui.js`) y
+dos filas de documentación. El análisis y la alarma que se muestran son la respuesta de
+`POST /lecturas` (`veredictos[].parametros[].posicion_en_banda` y `veredictos[].alertas`); la pantalla
+no calcula nada por su cuenta, de modo que cuando M2 sustituya al evaluador provisional se verá
+su resultado sin tocar la interfaz.
+
+**Impacto en otros módulos.** Ninguno. Sin el backend conectado, la plataforma aparece como
+"sin conexión" y la tabla no muestra análisis.
+
+---
+
+## 2026-11-24 · Rediseño visual del mapa y del simulador
+
+**Qué cambió.** El mapa y el simulador del dispositivo se rehicieron con otro criterio visual: tema
+claro, un azul para el agua y tinta para las estaciones, trazo fino, filetes en lugar de tarjetas y
+sin brillos ni animaciones decorativas. El mapa pasó a una barra lateral plana que hace de índice
+y de leyenda (la lista de las 5 estaciones), con los sitios del monitoreo oficial en gris. El
+simulador pasó a una lámina técnica de la instalación con rótulos y a una tabla de medición por
+sonda; la barra de fases tiene el ancho proporcional a la duración real de cada fase.
+
+**Por qué.** Los puntos del mapa no se entendían: 176 de 198 sitios con dato están en rojo, así
+que pintarlos por semáforo (decisión D9) producía una nube roja sin información, y las
+estaciones no se distinguían de ellos. Las pantallas anteriores usaban recursos de diseño
+genérico (paneles translúcidos, resplandores, rótulos en mayúsculas espaciadas, tarjetas
+idénticas, numerales encerrados) que no aportaban nada.
+
+**Qué arrastró.** Solo `mapa/` y `dispositivo/simulador/` (`index.html`, `estilos.css`,
+`escena.js`, `ui.js`, `mapa.js`). Sin cambios en el contrato ni en los datos.
+
+**Impacto en otros módulos.** Ninguno. M6, M7 y M8 pueden tomar los criterios como referencia.
+
+---
+
+## 2026-11-23 · Mapa de la cuenca y red hidrográfica para pintar
+
+**Qué cambió.** Se descargó la red hidrográfica del INEGI (F08, 36.8 MB, con
+`scripts/00_descargar_fuentes.py F08`) y se extrajo a `datos/geo/`. Nuevo
+`scripts/60_red_para_mapa.py`, que genera `datos/procesados/mapa/` con 8 184 tramos de orden ≥ 4,
+las 10 subcuencas (con a cuál drena cada una) y los nombres de ríos, barrancas y presas. Nueva
+carpeta `mapa/`: mapa con Leaflet, los 219 sitios, las 5 estaciones y zoom animado que abre el
+simulador de la estación. El simulador acepta ahora parámetros de URL (`estacion`, `incrustado`,
+`vel`, `backend`) y se rediseñó su vista: corte de la estación en el río y tarjetas con el
+principio de medición de cada sonda.
+
+**Por qué.** El mecanismo debe mostrarse dentro del mapa de la cuenca. La geometría oficial del
+INEGI es la fuente que el proyecto ya había elegido (F08) y la que M1 necesita igual. Los
+datos traen `ORDER_1` y el acumulado aguas arriba por tramo, útiles para el orden de los sitios.
+
+**Qué arrastró.** `01-que-construimos.md`, `03-tecnologias.md` (Leaflet y OSM en uso; teselas de
+CARTO descartadas porque ahora exigen llave), `02-mapa-del-repo.md`, `README.md`.
+
+**Impacto en otros módulos.** M1: el shapefile ya está extraído y `60_red_para_mapa.py` incluye un
+lector de shapefile y dbf sin dependencias que puede reutilizar (no calcula topología). M6: hay un
+prototipo de mapa; el definitivo puede partir de él. El mapa necesita internet solo para el fondo.
+
+---
+
+## 2026-11-23 · Simulador web del dispositivo (M4) y ficha técnica
+
+**Qué cambió.** Se creó `dispositivo/` con el simulador de la estación centinela: modelo del
+agua (con la banda histórica real de cada sitio), sondas con sesgo, deriva, ensuciamiento,
+saturación y fallas, energía solar y enlace celular, y un firmware como máquina de estados
+pura (dormir, medir, guardar en SD, enviar, reintentar, muestreo adaptativo, ahorro por
+batería). Incluye una interfaz web que anima los cuatro bloques (sondas, controlador,
+comunicación, energía), una prueba en Node y la ficha técnica.
+
+**Por qué.** El mecanismo debe demostrarse dentro de una interfaz web propia que después se
+comunique con los demás módulos, y no exigir comprar hardware antes de validar el diseño
+(D18). Resultados medidos: 96 paquetes por día y estación; 0 pérdidas ni duplicados en un
+corte de red de 4 h; 486 paquetes validan con cero errores contra `lectura.schema.json`;
+`POST /lecturas` responde 202; consumo ≈ 1.4 Wh/día y autonomía sin sol ≈ 14 días.
+
+**Qué arrastró.** `05-decisiones-tecnicas.md` (D18), `03-tecnologias.md` (Wokwi descartado,
+JavaScript plano y Node en uso), `01-que-construimos.md` y `02-arquitectura.md` (estado de M4),
+`11-metodologia-modulos.md` (menciones a Wokwi), `02-mapa-del-repo.md` y `README.md`.
+
+**Impacto en otros módulos.** Ninguno en el contrato: el simulador no lo toca. M5, M6 y M7
+tienen ahora un emisor de lecturas con ciclo, retardo y cola realistas, además de
+`reproducir_escenario.py`. Los números de energía son del modelo, no medidos en banco, y la
+estimación a mano de la conversación de diseño (1.1 Wh/día, 19 días) queda corregida.
+
+---
+
 ## 2026-11-23 · Verificación mecánica del repositorio y normalización de estados
 
 **Qué cambió.** Se creó `scripts/50_verificar_repo.py`, que automatiza nueve

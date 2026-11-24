@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cuenca del Alto Atoyac · estaciones</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+<div class="app" id="app">
+  <aside class="lateral">
+    <header>
+      <h1>Cuenca del Alto Atoyac</h1>
+      <p>Puebla y Tlaxcala. Cinco estaciones de monitoreo continuo en el piloto.</p>
+    </header>
+
+    <section>
+      <h2>Estaciones</h2>
+      <ol class="estaciones" id="listaEstaciones"></ol>
+      <p class="nota">Elige una para ver cómo mide.</p>
+    </section>
+
+    <section>
+      <h2>Capas</h2>
+      <label class="check"><input type="checkbox" id="chkRios" checked> Ríos y barrancas</label>
+      <label class="check"><input type="checkbox" id="chkSub" checked> Límites de subcuenca</label>
+      <label class="check"><input type="checkbox" id="chkSitios" checked> Sitios del monitoreo oficial</label>
+      <div class="simbolos">
+        <div><svg width="30" height="12" aria-hidden="true"><line x1="0" y1="6" x2="30" y2="6" stroke="#1d6fa5" stroke-width="4"/></svg> Río, orden 7</div>
+        <div><svg width="30" height="12" aria-hidden="true"><line x1="0" y1="6" x2="30" y2="6" stroke="#1d6fa5" stroke-width="2"/></svg> Orden 5</div>
+        <div><svg width="30" height="12" aria-hidden="true"><line x1="0" y1="6" x2="30" y2="6" stroke="#1d6fa5" stroke-width="1"/></svg> Orden 4, barrancas</div>
+        <div><svg width="30" height="12" aria-hidden="true"><line x1="0" y1="6" x2="30" y2="6" stroke="#7b6a52" stroke-width="1" stroke-dasharray="5 3"/></svg> Subcuenca</div>
+        <div><svg width="30" height="12" aria-hidden="true"><circle cx="15" cy="6" r="3" fill="#8a979f"/></svg> Sitio oficial (219)</div>
+        <div><svg width="30" height="16" aria-hidden="true"><circle cx="15" cy="8" r="7" fill="#16222c" stroke="#fff" stroke-width="1.5"/></svg> Estación centinela</div>
+      </div>
+      <p class="nota" id="notaSitios"></p>
+    </section>
+
+    <section>
+      <button class="boton" id="btnCuenca">Ver la cuenca completa</button>
+      <p class="nota estado" id="estadoMock">Backend: comprobando.</p>
+    </section>
+
+    <footer>
+      Ríos y subcuencas: INEGI, red hidrográfica 1:50 000, edición 2.0. Sitios: CONAGUA. Mapa base: relieve y nombres de Esri (Esri, USGS, NOAA).
+    </footer>
+  </aside>
+
+  <div class="mapa-col"><div id="mapa"></div></div>
+
+  <section class="detalle" id="detalle" aria-hidden="true">
+    <header>
+      <button id="btnVolver" class="boton">← Volver al mapa</button>
+      <div>
+        <h2 id="detTitulo">—</h2>
+        <p id="detSub">—</p>
+      </div>
+    </header>
+    <iframe id="marco" title="Simulador de la estación seleccionada"></iframe>
+  </section>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="mapa.js"></script>
+</body>
+</html>

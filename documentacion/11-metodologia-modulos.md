@@ -44,7 +44,7 @@ persona puede terminar sola.
 | **M1** | Topología de la red | base de M3, M5, M8 | red hidrográfica INEGI, `sitio.csv` | `tramo.csv`, `sitio_orden.csv`, `red.geojson` |
 | **M2** | Motor de reglas | Modelos · Alertamiento temprano | `muestreo`, `umbral`, línea base, `lectura` | librería `evaluar()` → `veredicto` |
 | **M3** | Propagación | Modelos | M1 + `alerta` | `prediccion_propagacion` |
-| **M4** | Dispositivo y simulador | Dispositivos electrónicos · Automatización · Energía · Comunicaciones | esquema `lectura` | firmware Wokwi, ficha técnica, render |
+| **M4** | Dispositivo y simulador | Dispositivos electrónicos · Automatización · Energía · Comunicaciones | esquema `lectura` | simulador web del firmware, ficha técnica, render |
 | **M5** | Backend y API | Plataformas digitales · Bases de datos | contrato | endpoints, base geoespacial |
 | **M6** | Mapa público | Plataformas digitales · Geolocalización | API | web pública |
 | **M7** | Panel de autoridad | Plataformas digitales | API | web con sesión |
@@ -80,7 +80,7 @@ módulo está mal cortado.
 | **M1** | Los shapefiles del INEGI ya están en `datos/geo/`. Valida contra los nombres de los sitios: hay decenas que dicen *"antes de la confluencia con X"*, así que el propio nombre revela el orden esperado. | `python -I scripts/...` sobre `datos/geo/` |
 | **M2** | Los cinco escenarios son su suite de pruebas. Cada uno tiene una firma esperada declarada. | `python contrato/reproducir_escenario.py <esc> --en-seco` y su propia prueba unitaria |
 | **M3** | Si M1 no terminó, usa un `sitio_orden.csv` de cinco filas hecho a mano con las cinco estaciones del piloto. | fixture de orden + `alerta` de ejemplo |
-| **M4** | El simulador de Wokwi solo necesita el esquema `lectura` y una URL. Le manda al mock. | `POST http://127.0.0.1:8080/lecturas` |
+| **M4** | El simulador (`dispositivo/simulador/`) solo necesita el esquema `lectura` y una URL. Le manda al mock. | `POST http://127.0.0.1:8080/lecturas` |
 | **M5** | Las pruebas de contrato del mock son sus pruebas. Si acepta y rechaza lo mismo que el mock, está bien. | `python contrato/reproducir_escenario.py normal --url <su backend>` |
 | **M6** | `sitios.geojson` tiene los 219 puntos con su índice y su semáforo. No necesita backend. | `python contrato/servidor_mock.py` |
 | **M7** | El mock genera alertas de verdad al reproducir un escenario. | `servidor_mock.py` + `reproducir_escenario.py descarga_industrial` |
@@ -121,7 +121,7 @@ criterio no requiere a nadie más.
 | **M1** | Los 219 sitios tienen `c_sitio_aguas_abajo` o una razón documentada de por qué no. Distancias medidas sobre el cauce, no en línea recta. Validado contra al menos 10 sitios cuyo nombre declara su posición relativa. |
 | **M2** | Sobre los cinco escenarios: **a lo más 2 alertas** en `normal` (el stub da 31), evento detectado en menos de 45 min simulados en los tres escenarios de incidente, y en `falla_sensor` **cero alertas ambientales** con al menos 4 avisos técnicos. |
 | **M3** | Dada una alerta en `EST-ATY-01`, devuelve para cada sitio aguas abajo una ventana de llegada, un factor de dilución y los supuestos llenos. Cumple `prediccion_propagacion.schema.json`. |
-| **M4** | El circuito de Wokwi emite un payload que `POST /lecturas` responde **202**. Ficha técnica con rango, precisión, mantenimiento y costo por sensor. |
+| **M4** | El simulador del dispositivo emite un payload que `POST /lecturas` responde **202**. Ficha técnica con rango, precisión, mantenimiento y costo por sensor. |
 | **M5** | `reproducir_escenario.py normal --url <backend>` termina sin errores de contrato, y rechaza con 422 el mismo payload inválido que rechaza el mock. Los datos persisten tras reiniciar. |
 | **M6** | Pinta los 219 sitios, colorea por índice, muestra `n` y fecha del último dato, y funciona a ancho de teléfono. |
 | **M7** | Lista alertas con su evidencia, su fuente probable con puntaje, su predicción, y permite cambiar el estado y asignar responsable. |
@@ -227,6 +227,10 @@ perder una hackathon.
   cinco escenarios de un día completo.
 - Servidor mock funcionando, con validación de contrato y evaluador stub medido.
 - Validador de esquemas sin dependencias.
+
+**Hecho después (M4 y M6):** simulador web de la estación centinela con su ficha técnica
+(`dispositivo/`) y prototipo del mapa de la cuenca con zoom al simulador (`mapa/`). El estado
+al día está en [12-estado-y-traspaso.md](12-estado-y-traspaso.md).
 
 **Lo que sigue, en orden:**
 

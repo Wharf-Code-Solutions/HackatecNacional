@@ -62,16 +62,18 @@ planeado es lo primero que se pierde al documentar y lo primero que un jurado de
 | Conjunto de datos del Alto Atoyac: 219 sitios, 145 703 resultados, 2012–2025 | **Construido y verificado** | `datos/procesados/` |
 | Línea base por sitio y parámetro | **Construido**: 4 385 pares con 12 o más mediciones | `datos/procesados/analisis/linea_base_sitio_parametro.csv` |
 | Escalas de calidad de CONAGUA y límites de la NOM-001 | **Construido** | `datos/procesados/umbral.csv` |
-| Red hidrográfica del INEGI, 10 subcuencas | **Descargada y extraída**, sin procesar | `datos/geo/` |
+| Red hidrográfica del INEGI, 10 subcuencas | **Descargada y extraída**. Geometría simplificada para pintar (8 184 tramos de orden ≥ 4, 10 subcuencas): `datos/procesados/mapa/`. **Sin** orden aguas arriba → aguas abajo de los sitios (eso es M1) | `datos/geo/`, `scripts/60_red_para_mapa.py` |
 | Contrato de datos v1.0: 7 esquemas | **Construido** | `contrato/esquemas/` |
 | Fixtures con 5 estaciones reales y 5 escenarios de un día | **Construido** | `contrato/fixtures/` |
 | Servidor mock con evaluador stub | **Construido y funcionando** | `contrato/servidor_mock.py` |
 | Orden aguas arriba → aguas abajo de los sitios | **Pendiente**, es el camino crítico | módulo M1 |
 | Motor de reglas real | **Pendiente** | módulo M2 |
 | Modelo de propagación | **Pendiente** | módulo M3 |
-| Dispositivo físico y su simulación | **Pendiente** | módulo M4 |
+| Simulador del dispositivo (firmware como máquina de estados, modelo de agua, sondas, energía y enlace) y su ficha técnica | **Construido y probado**: 96 paquetes por día y estación, 0 pérdidas en un corte de 4 h, `POST /lecturas` responde 202 | `dispositivo/` |
+| Dispositivo físico (hardware armado y medido) | **Pendiente**: no hay hardware comprado; las especificaciones son supuestos de diseño | módulo M4 |
 | Backend y base de datos | **Pendiente** | módulo M5 |
-| Mapa público, panel de autoridad, app ciudadana | **Pendiente** | módulos M6, M7, M8 |
+| Mapa de la cuenca con las 5 estaciones y zoom al simulador de la estación (prototipo de M6) | **Construido**: ríos, subcuencas, 219 sitios con "sin dato" visible; lee alertas del backend por contrato | `mapa/` |
+| Mapa público definitivo, panel de autoridad, app ciudadana | **Pendiente** | módulos M6, M7, M8 |
 | Estimación de costos y propuesta de implementación | **Pendiente** | módulo M10 |
 
 El reparto de módulos y el criterio de terminado de cada uno están en

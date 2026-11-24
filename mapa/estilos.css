@@ -1,0 +1,93 @@
+/* Carta temática: base clara y apagada, el agua en azul, las estaciones en tinta.
+   Una barra lateral plana hace de leyenda y de índice. Sin tarjetas flotantes ni brillos. */
+:root {
+  --papel: #f3f5f6;
+  --superficie: #ffffff;
+  --tinta: #16222c;
+  --tenue: #5b6974;
+  --linea: #cdd5da;
+  --agua: #1d6fa5;
+  --alerta: #b3261e;
+  --ok: #2d7a4d;
+  --cuerpo: "Public Sans", system-ui, "Segoe UI", sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; background: var(--papel); color: var(--tinta); font: 14px/1.5 var(--cuerpo); overflow: hidden; }
+h1, h2, p, ol { margin: 0; padding: 0; }
+h1 { font-size: 19px; font-weight: 700; line-height: 1.25; }
+h2 { font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+.nota { color: var(--tenue); font-size: 12.5px; margin-top: 8px; }
+:focus-visible { outline: 2px solid var(--agua); outline-offset: 2px; }
+
+.app { display: flex; height: 100%; }
+.lateral { flex: 0 0 292px; overflow-y: auto; background: var(--superficie); border-right: 1px solid var(--linea); padding: 20px 18px 16px; }
+.lateral header p { color: var(--tenue); font-size: 13px; margin-top: 4px; }
+.lateral section { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--linea); }
+.lateral footer { margin-top: 20px; padding-top: 12px; border-top: 1px solid var(--linea); color: var(--tenue); font-size: 11.5px; }
+
+.estaciones { list-style: none; }
+.estaciones li + li { border-top: 1px solid #e4e9ec; }
+.estaciones button { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 10px; align-items: center; width: 100%;
+  background: none; border: 0; padding: 8px 4px; text-align: left; cursor: pointer; font: inherit; color: inherit; }
+.estaciones button:hover { background: var(--papel); }
+.estaciones li.activa button { background: #e8f1f8; }
+.num { width: 24px; height: 24px; border-radius: 50%; background: var(--tinta); color: #fff; display: grid; place-items: center;
+  font-size: 12px; font-weight: 700; }
+.estaciones li.alerta .num { background: var(--alerta); }
+.estaciones b { display: block; font-size: 13.5px; font-weight: 600; }
+.estaciones span.det { display: block; color: var(--tenue); font-size: 12px; }
+.estaciones .aviso { color: var(--alerta); font-weight: 600; }
+
+.check { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; cursor: pointer; font-size: 13.5px; }
+.simbolos { margin-top: 12px; display: grid; gap: 4px; font-size: 12.5px; color: var(--tenue); }
+.simbolos div { display: flex; align-items: center; gap: 10px; }
+.simbolos svg { flex: none; }
+.boton { font: inherit; font-size: 13px; color: var(--tinta); background: var(--superficie); border: 1px solid #aeb9c0;
+  border-radius: 3px; padding: 6px 12px; cursor: pointer; }
+.boton:hover { border-color: var(--tinta); }
+.estado.ok { color: var(--ok); } .estado.mal { color: var(--tenue); }
+
+.mapa-col { position: relative; flex: 1 1 0; min-width: 0; }
+#mapa { position: absolute; inset: 0; background: #e9edef; }
+.leaflet-container { font-family: var(--cuerpo); background: #e9edef; }
+/* base: relieve aclarado y nombres tenues, para que los ríos y las estaciones sean lo que se lee */
+.base-relieve { opacity: .45; }
+.base-nombres { opacity: .7; }
+.leaflet-control-scale-line { border-color: var(--tinta); color: var(--tinta); background: rgba(255,255,255,.85); }
+
+/* estaciones */
+.est-marca { position: relative; }
+.est-marca .punto { width: 26px; height: 26px; border-radius: 50%; background: var(--tinta); color: #fff; border: 2px solid #fff;
+  box-shadow: 0 0 0 1px var(--tinta); display: grid; place-items: center; font-weight: 700; font-size: 13px; cursor: pointer; }
+.est-marca.alerta .punto { background: var(--alerta); box-shadow: 0 0 0 1px var(--alerta); }
+.est-marca.activa .punto { box-shadow: 0 0 0 3px var(--agua); }
+.est-marca .nombre { position: absolute; left: 32px; top: 3px; white-space: nowrap; font-size: 12.5px; font-weight: 600;
+  color: var(--tinta); text-shadow: 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff; display: none; }
+#mapa.zoom-cerca .est-marca .nombre { display: block; }
+
+.rio-rotulo { font-size: 12px; font-style: italic; color: #14527a; white-space: nowrap; pointer-events: none;
+  text-shadow: 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff, 0 0 4px #fff; }
+#mapa.zoom-bajo .rio-rotulo.menor { display: none; }
+.leaflet-tooltip { background: var(--superficie); color: var(--tinta); border: 1px solid var(--tinta); border-radius: 2px; box-shadow: none; font-size: 12.5px; }
+.leaflet-tooltip b { font-weight: 600; }
+
+/* detalle: el simulador de la estación */
+.detalle { flex: 0 0 0; width: 0; overflow: hidden; background: var(--papel); border-left: 1px solid var(--linea);
+  display: flex; flex-direction: column; }
+.app.abierto .detalle { flex: 0 0 62%; width: auto; }
+.app.abierto .lateral { flex-basis: 250px; }
+.detalle header { display: flex; align-items: center; gap: 16px; padding: 10px 16px; background: var(--superficie);
+  border-bottom: 1px solid var(--linea); flex: none; }
+.detalle h2 { font-size: 16px; margin: 0; }
+.detalle header p { color: var(--tenue); font-size: 12.5px; }
+.detalle iframe { flex: 1; border: 0; width: 100%; background: var(--papel); }
+
+@media (max-width: 900px) {
+  .lateral { display: none; }
+  .app.abierto .detalle { flex-basis: 100%; }
+  .app.abierto .mapa-col { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+[hidden] { display: none !important; }
