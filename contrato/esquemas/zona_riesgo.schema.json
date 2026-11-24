@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hackatec2026.local/esquemas/zona_riesgo.schema.json",
+  "title": "Zona de riesgo (properties de cada Feature)",
+  "description": "Propiedades de cada poligono de contrato/fixtures/zonas_riesgo.geojson (docs/19-cambio-de-rumbo-capcee.md, seccion 4.2). Lo produce scripts/97_escuelas_riesgo.py.",
+  "type": "object",
+  "required": ["c_zona", "tipo", "nivel", "fuente", "escuelas"],
+  "additionalProperties": false,
+  "properties": {
+    "c_zona": { "type": "string", "pattern": "^ZR-[0-9]{4}$" },
+    "tipo": { "type": "string", "enum": ["derrumbe", "inundacion", "contaminacion"] },
+    "nivel": { "type": "string", "enum": ["bajo", "medio", "alto", "muy_alto"] },
+    "fuente": { "description": "De donde sale la zona. Mientras sea provisional, lo dice.", "type": "string", "minLength": 1 },
+    "escuelas": { "description": "CCT de las escuelas dentro o junto a la zona.", "type": "array", "items": { "type": "string" } }
+  }
+}

@@ -31,6 +31,8 @@ Leyenda de "editable":
 | `contrato/esquemas/alerta.schema.json` | Alerta ambiental | niveles, reglas, criterios, tipos de fuente probable | sí, con protocolo |
 | `contrato/esquemas/estacion.schema.json` | Estación de monitoreo | — | sí, con protocolo |
 | `contrato/esquemas/linea_base.schema.json` | Banda histórica | — | sí, con protocolo |
+| `contrato/esquemas/escuela.schema.json` | Escuela de interés con su riesgo y desglose (docs/19 §4.1) | forma de `escuelas.json` | sí, con protocolo |
+| `contrato/esquemas/zona_riesgo.schema.json` | Zona propensa (properties de cada polígono, docs/19 §4.2) | forma de `zonas_riesgo.geojson` | sí, con protocolo |
 | `contrato/esquemas/prediccion_propagacion.schema.json` | Predicción aguas abajo | modelos permitidos | sí, con protocolo |
 | `contrato/esquemas/reporte_ciudadano.schema.json` | Reporte ciudadano | catálogo de tipos de reporte | sí, con protocolo |
 | `contrato/validador.py` | Validador de JSON Schema sin dependencias | — | sí |
@@ -186,6 +188,8 @@ El prefijo numérico indica el orden de ejecución. `_comun.py` no se ejecuta so
 | `scripts/40_generar_fixtures.py` | Genera los fixtures del contrato | `datos/procesados/` | `contrato/fixtures/` |
 | `scripts/60_red_para_mapa.py` | Lee las capas de la red hidrográfica y las simplifica para pintar el mapa. **Fuente de verdad de** qué orden de cauce se dibuja (`ORDEN_MINIMO`) y de las tolerancias de simplificación. Calcula el contorno de la cuenca y las confluencias por longitud de red acumulada; **no** ordena los sitios (eso es M1, `70_topologia_red.py`) | `datos/geo/F08_red_hidrografica/` | `datos/procesados/mapa/` |
 | `scripts/61_rios_menores_para_app.py` | Saca los cauces de orden 3 de la red del INEGI para la app ciudadana; reutiliza la lectura y la simplificación de `60_red_para_mapa.py` | `datos/geo/F08_red_hidrografica/` | `datos/procesados/mapa/rios_orden3.json` |
+| `scripts/97_escuelas_riesgo.py` | Índice de riesgo de escuelas (pesos como hipótesis; el índice es la suma del desglose). Escribe `escuelas.json` y `zonas_riesgo.geojson`; provisionales mientras no exista `datos/procesados/escuelas/factores_escuelas.csv` | `datos/procesados/escuelas/` | `contrato/fixtures/escuelas.json`, `zonas_riesgo.geojson` |
+| `scripts/98_escuelas_candidatas.py` | Escuelas públicas rurales de Puebla (DENUE) con su localidad (censo 2020), drenaje, agua, pendiente de la ladera y fuente contaminante más cercana | `datos/crudos/F12`, `F16`, `F17` | `datos/procesados/escuelas/escuelas_candidatas.csv` |
 | `scripts/70_topologia_red.py` | **M1.** Engancha los sitios a la red del INEGI, orienta los tramos y calcula el siguiente sitio aguas abajo. **Fuente de verdad de la topología** | `datos/geo/`, `sitio.csv` | `datos/procesados/red/`, `docs/13-...` |
 | `scripts/80_propagacion.py` | **M3.** Calibra la atenuación con los datos, calcula ventanas de llegada y produce la predicción. **Fuente de verdad de la velocidad supuesta y del alcance útil** | `red/`, `muestreo_nucleo.csv` | `red/atenuacion_observada.csv`, `red/tiempo_viaje.csv`, `contrato/fixtures/prediccion_ejemplo.json`, `docs/14-...` |
 | `motor/reglas.py` | **M2.** `evaluar(paquete) → veredicto`. **Fuente de verdad de los umbrales de deteccion y de la firma de fuente probable** | fixtures, `umbral.csv` | nada en disco |

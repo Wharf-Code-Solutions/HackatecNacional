@@ -21,6 +21,26 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Módulo A (cambio de rumbo): contrato de escuelas y zonas, fixtures provisionales y primeros datos reales
+
+**Qué cambió.** Esquemas `escuela` y `zona_riesgo` (docs/19 §4.1 y §4.2). `scripts/97_escuelas_riesgo.py` escribe
+`escuelas.json` (11 escuelas) y `zonas_riesgo.geojson` (10 zonas) PROVISIONALES (docs/19 §4.5; marcados en
+`contrato/fixtures/LEEME.md`): lugares reales de Puebla, CCT, nombres, puntajes y polígonos inventados; dos escuelas
+ligadas a `EST-ATY-04` y `EST-ATY-05` para cruzar alertas. `50_verificar_repo.py` valida los dos y que el desglose sume
+el índice. `scripts/98_escuelas_candidatas.py`: 473 escuelas públicas rurales de Puebla (de 4 809 públicas del DENUE)
+con drenaje y agua de su localidad (censo 2020), pendiente de la ladera (percentil 75 en 250 m, mosaicos de elevación
+terrarium) y fuente contaminante más cercana.
+**Por qué.** Que el panel (B) y la app (C) trabajen sin esperar los datos reales. El índice se calcula como la suma del
+desglose porque el ejemplo de docs/19 §4.1 no la cumplía (desglose 0.92, índice 0.72). Pesos: hipótesis.
+**Qué arrastró.** `02-mapa-del-repo.md`. Fuentes nuevas en `datos/crudos/` (no versionadas): F16 ITER 2020 de Puebla
+(INEGI), F17 mosaicos de elevación (AWS terrarium), F19 marginación por localidad 2020 (CONAPO, `.xls`: falta `xlrd`
+para leerla). Pendiente: anotarlas en `00_descargar_fuentes.py`, la bitácora y `04-fuentes-de-datos.md`.
+**Impacto en otros módulos.** B y C leen `escuelas.json` y `zonas_riesgo.geojson` con la forma definitiva. El DENUE
+registra pocas escuelas en localidades pequeñas: los datos reales dependen del catálogo de centros de trabajo de la SEP,
+que bloquea descargas automáticas y se baja a mano a `datos/crudos/F18`.
+
+---
+
 ## 2026-11-24 · Cambio de rumbo: escuelas rurales vulnerables (reto CAPCEE)
 
 **Qué cambió.** Nuevo `docs/19-cambio-de-rumbo-capcee.md`: el proyecto pasa a prevenir contaminación y derrumbes

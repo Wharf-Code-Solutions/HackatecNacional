@@ -1,0 +1,394 @@
+[
+ {
+  "cct": "21DPR9001K",
+  "nombre": "Escuela Primaria Rural Lázaro Cárdenas",
+  "nivel": "primaria",
+  "matricula": 96,
+  "municipio": "Cuetzalan del Progreso",
+  "localidad": "Xocoyolo",
+  "ambito": "rural",
+  "latitud": 20.0185,
+  "longitud": -97.5402,
+  "fuente_agua": "manantial",
+  "riesgo": {
+   "indice": 0.679,
+   "nivel": "alto",
+   "contaminacion": 0.391,
+   "derrumbe": 0.831,
+   "desglose": {
+    "pendiente": 0.237,
+    "susceptibilidad_laderas": 0.18,
+    "urbanizacion_reciente": 0.04,
+    "cercania_cauce_o_descarga": 0.045,
+    "calidad_agua": 0.052,
+    "sin_drenaje": 0.04,
+    "marginacion": 0.085
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": [
+   {
+    "organismo": "CAPCEE",
+    "tramite": "dictamen_del_inmueble",
+    "estado": "solicitada",
+    "fecha": null
+   }
+  ]
+ },
+ {
+  "cct": "21DJN9004R",
+  "nombre": "Jardín de Niños Gabriela Mistral",
+  "nivel": "preescolar",
+  "matricula": 31,
+  "municipio": "Huauchinango",
+  "localidad": "Xilocuautla",
+  "ambito": "rural",
+  "latitud": 20.1781,
+  "longitud": -98.0712,
+  "fuente_agua": "pozo",
+  "riesgo": {
+   "indice": 0.623,
+   "nivel": "alto",
+   "contaminacion": 0.509,
+   "derrumbe": 0.664,
+   "desglose": {
+    "pendiente": 0.175,
+    "susceptibilidad_laderas": 0.16,
+    "urbanizacion_reciente": 0.03,
+    "cercania_cauce_o_descarga": 0.068,
+    "calidad_agua": 0.075,
+    "sin_drenaje": 0.035,
+    "marginacion": 0.08
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": [
+   {
+    "organismo": "CEASPUE",
+    "tramite": "instalacion_en_fuente",
+    "estado": "pendiente",
+    "fecha": null
+   },
+   {
+    "organismo": "CAPCEE",
+    "tramite": "acceso_al_plantel",
+    "estado": "solicitada",
+    "fecha": null
+   }
+  ]
+ },
+ {
+  "cct": "21DPR9003P",
+  "nombre": "Escuela Primaria Ignacio Zaragoza",
+  "nivel": "primaria",
+  "matricula": 142,
+  "municipio": "Teziutlán",
+  "localidad": "Aire Libre",
+  "ambito": "rural",
+  "latitud": 19.8239,
+  "longitud": -97.3681,
+  "fuente_agua": "red_publica",
+  "riesgo": {
+   "indice": 0.622,
+   "nivel": "alto",
+   "contaminacion": 0.191,
+   "derrumbe": 0.909,
+   "desglose": {
+    "pendiente": 0.225,
+    "susceptibilidad_laderas": 0.19,
+    "urbanizacion_reciente": 0.085,
+    "cercania_cauce_o_descarga": 0.022,
+    "calidad_agua": 0.03,
+    "sin_drenaje": 0.015,
+    "marginacion": 0.055
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": [
+   {
+    "organismo": "CAPCEE",
+    "tramite": "dictamen_del_inmueble",
+    "estado": "otorgada",
+    "fecha": "2026-11-18"
+   }
+  ]
+ },
+ {
+  "cct": "21DTV9002M",
+  "nombre": "Telesecundaria Miguel Hidalgo",
+  "nivel": "secundaria",
+  "matricula": 58,
+  "municipio": "Zacatlán",
+  "localidad": "Tomatlán",
+  "ambito": "rural",
+  "latitud": 19.9618,
+  "longitud": -97.9893,
+  "fuente_agua": "manantial",
+  "riesgo": {
+   "indice": 0.572,
+   "nivel": "alto",
+   "contaminacion": 0.277,
+   "derrumbe": 0.736,
+   "desglose": {
+    "pendiente": 0.2,
+    "susceptibilidad_laderas": 0.15,
+    "urbanizacion_reciente": 0.055,
+    "cercania_cauce_o_descarga": 0.03,
+    "calidad_agua": 0.037,
+    "sin_drenaje": 0.03,
+    "marginacion": 0.07
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR9009B",
+  "nombre": "Escuela Primaria Josefa Ortiz de Domínguez",
+  "nivel": "primaria",
+  "matricula": 76,
+  "municipio": "Puebla",
+  "localidad": "San Andrés Azumiatla",
+  "ambito": "rural",
+  "latitud": 18.9541,
+  "longitud": -98.2063,
+  "fuente_agua": "pipa",
+  "riesgo": {
+   "indice": 0.553,
+   "nivel": "alto",
+   "contaminacion": 0.837,
+   "derrumbe": 0.345,
+   "desglose": {
+    "pendiente": 0.075,
+    "susceptibilidad_laderas": 0.05,
+    "urbanizacion_reciente": 0.065,
+    "cercania_cauce_o_descarga": 0.135,
+    "calidad_agua": 0.12,
+    "sin_drenaje": 0.038,
+    "marginacion": 0.07
+   }
+  },
+  "c_estacion": "EST-ATY-05",
+  "autorizaciones": [
+   {
+    "organismo": "CEASPUE",
+    "tramite": "instalacion_en_fuente",
+    "estado": "pendiente",
+    "fecha": null
+   },
+   {
+    "organismo": "CAPCEE",
+    "tramite": "acceso_al_plantel",
+    "estado": "otorgada",
+    "fecha": "2026-11-19"
+   }
+  ]
+ },
+ {
+  "cct": "21DPB9005T",
+  "nombre": "Escuela Primaria Bilingüe Netzahualcóyotl",
+  "nivel": "primaria",
+  "matricula": 67,
+  "municipio": "Tlatlauquitepec",
+  "localidad": "Xonocuautla",
+  "ambito": "rural",
+  "latitud": 19.8702,
+  "longitud": -97.4978,
+  "fuente_agua": "captacion_lluvia",
+  "riesgo": {
+   "indice": 0.473,
+   "nivel": "medio",
+   "contaminacion": 0.294,
+   "derrumbe": 0.509,
+   "desglose": {
+    "pendiente": 0.15,
+    "susceptibilidad_laderas": 0.11,
+    "urbanizacion_reciente": 0.02,
+    "cercania_cauce_o_descarga": 0.015,
+    "calidad_agua": 0.045,
+    "sin_drenaje": 0.043,
+    "marginacion": 0.09
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR9008Z",
+  "nombre": "Escuela Primaria Benito Juárez",
+  "nivel": "primaria",
+  "matricula": 89,
+  "municipio": "Ocoyucan",
+  "localidad": "San Bernabé Temoxtitla",
+  "ambito": "rural",
+  "latitud": 18.9935,
+  "longitud": -98.2498,
+  "fuente_agua": "pozo",
+  "riesgo": {
+   "indice": 0.468,
+   "nivel": "medio",
+   "contaminacion": 0.817,
+   "derrumbe": 0.213,
+   "desglose": {
+    "pendiente": 0.037,
+    "susceptibilidad_laderas": 0.02,
+    "urbanizacion_reciente": 0.06,
+    "cercania_cauce_o_descarga": 0.128,
+    "calidad_agua": 0.128,
+    "sin_drenaje": 0.03,
+    "marginacion": 0.065
+   }
+  },
+  "c_estacion": "EST-ATY-04",
+  "autorizaciones": [
+   {
+    "organismo": "CEASPUE",
+    "tramite": "instalacion_en_fuente",
+    "estado": "otorgada",
+    "fecha": "2026-11-15"
+   },
+   {
+    "organismo": "CAPCEE",
+    "tramite": "acceso_al_plantel",
+    "estado": "otorgada",
+    "fecha": "2026-11-15"
+   }
+  ]
+ },
+ {
+  "cct": "21DPR9006V",
+  "nombre": "Escuela Primaria Emiliano Zapata",
+  "nivel": "primaria",
+  "matricula": 118,
+  "municipio": "San Martín Texmelucan",
+  "localidad": "San Lucas Atoyatenco",
+  "ambito": "rural",
+  "latitud": 19.2531,
+  "longitud": -98.4127,
+  "fuente_agua": "pozo",
+  "riesgo": {
+   "indice": 0.44,
+   "nivel": "medio",
+   "contaminacion": 0.863,
+   "derrumbe": 0.169,
+   "desglose": {
+    "pendiente": 0.013,
+    "susceptibilidad_laderas": 0.01,
+    "urbanizacion_reciente": 0.07,
+    "cercania_cauce_o_descarga": 0.142,
+    "calidad_agua": 0.135,
+    "sin_drenaje": 0.025,
+    "marginacion": 0.045
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": [
+   {
+    "organismo": "CEASPUE",
+    "tramite": "instalacion_en_fuente",
+    "estado": "solicitada",
+    "fecha": null
+   },
+   {
+    "organismo": "CAPCEE",
+    "tramite": "acceso_al_plantel",
+    "estado": "otorgada",
+    "fecha": "2026-11-20"
+   }
+  ]
+ },
+ {
+  "cct": "21DES9007X",
+  "nombre": "Escuela Secundaria Técnica Agropecuaria",
+  "nivel": "secundaria",
+  "matricula": 204,
+  "municipio": "Santa Isabel Cholula",
+  "localidad": "Santa Ana Acozautla",
+  "ambito": "rural",
+  "latitud": 18.9862,
+  "longitud": -98.3691,
+  "fuente_agua": "pozo",
+  "riesgo": {
+   "indice": 0.372,
+   "nivel": "medio",
+   "contaminacion": 0.677,
+   "derrumbe": 0.155,
+   "desglose": {
+    "pendiente": 0.025,
+    "susceptibilidad_laderas": 0.02,
+    "urbanizacion_reciente": 0.04,
+    "cercania_cauce_o_descarga": 0.105,
+    "calidad_agua": 0.112,
+    "sin_drenaje": 0.02,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": [
+   {
+    "organismo": "CEASPUE",
+    "tramite": "instalacion_en_fuente",
+    "estado": "pendiente",
+    "fecha": null
+   }
+  ]
+ },
+ {
+  "cct": "21DPR9010D",
+  "nombre": "Escuela Primaria Vicente Guerrero",
+  "nivel": "primaria",
+  "matricula": 53,
+  "municipio": "Atlixco",
+  "localidad": "Metepec",
+  "ambito": "rural",
+  "latitud": 18.9361,
+  "longitud": -98.4719,
+  "fuente_agua": "manantial",
+  "riesgo": {
+   "indice": 0.37,
+   "nivel": "medio",
+   "contaminacion": 0.357,
+   "derrumbe": 0.364,
+   "desglose": {
+    "pendiente": 0.1,
+    "susceptibilidad_laderas": 0.07,
+    "urbanizacion_reciente": 0.03,
+    "cercania_cauce_o_descarga": 0.06,
+    "calidad_agua": 0.045,
+    "sin_drenaje": 0.02,
+    "marginacion": 0.045
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DJN9011F",
+  "nombre": "Jardín de Niños Rosaura Zapata",
+  "nivel": "preescolar",
+  "matricula": 22,
+  "municipio": "Chiautla",
+  "localidad": "San Miguel Ixtlán",
+  "ambito": "rural",
+  "latitud": 18.2903,
+  "longitud": -98.6057,
+  "fuente_agua": "pipa",
+  "riesgo": {
+   "indice": 0.237,
+   "nivel": "bajo",
+   "contaminacion": 0.229,
+   "derrumbe": 0.113,
+   "desglose": {
+    "pendiente": 0.037,
+    "susceptibilidad_laderas": 0.02,
+    "urbanizacion_reciente": 0.005,
+    "cercania_cauce_o_descarga": 0.015,
+    "calidad_agua": 0.03,
+    "sin_drenaje": 0.035,
+    "marginacion": 0.095
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ }
+]

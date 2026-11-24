@@ -171,6 +171,25 @@ for esquema, archivo, llave in (('estacion', 'estaciones.json', 'estaciones'),
         else:
             ok(archivo, detalle)
 
+# Escuelas y zonas del cambio de rumbo (docs/19): forma del contrato y desglose que suma el indice
+for archivo, esquema in (('escuelas.json', 'escuela'), ('zonas_riesgo.geojson', 'zona_riesgo')):
+    ruta = os.path.join(FIX, archivo)
+    if not os.path.exists(ruta):
+        aviso(archivo, 'no existe; corre scripts/97_escuelas_riesgo.py')
+        continue
+    datos = json.load(open(ruta, encoding='utf-8'))
+    objetos = [f['properties'] for f in datos['features']] if archivo.endswith('.geojson') else datos
+    esq = val.cargar_esquema(esquema)
+    err = [e for i, o in enumerate(objetos) for e in val.validar(o, esq, '$[{}]'.format(i))]
+    if esquema == 'escuela':
+        err += ['{}: el desglose no suma el indice'.format(o['cct']) for o in objetos
+                if abs(sum(o['riesgo']['desglose'].values()) - o['riesgo']['indice']) > 0.002]
+    total_err += len(err)
+    if err:
+        falla(archivo, '{} errores, el primero: {}'.format(len(err), err[0]))
+    else:
+        ok(archivo, '{} objetos'.format(len(objetos)))
+
 carpeta = os.path.join(FIX, 'escenarios')
 if os.path.isdir(carpeta):
     esq = val.cargar_esquema('lectura')

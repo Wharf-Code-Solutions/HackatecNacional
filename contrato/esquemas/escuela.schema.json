@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hackatec2026.local/esquemas/escuela.schema.json",
+  "title": "Escuela de interes",
+  "description": "Una escuela rural vulnerable a contaminacion o a derrumbe (docs/19-cambio-de-rumbo-capcee.md, seccion 4.1). La produce scripts/97_escuelas_riesgo.py en contrato/fixtures/escuelas.json; la leen el panel (modulo B) y la app ciudadana (modulo C). El riesgo trae su desglose: los factores suman el indice y los pesos son hipotesis.",
+  "type": "object",
+  "required": ["cct", "nombre", "nivel", "municipio", "localidad", "ambito", "latitud", "longitud", "fuente_agua", "riesgo", "c_estacion", "autorizaciones"],
+  "additionalProperties": false,
+  "properties": {
+    "cct": {
+      "description": "Clave de Centro de Trabajo de la SEP: 2 digitos de entidad, 3 letras de tipo, 4 digitos y una letra.",
+      "type": "string", "pattern": "^[0-9]{2}[A-Z]{3}[0-9]{4}[A-Z]$"
+    },
+    "nombre": { "type": "string", "minLength": 1 },
+    "nivel": { "type": "string", "enum": ["preescolar", "primaria", "secundaria", "media_superior", "otro"] },
+    "matricula": { "type": ["integer", "null"], "minimum": 0 },
+    "municipio": { "type": "string" },
+    "localidad": { "type": "string" },
+    "ambito": { "type": "string", "enum": ["rural", "urbano"] },
+    "latitud": { "type": "number", "minimum": 17.5, "maximum": 21.0 },
+    "longitud": { "type": "number", "minimum": -99.5, "maximum": -96.5 },
+    "fuente_agua": {
+      "type": "string",
+      "enum": ["red_publica", "pozo", "manantial", "rio", "pipa", "captacion_lluvia", "desconocida"]
+    },
+    "riesgo": {
+      "type": "object",
+      "required": ["indice", "nivel", "contaminacion", "derrumbe", "desglose"],
+      "additionalProperties": false,
+      "properties": {
+        "indice": { "description": "Suma del desglose, de 0 a 1.", "type": "number", "minimum": 0, "maximum": 1 },
+        "nivel": { "type": "string", "enum": ["bajo", "medio", "alto", "muy_alto"] },
+        "contaminacion": { "description": "Factores de agua normalizados, de 0 a 1.", "type": "number", "minimum": 0, "maximum": 1 },
+        "derrumbe": { "description": "Factores de ladera normalizados, de 0 a 1.", "type": "number", "minimum": 0, "maximum": 1 },
+        "desglose": {
+          "description": "Aporte de cada factor (peso x puntaje). Suman el indice.",
+          "type": "object",
+          "required": ["pendiente", "susceptibilidad_laderas", "cercania_cauce_o_descarga", "calidad_agua", "marginacion", "sin_drenaje", "urbanizacion_reciente"],
+          "additionalProperties": false,
+          "properties": {
+            "pendiente": { "type": "number", "minimum": 0, "maximum": 1 },
+            "susceptibilidad_laderas": { "type": "number", "minimum": 0, "maximum": 1 },
+            "cercania_cauce_o_descarga": { "type": "number", "minimum": 0, "maximum": 1 },
+            "calidad_agua": { "type": "number", "minimum": 0, "maximum": 1 },
+            "marginacion": { "type": "number", "minimum": 0, "maximum": 1 },
+            "sin_drenaje": { "type": "number", "minimum": 0, "maximum": 1 },
+            "urbanizacion_reciente": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        }
+      }
+    },
+    "c_estacion": {
+      "description": "Estacion de calidad del agua junto a la fuente de la escuela; null si no tiene.",
+      "type": ["string", "null"], "pattern": "^EST-[A-Z]{3}-[0-9]{2}$"
+    },
+    "autorizaciones": {
+      "description": "Tramites del mecanismo instalado o propuesto. Sin autorizacion otorgada de CEASPUE el mecanismo se muestra como propuesto (seccion 4.3).",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["organismo", "tramite", "estado", "fecha"],
+        "additionalProperties": false,
+        "properties": {
+          "organismo": { "type": "string", "enum": ["CEASPUE", "CAPCEE"] },
+          "tramite": { "type": "string" },
+          "estado": { "type": "string", "enum": ["pendiente", "solicitada", "otorgada", "negada"] },
+          "fecha": { "type": ["string", "null"], "format": "date" }
+        }
+      }
+    }
+  }
+}
