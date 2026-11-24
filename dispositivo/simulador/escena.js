@@ -948,6 +948,12 @@
       G.paquete.position.copy(G.rutaAire.getPoint(p)); G.paquete.visible = true; G.trazoAire.visible = true;
     }
     G.paquete.material.color.setHex(ext && ext.alarma ? ALARMA : TINTA);
+    // En la vista de comunicación la trayectoria antena-torre queda siempre dibujada, para que se vea por
+    // dónde viaja cada paquete aunque no haya uno en el aire; en rojo si el sitio no tiene cobertura.
+    if (G.vista === 'enlace') {
+      G.trazoAire.visible = true;
+      G.trazoAire.material.color.setHex(s.enlace.caido ? ALARMA : TINTA);
+    } else G.trazoAire.material.color.setHex(TINTA);
     if (G.vista !== 'general') pintaDetalle({ s: s, nom: nom, f: f, transcurrido: f.dur - f.resta, env: env, nSD: nSD });
 
     if (G.trans) avanzaTransicion();

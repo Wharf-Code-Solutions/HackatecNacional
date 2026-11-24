@@ -21,6 +21,17 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · M4: la trayectoria del envío queda dibujada en la vista de comunicación
+
+**Qué cambió.** Al abrir la vista de comunicación (antena o torre), la línea punteada de la antena a la
+torre se queda visible todo el tiempo, no solo mientras un paquete viaja; se pone roja si el sitio no
+tiene cobertura. En la vista general sigue apareciendo solo durante el envío.
+**Por qué.** Lo pidió el usuario: entre envíos no se veía por dónde viajan los datos.
+**Qué arrastró.** `escena.js?v=33`, `CLAUDE.md`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
 ## 2026-11-24 · M4: estados en palabras llanas, envío visible en comunicación y líneas sin cruzar rótulos
 
 **Qué cambió.** Los estados se dicen sin jerga del firmware: "En reposo hasta las 10:30" en lugar de

@@ -68,7 +68,7 @@ No conviertas "pendiente" en "construido" sin verificarlo contra el repo.
     invisibles `G.zonas`): sondas, gabinete (ESP32, reloj, microSD, módem, baterías), energía (panel, baterías,
     consumo) y comunicación (antena, SD, paquete, torre). En cada una, un rótulo por pieza con qué es y su estado
     vivo; sondas y gabinete pasan a tiempo real las fases que muestran (`Escena.tiempoReal`), comunicación no (así el
-    envío se repite cada pocos segundos). Estados en palabras llanas ("En reposo hasta las 10:30", "Enviando los
+    envío se repite cada pocos segundos) y deja la trayectoria antena-torre siempre dibujada (roja sin cobertura). Estados en palabras llanas ("En reposo hasta las 10:30", "Enviando los
     datos"). Un rótulo de detalle nunca queda atravesado por su línea: si no cabe afuera, va junto a su pieza.
     "Vista general" o Esc regresa.
     Cada envío (ACK del firmware) se dibuja en 2.3 s reales: antena encendida, paquete a la torre,
