@@ -21,6 +21,50 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · M2: motor de reglas, de 31 falsas alarmas a 0
+
+**Qué cambió.** Nuevo módulo `motor/` con `reglas.py` (`evaluar(paquete) → veredicto`),
+`prueba.py` (banco de pruebas que mide el criterio de terminado y sale con código 1 si no
+se cumple) y su README. `contrato/servidor_mock.py` acepta `--motor real`. Se agregó MAD a
+la línea base (`scripts/20` y `scripts/40`).
+
+**Resultado.** Día de control: **0 alertas**, contra 31 del evaluador provisional. Sensor
+roto: **0 alertas ambientales** y 19 avisos técnicos. Los tres eventos detectados y su
+fuente correctamente clasificada: municipal 0.90, industrial 0.80, arrastre 0.70.
+
+**Las cuatro decisiones que lo lograron.** La salud del sensor se evalúa **primero** y saca
+el parámetro de la evaluación ambiental: una turbiedad congelada en 37.5 donde la mediana
+histórica es 368 habría parecido un evento enorme. El disparador es el **escalón** contra
+las últimas horas, no la banda histórica: estas series están tan sesgadas que la media queda
+muy por encima de la mediana y usar el z histórico como disparador daba **35** alertas en el
+día de control, peor que la regla ingenua. La ventana de referencia lleva una **brecha de
+guarda** de 2 h, porque sin ella una descarga en rampa contamina su propia referencia y el
+evento no se detecta. Y se exigen **dos parámetros** coherentes, que es lo que distingue una
+descarga de una sonda rota.
+
+**El intercambio, explícito.** El criterio original pedía detección en menos de 45 min. Se
+cumple en la industrial (15 min) pero no en la orgánica (75) ni la lluvia (90). Se probaron
+cuatro variantes de umbral y persistencia y el tiempo **no cambió en ninguna**: el límite es
+la exigencia de coherencia. Quitarla detectaría a los 45 min al precio de confundir sensores
+rotos con eventos. Se prefirió no alarmar en falso y el criterio quedó replanteado:
+detectar antes de que el evento alcance su intensidad plena, que los tres cumplen.
+
+**El mismo error, dos veces más.** Clasificar la fuente falló primero por puntuar "pH fuera
+de 6 a 9" como firma industrial, cuando en estos sitios el pH ya está normalmente bajo 6; y
+después por juzgar "conductividad multiplicada" con el z, que depende del ruido de base, de
+modo que una subida del 35 % daba z = 8. La lección: **el z sirve para detectar que algo
+cambió, no para clasificar qué fue.** Clasificar exige las unidades de la cosa física.
+
+**Qué arrastró.** `README.md`, `CLAUDE.md`, `docs/01`, `docs/12`, `docs/README.md`,
+`docs/contexto/02-mapa-del-repo.md`, y los fixtures regenerados con MAD.
+
+**Impacto en otros módulos.** El stub sigue siendo el valor por omisión del servidor a
+propósito: es la vara medida y sustituirlo en silencio la borraría. `nivel_esperado` de M3
+ya se puede llenar llamando a este motor. `riesgo_por_uso` sigue vacío: necesita los
+criterios por uso destinado (F19).
+
+---
+
 ## 2026-11-24 · M3: propagacion, y el modelo que los datos rechazaron
 
 **Qué cambió.** Nuevo `scripts/80_propagacion.py`. Dada una alerta, devuelve a qué sitios

@@ -31,6 +31,7 @@ Orden de lectura recomendado. Los primeros seis documentos se mantienen a mano; 
 | 08 | [Verificación de datos](08-verificacion-datos.md) | El estado del conjunto de datos, con veredicto por sección | **generado** por `scripts/30_verificacion_datos.py` |
 | 09 | [Hallazgos del exploratorio](09-hallazgos-exploratorio.md) | Qué dicen los datos | **generado** por `scripts/20_analisis_exploratorio.py` |
 | 10 | [Revisión crítica del plan](10-revision-critica-plan.md) | Seis objeciones al plan de etapas 2 a 8, con alternativas | a mano |
+| 15 | [Motor de reglas](15-motor-reglas.md) | Resultado contra los cinco escenarios y el intercambio que se eligió | **generado** por `motor/prueba.py` |
 | 14 | [Propagación](14-propagacion.md) | Qué modelo se usa, por qué los datos descartaron el decaimiento y cómo se validó | **generado** por `scripts/80_propagacion.py` |
 | 13 | [Topología de la red](13-topologia-red.md) | Cómo se ordenaron los sitios río abajo y qué casos quedaron marcados | **generado** por `scripts/70_topologia_red.py` |
 | 11 | [Metodología de módulos](11-metodologia-modulos.md) | Cómo se reparte el trabajo sin cuellos de botella | a mano |

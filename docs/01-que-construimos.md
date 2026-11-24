@@ -67,7 +67,7 @@ planeado es lo primero que se pierde al documentar y lo primero que un jurado de
 | Fixtures con 5 estaciones reales y 5 escenarios de un día | **Construido** | `contrato/fixtures/` |
 | Servidor mock con evaluador stub | **Construido y funcionando** | `contrato/servidor_mock.py` |
 | Orden aguas arriba → aguas abajo de los sitios | **Construido**: 210 de 219 sitios con sucesor, 6 276 pares, 14 casos marcados | `datos/procesados/red/` |
-| Motor de reglas real | **Pendiente** | módulo M2 |
+| Motor de reglas | **Construido**: 0 falsas alarmas en el día de control, los tres escenarios detectados y su fuente correctamente clasificada | `motor/` |
 | Modelo de propagación | **Construido**: transporte conservativo calibrado con los datos, con ventana de llegada y banda de valor | `scripts/80_propagacion.py` |
 | Simulador del dispositivo (firmware como máquina de estados, modelo de agua, sondas, energía y enlace) y su ficha técnica | **Construido y probado**: 96 paquetes por día y estación, 0 pérdidas en un corte de 4 h, `POST /lecturas` responde 202 | `dispositivo/` |
 | Dispositivo físico (hardware armado y medido) | **Pendiente**: no hay hardware comprado; las especificaciones son supuestos de diseño | módulo M4 |

@@ -114,6 +114,10 @@ for (cs, cp), serie in sorted(grupos.items()):
         'n': len(vs), 'media': round(st.fmean(vs), 4),
         'mediana': round(st.median(vs), 4),
         'desv_est': round(st.stdev(vs), 4) if len(vs) > 1 else '',
+        # Desviacion absoluta mediana. Preferible a la desviacion estandar en
+        # estas series: los valores extremos son reales, no errores, y la
+        # desviacion estandar los deja dominar la banda.
+        'mad': round(st.median([abs(v - st.median(vs)) for v in vs]), 4),
         'minimo': round(min(vs), 4), 'maximo': round(max(vs), 4),
         'p10': round(pct(vs, 10), 4), 'p90': round(pct(vs, 90), 4),
         'primera_fecha': min(f for f, _ in serie),

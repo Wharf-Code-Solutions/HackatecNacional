@@ -29,7 +29,8 @@ etapa del proyecto.
 | Propagación aguas abajo | Transporte conservativo calibrado con 90 tramos del propio río, con ventana horaria de llegada |
 | Estación de monitoreo | Diseñada y simulada; sin hardware |
 | Mapa de la cuenca | Prototipo con la red del INEGI, los sitios y las estaciones |
-| Motor de reglas, backend, panel, app ciudadana | Pendientes |
+| Motor de reglas | Cero falsas alarmas en el día de control, contra 31 del evaluador provisional |
+| Backend, panel de autoridad, app ciudadana | Pendientes |
 
 El estado detallado por módulo está en
 [`docs/12-estado-y-traspaso.md`](docs/12-estado-y-traspaso.md).

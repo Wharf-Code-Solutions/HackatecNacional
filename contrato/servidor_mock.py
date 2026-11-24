@@ -45,6 +45,20 @@ from validador import cargar_esquema, validar          # noqa: E402
 ESQ_LECTURA = cargar_esquema('lectura')
 ESQ_REPORTE = cargar_esquema('reporte_ciudadano')
 
+# El motor real de M2 vive en motor/reglas.py y se carga solo si se pide con
+# --motor real. Por omision se usa el stub, que es la linea base medida contra
+# la que M2 compite: sustituirlo en silencio borraria la vara.
+MOTOR_REAL = None
+
+
+def cargar_motor_real():
+    import importlib.util
+    ruta = os.path.join(os.path.dirname(AQUI), 'motor', 'reglas.py')
+    spec = importlib.util.spec_from_file_location('reglas', ruta)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod.Motor()
+
 
 def leer_json(ruta):
     with open(ruta, encoding='utf-8') as f:
@@ -172,7 +186,8 @@ class Manejador(BaseHTTPRequestHandler):
         ruta = urlparse(self.path).path.rstrip('/') or '/'
         if ruta == '/salud':
             return self._responder(200, {
-                'estado': 'ok', 'version_contrato': '1.0', 'motor': 'stub',
+                'estado': 'ok', 'version_contrato': '1.0',
+                'motor': 'real' if MOTOR_REAL is not None else 'stub',
                 'hora': datetime.now().astimezone().isoformat(timespec='seconds'),
                 'estaciones': len(ESTACIONES), 'alertas_abiertas': len(ALERTAS),
                 'reportes': len(REPORTES)})
@@ -229,7 +244,14 @@ class Manejador(BaseHTTPRequestHandler):
                     errores.append('$[{}].c_estacion: {} no esta registrada'.format(
                         i, p['c_estacion']))
                     continue
-                resultados.append(evaluar_stub(p))
+                if MOTOR_REAL is not None:
+                    v = MOTOR_REAL.evaluar(p)
+                    v['motor'] = 'real'
+                    VEREDICTOS.append(v)
+                    ALERTAS.extend(v['alertas'])
+                    resultados.append(v)
+                else:
+                    resultados.append(evaluar_stub(p))
             if errores:
                 return self._responder(422, {'error': 'contrato no cumplido',
                                              'detalles': errores,
@@ -265,9 +287,16 @@ def main():
     ap = argparse.ArgumentParser(description='Servidor mock del contrato')
     ap.add_argument('--puerto', type=int, default=8080)
     ap.add_argument('--host', default='127.0.0.1')
+    ap.add_argument('--motor', choices=('stub', 'real'), default='stub',
+                    help='stub es el evaluador provisional; real carga '
+                         'motor/reglas.py (M2)')
     args = ap.parse_args()
+    global MOTOR_REAL
+    if args.motor == 'real':
+        MOTOR_REAL = cargar_motor_real()
     srv = ThreadingHTTPServer((args.host, args.puerto), Manejador)
-    print('Contrato 1.0 (motor: stub) en http://{}:{}'.format(args.host, args.puerto))
+    print('Contrato 1.0 (motor: {}) en http://{}:{}'.format(
+        args.motor, args.host, args.puerto))
     print('Estaciones cargadas: {}'.format(', '.join(sorted(ESTACIONES))))
     print('Ctrl+C para detener.')
     try:

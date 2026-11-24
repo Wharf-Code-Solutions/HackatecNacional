@@ -122,6 +122,8 @@ El prefijo numérico indica el orden de ejecución. `_comun.py` no se ejecuta so
 | `scripts/60_red_para_mapa.py` | Lee las capas de la red hidrográfica y las simplifica para pintar el mapa. **Fuente de verdad de** qué orden de cauce se dibuja (`ORDEN_MINIMO`) y de las tolerancias de simplificación. No calcula topología | `datos/geo/F08_red_hidrografica/` | `datos/procesados/mapa/` |
 | `scripts/70_topologia_red.py` | **M1.** Engancha los sitios a la red del INEGI, orienta los tramos y calcula el siguiente sitio aguas abajo. **Fuente de verdad de la topología** | `datos/geo/`, `sitio.csv` | `datos/procesados/red/`, `docs/13-...` |
 | `scripts/80_propagacion.py` | **M3.** Calibra la atenuación con los datos, calcula ventanas de llegada y produce la predicción. **Fuente de verdad de la velocidad supuesta y del alcance útil** | `red/`, `muestreo_nucleo.csv` | `red/atenuacion_observada.csv`, `red/tiempo_viaje.csv`, `contrato/fixtures/prediccion_ejemplo.json`, `docs/14-...` |
+| `motor/reglas.py` | **M2.** `evaluar(paquete) → veredicto`. **Fuente de verdad de los umbrales de deteccion y de la firma de fuente probable** | fixtures, `umbral.csv` | nada en disco |
+| `motor/prueba.py` | Banco de pruebas de M2: mide el criterio de terminado | escenarios | `docs/15-...` |
 | `scripts/50_verificar_repo.py` | **Revisión de salud del repositorio.** Automatiza nueve comprobaciones de invariantes y sale con código 1 si falla. **Fuente de verdad de los conteos esperados** (`FILAS_ESPERADAS`) | todo | stdout |
 
 **Orden de ejecución.** Reconstruir todo desde las fuentes originales requiere
@@ -203,6 +205,8 @@ debes tocar.
 | Qué sitio está aguas abajo de cuál | `datos/procesados/red/sitio_aguas_abajo.csv` (no `sitio.csv`) |
 | Tolerancia de enganche de un sitio al cauce | `ENGANCHE_BUENO` y `ENGANCHE_DUDOSO` en `scripts/70_topologia_red.py` |
 | Velocidad de flujo supuesta | `VELOCIDAD_MIN_MS` y `VELOCIDAD_MAX_MS` en `scripts/80_propagacion.py` |
+| Cuándo una lectura dispara alerta | `Z_ESCALON`, `BRECHA_GUARDA` y `PERSISTENCIA` en `motor/reglas.py` |
+| Cómo se clasifica la fuente probable | `_fuente_probable()` en `motor/reglas.py` |
 | Hasta qué distancia la predicción es útil | `DISTANCIA_UTIL_M` en `scripts/80_propagacion.py` |
 | Los conteos esperados de cada tabla | `FILAS_ESPERADAS` en `scripts/50_verificar_repo.py` |
 | Traducción entre claves CONAGUA y códigos cortos | `datos/procesados/parametro.csv`, columna `c_parametro_std` |
