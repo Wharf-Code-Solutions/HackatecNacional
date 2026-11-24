@@ -107,6 +107,18 @@
     if (p === 'TURB' || p === 'COND') v = Math.max(v, 1);
     return v;
   };
+  // Velocidad de la corriente, SIMULADA: en la cuenca no hay velocidad medida (docs/14-propagacion.md).
+  // Base 0.6 m/s, el centro del intervalo 0.3-1.0 que declara M3, con una variación lenta de ±10 %.
+  // Con lluvia el caudal llega a 4 veces el base y la velocidad crece como Q^0.4 (geometría
+  // hidráulica de Leopold y Maddock): ≈ 1.0 m/s en la punta de la crecida.
+  var VEL_BASE = 0.6;
+  Agua.prototype.velocidad = function (t) {
+    var q = 1;
+    for (var i = 0; i < this.eventos.length; i++) {
+      if (this.eventos[i].tipo === 'lluvia') q += 3 * this._env(this.eventos[i], t);
+    }
+    return VEL_BASE * (1 + 0.1 * Math.sin(2 * Math.PI * t / 10800 + this.fase.TURB[1])) * Math.pow(q, 0.4);
+  };
   Agua.prototype.eventoActivo = function (t) {
     for (var i = 0; i < this.eventos.length; i++) {
       var ev = this.eventos[i];

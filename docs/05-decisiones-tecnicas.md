@@ -368,6 +368,51 @@ proporciones de la estación están exageradas 1.6× respecto al río para que s
 plano de instalación. El terreno imita el Atoyac del valle Puebla-Tlaxcala (cauce de taludes de
 tierra, orillas con pasto y árboles, agua turbia), pero no es el relieve de un sitio concreto.
 
+**Revisión (2026-11-24): realismo moderado.** Los materiales mate pasan a materiales físicos
+(rugosidad y metal): acero en mástil y torre, policarbonato en el gabinete, vidrio sobre las celdas
+del panel, circuito impreso con pistas. El suelo, los estratos del corte, el follaje y las ondas del
+agua llevan texturas dibujadas en código (ruido determinista, sin descargas ni archivos nuevos), y el
+sol proyecta sombras. Los reflejos salen de un cielo degradado y se aplican solo a metal, vidrio y
+agua, para no lavar los colores. Las aristas en tinta quedan como filete tenue y el perfil del corte
+sigue en tinta. Sigue sin moverse nada por adorno: las ondas son fijas y el agua solo cambia de color
+con la turbiedad. Se descartaron modelos glTF y luz HDRI por peso de carga y por el aspecto de render.
+La luz es la de un día soleado a media mañana, fija, sea cual sea la hora simulada: en la
+demostración todos los mecanismos tienen que leerse. Los datos no se tocan (el rótulo del panel
+sigue diciendo "Sin sol" de noche). Color con gestión sRGB y mapeo de tonos ACES; las sombras se
+calculan una vez. La figura se dibuja en cada cuadro de la animación (antes, 20 veces por segundo
+junto con los textos), y así girarla y el viaje del paquete van a 60 cuadros por segundo.
+
+**Vista de cerca de las sondas (2026-11-24).** Un clic en el tubo o en el rótulo "Sondas" acerca
+la cámara de frente al corte, bajo la lámina de agua (que se aclara); "Vista general" o Esc regresa.
+Cada sonda tiene su cabeza distinta (anillos de acero de la celda de conductividad, membrana del OD,
+bulbo de vidrio del pH, aguja de temperatura, ventana óptica y limpiador de la turbiedad) y un rótulo
+con qué mide y cómo, según la ficha técnica, y su estado vivo: estabilizando con los segundos que le
+faltan (su `estabS`), lectura k de 5, último valor enviado o la falla. Mientras está abierta, el
+calentamiento y la medición van a tiempo real; el resto del ciclo, a la velocidad elegida: a 300× la
+medición dura una fracción de segundo y no se vería.
+
+**Cielo, vegetación y corriente (2026-11-24).** Bóveda con degradado de horizonte casi blanco a cenit
+azul claro, nubes quietas al fondo y niebla del color del horizonte; los reflejos de metal y agua
+toman ese mismo cielo. Vegetación instanciada y determinista: matas de pasto en las orillas, carrizo
+al pie del talud junto al agua y arbustos; la estación, el cable, la torre y el frente del corte
+quedan libres. Los árboles son 12 ahuejotes (copa angosta y alta, en huso, verde grisáceo), al fondo
+y a los lados: las copas redondas anteriores, en mayor número, distraían de la estación. El agua corre aguas abajo, hacia el corte, a la velocidad
+de `Agua.velocidad` (`modelo.js`), en tiempo real, y un rótulo "Corriente" la da con la palabra
+"simulada". **No hay velocidad medida en la cuenca** (docs/14) y el caudal puntual de la red de
+monitoreo solo existe en 1 de los 5 sitios de las estaciones (DLPUE2063, mediana 671 L/s, n = 21,
+2012-2015), sin serie de tiempo; por eso se simula: 0.6 m/s, el centro del intervalo 0.3-1.0 que
+declara M3, ±10 % lento, y con lluvia el caudal llega a 4 veces el base y la velocidad crece como
+Q^0.4 (geometría hidráulica), ≈ 1.0 m/s en la punta. Un aforo en campo lo reemplaza. El dibujo del
+agua corre 4 veces más rápido que esa velocidad (a escala real casi no se percibe desde la cámara);
+el rótulo da la del modelo y la proporción entre corriente normal y crecida se conserva.
+
+**Envío visible (2026-11-24).** El envío dura 4 s simulados: a 300× serían 13 ms. Cada ACK del
+firmware (`stats.posts`) se dibuja en tiempo real, sin detener el reloj: la punta de la antena se
+enciende en azul (tenue al buscar red, intensa al enviar; roja si no hay cobertura), el paquete sube
+a la torre en 1 s, las antenas de la torre se encienden, la confirmación regresa en azul y solo
+entonces los cubos desaparecen de la SD, porque el firmware borra después del ACK. A velocidad baja,
+donde el envío real ya se ve, se dibuja solo la confirmación.
+
 ## D20 · El mapa usa MapLibre con base vectorial y las vistas solo muestran lo que se ve
 
 **Decisión.** El mapa pasa de Leaflet con teselas raster a MapLibre GL con la base vectorial de

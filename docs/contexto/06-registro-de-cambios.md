@@ -21,6 +21,94 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · M4: el envío a la torre se ve, con su confirmación
+
+**Qué cambió.** La punta de la antena se ilumina al buscar red y al enviar; cada envío se dibuja en
+2.3 s reales: el paquete sube a la torre, la torre se enciende, la confirmación (ACK) regresa y los
+cubos de la SD desaparecen. Los rótulos acompañan: "Enviando", "Recibido: confirma a la
+estación", "Confirmado: borra de la SD".
+**Por qué.** A 300× el envío de 4 s simulados duraba 13 ms y no se veía; el usuario eligió la punta
+que se ilumina, un envío con duración mínima y la confirmación de vuelta.
+**Qué arrastró.** D19, `CLAUDE.md`, `escena.js?v=24`.
+**Impacto en otros módulos.** Ninguno: el firmware y los paquetes no cambian.
+
+---
+
+## 2026-11-24 · M4: el agua se dibuja 4 veces más rápido
+
+**Qué cambió.** La corriente visible del agua avanza 4 veces más rápido que la velocidad simulada; el
+rótulo "Corriente" sigue dando la del modelo.
+**Por qué.** A 0.6 m/s y desde la distancia de la cámara casi no se percibía el movimiento.
+**Qué arrastró.** D19, `escena.js?v=23`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
+## 2026-11-24 · M4: ahuejotes en lugar de árboles de copa redonda
+
+**Qué cambió.** Los 26 árboles de copa redonda (cuatro bultos cada uno) pasan a 12 ahuejotes de copa
+angosta y alta, en verde grisáceo, al fondo y a los lados, dibujados con mallas instanciadas. Los
+arbustos bajan de 70 a 40.
+**Por qué.** El usuario notó que el árbol no se veía bien y que, al ser varios, distraía de la
+estación. El ahuejote es el árbol de las orillas y canales del valle Puebla-Tlaxcala.
+**Qué arrastró.** D19, `CLAUDE.md`, `escena.js?v=22`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
+## 2026-11-24 · M4: cielo, vegetación y corriente del río en la figura 3D
+
+**Qué cambió.** Cielo con degradado y nubes; pasto, carrizo, arbustos y 14 árboles más, con mallas
+instanciadas; el agua corre aguas abajo a la velocidad de `Agua.velocidad` (nueva en `modelo.js`) y
+un rótulo "Corriente" la muestra como simulada.
+**Por qué.** El usuario pidió cielo, vegetación y el flujo según los datos. No hay velocidad medida
+en la cuenca y el caudal puntual solo existe en 1 de los 5 sitios de estación (DLPUE2063, mediana
+671 L/s, n = 21): se simula con el centro del intervalo de M3 (0.6 m/s) y crece con la lluvia (Q^0.4).
+**Qué arrastró.** D19, `CLAUDE.md`, `dispositivo/README.md`, `escena.js`, `modelo.js`; versiones en
+`index.html`.
+**Impacto en otros módulos.** Ninguno: la velocidad simulada no viaja en los paquetes ni la usa M3.
+
+---
+
+## 2026-11-24 · M4: vista de cerca de las sondas
+
+**Qué cambió.** Clic en el tubo de las sondas o en su rótulo: la cámara se acerca y cada una de las
+cinco sondas muestra su cabeza propia, qué mide y cómo, y su estado vivo (estabilizando con cuenta
+regresiva, lectura k de 5, valor enviado o falla). Durante el calentamiento y la medición el
+simulador va a tiempo real; "Vista general" o Esc regresa.
+**Por qué.** El usuario quiere ver de cerca el funcionamiento de la sonda.
+**Qué arrastró.** D19, `CLAUDE.md`, `escena.js` (vistas, selección, cabezas), `ui.js` (tiempo real en
+la vista de cerca), `estilos.css`; versiones en `index.html`.
+**Impacto en otros módulos.** Ninguno: el firmware y los paquetes no cambian.
+
+---
+
+## 2026-11-24 · M4: la figura 3D va fluida y siempre de día soleado
+
+**Qué cambió.** La figura se dibuja en cada cuadro (antes 20 veces por segundo, junto con textos y
+gráfica): girarla y el viaje del paquete pasan a 60 cuadros por segundo en el navegador integrado
+con gráficos AMD integrados. La luz es fija de día soleado a media mañana, con gestión de color sRGB y
+mapeo de tonos ACES; sombras calculadas una vez, con filtro PCF.
+**Por qué.** El usuario notó poca fluidez y, al ser una demostración, quiere ver todos los mecanismos
+de día. Los datos no cambian: el rótulo del panel sigue la hora del modelo de energía.
+**Qué arrastró.** D19, `CLAUDE.md`, `ui.js` (bucle), `escena.js?v=15` y `ui.js?v=6` en `index.html`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
+## 2026-11-24 · M4: la figura 3D con realismo moderado
+
+**Qué cambió.** `escena.js` usa materiales físicos (acero, policarbonato, vidrio del panel, circuito
+impreso), texturas dibujadas en código para suelo, corte, follaje y agua, árboles con copas de varios
+bultos y sombras del sol. Los reflejos de un cielo degradado van solo en metal, vidrio y agua.
+**Por qué.** El usuario pidió una figura más realista sin descargar modelos; se eligió el nivel que
+no añade peso de carga ni movimiento decorativo.
+**Qué arrastró.** D19 (revisión), `dispositivo/README.md`, `CLAUDE.md`, `escena.js?v=10` en el
+`index.html` del simulador.
+**Impacto en otros módulos.** Ninguno: el mapa muestra el simulador por URL y la lógica no cambió.
+
+---
+
 ## 2026-11-24 · M7: el panel muestra hasta dónde llega la contaminación
 
 **Qué cambió.** El expediente de cada alerta pide `GET /alertas/<c_alerta>/prediccion` (M3, servida

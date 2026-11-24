@@ -52,6 +52,16 @@ select { font: inherit; font-size: 13px; color: var(--tinta); background: var(--
 .rot3d .val:empty { display: none; }
 .rot3d .val.mal { color: var(--alarma); }
 @container (max-width: 640px) { .rot3d .eq { display: none; } }
+/* sondas: se abren con un clic; en la vista de cerca, un rótulo por sensor con su línea */
+.escena3d canvas.apunta { cursor: pointer; }
+.rot3d.clic { pointer-events: auto; cursor: pointer; }
+.rot3d.clic:hover b { text-decoration: underline; text-underline-offset: 2px; }
+.rot3d.sensor { text-shadow: 0 0 3px #fff, 0 0 3px #fff, 0 0 4px #fff, 0 0 6px #fff; }
+.rot3d.sensor .eq { display: block; color: var(--tinta); font-weight: 400; }
+.rot3d.sensor .val { color: var(--tinta); font-weight: 500; }
+.lineas3d { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.lineas3d polyline { fill: none; stroke: var(--tinta); stroke-width: 0.8; }
+.volver3d { position: absolute; top: 10px; left: 10px; }
 
 /* lo que recibe la plataforma: pestañas con el último valor y la línea de tiempo */
 .recepcion svg { width: 100%; height: auto; display: block; font-family: var(--cuerpo); font-variant-numeric: tabular-nums; }

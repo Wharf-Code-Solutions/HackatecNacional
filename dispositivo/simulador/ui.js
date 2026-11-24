@@ -110,8 +110,7 @@
   function dibuja(s) {
     $('relojFecha').textContent = M.iso(s.fw.t).substr(0, 10);
     $('relojHora').textContent = M.iso(s.fw.t).substr(11, 8);
-    var al = alarmaVigente(s);
-    Escena.pinta(s, { alarma: al });
+    var al = estado.alarma = alarmaVigente(s);
     Recepcion.pinta(s);
     var linea = $('alarmaLinea');
     linea.hidden = !al;
@@ -121,10 +120,17 @@
   function bucle(ahora) {
     var dt = (ahora - estado.ultimo) / 1000; estado.ultimo = ahora;
     if (!estado.pausa) {
-      dt = Math.min(dt, 0.25) * estado.vel;
+      // En la vista de cerca de las sondas, el calentamiento y la medición van a tiempo real para
+      // que se vea cada sonda estabilizarse y tomar sus cinco lecturas; el resto, a la velocidad elegida.
+      var v = estado.vel, fase = actual().fw.fase.nombre;
+      if (Escena.vista() === 'sondas' && (fase === 'CALENTAMIENTO' || fase === 'MEDICIÓN')) v = 1;
+      dt = Math.min(dt, 0.25) * v;
       estado.est.forEach(function (e) { estado.por[e.c_estacion].fw.tick(dt); });
     }
+    // Textos y gráficas 20 veces por segundo; la figura 3D en cada cuadro, para que girar y el
+    // viaje del paquete se vean fluidos.
     if (ahora - ultimoPintado > 50) { ultimoPintado = ahora; dibuja(actual()); }
+    Escena.pinta(actual(), { alarma: estado.alarma });
     requestAnimationFrame(bucle);
   }
 })();

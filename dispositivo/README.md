@@ -9,11 +9,13 @@ completa, con rangos, consumos y lo que falta validar, está en
 ```
 ficha-tecnica.md          los cuatro bloques, el ciclo del firmware, lo medido y lo supuesto
 simulador/
-  modelo.js               el agua, las sondas, la energía y el enlace (lo que no es firmware)
+  modelo.js               el agua (incluida la velocidad de la corriente, simulada), las sondas, la energía
+                          y el enlace (lo que no es firmware)
   firmware.js             la máquina de estados del ESP32: dormir, medir, guardar, enviar
   montaje.js              arma una estación desde los fixtures del contrato
   prueba.js               siete pruebas en Node, sin dependencias
-  escena.js               la figura en 3D (Three.js): valle con el río en su cauce de taludes, agua turbia
+  escena.js               la figura en 3D (Three.js, materiales físicos, texturas dibujadas en código
+                          y sombras): valle con el río en su cauce de taludes, agua turbia
                           que cambia con la turbiedad, las sondas, el gabinete abierto
                           (controlador, SD, módem, baterías), panel, antena y la torre celular
   recepcion.js            lo que recibe la plataforma: línea de tiempo de 12 h, ● recibida, ○ en la SD
