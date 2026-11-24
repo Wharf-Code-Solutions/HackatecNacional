@@ -21,6 +21,28 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · M7: el mapa de la red de estaciones es el mismo que el de mapa/
+
+**Qué cambió.** "La red de estaciones" del panel deja el SVG dibujado y usa el mapa del módulo M6:
+MapLibre con la base positron de OpenFreeMap (sus ríos y rótulos de calles apagados), las mismas
+capas del INEGI (máscara y contorno de la cuenca, subcuencas, red hidrográfica por orden, nombres de
+ríos, confluencias), los 219 sitios de CONAGUA y el mismo marcador de estación (negro, rojo con una
+alerta por atender). Nuevo `panel/src/graficas/MapaEstaciones.jsx`; `scripts/copiar-datos.mjs` copia
+las capas de `datos/procesados/mapa/`. No importa código de `mapa/`: lee los mismos archivos.
+
+**Diferencias con mapa/.** Un clic en una estación filtra la lista de alertas del panel (en mapa/
+abre el simulador). Encuadra las 5 estaciones, no toda la cuenca. El zoom con la rueda pide Ctrl,
+para no secuestrar el desplazamiento de la página.
+
+**Por qué.** El equipo pidió el mismo mapa que el módulo del mapa en lugar de uno dibujado.
+
+**Verificación.** Escritorio, 375 px sin desborde y modo demostración sin llamadas al backend; el
+clic en la estación 2 filtró la lista (0 de 5 alertas) y la marcó como elegida.
+
+**Pendiente.** El mapa de la pluma ("Hasta dónde llega") sigue en SVG (`MapaRed.jsx`).
+
+---
+
 ## 2026-11-24 · M7: plantilla del SND y más gráficas en el panel
 
 **Qué cambió.** El panel enlaza la hoja de estilos del Sistema Nacional de Diseño, tema guinda (D31):

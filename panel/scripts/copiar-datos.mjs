@@ -18,6 +18,13 @@ const ARCHIVOS = [
   'datos/procesados/red/sitio_aguas_abajo.csv',
   'datos/procesados/red/sitio_pares.csv',
   'contrato/fixtures/sitios.geojson',
+  // Las capas del modulo del mapa (M6, scripts/60_red_para_mapa.py): el mapa de la red del panel
+  // usa las mismas, con la misma base, para verse igual que mapa/.
+  'datos/procesados/mapa/cuenca.geojson',
+  'datos/procesados/mapa/subcuencas.geojson',
+  'datos/procesados/mapa/red_hidrografica.geojson',
+  'datos/procesados/mapa/confluencias.geojson',
+  'datos/procesados/mapa/toponimia_hidrografica.geojson',
 ];
 
 // Para el mapa del panel: la red hidrografica completa pesa 2 MB. Se recorta a los rios de

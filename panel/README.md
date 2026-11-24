@@ -68,6 +68,8 @@ npm run capturar-demo
 
 - **Resumen** con su hora de corte: críticas por atender, por atender, sin responsable y
   estaciones con falla técnica.
+- **Mapa de la red de estaciones**, el mismo de `mapa/` (MapLibre y las capas del INEGI); un clic en
+  una estación filtra la lista de alertas.
 - **Panorama** con cinco gráficas: alertas por hora del día, matriz estación × sonda (la
   última lectura sobre, dentro o bajo lo habitual del sitio), alertas por atender por estación,
   alertas por parámetro y avance de la atención. Pasa el cursor sobre una marca para ver el dato.
@@ -92,7 +94,8 @@ npm run capturar-demo
 src/
   App.jsx               pestañas, filtros y alerta elegida
   componentes/          Resumen, Panorama, TablaEstaciones, ListaAlertas, Expediente, Avisos, Reportes, Tooltip
-  graficas/             SVG a mano: GraficaHoras, MatrizEstaciones, BarrasH, BarraAtencion, Serie, Miniaturas
+  graficas/             SVG a mano (GraficaHoras, MatrizEstaciones, BarrasH, BarraAtencion, Serie, Miniaturas,
+                        Huella, Llegadas, MapaRed para la pluma) y MapaEstaciones (MapLibre, el mapa de mapa/)
   lib/datos.js          lectura de tablas, sondeo del backend cada 3 s, modo demostración, guardado
   lib/etiquetas.js      textos y colores (paleta del SND, validada para daltonismo)
   lib/formato.js        fechas, números, CSV

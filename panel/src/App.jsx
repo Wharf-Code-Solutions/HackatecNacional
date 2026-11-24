@@ -131,7 +131,8 @@ export default function App() {
             {seccion === 'monitoreo' && vista === 'alertas' && (
               <section className="vista">
                 <Resumen alertas={be.alertas} veredictos={be.veredictos} totalEstaciones={codigos.length} corte={corte} />
-                <Panorama alertas={be.alertas} veredictos={be.veredictos} corte={corte} />
+                <Panorama alertas={be.alertas} veredictos={be.veredictos} corte={corte} elegida={filtros.estacion}
+                  onElegir={(c) => setFiltros({ ...filtros, estacion: filtros.estacion === c ? 'todas' : c })} />
                 <TablaEstaciones alertas={be.alertas} veredictos={be.veredictos} elegida={filtros.estacion}
                   onElegir={(c) => setFiltros({ ...filtros, estacion: c })} />
                 <div className="trabajo">

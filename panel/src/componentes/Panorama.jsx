@@ -5,7 +5,7 @@ import BarraAtencion from '../graficas/BarraAtencion.jsx';
 import BarrasH from '../graficas/BarrasH.jsx';
 import GraficaHoras from '../graficas/GraficaHoras.jsx';
 import Huella from '../graficas/Huella.jsx';
-import MapaRed from '../graficas/MapaRed.jsx';
+import MapaEstaciones from '../graficas/MapaEstaciones.jsx';
 import MatrizEstaciones from '../graficas/MatrizEstaciones.jsx';
 
 function Tarjeta({ titulo, subtitulo, ancha, children }) {
@@ -18,8 +18,8 @@ function Tarjeta({ titulo, subtitulo, ancha, children }) {
   );
 }
 
-export default function Panorama({ alertas, veredictos, corte }) {
-  const { estaciones, lineaBase, sitios, rios } = useDatos();
+export default function Panorama({ alertas, veredictos, corte, elegida, onElegir }) {
+  const { estaciones, lineaBase } = useDatos();
   const porEstacion = Object.keys(estaciones).sort().map((c) => {
     const partes = {};
     let total = 0;
@@ -35,8 +35,8 @@ export default function Panorama({ alertas, veredictos, corte }) {
 
   return (
     <div className="panorama">
-      <Tarjeta titulo="La red de estaciones" subtitulo="Ríos principales (INEGI), sitios oficiales de CONAGUA y las 5 estaciones con su alerta más grave abierta.">
-        <MapaRed estaciones={estaciones} sitios={sitios} rios={rios} alertas={alertas} />
+      <Tarjeta titulo="La red de estaciones" subtitulo="El mapa de la cuenca. En rojo, las estaciones con una alerta por atender; un clic filtra la lista de alertas.">
+        <MapaEstaciones estaciones={estaciones} alertas={alertas} elegida={elegida} onElegir={onElegir} />
       </Tarjeta>
       <Tarjeta titulo="Cómo están las estaciones ahora" subtitulo="Última lectura de cada sonda frente a la historia de su sitio.">
         <MatrizEstaciones estaciones={estaciones} lineaBase={lineaBase} veredictos={veredictos} corte={corte} />

@@ -305,3 +305,19 @@ ul.lista { margin: 8px 0 0; padding-left: 20px; font-size: 14px; }
 button.enlace { background: none; border: 0; padding: 0; color: var(--principal); text-decoration: underline; cursor: pointer; font: inherit; font-size: 13px; }
 .tabla-desliza select { min-width: 9em; }
 .subnav-vacio { height: 20px; }
+
+/* ---------------------------------------------------------------- mapa de la red (el de mapa/, M6) */
+.mapa-estaciones { position: relative; border-radius: 4px; overflow: hidden; border: 1px solid var(--linea); }
+.mapa-estaciones-lienzo { height: 420px; background: #e9edef; }
+/* Marcador de estacion igual que en mapa/estilos.css: circulo en tinta, rojo con alerta. */
+.est-marca { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+.est-marca .punto { width: 26px; height: 26px; border-radius: 50%; background: #16222c; color: #fff; border: 2px solid #fff;
+  box-shadow: 0 0 0 1px #16222c; display: grid; place-items: center; font-weight: 700; font-size: 13px; }
+.est-marca.alerta .punto { background: #b3261e; box-shadow: 0 0 0 1px #b3261e; }
+.est-marca.activa .punto { box-shadow: 0 0 0 3px #1d6fa5; }
+.est-marca .nombre { white-space: nowrap; font-size: 12.5px; font-weight: 600; color: #16222c;
+  text-shadow: 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff; display: none; }
+.mapa-estaciones-lienzo.zoom-cerca .est-marca .nombre { display: block; }
+.mapa-estaciones .maplibregl-popup-content { font-size: 13px; padding: 8px 10px; border-radius: 3px; }
+.mapa-estaciones .maplibregl-popup-tip { display: none; }
+@media (max-width: 700px) { .mapa-estaciones-lienzo { height: 340px; } }
