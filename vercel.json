@@ -1,8 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
-  "installCommand": "npm --prefix panel ci",
-  "buildCommand": "npm --prefix panel run build",
+  "installCommand": "cd panel && npm ci",
+  "buildCommand": "cd panel && npm run build",
   "outputDirectory": "panel/dist",
   "functions": {
     "api/index.py": {
