@@ -44,7 +44,10 @@ Leyenda de "editable":
 | `contrato/fixtures/mecanismos.json` | Los 5 mecanismos (estación + colector) reubicados junto a escuelas rurales, forma de estación v2.0 (docs/19 §5). Los leen simulador, mapa, motor y mock | `99_reubicacion.py`, de `escuelas.json` y la red de asignación | **NO** |
 | `contrato/fixtures/linea_base.json` | Banda de esas 5 estaciones | — | **NO** |
 | `contrato/fixtures/sitios.geojson` | Los 219 sitios para el mapa | — | **NO** |
-| `contrato/fixtures/escenarios/*.json` | 5 escenarios de un día | — | **NO** |
+| `contrato/fixtures/escuelas_ladera.json` | Las 5 escuelas con módulo de ladera (`EST-LAD-01..05`), su criterio y sus escuelas protegidas (docs/20 §3.2). Lo lee `99_reubicacion.py` | `100_escuelas_ladera.py` | **NO** |
+| `contrato/fixtures/lluvia_sitios.json` | Lluvia diaria típica de temporada y percentiles de tormenta (p50, p90, p99) en cada escuela con módulo de ladera, de NASA POWER/IMERG (docs/20 §3.3) | `101_lluvia_sitios.py`, de `datos/crudos/F21` | **NO** |
+| `contrato/fixtures/umbrales_lluvia.json` | Umbrales de lluvia (24 h y 72 h), humedad e inclinación con la fuente de cada uno; hipótesis | `101_lluvia_sitios.py` | **NO** |
+| `contrato/fixtures/escenarios/*.json` | 8 escenarios: 5 de agua de un día y 3 de ladera (`tormenta_ladera`, `lluvia_prolongada`, `deslave`, de EST-LAD-01) | los de ladera, `102_escenarios_ladera.py` | **NO** los de ladera |
 
 Los fixtures los genera `scripts/40_generar_fixtures.py`.
 
@@ -194,6 +197,9 @@ El prefijo numérico indica el orden de ejecución. `_comun.py` no se ejecuta so
 | `scripts/99_reubicacion.py` | Reubica los 5 mecanismos: escuelas con cauce a menos de 2.5 km, por riesgo de contaminación, a más de 3 km entre sí; sitio CONAGUA aguas abajo y autorizaciones. **Fuente de verdad de `N_MECANISMOS`** | `escuelas.json`, `linea_base.json`, `sitio.csv`, `red/red_asignacion.json`, `mapa/red_hidrografica.geojson` | `contrato/fixtures/mecanismos.json`, `mapa/red_mecanismos.geojson` |
 | `scripts/97_escuelas_riesgo.py` | Índice de riesgo de escuelas (pesos como hipótesis; el índice es la suma del desglose). Escribe `escuelas.json` (las 400 de mayor riesgo) y `zonas_riesgo.geojson` (agrupadas a partir de los datos); con la lista provisional si no existe `factores_escuelas.csv` | `datos/procesados/escuelas/factores_escuelas.csv` | `contrato/fixtures/escuelas.json`, `zonas_riesgo.geojson` |
 | `scripts/98_escuelas_candidatas.py` | Escuelas públicas rurales de Puebla (catálogo SEP) con un puntaje por factor: pendiente, urbanización reciente, fuente contaminante cercana, calidad del agua, sin drenaje y marginación | `datos/crudos/F12`, `F16`, `F17`, `F18`, `F19` | `datos/procesados/escuelas/factores_escuelas.csv` |
+| `scripts/100_escuelas_ladera.py` | Elige las 5 escuelas con módulo de ladera: `riesgo.derrumbe` ≥ 0.7 y susceptibilidad CENAPRED Alta o Muy alta, a más de 5 km entre sí; `INCL` solo con Muy alta. **Fuente de verdad del criterio de ladera** | `escuelas.json`, `factores_escuelas.csv`, `mecanismos.json` | `escuelas_ladera.json` |
+| `scripts/101_lluvia_sitios.py` | Lluvia por sitio (percentiles de temporada) y umbrales de lluvia, humedad e inclinación con su fuente. **Fuente de verdad de los umbrales de derrumbe** | `datos/crudos/F21`, `escuelas_ladera.json` | `lluvia_sitios.json`, `umbrales_lluvia.json` |
+| `scripts/102_escenarios_ladera.py` | Los tres escenarios sintéticos del módulo de ladera, con paquetes `LLUVIA`, `HUM_SUELO` e `INCL` | — | `escenarios/tormenta_ladera.json`, `lluvia_prolongada.json`, `deslave.json` |
 | `scripts/70_topologia_red.py` | **M1.** Engancha los sitios a la red del INEGI, orienta los tramos y calcula el siguiente sitio aguas abajo. **Fuente de verdad de la topología** | `datos/geo/`, `sitio.csv` | `datos/procesados/red/`, `docs/13-...` |
 | `scripts/80_propagacion.py` | **M3.** Calibra la atenuación con los datos, calcula ventanas de llegada y produce la predicción. **Fuente de verdad de la velocidad supuesta y del alcance útil** | `red/`, `muestreo_nucleo.csv` | `red/atenuacion_observada.csv`, `red/tiempo_viaje.csv`, `contrato/fixtures/prediccion_ejemplo.json`, `docs/14-...` |
 | `motor/reglas.py` | **M2.** `evaluar(paquete) → veredicto`. **Fuente de verdad de los umbrales de deteccion y de la firma de fuente probable** | fixtures, `umbral.csv` | nada en disco |

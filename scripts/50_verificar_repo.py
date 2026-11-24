@@ -236,7 +236,10 @@ if os.path.exists(ruta_esq) and os.path.exists(ruta_par):
                   ['c_parametro']['enum'])
     with open(ruta_par, encoding='utf-8-sig') as f:
         std = {r['c_parametro_std'] for r in csv.DictReader(f) if r['c_parametro_std']}
-    faltan = codigos - std
+    # Los sensores de ladera (docs/20) no son calidad de agua: no tienen clave CONAGUA ni linea base; el motor
+    # los compara contra umbrales, no contra la banda de un sitio.
+    SIN_CLAVE_CONAGUA = {'LLUVIA', 'HUM_SUELO', 'INCL'}
+    faltan = codigos - std - SIN_CLAVE_CONAGUA
     if faltan:
         falla('codigos del contrato', 'sin equivalente CONAGUA en parametro.csv: '
                                      '{}'.format(sorted(faltan)))

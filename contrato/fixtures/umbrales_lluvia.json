@@ -1,0 +1,42 @@
+{
+ "version": "0.1-propuesta",
+ "_provisional": true,
+ "aviso": "HIPÓTESIS. No hay umbral publicado de lluvia para deslaves en la Sierra Norte de Puebla; estos valores ordenan la vigilancia, no predicen un deslave. Se calibran con la primera temporada de datos del pluviómetro.",
+ "lluvia": {
+  "descripcion": "Lluvia acumulada (suma de LLUVIA de los paquetes) en ventanas móviles de 24 h y 72 h. Un nivel se alcanza cuando se cumple CUALQUIERA de sus dos ventanas.",
+  "niveles": [
+   {
+    "nivel": "Informativa",
+    "acumulada_24h_mm": "p99_sitio",
+    "acumulada_72h_mm": "p99_sitio_3_dias",
+    "origen": "Historia del propio sitio (lluvia_sitios.json): el p99 de la lluvia diaria en días con lluvia de la temporada y el p99 de la lluvia de 3 días. Es satélite, puede quedar bajo la lluvia real. Mismo principio que el resto del proyecto: desviación respecto de la historia del punto.",
+    "tipo": "percentil_del_sitio"
+   },
+   {
+    "nivel": "Preventiva",
+    "acumulada_24h_mm": 103.0,
+    "acumulada_72h_mm": 201.0,
+    "origen": "Mínimo global de intensidad-duración de Caine (1980) evaluado en D = 24 h y D = 72 h (I·D = 14.82 · D^0.61). Caine, N. (1980), \"The rainfall intensity-duration control of shallow landslides and debris flows\", Geografiska Annaler 62A. Ecuación tomada de su cita en Vennari et al. (2014), Nat. Hazards Earth Syst. Sci. 14, 317-330: I = 14.82 · D^-0.39, mínimo global de 73 eventos; por debajo, la actividad de deslizamientos es poco probable.",
+    "tipo": "minimo_global_literatura"
+   },
+   {
+    "nivel": "Critica",
+    "acumulada_24h_mm": 360.0,
+    "acumulada_72h_mm": 660.0,
+    "origen": "Lluvia que sí detonó miles de deslaves en la zona: 360 mm en un día y 660 mm en dos días (300 + 360) en Teziutlán, octubre de 1999. La segunda cifra se usa como cota para la ventana de 72 h (en 72 h cayó al menos eso). Flores-Lorenzo y Alcántara-Ayala (2002), Investigaciones Geográficas 49, 7-26: en Teziutlán cayeron 300 mm el 4 y 360 mm el 5 de octubre de 1999. Lugo-Hubp et al. (2005), Rev. Mex. Ciencias Geológicas 22(2), 212-228: 743 mm del 3 al 6 de octubre en Teziutlán y 844 mm en Zacapoaxtla; \"no se puede determinar un umbral de precipitación absoluto\".",
+    "tipo": "evento_observado"
+   }
+  ],
+  "ventana_de_los_percentiles": "p99_sitio y p99_sitio_3_dias se leen de lluvia_sitios.json: temporada.lluvia_diaria_dia_con_lluvia_mm.p99 y temporada.lluvia_3_dias_mm.p99"
+ },
+ "humedad_suelo": {
+  "cerca_de_saturacion_pct": 45.0,
+  "fuente": "ninguna publicada: supuesto de diseño de docs/20 §4 (el suelo satura alrededor de 45-50 %). Depende del suelo de cada ladera; calibrar con la primera temporada."
+ },
+ "inclinacion": {
+  "aviso_grados": 0.5,
+  "critico_grados": 2.0,
+  "fuente": "ninguna publicada: 10 y 40 veces el ruido de diseño del sensor (±0.05°, docs/20 §2). INCL es el cambio respecto de la instalación, no la inclinación absoluta."
+ },
+ "combinacion_propuesta": "Lluvia al nivel Preventiva con suelo cerca de saturación sube a Critica; un cambio de INCL de aviso con lluvia o suelo saturado es Preventiva, y un cambio crítico es Critica sin más. Es una propuesta para el motor (docs/20 §5), no está implementada."
+}

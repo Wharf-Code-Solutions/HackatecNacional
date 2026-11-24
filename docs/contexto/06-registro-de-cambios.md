@@ -21,6 +21,31 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Módulo A: datos y escenarios del módulo de ladera (docs/20 §3)
+
+**Qué cambió.** (1) Criterio y lista de las 5 escuelas con módulo de ladera (`100_escuelas_ladera.py` → `escuelas_ladera.json`):
+`riesgo.derrumbe` ≥ 0.7 y susceptibilidad CENAPRED Alta o Muy alta, a más de 5 km entre sí, `INCL` solo con Muy alta; salen 248
+elegibles (56 Muy alta) y 5 módulos en la Sierra Norte (Jopala, Xicotepec, Huitzilan de Serdán, Pahuatlán, Xochitlán). (2) Lluvia
+por sitio (`101_lluvia_sitios.py` → `lluvia_sitios.json`) de NASA POWER/IMERG 2001-2025 en esos 5 puntos (fuente F21), y los
+umbrales detonantes (`umbrales_lluvia.json`): Informativa = p99 del sitio, Preventiva = mínimo global de Caine (1980; 103 mm en
+24 h, 201 mm en 72 h), Crítica = lluvia de Teziutlán en octubre de 1999 (360 mm en 24 h, 660 mm en dos días). (3) Tres
+escenarios (`102_escenarios_ladera.py`): `tormenta_ladera`, `lluvia_prolongada` y `deslave`, de EST-LAD-01. (4) Los códigos
+`LLUVIA`, `HUM_SUELO` e `INCL` entran al `enum` de `lectura.schema.json` y `estacion.schema.json`; la comprobación I5 de
+`50_verificar_repo.py` los exime de la clave CONAGUA.
+**Por qué.** docs/20 pide estos insumos para que el grupo agregue los sensores al simulador y las reglas al motor. No hay umbral
+publicado de lluvia para deslaves en la Sierra Norte (Lugo-Hubp et al., 2005, dicen que no se puede fijar uno absoluto): los
+umbrales son hipótesis con la fuente de cada número, y los de humedad (45 %) e inclinación (0.5° y 2°) son supuestos de
+diseño sin fuente. La lluvia es de satélite: subestima tormentas de montaña (930 a 1 376 mm/año en los 5 puntos).
+**Qué arrastró.** `00_descargar_fuentes.py` (F21), `datos/bitacora.md`, `docs/04-fuentes-de-datos.md`, `02-mapa-del-repo.md`.
+Compatible: los paquetes del agua siguen siendo válidos. Las alertas de ladera y `escuelas_afectadas` **no** están hechas:
+`motor/reglas.py` y `alerta.schema.json` quedan para el grupo. Nota: el ejemplo de docs/20 §3.1 trae `bateria: 3.95` y el
+contrato exige un entero 0-100.
+**Impacto en otros módulos.** Dispositivo y simulador: pueden usar `LLUVIA`, `HUM_SUELO` e `INCL`, y leer `escuelas_ladera.json`
+(que `99_reubicacion.py` convierta en `EST-LAD-`) y `lluvia_sitios.json`. Motor y backend: leer `umbrales_lluvia.json` y los
+escenarios nuevos. EST-LAD-03 y 05 comparten celda de IMERG y por eso la misma serie de lluvia.
+
+---
+
 ## 2026-11-24 · Módulo B: escuelas encimadas se agrupan en el mapa
 
 **Qué cambió.** `MapaEstaciones.jsx` junta las escuelas que comparten coordenada en un solo punto con el número de
@@ -42,6 +67,7 @@ al mapa, la lista de escuelas y las autorizaciones; el mapa abre centrado en la 
 **Qué arrastró.** Nada más; `escuelas.json` no se toca.
 **Impacto en otros módulos.** A: si todo el proyecto se limita a la cuenca, conviene filtrar en `97_escuelas_riesgo.py`
 para que la app ciudadana y el mapa usen las mismas escuelas.
+
 
 ---
 

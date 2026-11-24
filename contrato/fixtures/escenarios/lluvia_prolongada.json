@@ -1,0 +1,8072 @@
+{
+ "version": "1.0",
+ "escenario": "lluvia_prolongada",
+ "descripcion": "Cuatro días de lluvia moderada (65 a 95 mm por día). Ninguna ventana de 24 h pasa 103 mm pero la de 72 h pasa 201 mm, y el suelo llega cerca de saturación. Escenario sintético de EST-LAD-01. Esperado: alerta Preventiva por la ventana de 72 h; con la combinación propuesta (lluvia Preventiva + suelo cerca de saturación), Crítica. El inclinómetro no pasa su aviso.",
+ "estacion_del_evento": "EST-LAD-01",
+ "paquetes": [
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T00:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 30.84
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.005
+    }
+   ],
+   "bateria": 96,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T00:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 31.01
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.048
+    }
+   ],
+   "bateria": 96,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T00:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 30.62
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.003
+    }
+   ],
+   "bateria": 96,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T00:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 30.88
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.011
+    }
+   ],
+   "bateria": 96,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T01:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 31.09
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.044
+    }
+   ],
+   "bateria": 96,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T01:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 31.15
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.031
+    }
+   ],
+   "bateria": 96,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T01:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 30.99
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.017
+    }
+   ],
+   "bateria": 96,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T01:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 30.79
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.036
+    }
+   ],
+   "bateria": 96,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T02:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 31.04
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.007
+    }
+   ],
+   "bateria": 96,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T02:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 31.08
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.018
+    }
+   ],
+   "bateria": 96,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T02:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 30.95
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.015
+    }
+   ],
+   "bateria": 96,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T02:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 30.84
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.008
+    }
+   ],
+   "bateria": 96,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T03:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 30.9
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.011
+    }
+   ],
+   "bateria": 96,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T03:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 31.2
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.032
+    }
+   ],
+   "bateria": 96,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T03:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 30.91
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.026
+    }
+   ],
+   "bateria": 96,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T03:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 31.03
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.019
+    }
+   ],
+   "bateria": 96,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T04:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 30.92
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.026
+    }
+   ],
+   "bateria": 96,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T04:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 31.02
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.019
+    }
+   ],
+   "bateria": 96,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T04:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 30.99
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.049
+    }
+   ],
+   "bateria": 96,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T04:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 30.69
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.019
+    }
+   ],
+   "bateria": 96,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T05:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 30.97
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.002
+    }
+   ],
+   "bateria": 96,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T05:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 30.85
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.005
+    }
+   ],
+   "bateria": 96,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T05:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 31.24
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.01
+    }
+   ],
+   "bateria": 96,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T05:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 31.17
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.014
+    }
+   ],
+   "bateria": 96,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T06:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 31.16
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.016
+    }
+   ],
+   "bateria": 96,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T06:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 30.84
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.022
+    }
+   ],
+   "bateria": 96,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T06:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 30.99
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.022
+    }
+   ],
+   "bateria": 96,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T06:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 30.95
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.004
+    }
+   ],
+   "bateria": 96,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T07:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 30.94
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.022
+    }
+   ],
+   "bateria": 96,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T07:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 31.13
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.013
+    }
+   ],
+   "bateria": 96,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T07:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 30.93
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.021
+    }
+   ],
+   "bateria": 96,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T07:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 30.95
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.012
+    }
+   ],
+   "bateria": 96,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T08:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 31.1
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.057
+    }
+   ],
+   "bateria": 96,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T08:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 30.91
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.005
+    }
+   ],
+   "bateria": 96,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T08:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 30.96
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.006
+    }
+   ],
+   "bateria": 96,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T08:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 30.75
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.005
+    }
+   ],
+   "bateria": 96,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T09:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 31.0
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.039
+    }
+   ],
+   "bateria": 96,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T09:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 31.08
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.036
+    }
+   ],
+   "bateria": 96,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T09:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 30.95
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.037
+    }
+   ],
+   "bateria": 96,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T09:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 31.0
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.026
+    }
+   ],
+   "bateria": 96,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T10:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 31.13
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.024
+    }
+   ],
+   "bateria": 96,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T10:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 31.24
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.001
+    }
+   ],
+   "bateria": 96,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T10:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 31.42
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.065
+    }
+   ],
+   "bateria": 96,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T10:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 31.35
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.061
+    }
+   ],
+   "bateria": 96,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T11:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 31.7
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.015
+    }
+   ],
+   "bateria": 96,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T11:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 32.12
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.055
+    }
+   ],
+   "bateria": 96,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T11:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 32.23
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.037
+    }
+   ],
+   "bateria": 96,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T11:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 32.59
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.025
+    }
+   ],
+   "bateria": 96,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T12:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 32.91
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.049
+    }
+   ],
+   "bateria": 95,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T12:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 33.44
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.01
+    }
+   ],
+   "bateria": 95,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T12:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 33.71
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.047
+    }
+   ],
+   "bateria": 95,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T12:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 3.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 34.37
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.006
+    }
+   ],
+   "bateria": 95,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T13:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 3.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 34.55
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.047
+    }
+   ],
+   "bateria": 95,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T13:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 3.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 34.99
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.037
+    }
+   ],
+   "bateria": 95,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T13:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 35.48
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.045
+    }
+   ],
+   "bateria": 95,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T13:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 35.77
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.008
+    }
+   ],
+   "bateria": 95,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T14:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 35.72
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.002
+    }
+   ],
+   "bateria": 95,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T14:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 36.22
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.035
+    }
+   ],
+   "bateria": 95,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T14:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 36.37
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.031
+    }
+   ],
+   "bateria": 95,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T14:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 36.43
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.036
+    }
+   ],
+   "bateria": 95,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T15:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 36.74
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.0
+    }
+   ],
+   "bateria": 95,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T15:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 37.01
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.013
+    }
+   ],
+   "bateria": 95,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T15:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 36.73
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.01
+    }
+   ],
+   "bateria": 95,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T15:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 37.02
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.064
+    }
+   ],
+   "bateria": 95,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T16:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 37.0
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.014
+    }
+   ],
+   "bateria": 95,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T16:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 37.38
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.023
+    }
+   ],
+   "bateria": 95,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T16:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 37.33
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.033
+    }
+   ],
+   "bateria": 95,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T16:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 36.89
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.066
+    }
+   ],
+   "bateria": 95,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T17:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 36.92
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.009
+    }
+   ],
+   "bateria": 95,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T17:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 37.02
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.008
+    }
+   ],
+   "bateria": 95,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T17:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 36.75
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.035
+    }
+   ],
+   "bateria": 95,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T17:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 37.0
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.0
+    }
+   ],
+   "bateria": 95,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T18:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 36.91
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.013
+    }
+   ],
+   "bateria": 95,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T18:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 36.91
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.041
+    }
+   ],
+   "bateria": 95,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T18:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 37.01
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.029
+    }
+   ],
+   "bateria": 95,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T18:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 37.32
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.013
+    }
+   ],
+   "bateria": 95,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T19:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 37.07
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.012
+    }
+   ],
+   "bateria": 95,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T19:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 37.23
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.009
+    }
+   ],
+   "bateria": 95,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T19:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 37.2
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.023
+    }
+   ],
+   "bateria": 95,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T19:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 37.46
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.015
+    }
+   ],
+   "bateria": 95,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T20:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 37.79
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.032
+    }
+   ],
+   "bateria": 95,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T20:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 37.89
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.053
+    }
+   ],
+   "bateria": 95,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T20:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.17
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.079
+    }
+   ],
+   "bateria": 95,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T20:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.32
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.044
+    }
+   ],
+   "bateria": 95,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T21:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.45
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.011
+    }
+   ],
+   "bateria": 95,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T21:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.58
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.048
+    }
+   ],
+   "bateria": 95,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T21:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.87
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.045
+    }
+   ],
+   "bateria": 95,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T21:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.89
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.01
+    }
+   ],
+   "bateria": 95,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T22:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.79
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.035
+    }
+   ],
+   "bateria": 95,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T22:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 39.09
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.015
+    }
+   ],
+   "bateria": 95,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T22:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 39.11
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.037
+    }
+   ],
+   "bateria": 95,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T22:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 39.01
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.004
+    }
+   ],
+   "bateria": 95,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T23:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.97
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.084
+    }
+   ],
+   "bateria": 95,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T23:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 39.16
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.011
+    }
+   ],
+   "bateria": 95,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T23:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.8
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.011
+    }
+   ],
+   "bateria": 95,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-20T23:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.98
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.055
+    }
+   ],
+   "bateria": 95,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T00:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 39.04
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.033
+    }
+   ],
+   "bateria": 94,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T00:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.74
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.001
+    }
+   ],
+   "bateria": 94,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T00:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.78
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.022
+    }
+   ],
+   "bateria": 94,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T00:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.91
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.005
+    }
+   ],
+   "bateria": 94,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T01:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.78
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.006
+    }
+   ],
+   "bateria": 94,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T01:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.67
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.003
+    }
+   ],
+   "bateria": 94,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T01:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.73
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.049
+    }
+   ],
+   "bateria": 94,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T01:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.66
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.077
+    }
+   ],
+   "bateria": 94,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T02:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.75
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.004
+    }
+   ],
+   "bateria": 94,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T02:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.66
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.006
+    }
+   ],
+   "bateria": 94,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T02:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.77
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.013
+    }
+   ],
+   "bateria": 94,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T02:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.59
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.006
+    }
+   ],
+   "bateria": 94,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T03:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.65
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.035
+    }
+   ],
+   "bateria": 94,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T03:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.68
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.011
+    }
+   ],
+   "bateria": 94,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T03:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.72
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.018
+    }
+   ],
+   "bateria": 94,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T03:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.49
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.044
+    }
+   ],
+   "bateria": 94,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T04:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.54
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.038
+    }
+   ],
+   "bateria": 94,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T04:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.51
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.004
+    }
+   ],
+   "bateria": 94,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T04:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.71
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.018
+    }
+   ],
+   "bateria": 94,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T04:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.61
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.076
+    }
+   ],
+   "bateria": 94,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T05:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.45
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.045
+    }
+   ],
+   "bateria": 94,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T05:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.51
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.044
+    }
+   ],
+   "bateria": 94,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T05:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.51
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.032
+    }
+   ],
+   "bateria": 94,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T05:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.45
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.063
+    }
+   ],
+   "bateria": 94,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T06:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.62
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.006
+    }
+   ],
+   "bateria": 94,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T06:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.23
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.052
+    }
+   ],
+   "bateria": 94,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T06:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.66
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.017
+    }
+   ],
+   "bateria": 94,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T06:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.58
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.012
+    }
+   ],
+   "bateria": 94,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T07:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.49
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.008
+    }
+   ],
+   "bateria": 94,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T07:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.32
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.035
+    }
+   ],
+   "bateria": 94,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T07:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.14
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.0
+    }
+   ],
+   "bateria": 94,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T07:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.42
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.037
+    }
+   ],
+   "bateria": 94,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T08:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.51
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.033
+    }
+   ],
+   "bateria": 94,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T08:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.37
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.023
+    }
+   ],
+   "bateria": 94,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T08:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.44
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.004
+    }
+   ],
+   "bateria": 94,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T08:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.27
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.051
+    }
+   ],
+   "bateria": 94,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T09:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.36
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.006
+    }
+   ],
+   "bateria": 94,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T09:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.26
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.028
+    }
+   ],
+   "bateria": 94,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T09:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.16
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.011
+    }
+   ],
+   "bateria": 94,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T09:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.06
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.073
+    }
+   ],
+   "bateria": 94,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T10:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.19
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.022
+    }
+   ],
+   "bateria": 94,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T10:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.41
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.003
+    }
+   ],
+   "bateria": 94,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T10:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.53
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.024
+    }
+   ],
+   "bateria": 94,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T10:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.63
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.027
+    }
+   ],
+   "bateria": 94,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T11:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.76
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.033
+    }
+   ],
+   "bateria": 94,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T11:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 38.99
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.028
+    }
+   ],
+   "bateria": 94,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T11:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 39.18
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.012
+    }
+   ],
+   "bateria": 94,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T11:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 39.37
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.017
+    }
+   ],
+   "bateria": 94,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T12:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 39.5
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.012
+    }
+   ],
+   "bateria": 93,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T12:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 3.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 39.87
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.043
+    }
+   ],
+   "bateria": 93,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T12:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 3.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 40.12
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.014
+    }
+   ],
+   "bateria": 93,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T12:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 4.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 40.37
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.005
+    }
+   ],
+   "bateria": 93,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T13:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 4.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 40.81
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.011
+    }
+   ],
+   "bateria": 93,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T13:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 3.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 40.89
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.059
+    }
+   ],
+   "bateria": 93,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T13:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 3.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 41.25
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.005
+    }
+   ],
+   "bateria": 93,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T13:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 3.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 41.32
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.092
+    }
+   ],
+   "bateria": 93,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T14:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 41.57
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.0
+    }
+   ],
+   "bateria": 93,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T14:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.01
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.019
+    }
+   ],
+   "bateria": 93,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T14:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.26
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.032
+    }
+   ],
+   "bateria": 93,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T14:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.19
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.007
+    }
+   ],
+   "bateria": 93,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T15:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.17
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.015
+    }
+   ],
+   "bateria": 93,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T15:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.04
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.034
+    }
+   ],
+   "bateria": 93,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T15:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.32
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.006
+    }
+   ],
+   "bateria": 93,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T15:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.44
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.003
+    }
+   ],
+   "bateria": 93,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T16:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.39
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.012
+    }
+   ],
+   "bateria": 93,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T16:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.31
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.005
+    }
+   ],
+   "bateria": 93,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T16:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.43
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.008
+    }
+   ],
+   "bateria": 93,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T16:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.25
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.009
+    }
+   ],
+   "bateria": 93,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T17:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.33
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.011
+    }
+   ],
+   "bateria": 93,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T17:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.23
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.011
+    }
+   ],
+   "bateria": 93,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T17:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.19
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.029
+    }
+   ],
+   "bateria": 93,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T17:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.43
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.034
+    }
+   ],
+   "bateria": 93,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T18:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.36
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.015
+    }
+   ],
+   "bateria": 93,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T18:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.26
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.047
+    }
+   ],
+   "bateria": 93,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T18:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.07
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.002
+    }
+   ],
+   "bateria": 93,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T18:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.33
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.019
+    }
+   ],
+   "bateria": 93,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T19:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.34
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.075
+    }
+   ],
+   "bateria": 93,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T19:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.45
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.025
+    }
+   ],
+   "bateria": 93,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T19:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.6
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.051
+    }
+   ],
+   "bateria": 93,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T19:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.44
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.023
+    }
+   ],
+   "bateria": 93,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T20:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.74
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.025
+    }
+   ],
+   "bateria": 93,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T20:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.86
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.008
+    }
+   ],
+   "bateria": 93,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T20:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 3.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.07
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.009
+    }
+   ],
+   "bateria": 93,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T20:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 3.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.22
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.005
+    }
+   ],
+   "bateria": 93,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T21:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.27
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.032
+    }
+   ],
+   "bateria": 93,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T21:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.53
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.04
+    }
+   ],
+   "bateria": 93,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T21:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.37
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.005
+    }
+   ],
+   "bateria": 93,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T21:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.79
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.009
+    }
+   ],
+   "bateria": 93,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T22:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.69
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.02
+    }
+   ],
+   "bateria": 93,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T22:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.64
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.017
+    }
+   ],
+   "bateria": 93,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T22:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.43
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.005
+    }
+   ],
+   "bateria": 93,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T22:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.41
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.008
+    }
+   ],
+   "bateria": 93,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T23:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.36
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.034
+    }
+   ],
+   "bateria": 93,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T23:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.52
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.007
+    }
+   ],
+   "bateria": 93,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T23:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.52
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.003
+    }
+   ],
+   "bateria": 93,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-21T23:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.52
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.024
+    }
+   ],
+   "bateria": 93,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T00:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.42
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.003
+    }
+   ],
+   "bateria": 92,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T00:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.35
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.039
+    }
+   ],
+   "bateria": 92,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T00:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.08
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.025
+    }
+   ],
+   "bateria": 92,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T00:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.24
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.022
+    }
+   ],
+   "bateria": 92,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T01:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.35
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.029
+    }
+   ],
+   "bateria": 92,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T01:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.21
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.028
+    }
+   ],
+   "bateria": 92,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T01:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.35
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.03
+    }
+   ],
+   "bateria": 92,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T01:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.19
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.063
+    }
+   ],
+   "bateria": 92,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T02:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.31
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.016
+    }
+   ],
+   "bateria": 92,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T02:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.29
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.002
+    }
+   ],
+   "bateria": 92,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T02:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.76
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.039
+    }
+   ],
+   "bateria": 92,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T02:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.0
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.005
+    }
+   ],
+   "bateria": 92,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T03:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.2
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.017
+    }
+   ],
+   "bateria": 92,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T03:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.17
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.017
+    }
+   ],
+   "bateria": 92,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T03:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.96
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.013
+    }
+   ],
+   "bateria": 92,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T03:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.98
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.027
+    }
+   ],
+   "bateria": 92,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T04:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.03
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.006
+    }
+   ],
+   "bateria": 92,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T04:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.06
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.011
+    }
+   ],
+   "bateria": 92,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T04:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.02
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.015
+    }
+   ],
+   "bateria": 92,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T04:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.73
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.048
+    }
+   ],
+   "bateria": 92,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T05:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.73
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.003
+    }
+   ],
+   "bateria": 92,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T05:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.66
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.018
+    }
+   ],
+   "bateria": 92,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T05:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.7
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.021
+    }
+   ],
+   "bateria": 92,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T05:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.82
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.044
+    }
+   ],
+   "bateria": 92,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T06:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.74
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.035
+    }
+   ],
+   "bateria": 92,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T06:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.68
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.031
+    }
+   ],
+   "bateria": 92,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T06:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.63
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.022
+    }
+   ],
+   "bateria": 92,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T06:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.86
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.008
+    }
+   ],
+   "bateria": 92,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T07:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.65
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.005
+    }
+   ],
+   "bateria": 92,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T07:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.48
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.04
+    }
+   ],
+   "bateria": 92,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T07:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.57
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.011
+    }
+   ],
+   "bateria": 92,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T07:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.46
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.017
+    }
+   ],
+   "bateria": 92,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T08:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.42
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.029
+    }
+   ],
+   "bateria": 92,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T08:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.37
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.011
+    }
+   ],
+   "bateria": 92,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T08:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.08
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.013
+    }
+   ],
+   "bateria": 92,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T08:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.21
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.009
+    }
+   ],
+   "bateria": 92,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T09:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.32
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.004
+    }
+   ],
+   "bateria": 92,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T09:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.13
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.01
+    }
+   ],
+   "bateria": 92,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T09:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.16
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.013
+    }
+   ],
+   "bateria": 92,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T09:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.09
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.02
+    }
+   ],
+   "bateria": 92,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T10:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.04
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.022
+    }
+   ],
+   "bateria": 92,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T10:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.33
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.019
+    }
+   ],
+   "bateria": 92,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T10:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.34
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.022
+    }
+   ],
+   "bateria": 92,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T10:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.28
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.017
+    }
+   ],
+   "bateria": 92,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T11:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.57
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.023
+    }
+   ],
+   "bateria": 92,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T11:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.88
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.025
+    }
+   ],
+   "bateria": 92,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T11:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.82
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.008
+    }
+   ],
+   "bateria": 92,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T11:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 3.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.94
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.018
+    }
+   ],
+   "bateria": 92,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T12:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 3.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 42.94
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.047
+    }
+   ],
+   "bateria": 91,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T12:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 3.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.33
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.034
+    }
+   ],
+   "bateria": 91,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T12:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 3.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.52
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.013
+    }
+   ],
+   "bateria": 91,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T12:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 3.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.43
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.019
+    }
+   ],
+   "bateria": 91,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T13:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 4.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.81
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.012
+    }
+   ],
+   "bateria": 91,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T13:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 3.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.16
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.025
+    }
+   ],
+   "bateria": 91,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T13:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 3.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.16
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.007
+    }
+   ],
+   "bateria": 91,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T13:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 3.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.99
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.009
+    }
+   ],
+   "bateria": 91,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T14:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.43
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.003
+    }
+   ],
+   "bateria": 91,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T14:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 3.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.55
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.031
+    }
+   ],
+   "bateria": 91,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T14:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.66
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.001
+    }
+   ],
+   "bateria": 91,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T14:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.68
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.062
+    }
+   ],
+   "bateria": 91,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T15:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.86
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.04
+    }
+   ],
+   "bateria": 91,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T15:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.85
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.042
+    }
+   ],
+   "bateria": 91,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T15:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.09
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.021
+    }
+   ],
+   "bateria": 91,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T15:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.84
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.006
+    }
+   ],
+   "bateria": 91,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T16:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.87
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.034
+    }
+   ],
+   "bateria": 91,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T16:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.81
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.05
+    }
+   ],
+   "bateria": 91,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T16:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.65
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.043
+    }
+   ],
+   "bateria": 91,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T16:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.74
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.012
+    }
+   ],
+   "bateria": 91,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T17:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.7
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.012
+    }
+   ],
+   "bateria": 91,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T17:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.43
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.032
+    }
+   ],
+   "bateria": 91,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T17:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.92
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.014
+    }
+   ],
+   "bateria": 91,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T17:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.64
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.027
+    }
+   ],
+   "bateria": 91,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T18:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.67
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.019
+    }
+   ],
+   "bateria": 91,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T18:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.6
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.015
+    }
+   ],
+   "bateria": 91,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T18:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.55
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.014
+    }
+   ],
+   "bateria": 91,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T18:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.63
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.009
+    }
+   ],
+   "bateria": 91,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T19:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.78
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.014
+    }
+   ],
+   "bateria": 91,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T19:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.74
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.015
+    }
+   ],
+   "bateria": 91,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T19:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.64
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.019
+    }
+   ],
+   "bateria": 91,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T19:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.87
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.024
+    }
+   ],
+   "bateria": 91,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T20:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.94
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.041
+    }
+   ],
+   "bateria": 91,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T20:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 3.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.88
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.007
+    }
+   ],
+   "bateria": 91,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T20:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 3.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.13
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.004
+    }
+   ],
+   "bateria": 91,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T20:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 3.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.25
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.004
+    }
+   ],
+   "bateria": 91,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T21:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.24
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.094
+    }
+   ],
+   "bateria": 91,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T21:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.38
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.007
+    }
+   ],
+   "bateria": 91,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T21:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.33
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.028
+    }
+   ],
+   "bateria": 91,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T21:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.32
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.033
+    }
+   ],
+   "bateria": 91,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T22:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.38
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.01
+    }
+   ],
+   "bateria": 91,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T22:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.31
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.025
+    }
+   ],
+   "bateria": 91,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T22:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.78
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.022
+    }
+   ],
+   "bateria": 91,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T22:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.54
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.004
+    }
+   ],
+   "bateria": 91,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T23:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.37
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.028
+    }
+   ],
+   "bateria": 91,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T23:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.18
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.012
+    }
+   ],
+   "bateria": 91,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T23:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.41
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.025
+    }
+   ],
+   "bateria": 91,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-22T23:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.4
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.003
+    }
+   ],
+   "bateria": 91,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T00:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.04
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.038
+    }
+   ],
+   "bateria": 90,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T00:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.16
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.005
+    }
+   ],
+   "bateria": 90,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T00:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.32
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.048
+    }
+   ],
+   "bateria": 90,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T00:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.19
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.026
+    }
+   ],
+   "bateria": 90,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T01:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.29
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.013
+    }
+   ],
+   "bateria": 90,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T01:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.98
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.007
+    }
+   ],
+   "bateria": 90,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T01:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.97
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.002
+    }
+   ],
+   "bateria": 90,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T01:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.92
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.01
+    }
+   ],
+   "bateria": 90,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T02:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.82
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.013
+    }
+   ],
+   "bateria": 90,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T02:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.78
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.021
+    }
+   ],
+   "bateria": 90,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T02:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.88
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.022
+    }
+   ],
+   "bateria": 90,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T02:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.1
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.02
+    }
+   ],
+   "bateria": 90,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T03:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.8
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.067
+    }
+   ],
+   "bateria": 90,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T03:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.82
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.023
+    }
+   ],
+   "bateria": 90,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T03:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.48
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.079
+    }
+   ],
+   "bateria": 90,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T03:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.75
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.054
+    }
+   ],
+   "bateria": 90,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T04:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.64
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.018
+    }
+   ],
+   "bateria": 90,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T04:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.55
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.041
+    }
+   ],
+   "bateria": 90,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T04:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.4
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.02
+    }
+   ],
+   "bateria": 90,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T04:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.72
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.023
+    }
+   ],
+   "bateria": 90,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T05:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.66
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.001
+    }
+   ],
+   "bateria": 90,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T05:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.45
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.024
+    }
+   ],
+   "bateria": 90,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T05:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.37
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.005
+    }
+   ],
+   "bateria": 90,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T05:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.44
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.018
+    }
+   ],
+   "bateria": 90,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T06:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.28
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.039
+    }
+   ],
+   "bateria": 90,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T06:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.14
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.056
+    }
+   ],
+   "bateria": 90,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T06:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.22
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.005
+    }
+   ],
+   "bateria": 90,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T06:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.49
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.023
+    }
+   ],
+   "bateria": 90,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T07:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.08
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.006
+    }
+   ],
+   "bateria": 90,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T07:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.23
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.026
+    }
+   ],
+   "bateria": 90,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T07:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.18
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.025
+    }
+   ],
+   "bateria": 90,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T07:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.0
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.018
+    }
+   ],
+   "bateria": 90,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T08:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.28
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.038
+    }
+   ],
+   "bateria": 90,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T08:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.38
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.018
+    }
+   ],
+   "bateria": 90,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T08:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.15
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.025
+    }
+   ],
+   "bateria": 90,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T08:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.06
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.026
+    }
+   ],
+   "bateria": 90,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T09:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.14
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.048
+    }
+   ],
+   "bateria": 90,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T09:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.09
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.024
+    }
+   ],
+   "bateria": 90,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T09:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.62
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.03
+    }
+   ],
+   "bateria": 90,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T09:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.0
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.04
+    }
+   ],
+   "bateria": 90,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T10:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.93
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.039
+    }
+   ],
+   "bateria": 90,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T10:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.95
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.017
+    }
+   ],
+   "bateria": 90,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T10:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.03
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.002
+    }
+   ],
+   "bateria": 90,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T10:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.96
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.02
+    }
+   ],
+   "bateria": 90,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T11:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.03
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.03
+    }
+   ],
+   "bateria": 90,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T11:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.93
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.028
+    }
+   ],
+   "bateria": 90,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T11:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 43.99
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.003
+    }
+   ],
+   "bateria": 90,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T11:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.16
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.049
+    }
+   ],
+   "bateria": 90,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T12:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.22
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.045
+    }
+   ],
+   "bateria": 89,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T12:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.52
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.004
+    }
+   ],
+   "bateria": 89,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T12:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.58
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.006
+    }
+   ],
+   "bateria": 89,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T12:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 3.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.56
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.002
+    }
+   ],
+   "bateria": 89,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T13:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.76
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.013
+    }
+   ],
+   "bateria": 89,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T13:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.72
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.024
+    }
+   ],
+   "bateria": 89,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T13:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.68
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.028
+    }
+   ],
+   "bateria": 89,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T13:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.94
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.029
+    }
+   ],
+   "bateria": 89,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T14:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.96
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.027
+    }
+   ],
+   "bateria": 89,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T14:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.11
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.031
+    }
+   ],
+   "bateria": 89,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T14:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.08
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.02
+    }
+   ],
+   "bateria": 89,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T14:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.1
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.06
+    }
+   ],
+   "bateria": 89,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T15:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.15
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.03
+    }
+   ],
+   "bateria": 89,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T15:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.29
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.005
+    }
+   ],
+   "bateria": 89,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T15:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.18
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.04
+    }
+   ],
+   "bateria": 89,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T15:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.16
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.009
+    }
+   ],
+   "bateria": 89,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T16:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.27
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.008
+    }
+   ],
+   "bateria": 89,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T16:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.94
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.0
+    }
+   ],
+   "bateria": 89,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T16:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.77
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.043
+    }
+   ],
+   "bateria": 89,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T16:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.98
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.07
+    }
+   ],
+   "bateria": 89,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T17:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.08
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.022
+    }
+   ],
+   "bateria": 89,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T17:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.78
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.059
+    }
+   ],
+   "bateria": 89,
+   "senal": -86
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T17:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.79
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.008
+    }
+   ],
+   "bateria": 89,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T17:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.03
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.069
+    }
+   ],
+   "bateria": 89,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T18:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.79
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.014
+    }
+   ],
+   "bateria": 89,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T18:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.92
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.018
+    }
+   ],
+   "bateria": 89,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T18:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.81
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.002
+    }
+   ],
+   "bateria": 89,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T18:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.82
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.007
+    }
+   ],
+   "bateria": 89,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T19:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.88
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.015
+    }
+   ],
+   "bateria": 89,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T19:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.64
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.023
+    }
+   ],
+   "bateria": 89,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T19:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.93
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.006
+    }
+   ],
+   "bateria": 89,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T19:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.8
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.031
+    }
+   ],
+   "bateria": 89,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T20:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.91
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.01
+    }
+   ],
+   "bateria": 89,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T20:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 44.86
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.012
+    }
+   ],
+   "bateria": 89,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T20:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.07
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.011
+    }
+   ],
+   "bateria": 89,
+   "senal": -83
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T20:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 2.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.28
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.028
+    }
+   ],
+   "bateria": 89,
+   "senal": -85
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T21:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.36
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.001
+    }
+   ],
+   "bateria": 89,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T21:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.6
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.37
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.0
+    }
+   ],
+   "bateria": 89,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T21:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.23
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.04
+    }
+   ],
+   "bateria": 89,
+   "senal": -84
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T21:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.22
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.007
+    }
+   ],
+   "bateria": 89,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T22:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 1.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.21
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.003
+    }
+   ],
+   "bateria": 89,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T22:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.8
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.08
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.041
+    }
+   ],
+   "bateria": 89,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T22:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.4
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.57
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.017
+    }
+   ],
+   "bateria": 89,
+   "senal": -88
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T22:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.2
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.34
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": -0.0
+    }
+   ],
+   "bateria": 89,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T23:00:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.32
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.321
+    }
+   ],
+   "bateria": 89,
+   "senal": -89
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T23:15:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.14
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.31
+    }
+   ],
+   "bateria": 89,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T23:30:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.1
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.242
+    }
+   ],
+   "bateria": 89,
+   "senal": -87
+  },
+  {
+   "version": "1.0",
+   "c_estacion": "EST-LAD-01",
+   "fecha_hora": "2026-11-23T23:45:00-06:00",
+   "lecturas": [
+    {
+     "c_parametro": "LLUVIA",
+     "valor": 0.0
+    },
+    {
+     "c_parametro": "HUM_SUELO",
+     "valor": 45.08
+    },
+    {
+     "c_parametro": "INCL",
+     "valor": 0.268
+    }
+   ],
+   "bateria": 89,
+   "senal": -89
+  }
+ ]
+}

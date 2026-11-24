@@ -1,0 +1,290 @@
+{
+ "version": "0.1-propuesta",
+ "_provisional": true,
+ "fuente": "NASA POWER, parámetro IMERG_PRECTOT (mm/día, malla 0.1°, día en hora UTC), 2001-2025; datos/crudos/F21",
+ "advertencia": "Es lluvia de satélite, no de pluviómetro: tiende a subestimar tormentas extremas de montaña. Los percentiles dicen qué es normal en temporada en ese sitio, no cuánto llovió en la ladera. Dos estaciones pueden compartir celda y dar la misma serie.",
+ "temporada": "los meses cuyo promedio mensual supera al promedio de los 12; ver temporada_meses de cada sitio",
+ "dia_con_lluvia_mm": 1.0,
+ "sitios": [
+  {
+   "c_estacion": "EST-LAD-01",
+   "cct": "21KTV0122C",
+   "localidad": "Tecuantla (los Reyes)",
+   "municipio": "Jopala",
+   "latitud": 20.164262,
+   "longitud": -97.69145,
+   "celda_de_la_fuente": {
+    "longitud": -97.691,
+    "latitud": 20.164
+   },
+   "dias_validos": 9131,
+   "temporada_meses": [
+    "jun",
+    "jul",
+    "ago",
+    "sep",
+    "oct"
+   ],
+   "mm_por_mes_promedio": {
+    "ene": 30.1,
+    "feb": 28.2,
+    "mar": 38.3,
+    "abr": 64.5,
+    "may": 88.3,
+    "jun": 213.5,
+    "jul": 186.2,
+    "ago": 205.7,
+    "sep": 255.6,
+    "oct": 175.4,
+    "nov": 65.2,
+    "dic": 24.7
+   },
+   "mm_anuales_promedio": 1376.0,
+   "temporada": {
+    "dias": 3825,
+    "lluvia_diaria_media_mm": 6.81,
+    "dias_con_lluvia": 2339,
+    "fraccion_dias_con_lluvia": 0.612,
+    "lluvia_diaria_dia_con_lluvia_mm": {
+     "p50": 6.3,
+     "p90": 26.1,
+     "p99": 66.2
+    },
+    "lluvia_3_dias_mm": {
+     "p50": 12.1,
+     "p90": 52.1,
+     "p99": 113.8
+    },
+    "n_ventanas_3_dias": 3825
+   },
+   "maximo_diario_mm": {
+    "valor": 181.4,
+    "fecha": "2005-10-06"
+   }
+  },
+  {
+   "c_estacion": "EST-LAD-02",
+   "cct": "21DPR0901Z",
+   "localidad": "El Tabacal",
+   "municipio": "Xicotepec",
+   "latitud": 20.287337,
+   "longitud": -97.948396,
+   "celda_de_la_fuente": {
+    "longitud": -97.948,
+    "latitud": 20.287
+   },
+   "dias_validos": 9131,
+   "temporada_meses": [
+    "jun",
+    "jul",
+    "ago",
+    "sep",
+    "oct"
+   ],
+   "mm_por_mes_promedio": {
+    "ene": 23.1,
+    "feb": 22.8,
+    "mar": 30.2,
+    "abr": 52.3,
+    "may": 71.9,
+    "jun": 191.1,
+    "jul": 173.4,
+    "ago": 178.7,
+    "sep": 219.8,
+    "oct": 140.0,
+    "nov": 52.6,
+    "dic": 18.7
+   },
+   "mm_anuales_promedio": 1175.0,
+   "temporada": {
+    "dias": 3825,
+    "lluvia_diaria_media_mm": 5.93,
+    "dias_con_lluvia": 2366,
+    "fraccion_dias_con_lluvia": 0.619,
+    "lluvia_diaria_dia_con_lluvia_mm": {
+     "p50": 5.6,
+     "p90": 22.0,
+     "p99": 55.7
+    },
+    "lluvia_3_dias_mm": {
+     "p50": 11.0,
+     "p90": 43.7,
+     "p99": 95.7
+    },
+    "n_ventanas_3_dias": 3825
+   },
+   "maximo_diario_mm": {
+    "valor": 141.8,
+    "fecha": "2012-08-10"
+   }
+  },
+  {
+   "c_estacion": "EST-LAD-03",
+   "cct": "21DCC0912Z",
+   "localidad": "Xinachapan de Allende",
+   "municipio": "Huitzilan de Serdán",
+   "latitud": 19.968377,
+   "longitud": -97.679854,
+   "celda_de_la_fuente": {
+    "longitud": -97.68,
+    "latitud": 19.968
+   },
+   "dias_validos": 9131,
+   "temporada_meses": [
+    "jun",
+    "jul",
+    "ago",
+    "sep",
+    "oct"
+   ],
+   "mm_por_mes_promedio": {
+    "ene": 25.4,
+    "feb": 23.6,
+    "mar": 31.1,
+    "abr": 54.5,
+    "may": 78.6,
+    "jun": 187.2,
+    "jul": 161.3,
+    "ago": 179.6,
+    "sep": 215.6,
+    "oct": 143.9,
+    "nov": 44.4,
+    "dic": 15.1
+   },
+   "mm_anuales_promedio": 1160.0,
+   "temporada": {
+    "dias": 3825,
+    "lluvia_diaria_media_mm": 5.83,
+    "dias_con_lluvia": 2339,
+    "fraccion_dias_con_lluvia": 0.612,
+    "lluvia_diaria_dia_con_lluvia_mm": {
+     "p50": 5.3,
+     "p90": 21.0,
+     "p99": 63.0
+    },
+    "lluvia_3_dias_mm": {
+     "p50": 10.0,
+     "p90": 42.7,
+     "p99": 108.8
+    },
+    "n_ventanas_3_dias": 3825
+   },
+   "maximo_diario_mm": {
+    "valor": 188.1,
+    "fecha": "2007-08-22"
+   }
+  },
+  {
+   "c_estacion": "EST-LAD-04",
+   "cct": "21KJN1742B",
+   "localidad": "San Pablito",
+   "municipio": "Pahuatlán",
+   "latitud": 20.297957,
+   "longitud": -98.15735,
+   "celda_de_la_fuente": {
+    "longitud": -98.157,
+    "latitud": 20.298
+   },
+   "dias_validos": 9131,
+   "temporada_meses": [
+    "jun",
+    "jul",
+    "ago",
+    "sep",
+    "oct"
+   ],
+   "mm_por_mes_promedio": {
+    "ene": 16.3,
+    "feb": 16.8,
+    "mar": 25.4,
+    "abr": 45.6,
+    "may": 59.8,
+    "jun": 157.5,
+    "jul": 145.4,
+    "ago": 143.3,
+    "sep": 170.9,
+    "oct": 101.5,
+    "nov": 37.0,
+    "dic": 10.0
+   },
+   "mm_anuales_promedio": 930.0,
+   "temporada": {
+    "dias": 3825,
+    "lluvia_diaria_media_mm": 4.72,
+    "dias_con_lluvia": 2033,
+    "fraccion_dias_con_lluvia": 0.532,
+    "lluvia_diaria_dia_con_lluvia_mm": {
+     "p50": 4.9,
+     "p90": 19.9,
+     "p99": 51.5
+    },
+    "lluvia_3_dias_mm": {
+     "p50": 7.5,
+     "p90": 36.7,
+     "p99": 86.0
+    },
+    "n_ventanas_3_dias": 3825
+   },
+   "maximo_diario_mm": {
+    "valor": 131.6,
+    "fecha": "2012-08-10"
+   }
+  },
+  {
+   "c_estacion": "EST-LAD-05",
+   "cct": "21DCC1196M",
+   "localidad": "Bonillagco",
+   "municipio": "Xochitlán de Vicente Suárez",
+   "latitud": 19.934205,
+   "longitud": -97.625876,
+   "celda_de_la_fuente": {
+    "longitud": -97.626,
+    "latitud": 19.934
+   },
+   "dias_validos": 9131,
+   "temporada_meses": [
+    "jun",
+    "jul",
+    "ago",
+    "sep",
+    "oct"
+   ],
+   "mm_por_mes_promedio": {
+    "ene": 25.4,
+    "feb": 23.6,
+    "mar": 31.1,
+    "abr": 54.5,
+    "may": 78.6,
+    "jun": 187.2,
+    "jul": 161.3,
+    "ago": 179.6,
+    "sep": 215.6,
+    "oct": 143.9,
+    "nov": 44.4,
+    "dic": 15.1
+   },
+   "mm_anuales_promedio": 1160.0,
+   "temporada": {
+    "dias": 3825,
+    "lluvia_diaria_media_mm": 5.83,
+    "dias_con_lluvia": 2339,
+    "fraccion_dias_con_lluvia": 0.612,
+    "lluvia_diaria_dia_con_lluvia_mm": {
+     "p50": 5.3,
+     "p90": 21.0,
+     "p99": 63.0
+    },
+    "lluvia_3_dias_mm": {
+     "p50": 10.0,
+     "p90": 42.7,
+     "p99": 108.8
+    },
+    "n_ventanas_3_dias": 3825
+   },
+   "maximo_diario_mm": {
+    "valor": 188.1,
+    "fecha": "2007-08-22"
+   }
+  }
+ ]
+}

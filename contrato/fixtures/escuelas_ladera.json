@@ -1,0 +1,127 @@
+{
+ "version": "0.1-propuesta",
+ "_provisional": true,
+ "criterio": "Escuelas de escuelas.json con riesgo.derrumbe >= 0.7 y susceptibilidad de laderas CENAPRED Alta o Muy alta, por riesgo de derrumbe descendente; las 5 primeras a mas de 5000 m entre si; INCL solo con Muy alta. Umbrales de seleccion son hipotesis. Generado por scripts/100_escuelas_ladera.py.",
+ "elegibles": 248,
+ "elegibles_muy_alta": 56,
+ "modulos": [
+  {
+   "c_estacion": "EST-LAD-01",
+   "cct": "21KTV0122C",
+   "escuela": "Secundaria Comunitaria Rural Tecuantla, Los Reyes",
+   "nivel": "secundaria",
+   "municipio": "Jopala",
+   "localidad": "Tecuantla (los Reyes)",
+   "latitud": 20.164262,
+   "longitud": -97.69145,
+   "riesgo_derrumbe": 1.0,
+   "susceptibilidad_cenapred": "Muy alta",
+   "pendiente_p75_grados": 36.6,
+   "parametros": [
+    "LLUVIA",
+    "HUM_SUELO",
+    "INCL"
+   ],
+   "escuelas_protegidas": [
+    "21KTV0122C"
+   ],
+   "estacion_de_agua_existente": null
+  },
+  {
+   "c_estacion": "EST-LAD-02",
+   "cct": "21DPR0901Z",
+   "escuela": "Club de Leones de Xicotepec",
+   "nivel": "primaria",
+   "municipio": "Xicotepec",
+   "localidad": "El Tabacal",
+   "latitud": 20.287337,
+   "longitud": -97.948396,
+   "riesgo_derrumbe": 1.0,
+   "susceptibilidad_cenapred": "Muy alta",
+   "pendiente_p75_grados": 36.4,
+   "parametros": [
+    "LLUVIA",
+    "HUM_SUELO",
+    "INCL"
+   ],
+   "escuelas_protegidas": [
+    "21DPR0901Z",
+    "21DPR0971V",
+    "21DTV0192O"
+   ],
+   "estacion_de_agua_existente": null
+  },
+  {
+   "c_estacion": "EST-LAD-03",
+   "cct": "21DCC0912Z",
+   "escuela": "Yolot'si",
+   "nivel": "preescolar",
+   "municipio": "Huitzilan de Serdán",
+   "localidad": "Xinachapan de Allende",
+   "latitud": 19.968377,
+   "longitud": -97.679854,
+   "riesgo_derrumbe": 0.922,
+   "susceptibilidad_cenapred": "Muy alta",
+   "pendiente_p75_grados": 33.5,
+   "parametros": [
+    "LLUVIA",
+    "HUM_SUELO",
+    "INCL"
+   ],
+   "escuelas_protegidas": [
+    "21DCC0912Z",
+    "21DPB0484C",
+    "21EJN1113B",
+    "21EPR1541K"
+   ],
+   "estacion_de_agua_existente": null
+  },
+  {
+   "c_estacion": "EST-LAD-04",
+   "cct": "21KJN1742B",
+   "escuela": "Preescolar Comunitario Rural San Pablito",
+   "nivel": "preescolar",
+   "municipio": "Pahuatlán",
+   "localidad": "San Pablito",
+   "latitud": 20.297957,
+   "longitud": -98.15735,
+   "riesgo_derrumbe": 0.915,
+   "susceptibilidad_cenapred": "Muy alta",
+   "pendiente_p75_grados": 25.3,
+   "parametros": [
+    "LLUVIA",
+    "HUM_SUELO",
+    "INCL"
+   ],
+   "escuelas_protegidas": [
+    "21DCC0439L",
+    "21DPB0745Y",
+    "21DPR1945D",
+    "21ETV0948S",
+    "21KJN1742B"
+   ],
+   "estacion_de_agua_existente": null
+  },
+  {
+   "c_estacion": "EST-LAD-05",
+   "cct": "21DCC1196M",
+   "escuela": "Tierra y Libertad",
+   "nivel": "preescolar",
+   "municipio": "Xochitlán de Vicente Suárez",
+   "localidad": "Bonillagco",
+   "latitud": 19.934205,
+   "longitud": -97.625876,
+   "riesgo_derrumbe": 0.909,
+   "susceptibilidad_cenapred": "Alta",
+   "pendiente_p75_grados": 31.9,
+   "parametros": [
+    "LLUVIA",
+    "HUM_SUELO"
+   ],
+   "escuelas_protegidas": [
+    "21DCC1196M"
+   ],
+   "estacion_de_agua_existente": null
+  }
+ ]
+}
