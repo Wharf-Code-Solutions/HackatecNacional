@@ -85,3 +85,23 @@ export async function consultarFolio(origen, folio) {
   }
   return getJSON(origen.url + '/reportes/' + encodeURIComponent(folio));
 }
+
+// ¿La foto corresponde a alguno de los tipos? Pregunta al backend (que usa Gemini). Nunca lanza:
+//  { estado: 'ok', valida, tipo, confianza, motivo, modelo }
+//  { estado: 'no_disponible' }   sin backend, sin llave, sin red o con error: se deja enviar con aviso
+export async function analizarFoto(origen, dataUrl) {
+  if (origen.modo !== 'api') return { estado: 'no_disponible' };
+  try {
+    const c = new AbortController();
+    const t = setTimeout(() => c.abort(), 20000);
+    const r = await fetch(origen.url + '/reportes/analizar-foto', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ foto: dataUrl }), signal: c.signal,
+    });
+    clearTimeout(t);
+    if (!r.ok) return { estado: 'no_disponible' };
+    const j = await r.json();
+    return j.estado === 'ok' ? j : { estado: 'no_disponible' };
+  } catch {
+    return { estado: 'no_disponible' };
+  }
+}

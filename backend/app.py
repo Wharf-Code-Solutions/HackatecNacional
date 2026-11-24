@@ -58,6 +58,7 @@ def _cargar(nombre, ruta):
 
 
 validador = _cargar('validador', os.path.join(RAIZ, 'contrato', 'validador.py'))
+analisis_foto = _cargar('analisis_foto', os.path.join(RAIZ, 'contrato', 'analisis_foto.py'))
 reglas = _cargar('reglas', os.path.join(RAIZ, 'motor', 'reglas.py'))
 ESQ = {n: validador.cargar_esquema(n) for n in ('lectura', 'reporte_ciudadano', 'alerta', 'prediccion_propagacion')}
 # Tablas que el motor lee al construirse: se cargan una vez por proceso.
@@ -277,6 +278,19 @@ def crear_app(url=None):
         with almacen.transaccion('alerta:' + c_alerta):
             almacen.actualizar_alerta(nueva)
         return nueva
+
+    @app.post('/reportes/analizar-foto')
+    async def analizar_foto(request: Request):
+        # Misma ruta y misma respuesta que el mock. La llamada a Gemini bloquea hasta 15 s: va en un hilo.
+        cuerpo, problema = await leer_cuerpo(request)
+        if problema:
+            return error(400, {'error': problema})
+        ip = request.client.host if request.client else 'desconocida'
+        if not analisis_foto.permitir(ip):
+            return error(429, {'error': 'demasiadas solicitudes', 'detalle': 'espera un minuto'})
+        from starlette.concurrency import run_in_threadpool
+        r = await run_in_threadpool(analisis_foto.analizar, cuerpo.get('foto') if isinstance(cuerpo, dict) else None)
+        return JSONResponse(r, status_code=422 if r['estado'] == 'rechazada' else 200)
 
     @app.post('/reportes')
     async def reportes(request: Request):

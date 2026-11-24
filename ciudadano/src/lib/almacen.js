@@ -3,7 +3,7 @@
 // app tiene que seguir funcionando.
 const COLA = 'ciudadano.cola';
 const FOLIOS = 'ciudadano.folios';
-const AVISO = 'ciudadano.aviso';
+const AVISO = 'ciudadano.aviso2';   // v2: la foto se revisa con un servicio de análisis de imágenes
 
 const leer = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } };
 const escribir = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch { return false; } };

@@ -26,6 +26,7 @@ Rutas:
     GET  /alertas                    alertas generadas
     PATCH /alertas/<c_alerta>        cambia estado y responsable (panel de autoridad)
     POST /reportes                   reporte ciudadano
+    POST /reportes/analizar-foto     la foto corresponde a algun tipo? (Gemini; ver analisis_foto.py)
     GET  /reportes
 """
 import argparse
@@ -42,6 +43,7 @@ AQUI = os.path.dirname(os.path.abspath(__file__))
 FIX = os.path.join(AQUI, 'fixtures')
 sys.path.insert(0, AQUI)
 from validador import cargar_esquema, validar          # noqa: E402
+import analisis_foto                                   # noqa: E402
 
 ESQ_LECTURA = cargar_esquema('lectura')
 ESQ_REPORTE = cargar_esquema('reporte_ciudadano')
@@ -271,6 +273,14 @@ class Manejador(BaseHTTPRequestHandler):
                                              'aceptados': len(resultados)})
             return self._responder(202, {'aceptados': len(resultados),
                                          'veredictos': resultados})
+
+        if ruta == '/reportes/analizar-foto':
+            # La app pregunta aqui si la foto corresponde a algun tipo, antes de dejar enviar el reporte
+            ip = self.client_address[0]
+            if not analisis_foto.permitir(ip):
+                return self._responder(429, {'error': 'demasiadas solicitudes', 'detalle': 'espera un minuto'})
+            r = analisis_foto.analizar(cuerpo.get('foto') if isinstance(cuerpo, dict) else None)
+            return self._responder(422 if r['estado'] == 'rechazada' else 200, r)
 
         if ruta == '/reportes':
             cuerpo.setdefault('version', '1.0')

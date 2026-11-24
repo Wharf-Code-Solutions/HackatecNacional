@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import BottomSheet from './BottomSheet.jsx';
 import CategoriaIcono from './CategoriaIcono.jsx';
 import { encolar, guardarFolio } from '../lib/almacen.js';
-import { enviarReporte, getJSON } from '../lib/backend.js';
+import { analizarFoto, enviarReporte, getJSON } from '../lib/backend.js';
 import { prepararFoto } from '../lib/foto.js';
 import { dentroDeVentana, redondeada } from '../lib/ubicacion.js';
 import { TIPOS, km, nombreTipo } from '../lib/etiquetas.js';
@@ -15,6 +15,8 @@ export default function FormularioReporte({ lat, lon, precision, origen, datos, 
   const [foto, setFoto] = useState(null);
   const [procesando, setProcesando] = useState(false);
   const [errorFoto, setErrorFoto] = useState(null);
+  const [analisis, setAnalisis] = useState(null);   // { estado: 'analizando' | 'ok' | 'no_disponible', ... } de la foto actual
+  const turno = useRef(0);                          // descarta respuestas de una foto que ya se cambió
   const [descripcion, setDescripcion] = useState('');
   const [correo, setCorreo] = useState('');
   const [enviando, setEnviando] = useState(false);
@@ -32,16 +34,34 @@ export default function FormularioReporte({ lat, lon, precision, origen, datos, 
     const archivo = e.target.files && e.target.files[0];
     e.target.value = '';
     if (!archivo) return;
-    setProcesando(true); setErrorFoto(null);
-    try { setFoto(await prepararFoto(archivo)); } catch { setFoto(null); setErrorFoto('No se pudo leer esa foto. Prueba con otra.'); }
-    setProcesando(false);
+    const mio = ++turno.current;
+    setProcesando(true); setErrorFoto(null); setAnalisis(null);
+    try {
+      const f = await prepararFoto(archivo);
+      setFoto(f);
+      setProcesando(false);
+      // Revisa que la foto corresponda a algún tipo; mientras tanto no se puede enviar
+      setAnalisis({ estado: 'analizando' });
+      const a = await analizarFoto(origen, f.dataUrl);
+      if (mio === turno.current) setAnalisis(a);
+    } catch {
+      setFoto(null); setAnalisis(null); setErrorFoto('No se pudo leer esa foto. Prueba con otra.'); setProcesando(false);
+    }
   };
+
+  const quitarFoto = () => { turno.current += 1; setFoto(null); setAnalisis(null); };
+
+  // La foto no se puede enviar si se está revisando o si no corresponde a ninguno de los tipos
+  const revisando = !!foto && analisis && analisis.estado === 'analizando';
+  const fotoInvalida = !!foto && analisis && analisis.estado === 'ok' && !analisis.valida;
+  const sugerido = analisis && analisis.estado === 'ok' && analisis.valida && analisis.tipo !== tipo ? analisis.tipo : null;
 
   const enviar = async (e) => {
     e.preventDefault();
     if (enviando) return;
     const er = {};
     if (!tipo) er.tipo = 'Elige qué viste.';
+    if (revisando || fotoInvalida) er.foto = 'Esa foto no se puede enviar. Toma otra o quítala.';
     if (fuera) er.ubicacion = 'El punto del mapa queda fuera de la cuenca del Alto Atoyac. Mueve el mapa hasta el río.';
     if (correo.trim() && !CORREO.test(correo.trim())) er.correo = 'Revisa el correo.';
     setErrores(er);
@@ -58,7 +78,10 @@ export default function FormularioReporte({ lat, lon, precision, origen, datos, 
       // true: la foto, si hay, pasó por el canvas (sin EXIF); sin foto no hay metadatos que quitar.
       exif_removido: true,
     };
-    if (foto) payload.foto_url = foto.dataUrl;
+    if (foto) {
+      payload.foto_url = foto.dataUrl;
+      if (analisis && analisis.estado === 'ok') payload.clasificacion_automatica = { etiqueta: analisis.tipo, confianza: analisis.confianza, modelo: analisis.modelo };
+    }
     if (descripcion.trim()) payload.descripcion = descripcion.trim();
     if (correo.trim()) payload.correo = correo.trim();
 
@@ -142,6 +165,7 @@ export default function FormularioReporte({ lat, lon, precision, origen, datos, 
 
         <div className="mb-3">
           <span className="form-label">Foto <small>(opcional)</small></span>
+          {errores.foto && <div className="rf-error" role="alert">{errores.foto}</div>}
           <input ref={camara} type="file" accept="image/*" capture="environment" onChange={alElegirFoto} hidden />
           <input ref={galeria} type="file" accept="image/*" onChange={alElegirFoto} hidden />
           {!foto && (
@@ -155,6 +179,21 @@ export default function FormularioReporte({ lat, lon, precision, origen, datos, 
             <div className="report-form__foto">
               <img src={foto.dataUrl} alt="Foto del reporte, ya reducida" />
               <p className="report-form__meta" style={{ margin: 0 }}>Se reduce en tu teléfono ({foto.kb} KB) y se le borran los datos ocultos.</p>
+              {revisando && <p className="report-form__meta" role="status" style={{ margin: 0 }}>Revisando la foto…</p>}
+              {fotoInvalida && (
+                <div className="alert alert-danger" role="alert">
+                  Esta foto no parece mostrar ninguno de los problemas que se pueden reportar{analisis.motivo ? ' (' + analisis.motivo.replace(/\.$/, '') + ')' : ''}. Toma otra foto o quítala para enviar sin ella.
+                </div>
+              )}
+              {analisis && analisis.estado === 'no_disponible' && (
+                <div className="alert alert-warning" role="status">No pudimos revisar la foto en este momento. Se enviará de todos modos y se verificará después.</div>
+              )}
+              {sugerido && (
+                <div className="alert alert-warning" role="status">
+                  La foto parece de «{nombreTipo(sugerido)}», no de «{tipo ? nombreTipo(tipo) : 'ningún tipo'}».{' '}
+                  <button type="button" className="btn btn-outline-secondary btn-sm" onClick={() => setTipo(sugerido)}>Usar {nombreTipo(sugerido)}</button>
+                </div>
+              )}
               {foto.avisos.length > 0 && (
                 <div className="alert alert-warning" role="alert">
                   {foto.avisos.join(' ')} ¿Quieres tomar otra? Si no puedes, se envía igual.
@@ -163,7 +202,7 @@ export default function FormularioReporte({ lat, lon, precision, origen, datos, 
               <div className="report-form__acciones">
                 <button type="button" className="btn btn-outline-secondary btn-sm" onClick={() => camara.current.click()}>Tomar otra</button>
                 <button type="button" className="btn btn-outline-secondary btn-sm" onClick={() => galeria.current.click()}>Elegir otra</button>
-                <button type="button" className="btn btn-outline-secondary btn-sm" onClick={() => setFoto(null)}>Quitar</button>
+                <button type="button" className="btn btn-outline-secondary btn-sm" onClick={quitarFoto}>Quitar</button>
               </div>
             </div>
           )}
@@ -181,7 +220,7 @@ export default function FormularioReporte({ lat, lon, precision, origen, datos, 
         </div>
 
         {errorEnvio && <div className="alert alert-danger mb-3" role="alert">{errorEnvio}</div>}
-        <button className="btn btn-primary w-100" type="submit" disabled={enviando}>{enviando ? 'Enviando…' : 'Enviar reporte'}</button>
+        <button className="btn btn-primary w-100" type="submit" disabled={enviando || revisando || fotoInvalida}>{enviando ? 'Enviando…' : revisando ? 'Revisando la foto…' : 'Enviar reporte'}</button>
       </form>
     </BottomSheet>
   );
