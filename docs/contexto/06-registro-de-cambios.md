@@ -21,6 +21,22 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · M5: aviso por correo al cerrar un reporte ciudadano
+
+**Qué cambió.** `backend/correo.py`: al pasar un reporte a «Cerrado» por primera vez, el backend avisa por SMTP a quien
+dejó su correo, con el folio, el tipo y un enlace a `/ciudadano/#/rastreo?folio=<c_reporte>` (la app ya abre el rastreo con
+ese folio). Credenciales solo en variables de entorno (`SMTP_USER`, `SMTP_PASSWORD`; opcionales `SMTP_HOST`, `SMTP_PORT`,
+`MAIL_FROM_NAME`, `APP_URL`). El resultado va en la cabecera `X-Aviso-Correo`, expuesta por CORS, y el panel dice a cuántas
+personas se avisó. `/salud` agrega `aviso_por_correo`.
+**Por qué.** La app pedía el correo «solo para avisarte cuando se cierre» y el backend lo guardaba, pero nadie lo enviaba. Se
+avisa solo al cierre, no en cada etapa como SIGRIV, porque eso es lo que dicen la app y los términos.
+**Qué arrastró.** `backend/README.md`, `CLAUDE.md`, `backend/prueba.py` (prueba 8, 12 comprobaciones con un SMTP falso:
+sin credenciales no envía, validar no envía, cerrar envía una vez, sin correo no intenta, si el SMTP falla el cierre se guarda).
+**Impacto en otros módulos.** Ninguno en el contrato: el cuerpo de `PATCH /reportes` no cambia y el mock no envía correos.
+En un foco con varios reportes del mismo correo, cada reporte cerrado manda su aviso.
+
+---
+
 ## 2026-11-24 · M7 y M8: reportes ciudadanos con la forma del dashboard de SIGRIV; la foto antes del tipo
 
 **Qué cambió.** La sección de reportes del panel replica el dashboard de SIGRIV (Wharf-Code-Solutions/HackatecRegional,

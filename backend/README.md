@@ -94,6 +94,13 @@ Las del contrato (`contrato/README.md`) más una:
 - **Predicción de M3.** `scripts/80_propagacion.py` necesita `muestreo_nucleo.csv`, que no se
   versiona. El backend usa lo que M3 publica (`datos/procesados/red/tiempo_viaje.csv` y
   `atenuacion_observada.csv`) con la misma fórmula; la prueba 4 garantiza que dan lo mismo.
+- **Aviso por correo al cerrar un reporte** (`correo.py`). La app pide el correo «solo para avisarte
+  cuando se cierre», así que sale un correo únicamente cuando `PATCH /reportes/<c_reporte>` lo pasa a
+  `Cerrado` por primera vez: folio, tipo y un enlace a `/ciudadano/#/rastreo?folio=<c_reporte>`. Por SMTP,
+  como SIGRIV. El resultado va en la cabecera `X-Aviso-Correo` (`enviado`, `sin_correo`,
+  `no_configurado`, `fallido` o `no_aplica`) y el cuerpo sigue igual al del mock. Un correo que falla no
+  deshace el cierre. `/salud` dice `"aviso_por_correo": true` si hay credenciales. La prueba 8 lo cubre
+  con un SMTP falso.
 
 ## Desplegarlo en Vercel (mismo proyecto que el panel)
 
@@ -123,7 +130,12 @@ Pasos en Vercel:
    ciudadana. `VITE_API_URL` ya no hace falta: `vercel.json` la fija en `/api` al compilar.
    Opcional: `MAPBOX_ACCESS_TOKEN` (token público, `pk.`) para que `/mapa/` use la base de Mapbox; sin él
    usa la de OpenFreeMap.
-4. **Redeploy**.
+   Para el aviso de cierre por correo: `SMTP_USER` (la cuenta que envía) y `SMTP_PASSWORD` (en Gmail, una
+   **contraseña de aplicación**: myaccount.google.com/apppasswords, con la verificación en dos pasos
+   activa), las dos como *Sensitive*. Opcionales: `SMTP_HOST` (smtp.gmail.com), `SMTP_PORT` (465),
+   `MAIL_FROM_NAME` y `APP_URL` (si no, el enlace usa el dominio del propio despliegue). Gmail envía
+   unos 500 correos al día.
+4. **Redeploy**. Comprobar que `/api/salud` diga `"aviso_por_correo": true`.
 5. Comprobar `https://<tu-proyecto>.vercel.app/api/salud`: debe decir `"persistencia": "postgres"`.
 6. Cargar un día de lecturas:
    `python contrato\reproducir_escenario.py descarga_industrial --url https://<tu-proyecto>.vercel.app/api`

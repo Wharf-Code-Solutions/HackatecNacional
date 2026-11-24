@@ -34,6 +34,15 @@ function hace(iso) {
   if (min < 1440) return 'Hace ' + Math.round(min / 60) + ' h';
   return 'Hace ' + Math.round(min / 1440) + ' d';
 }
+// Qué pasó con el aviso de cierre por correo (cabecera X-Aviso-Correo del backend), en una frase
+function textoCorreo(avisos) {
+  const n = (k) => avisos.filter((a) => a === k).length;
+  const partes = [];
+  if (n('enviado')) partes.push(' Se avisó por correo a ' + n('enviado') + (n('enviado') === 1 ? ' persona.' : ' personas.'));
+  if (n('fallido')) partes.push(' No se pudo enviar ' + n('fallido') + (n('fallido') === 1 ? ' correo.' : ' correos.'));
+  if (n('no_configurado')) partes.push(' El correo de aviso no está configurado en el servidor.');
+  return partes.join('');
+}
 const coordenadas = (lat, lon) => lat.toFixed(5) + ', ' + lon.toFixed(5);
 
 // El estado de un foco: si sus reportes difieren, el menos avanzado (lo que falta por hacer)
@@ -133,7 +142,7 @@ const ACCIONES = {
   Cerrado: [],
 };
 const CONFIRMAR = {
-  Cerrado: (n) => '¿Marcar como cerrado? ' + (n > 1 ? 'Los ' + n + ' reportes salen' : 'El reporte sale') + ' de la lista de activos y quien reportó lo verá cerrado en su folio.',
+  Cerrado: (n) => '¿Marcar como cerrado? ' + (n > 1 ? 'Los ' + n + ' reportes salen' : 'El reporte sale') + ' de la lista de activos; quien reportó lo verá cerrado en su folio y, si dejó su correo, recibirá un aviso.',
   Descartado: (n) => '¿Descartar? ' + (n > 1 ? 'Los ' + n + ' reportes dejan' : 'El reporte deja') + ' de contar para la prioridad y el calor. Se puede restaurar después.',
 };
 
@@ -281,10 +290,10 @@ export default function Reportes({ reportes, prioridades, huella, conectado, gua
   const cambiar = async (it, nuevo) => {
     setOcupado(true);
     try {
-      await Promise.all(it.reportes.map((r) => guardarReporte(r.c_reporte, nuevo)));
+      const avisos = await Promise.all(it.reportes.map((r) => guardarReporte(r.c_reporte, nuevo)));
       const n = it.reportes.length;
       setAviso({ tipo: 'bien', texto: (n > 1 ? n + ' reportes' : 'Reporte ' + it.reportes[0].c_reporte) + ' en «' + txt(nuevo) + '».' +
-        (demo ? ' Demostración: el cambio solo vive en esta pestaña.' : '') });
+        textoCorreo(avisos) + (demo ? ' Demostración: el cambio solo vive en esta pestaña.' : '') });
       if (!ABIERTOS.includes(nuevo) || nuevo === 'Recibido') setElegidoId(null);   // sale de esta lista
       if (!demo) refrescar();
     } catch (err) {

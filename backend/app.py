@@ -39,6 +39,7 @@ sys.path.insert(0, AQUI)
 from almacen import Almacen, es_postgres, huella   # noqa: E402
 from propagacion import Propagacion                 # noqa: E402
 from asignacion import Asignador               # noqa: E402
+import correo                                   # noqa: E402
 
 VERSION_CONTRATO = '1.0'
 # Lo unico que la autoridad cambia de una alerta. El resto lo decide el motor.
@@ -134,7 +135,7 @@ def crear_app(url=None):
     app.state.ctx = ctx
     origenes = [o.strip() for o in os.environ.get('CORS_ORIGINS', '*').split(',') if o.strip()]
     app.add_middleware(CORSMiddleware, allow_origins=origenes, allow_methods=['GET', 'POST', 'PATCH', 'OPTIONS'],
-                       allow_headers=['Content-Type'])
+                       allow_headers=['Content-Type'], expose_headers=['X-Aviso-Correo'])
 
     @app.exception_handler(StarletteHTTPException)
     async def no_encontrada(request, exc):
@@ -151,7 +152,9 @@ def crear_app(url=None):
                 'hora': datetime.now().astimezone().isoformat(timespec='seconds'),
                 'estaciones': len(estaciones),
                 'alertas_abiertas': sum(1 for x in a.alertas() if x.get('estado') in ('Abierta', 'En atencion')),
-                'reportes': a.contar('reporte'), 'lecturas': a.contar('lectura')}
+                'reportes': a.contar('reporte'), 'lecturas': a.contar('lectura'),
+                # Si el aviso de cierre por correo tiene credenciales SMTP (no dice cuáles)
+                'aviso_por_correo': correo.configurado()}
 
     @app.get('/estaciones')
     def get_estaciones():
@@ -316,7 +319,15 @@ def crear_app(url=None):
             if e:
                 return error(422, {'error': 'contrato no cumplido', 'detalles': e})
             almacen.actualizar_reporte(nuevo)
-        return {k: v for k, v in nuevo.items() if k != 'correo'}
+        # Al cerrarse (y solo la primera vez) se avisa a quien dejó su correo. Fuera del candado y en un hilo:
+        # el SMTP tarda hasta 10 s. Se espera aquí y no en segundo plano porque en Vercel la función se congela
+        # al responder. El resultado va en una cabecera: el cuerpo sigue siendo el mismo que el del mock.
+        aviso = 'no_aplica'
+        if nuevo.get('estado') == 'Cerrado' and reporte.get('estado') != 'Cerrado':
+            from starlette.concurrency import run_in_threadpool
+            base = '{}://{}'.format(request.headers.get('x-forwarded-proto', request.url.scheme), request.headers.get('host', ''))
+            aviso = await run_in_threadpool(correo.avisar_cierre, nuevo, base)
+        return JSONResponse({k: v for k, v in nuevo.items() if k != 'correo'}, headers={'X-Aviso-Correo': aviso})
 
     @app.post('/reportes/analizar-foto')
     async def analizar_foto(request: Request):

@@ -133,15 +133,20 @@ export function useBackend(codigos) {
 
   // Cambia el estado de un reporte ciudadano (Recibido, Validado, En atencion, Cerrado, Descartado).
   // En demostracion solo se cambia en esta pestaña.
+  // Devuelve lo que dijo el backend del aviso por correo (cabecera X-Aviso-Correo): 'enviado', 'sin_correo',
+  // 'no_configurado', 'fallido' o 'no_aplica'; null si el backend no la manda (el mock) o en demostración.
   const guardarReporte = useCallback(async (c_reporte, estadoNuevo) => {
+    let aviso = null;
     if (origen.modo !== 'demo') {
       const r = await fetch(origen.url + '/reportes/' + encodeURIComponent(c_reporte), {
         method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ estado: estadoNuevo }),
       });
       const cuerpo = await r.json().catch(() => ({}));
       if (!r.ok) throw new Error((cuerpo.error || 'error ' + r.status) + (cuerpo.detalles ? ': ' + cuerpo.detalles.join('; ') : ''));
+      aviso = r.headers.get('X-Aviso-Correo');
     }
     setEstado((s) => ({ ...s, reportes: s.reportes.map((x) => (x.c_reporte === c_reporte ? { ...x, estado: estadoNuevo } : x)) }));
+    return aviso;
   }, [origen]);
   const refrescar = useCallback(() => setVersion((n) => n + 1), []);
 

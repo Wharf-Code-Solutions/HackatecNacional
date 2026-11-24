@@ -359,5 +359,87 @@ if PRUEBA_POSTGRES:
     revisar(not sin_rls, 'las cuatro tablas con RLS activo (la API REST de Supabase no las ve)',
             'sin RLS: {}'.format([r[0] for r in sin_rls]) if sin_rls else '')
 
+# ------------------------------------------------------------- 8. aviso por correo
+# El SMTP se reemplaza por uno falso que solo anota lo que se habría enviado: las pruebas nunca mandan correos.
+print('\n8) Aviso por correo al cerrar un reporte (SMTP falso)')
+import correo as modulo_correo        # noqa: E402
+
+class SMTPFalso:
+    enviados = []
+    falla = False
+
+    def __init__(self, host, puerto, timeout=None, context=None):
+        self.host, self.puerto = host, puerto
+
+    def __enter__(self):
+        if SMTPFalso.falla:
+            raise OSError('sin red')
+        return self
+
+    def __exit__(self, *a):
+        return False
+
+    def login(self, usuario, clave):
+        self.usuario, self.clave = usuario, clave
+
+    def send_message(self, msg):
+        SMTPFalso.enviados.append({'para': msg['To'], 'asunto': msg['Subject'], 'de': msg['From'],
+                                   'html': msg.get_body(('html',)).get_content(), 'clave': self.clave})
+
+_smtp_real = modulo_correo.smtplib.SMTP_SSL
+_entorno = {k: os.environ.get(k) for k in ('SMTP_USER', 'SMTP_PASSWORD', 'APP_URL')}
+modulo_correo.smtplib.SMTP_SSL = SMTPFalso
+try:
+    for k in _entorno:
+        os.environ.pop(k, None)
+    with TestClient(crear_app(base_temporal())) as c:
+        def nuevo_reporte(correo_persona):
+            cuerpo = {'version': '1.0', 'fecha_hora': '2026-11-24T10:00:00Z', 'tipo': 'descarga_visible',
+                      'latitud': 19.0262, 'longitud': -98.2335, 'exif_removido': True}
+            if correo_persona:
+                cuerpo['correo'] = correo_persona
+            return c.post('/reportes', json=cuerpo).json()['c_reporte']
+
+        f1 = nuevo_reporte('persona@ejemplo.mx')
+        r = c.patch('/reportes/' + f1, json={'estado': 'Cerrado'})
+        revisar(r.status_code == 200 and r.headers.get('x-aviso-correo') == 'no_configurado' and not SMTPFalso.enviados,
+                'sin credenciales no se envía nada y el cierre se guarda igual', r.headers.get('x-aviso-correo'))
+        revisar(c.get('/salud').json().get('aviso_por_correo') is False, '/salud dice que el correo no está configurado')
+
+        os.environ['SMTP_USER'] = 'avisos@ejemplo.mx'
+        os.environ['SMTP_PASSWORD'] = 'abcd efgh ijkl mnop'
+        os.environ['APP_URL'] = 'https://atoyac.ejemplo.mx'
+        revisar(c.get('/salud').json().get('aviso_por_correo') is True, '/salud dice que el correo está configurado')
+        f2 = nuevo_reporte('persona@ejemplo.mx')
+        r = c.patch('/reportes/' + f2, json={'estado': 'Validado'})
+        revisar(r.headers.get('x-aviso-correo') == 'no_aplica' and not SMTPFalso.enviados, 'validar no manda correo (solo el cierre)')
+        r = c.patch('/reportes/' + f2, json={'estado': 'Cerrado'})
+        e = SMTPFalso.enviados[-1] if SMTPFalso.enviados else {}
+        revisar(r.headers.get('x-aviso-correo') == 'enviado' and len(SMTPFalso.enviados) == 1 and e.get('para') == 'persona@ejemplo.mx',
+                'al cerrar se avisa a quien dejó su correo', r.headers.get('x-aviso-correo'))
+        revisar(f2 in e.get('asunto', '') and 'https://atoyac.ejemplo.mx/ciudadano/#/rastreo?folio=' + f2 in e.get('html', ''),
+                'el correo lleva el folio y el enlace a su rastreo')
+        revisar(e.get('clave') == 'abcdefghijklmnop', 'la contraseña de aplicación se usa sin los espacios con que la muestra Google')
+        revisar('correo' not in r.json(), 'la respuesta del cierre no expone el correo')
+        c.patch('/reportes/' + f2, json={'estado': 'Cerrado'})
+        revisar(len(SMTPFalso.enviados) == 1, 'cerrar de nuevo un reporte cerrado no repite el correo')
+        f3 = nuevo_reporte(None)
+        r = c.patch('/reportes/' + f3, json={'estado': 'Cerrado'})
+        revisar(r.headers.get('x-aviso-correo') == 'sin_correo' and len(SMTPFalso.enviados) == 1, 'sin correo no se intenta enviar')
+        SMTPFalso.falla = True
+        f4 = nuevo_reporte('otra@ejemplo.mx')
+        r = c.patch('/reportes/' + f4, json={'estado': 'Cerrado'})
+        revisar(r.status_code == 200 and r.headers.get('x-aviso-correo') == 'fallido' and c.get('/reportes/' + f4).json()['estado'] == 'Cerrado',
+                'si el SMTP falla, el cierre se guarda y se informa el fallo')
+        SMTPFalso.falla = False
+finally:
+    modulo_correo.smtplib.SMTP_SSL = _smtp_real
+    for k, v in _entorno.items():
+        if v is None:
+            os.environ.pop(k, None)
+        else:
+            os.environ[k] = v
+revisar(modulo_correo.enmascarar('persona@ejemplo.mx') == 'pe***@ejemplo.mx', 'los registros enmascaran el correo')
+
 print('\n{}'.format('Todo pasa.' if not fallas else '{} falla(s): {}'.format(len(fallas), ', '.join(fallas))))
 sys.exit(1 if fallas else 0)

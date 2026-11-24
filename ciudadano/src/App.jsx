@@ -7,10 +7,12 @@ import Rastreo from './components/Rastreo.jsx';
 import Terminos from './components/Terminos.jsx';
 
 const PANTALLAS = ['mapa', 'rastreo', 'terminos'];
+// #/rastreo?folio=RC-20261124-0001 abre el rastreo con ese folio (es el enlace del correo de cierre)
 const desdeHash = () => {
-  const p = window.location.hash.replace(/^#\/?/, '');
+  const p = window.location.hash.replace(/^#\/?/, '').split('?')[0];
   return PANTALLAS.includes(p) ? p : 'mapa';
 };
+const folioDelHash = () => new URLSearchParams(window.location.hash.split('?')[1] || '').get('folio') || '';
 
 export default function App() {
   const origen = useMemo(origenBackend, []);
@@ -63,7 +65,7 @@ export default function App() {
       <NavBar pantalla={pantalla} ir={ir} />
       <main className="app-main">
         {pantalla === 'mapa' && <MapaPage origen={origen} datos={datos} conectado={conectado} pendientes={pendientes} setPendientes={setPendientes} ir={ir} />}
-        {pantalla === 'rastreo' && <Rastreo origen={origen} datos={datos} folioInicial={folios()[0]?.c_reporte || ''} />}
+        {pantalla === 'rastreo' && <Rastreo origen={origen} datos={datos} key={folioDelHash()} folioInicial={folioDelHash() || folios()[0]?.c_reporte || ''} />}
         {pantalla === 'terminos' && <Terminos ir={ir} />}
       </main>
     </div>
