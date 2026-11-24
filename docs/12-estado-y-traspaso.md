@@ -7,9 +7,9 @@ están en [11-metodologia-modulos.md](11-metodologia-modulos.md); las reglas del
 
 ## En una frase
 
-Hay **datos** (M0), un **dispositivo simulado** (M4) y un **mapa** (M6). Falta el cerebro: saber qué
-sitio está río arriba de cuál (M1), decidir si una lectura es alarma (M2) y estimar hasta dónde llega
-la contaminación (M3).
+Hay **datos** (M0), un **dispositivo simulado** (M4), un **mapa** (M6) y la **topología del río**
+(M1): ya se sabe qué sitio está aguas abajo de cuál y a qué distancia. Falta decidir si una lectura
+es alarma (M2) y estimar hasta dónde llega la contaminación (M3), que ya tiene su entrada lista.
 
 ## Lo que se hizo, en el orden en que se hizo
 
@@ -28,9 +28,9 @@ la contaminación (M3).
 | Módulo | Estado | Dónde |
 |---|---|---|
 | M0 Datos y contrato | **Construido** | `datos/`, `contrato/`, `scripts/` |
-| M1 Topología | **Pendiente. Camino crítico.** Sin dependencias pendientes | escribirá en `datos/procesados/` |
+| M1 Topología | **Construida.** 210 de 219 sitios con sucesor; 14 marcados para revisión | `datos/procesados/red/`, `docs/13-topologia-red.md` |
 | M2 Motor de reglas | **Pendiente.** Sin dependencias pendientes | librería propia |
-| M3 Propagación | Pendiente. Necesita la salida de M1 | — |
+| M3 Propagación | **Pendiente, ya desbloqueada.** La topología que necesitaba existe | — |
 | M4 Dispositivo | **Simulador construido y probado; sin hardware** | `dispositivo/` |
 | M5 Backend | Pendiente. Puede empezarse contra el contrato | — |
 | M6 Mapa | **Prototipo** (aún no colorea por índice ni está probado a ancho de teléfono) | `mapa/` |

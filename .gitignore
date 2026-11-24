@@ -8,6 +8,7 @@ datos/geo/*
 # Tablas procesadas pesadas (se regeneran con scripts/10_construir_tablas.py)
 datos/procesados/muestreo.csv
 datos/procesados/muestreo_nucleo.csv
+datos/procesados/red/tramo.csv
 
 # Python
 __pycache__/

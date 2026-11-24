@@ -138,8 +138,7 @@ for ruta, fid in ORIGENES:
             'estado': normaliza_estado(estado), 'cuenca': cuenca,
             'organismo_cuenca': g(r, 'ORGANISMO CUENCA'),
             'latitud': lat, 'longitud': lon,
-            'c_sitio_aguas_abajo': '', 'semaforo': '', 'contaminantes': '',
-            'fuente': fid}
+            'semaforo': '', 'contaminantes': '', 'fuente': fid}
 print('   descartados:', descartes)
 
 # enriquecer con semaforo y contaminantes de F02 (periodo 2012-2025)
@@ -182,7 +181,7 @@ for r in it:
             'estado': normaliza_estado(estado),
             'cuenca': cuenca or '',
             'organismo_cuenca': r[jx['ORGANISMO_DE_CUENCA']] or '',
-            'latitud': lat, 'longitud': lon, 'c_sitio_aguas_abajo': '',
+            'latitud': lat, 'longitud': lon,
             'semaforo': r[jx['SEMAFORO']] or '',
             'contaminantes': r[jx['CONTAMINANTES']] or '', 'fuente': 'F02'}
 wb.close()
@@ -190,8 +189,7 @@ print('   indicadores de la cuenca en F02: {}'.format(len(ind_filas)))
 
 CAMPOS_SITIO = ['c_sitio', 'nombre', 'cuerpo_agua', 'tipo_cuerpo', 'subtipo_cuerpo',
                 'municipio', 'estado', 'cuenca', 'organismo_cuenca', 'latitud',
-                'longitud', 'c_sitio_aguas_abajo', 'semaforo', 'contaminantes',
-                'fuente']
+                'longitud', 'semaforo', 'contaminantes', 'fuente']
 escribir('sitio.csv', CAMPOS_SITIO,
          sorted(sitios.values(), key=lambda d: d['c_sitio']))
 if ind_filas:

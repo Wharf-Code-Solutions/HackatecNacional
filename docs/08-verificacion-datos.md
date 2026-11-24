@@ -6,8 +6,8 @@ Generado por `scripts/30_verificacion_datos.py`. Cada seccion termina en un vere
 
 - `datos/crudos/`: 138.0 MB
 - `datos/geo/`: 61.0 MB
-- `datos/procesados/`: 19.4 MB
-- **Total en disco: 218.3 MB.** De eso, 138.0 MB son archivos crudos que no se versionan y se vuelven a bajar con un script.
+- `datos/procesados/`: 27.8 MB
+- **Total en disco: 226.8 MB.** De eso, 138.0 MB son archivos crudos que no se versionan y se vuelven a bajar con un script.
 
 | Tabla | Filas |
 |---|---|
@@ -125,10 +125,11 @@ Por parametro de campo, sitios con 12 o mas mediciones:
 
 ## 10. Topologia del rio
 
-- Sitios con sucesor aguas abajo definido: **0 de 219**.
+- Sitios con sucesor aguas abajo definido: **210 de 219**.
+- Sitios marcados para revision en la topologia: **14**.
 - Capas de lineas de flujo disponibles en `datos/geo/`: **10** (una por subcuenca).
 
-**Veredicto: BLOQUEANTE.** El orden aguas arriba -> aguas abajo es la entrada de tres cosas distintas: el modelo de propagacion (Etapa 2), la vista de "fuentes aguas arriba de este punto" (Etapa 4) y la asignacion de un reporte ciudadano al tramo correcto (Etapa 5). La red ya esta descargada, pero falta proyectar los 219 sitios sobre ella y ordenarlos.
+**Veredicto: OK, con 14 casos marcados.** La topologia ya esta calculada por `scripts/70_topologia_red.py` y vive en `datos/procesados/red/`. Era la entrada de tres cosas distintas: el modelo de propagacion (Etapa 2), la vista de "fuentes aguas arriba de este punto" (Etapa 4) y la asignacion de un reporte ciudadano al tramo correcto (Etapa 5). Los sitios con `revisar = si` son presas y jagueyes que la red 1:50 000 no conecta con el Atoyac, y seis pares donde el orden de Strahler baja hacia aguas abajo; se publican marcados en lugar de corregirlos a mano. Detalle en `docs/13-topologia-red.md`.
 
 ## 11. Fuentes que faltan y a que etapa bloquean
 

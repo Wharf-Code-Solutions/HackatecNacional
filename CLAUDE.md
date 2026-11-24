@@ -27,9 +27,10 @@ color no ordena nada y **no se usa para pintar el mapa** (decisión D9).
 | M0 datos y contrato | Construido: 219 sitios, 145 703 resultados 2012-2025, 7 esquemas v1.0, fixtures, servidor mock |
 | M4 dispositivo | Simulador web construido y probado (`dispositivo/`). **Sin hardware**: las especificaciones son supuestos de diseño |
 | M6 mapa | Prototipo (`mapa/`): ríos, subcuencas, 219 sitios y 5 estaciones con zoom al simulador |
-| M1 topología (orden aguas arriba → abajo) | **Pendiente**, es el camino crítico. La red del INEGI ya está descargada |
+| M1 topología (orden aguas arriba → abajo) | **Construida** (`scripts/70_topologia_red.py` → `datos/procesados/red/`): 210 de 219 sitios con sucesor y distancia sobre el cauce; 14 marcados para revisión |
 | M2 motor de reglas | **Pendiente**. El mock trae un evaluador `stub` que no discrimina (31 alertas en un día sin incidente) |
-| M3 propagación, M5 backend, M7 panel, M8 app, M9, M10 | Pendientes |
+| M3 propagación | **Pendiente, desbloqueada**: ya tiene la topología |
+| M5 backend, M7 panel, M8 app, M9, M10 | Pendientes |
 
 No conviertas "pendiente" en "construido" sin verificarlo contra el repo.
 

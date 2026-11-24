@@ -92,6 +92,10 @@ repositorio (`python -m http.server 8000`).
 | `datos/procesados/diccionario_conagua.csv` | Diccionario oficial de campos | `10_construir_tablas.py` | **NO** |
 | `datos/procesados/mapa/*.geojson` | Cauces (orden ≥ 4), subcuencas y toponimia hidrográfica, simplificados para el mapa | `60_red_para_mapa.py` | **NO** |
 | `datos/procesados/analisis/*.csv` | Línea base, ranking, temporada, tendencia, cobertura, correlaciones | `20_analisis_exploratorio.py` | **NO** |
+| `datos/procesados/red/tramo.csv` | 65 342 tramos con orden de Strahler, longitud y tramo de aguas abajo. **No se versiona** (8.2 MB) | `70_topologia_red.py` | **NO** |
+| `datos/procesados/red/sitio_red.csv` | Dónde quedó enganchado cada sitio y con qué calidad | `70_topologia_red.py` | **NO** |
+| `datos/procesados/red/sitio_aguas_abajo.csv` | **El siguiente sitio aguas abajo y su distancia sobre el cauce** | `70_topologia_red.py` | **NO** |
+| `datos/procesados/red/sitio_pares.csv` | Los 6 276 pares arriba-abajo | `70_topologia_red.py` | **NO** |
 
 `muestreo.csv` y `muestreo_nucleo.csv` están en `.gitignore` por tamaño: quien clona debe
 regenerarlas.
@@ -113,6 +117,7 @@ El prefijo numérico indica el orden de ejecución. `_comun.py` no se ejecuta so
 | `scripts/30_verificacion_datos.py` | Verifica integridad y emite veredictos | `datos/crudos/`, `datos/procesados/` | `docs/08-...` |
 | `scripts/40_generar_fixtures.py` | Genera los fixtures del contrato | `datos/procesados/` | `contrato/fixtures/` |
 | `scripts/60_red_para_mapa.py` | Lee las capas de la red hidrográfica y las simplifica para pintar el mapa. **Fuente de verdad de** qué orden de cauce se dibuja (`ORDEN_MINIMO`) y de las tolerancias de simplificación. No calcula topología | `datos/geo/F08_red_hidrografica/` | `datos/procesados/mapa/` |
+| `scripts/70_topologia_red.py` | **M1.** Engancha los sitios a la red del INEGI, orienta los tramos y calcula el siguiente sitio aguas abajo. **Fuente de verdad de la topología** | `datos/geo/`, `sitio.csv` | `datos/procesados/red/`, `docs/13-...` |
 | `scripts/50_verificar_repo.py` | **Revisión de salud del repositorio.** Automatiza nueve comprobaciones de invariantes y sale con código 1 si falla. **Fuente de verdad de los conteos esperados** (`FILAS_ESPERADAS`) | todo | stdout |
 
 **Orden de dependencia:** 00 → 10 → 20 → 30 y 40. El 30 y el 40 dependen del 20 porque
@@ -151,6 +156,8 @@ debes tocar.
 | Qué sitios entran al área de estudio | `en_area()` en `scripts/10_construir_tablas.py` |
 | Cómo se interpreta un valor censurado | `parse_valor()` en `scripts/_comun.py` |
 | Cómo se escribe el nombre de un estado | `normaliza_estado()` en `scripts/_comun.py` |
+| Qué sitio está aguas abajo de cuál | `datos/procesados/red/sitio_aguas_abajo.csv` (no `sitio.csv`) |
+| Tolerancia de enganche de un sitio al cauce | `ENGANCHE_BUENO` y `ENGANCHE_DUDOSO` en `scripts/70_topologia_red.py` |
 | Los conteos esperados de cada tabla | `FILAS_ESPERADAS` en `scripts/50_verificar_repo.py` |
 | Traducción entre claves CONAGUA y códigos cortos | `datos/procesados/parametro.csv`, columna `c_parametro_std` |
 | Qué parámetros son del núcleo analítico | constante `NUCLEO` en `scripts/10_construir_tablas.py` |

@@ -31,6 +31,7 @@ Orden de lectura recomendado. Los primeros seis documentos se mantienen a mano; 
 | 08 | [Verificación de datos](08-verificacion-datos.md) | El estado del conjunto de datos, con veredicto por sección | **generado** por `scripts/30_verificacion_datos.py` |
 | 09 | [Hallazgos del exploratorio](09-hallazgos-exploratorio.md) | Qué dicen los datos | **generado** por `scripts/20_analisis_exploratorio.py` |
 | 10 | [Revisión crítica del plan](10-revision-critica-plan.md) | Seis objeciones al plan de etapas 2 a 8, con alternativas | a mano |
+| 13 | [Topología de la red](13-topologia-red.md) | Cómo se ordenaron los sitios río abajo y qué casos quedaron marcados | **generado** por `scripts/70_topologia_red.py` |
 | 11 | [Metodología de módulos](11-metodologia-modulos.md) | Cómo se reparte el trabajo sin cuellos de botella | a mano |
 | 12 | [Estado actual y traspaso](12-estado-y-traspaso.md) | Qué hay, qué falta y qué puede tomar alguien hoy sin esperar a nadie | a mano |
 

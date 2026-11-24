@@ -21,6 +21,47 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · M1: topologia de la red calculada
+
+**Qué cambió.** Nuevo `scripts/70_topologia_red.py`. Engancha los 219 sitios a la red
+hidrográfica del INEGI, orienta los 65 342 tramos hacia la salida de su componente y
+calcula, para cada sitio, el siguiente aguas abajo y la distancia **sobre el cauce**.
+Escribe `datos/procesados/red/` (cuatro tablas) y `docs/13-topologia-red.md`. Se quitó la
+columna vacía `c_sitio_aguas_abajo` de `sitio.csv`.
+
+**Resultado.** 210 de 219 sitios con sucesor, 6 276 pares arriba-abajo, mediana de
+distancia al siguiente sitio 1 749 m. Enganche: mediana 11 m, 195 buenos de 219. Validado
+por tres vías: los 4 pares que declaran su posición en el nombre coinciden, 204 de 210
+pares consecutivos tienen orden de Strahler no decreciente, y la cadena cruza de Tlaxcala
+a Puebla en 2 570 pares, que es la relación que importa porque el Zahuapan desagua en el
+Atoyac.
+
+**Dos errores que hubo que corregir.** El primero: enraizar cada subcuenca en el nodo más
+cercano a su punto de drenaje dejaba sin orientar el 99 % de la red en 4 de las 10
+subcuencas, porque la raíz caía en un fragmento suelto de 8 a 30 nodos. Se calculan las 52
+componentes conexas y se orienta cada una desde su propio desagüe, identificado como el
+nodo de grado 1 cuyo tramo tiene mayor `ARBSUM_1`. Pasó de 42 % a 100 % de tramos
+orientados. El segundo: ocho sitios enganchaban a más de 500 m del cauce, uno a 11 km; son
+jagüeyes y presas que la red 1:50 000 no conecta con el Atoyac. No se encadenan y quedan
+con su motivo escrito, en lugar de inventarles un recorrido.
+
+**Qué queda marcado.** 14 sitios con `revisar = si`: los 8 de enganche lejano y 6 donde el
+orden de Strahler baja hacia su sucesor, que es físicamente imposible y apunta a un
+enganche en la rama equivocada de una confluencia. Se publican marcados; quien consuma la
+tabla puede filtrarlos.
+
+**Qué arrastró.** `scripts/10_construir_tablas.py` (quita la columna),
+`scripts/30_verificacion_datos.py` (su sección 10 pasó de BLOQUEANTE a OK y ahora lee la
+tabla nueva), `docs/01-que-construimos.md`, `docs/12-estado-y-traspaso.md`,
+`docs/README.md`, `docs/contexto/02-mapa-del-repo.md`, `datos/README.md` y `CLAUDE.md`.
+
+**Impacto en otros módulos.** **M3 queda desbloqueada**: ya tiene la secuencia de sitios y
+las distancias sobre el cauce que necesitaba. M7 puede responder "qué hay aguas arriba de
+este punto" con `sitio_pares.csv`. M8 puede asignar un reporte al tramo correcto con
+`sitio_red.csv`. Quien leía `c_sitio_aguas_abajo` de `sitio.csv` debe leer
+`red/sitio_aguas_abajo.csv`. `red/tramo.csv` pesa 8.2 MB y no se versiona; las otras tres
+tablas suman 0.25 MB y sí, para que nadie necesite bajar la red del INEGI.
+
 ## 2026-11-24 · La carpeta `documentacion/` pasa a llamarse `docs/`
 
 **Qué cambió.** Renombrada con `git mv`, conservando el historial. Se actualizaron las 90

@@ -31,6 +31,24 @@ regeneran con los scripts. Todo lo demás sí está en el repositorio.
 | `indicador_sitio_periodo.csv` | 212 | `clave_sitio` | Fila de indicadores de CONAGUA por sitio para el periodo 2012–2025, con su semáforo y sus contaminantes. |
 | `diccionario_conagua.csv` | 48 | `campo` | Diccionario de datos oficial de los indicadores de agua superficial. |
 
+## Topología del río
+
+`datos/procesados/red/` la produce `scripts/70_topologia_red.py` a partir de la red
+hidrográfica del INEGI: `tramo.csv` (65 342 tramos con su orden de Strahler y su tramo
+aguas abajo), `sitio_red.csv` (dónde quedó enganchado cada sitio y con qué calidad),
+`sitio_aguas_abajo.csv` (el siguiente sitio y la distancia **sobre el cauce**) y
+`sitio_pares.csv` (los 6 276 pares arriba-abajo).
+
+`tramo.csv` pesa 8.2 MB y no se versiona, por el mismo criterio que `muestreo.csv`: se
+regenera con el script. Las otras tres suman 0.25 MB y sí están en el repositorio, para
+que M3, M7 y M8 puedan trabajar sin bajar los 37 MB de la red del INEGI.
+
+`c_sitio_aguas_abajo` **no está en `sitio.csv`**: esa tabla la genera
+`10_construir_tablas.py`, que corre antes y no puede conocer la topología. La columna
+vivía vacía y se quitó. Los 14 sitios con `revisar = si` son presas y jagüeyes que la red
+1:50 000 no conecta con el Atoyac, más seis pares donde el orden de Strahler baja hacia
+aguas abajo; se publican marcados en lugar de corregirlos a mano.
+
 ## Criterio de recorte al área de estudio
 
 Un sitio entra si **no** es subterráneo, su estado es Puebla o Tlaxcala y además:

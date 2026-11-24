@@ -49,6 +49,10 @@ FILAS_ESPERADAS = {
     'umbral.csv': 146,
     'indicador_sitio_periodo.csv': 212,
     'diccionario_conagua.csv': 48,
+    os.path.join('red', 'tramo.csv'): 65342,
+    os.path.join('red', 'sitio_red.csv'): 219,
+    os.path.join('red', 'sitio_aguas_abajo.csv'): 219,
+    os.path.join('red', 'sitio_pares.csv'): 6276,
 }
 
 print('\n1) Conteos de las tablas procesadas')

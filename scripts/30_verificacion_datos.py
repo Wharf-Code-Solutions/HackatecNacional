@@ -375,21 +375,42 @@ di()
 # ------------------------------------- 10. topologia: la dependencia critica
 di('## 10. Topologia del rio')
 di()
-con_abajo = sum(1 for s in sitios.values() if s['c_sitio_aguas_abajo'])
+ruta_red = os.path.join(PROC, 'red', 'sitio_aguas_abajo.csv')
+if os.path.exists(ruta_red):
+    with open(ruta_red, encoding='utf-8-sig') as f:
+        topo = list(csv.DictReader(f))
+    con_abajo = sum(1 for r in topo if r['c_sitio_aguas_abajo'])
+    marcados = sum(1 for r in topo if r.get('revisar'))
+else:
+    con_abajo = marcados = 0
 geo = os.path.join(RAIZ, 'datos', 'geo', 'F08_red_hidrografica')
 hl = []
 for raiz, _, archivos in os.walk(geo):
     hl += [a for a in archivos if a.endswith('_hl.shp')]
 di('- Sitios con sucesor aguas abajo definido: **{} de {}**.'.format(
     con_abajo, len(sitios)))
+di('- Sitios marcados para revision en la topologia: **{}**.'.format(marcados))
 di('- Capas de lineas de flujo disponibles en `datos/geo/`: **{}** '
    '(una por subcuenca).'.format(len(hl)))
 di()
-di('**Veredicto: BLOQUEANTE.** El orden aguas arriba -> aguas abajo es la '
-   'entrada de tres cosas distintas: el modelo de propagacion (Etapa 2), la '
-   'vista de "fuentes aguas arriba de este punto" (Etapa 4) y la asignacion de '
-   'un reporte ciudadano al tramo correcto (Etapa 5). La red ya esta '
-   'descargada, pero falta proyectar los 219 sitios sobre ella y ordenarlos.')
+if con_abajo:
+    di('**Veredicto: OK, con {} casos marcados.** La topologia ya esta '
+       'calculada por `scripts/70_topologia_red.py` y vive en '
+       '`datos/procesados/red/`. Era la entrada de tres cosas distintas: el '
+       'modelo de propagacion (Etapa 2), la vista de "fuentes aguas arriba de '
+       'este punto" (Etapa 4) y la asignacion de un reporte ciudadano al tramo '
+       'correcto (Etapa 5). Los sitios con `revisar = si` son presas y jagueyes '
+       'que la red 1:50 000 no conecta con el Atoyac, y seis pares donde el '
+       'orden de Strahler baja hacia aguas abajo; se publican marcados en lugar '
+       'de corregirlos a mano. Detalle en `docs/13-topologia-red.md`.'.format(
+           marcados))
+else:
+    di('**Veredicto: BLOQUEANTE.** El orden aguas arriba -> aguas abajo es la '
+       'entrada de tres cosas distintas: el modelo de propagacion (Etapa 2), la '
+       'vista de "fuentes aguas arriba de este punto" (Etapa 4) y la asignacion '
+       'de un reporte ciudadano al tramo correcto (Etapa 5). La red ya esta '
+       'descargada, pero falta proyectar los 219 sitios sobre ella y ordenarlos. '
+       'Lo calcula `scripts/70_topologia_red.py`.')
 di()
 
 # --------------------------------------------- 11. huecos de fuentes
