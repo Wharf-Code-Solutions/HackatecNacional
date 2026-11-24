@@ -21,6 +21,64 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · M5: la base en producción es Supabase
+
+**Qué cambió.** El backend en Vercel guarda en el Postgres de Supabase por su Transaction pooler
+(D26): conexión sin sentencias preparadas, URL limpia de parámetros de integraciones (`supa=`), las
+cuatro tablas con RLS activo y el esquema solo se toca si falta algo. Documentación de Neon cambiada
+a Supabase (`backend/README.md`, `panel/README.md`, `03-tecnologias.md`, `CLAUDE.md`, `api/index.py`).
+
+**Tres errores que aparecieron al probar.** (1) Aplicar el esquema en cada conexión, ya con
+`ENABLE ROW LEVEL SECURITY`, trababa a las instancias que escribían: Postgres reportó "deadlock
+detected" en la prueba de dos instancias. Ahora se consulta `pg_class` primero. (2) En SQLite,
+`PRAGMA journal_mode=WAL` corría antes de `busy_timeout`. (3) Aun con `busy_timeout`, pasar a WAL
+falla al instante si otra conexión escribe (1 de 3 corridas daba "database is locked"); ahora solo
+se pide si falta y se reintenta.
+
+**Verificación.** `backend/prueba.py`: SQLite 37 de 37 en 8 corridas seguidas, Postgres 17 38 de 38
+en 5 corridas seguidas. Nuevas: limpieza de la URL de la integración y, en Postgres, RLS activo en las
+cuatro tablas.
+
+**No verificado.** Supabase mismo: se probó contra un Postgres 17 local. El pooler de Supabase no se
+probó; la opción `prepare_threshold=None` es la que documentan psycopg y Supabase para él.
+
+**Impacto en otros módulos.** Ninguno. Nadie usa `@supabase/supabase-js`: el panel habla con el
+backend.
+
+---
+
+## 2026-11-24 · M5: el backend corre en Vercel junto al panel, con Postgres
+
+**Qué cambió.** Panel y backend se despliegan en un solo proyecto de Vercel (D25): `vercel.json`,
+`api/index.py` y `requirements.txt` en la raíz; se quitó `panel/vercel.json`. El backend guarda en
+Postgres cuando existe `DATABASE_URL` y en SQLite en local. El motor ya no vive en memoria: en cada
+lote se reconstruye por estación con sus últimas 200 lecturas, bajo un candado por estación en la
+base. Revisa D24 y D23.
+
+**Verificación.** `backend/prueba.py` (36 comprobaciones) pasa en SQLite y en un Postgres 17 de
+prueba, tres veces seguidas en Postgres. Dos instancias que se turnan los lotes de
+`descarga_industrial` dan las mismas cinco alertas y folios que una. Sin el candado por estación, la
+prueba directa del candado falla (la segunda conexión entra a los 0.15 s en vez de esperar). Con el
+panel compilado con `VITE_API_URL=/api` y servido junto a `api/index.py` sobre Postgres:
+`reproducir_escenario.py descarga_industrial --url .../api` da 5 alertas, el panel las muestra
+conectado a `/api`, guarda el responsable y la predicción de M3 responde con 26 destinos.
+
+**Dos errores que aparecieron al probar.** Dos instancias que arrancan a la vez sobre una base vacía
+chocaban al crear las tablas en Postgres ("duplicate key ... pg_type_typname_nsp_index"); se crean
+bajo un candado. Y desde Git Bash `VITE_API_URL=/api` llega como `C:/Program Files/Git/api`: en local
+se compila desde PowerShell.
+
+**No verificado.** El despliegue en Vercel mismo (lo hace el equipo a mano) ni Neon: se probó con un
+Postgres 17 local.
+
+**Qué arrastró.** `backend/README.md`, `panel/README.md`, D25 y notas de revisión en D23 y D24,
+`03-tecnologias.md`, `02-mapa-del-repo.md`, `12-estado-y-traspaso.md`, `CLAUDE.md`.
+
+**Impacto en otros módulos.** El mapa y el simulador pueden apuntar a `https://<proyecto>.vercel.app/api`
+con `?mock=` y `?backend=`. En Vercel, Root Directory deja de ser `panel`.
+
+---
+
 ## 2026-11-24 · M5: backend real con FastAPI y SQLite
 
 **Qué cambió.** Nueva carpeta `backend/` (D24): FastAPI con las rutas del contrato y las mismas

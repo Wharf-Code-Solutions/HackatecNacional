@@ -2,5 +2,7 @@
 # precompiladas de pydantic-core y pide Rust para compilarlo: usa el de python.org.
 fastapi==0.165.0
 uvicorn==0.54.0
+# Postgres (en Vercel, con DATABASE_URL). En tu computadora basta SQLite.
+psycopg[binary]==3.3.9
 # Solo para las pruebas (TestClient de FastAPI).
 httpx==0.28.1

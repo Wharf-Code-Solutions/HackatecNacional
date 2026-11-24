@@ -66,7 +66,7 @@ estaciones leyendo `GET /alertas` del backend. Se sirve desde la raíz del repo.
 | `panel/public/datos/` | Copia de `contrato/fixtures/` y `datos/procesados/red/` | **NO** (generado, no versionado) |
 | `panel/scripts/capturar-demo.mjs` | Captura la foto del backend para el modo demostración | sí |
 | `panel/public/demo/foto.json` | Respuestas del mock con `--motor real` sobre `descarga_industrial` | **NO**: se regenera con `npm run capturar-demo` |
-| `panel/vercel.json`, `package.json` | Despliegue en Vercel (raíz del proyecto: `panel/`) | sí |
+| `panel/package.json` | Dependencias y scripts del panel | sí |
 
 El panel **no evalúa nada**: lee `GET /alertas`, `GET /veredictos`, `GET /reportes` y escribe
 con `PATCH /alertas/<c_alerta>`. Por su cuenta solo lee tablas publicadas. Se corre con
@@ -74,12 +74,20 @@ con `PATCH /alertas/<c_alerta>`. Por su cuenta solo lee tablas publicadas. Se co
 
 ---
 
+## Raíz: despliegue en Vercel (D25)
+
+| Ruta | Qué es | Editable |
+|---|---|---|
+| `vercel.json` | Un solo proyecto: compila el panel y declara la función del backend en `/api` con los archivos que lee | sí |
+| `api/index.py` | Función de Python de Vercel: monta `backend/` bajo `/api` | sí |
+| `requirements.txt` | Dependencias de esa función (FastAPI, psycopg). Para correr el backend en local: `backend/requirements.txt` | sí |
+
 ## `backend/` — módulo M5
 
 | Ruta | Qué es | Editable |
 |---|---|---|
 | `backend/app.py` | Aplicación FastAPI: las rutas del contrato, igual que el mock, más `GET /alertas/<c_alerta>/prediccion` | sí |
-| `backend/almacen.py` | Persistencia en SQLite, con candado para leer y escribir | sí |
+| `backend/almacen.py` | Persistencia en SQLite o Postgres (`DATABASE_URL`), con candado por estación en la base | sí |
 | `backend/propagacion.py` | Predicción de M3 a partir de las tablas que M3 publica | sí, pero debe dar lo mismo que `scripts/80_propagacion.py` (la prueba lo exige) |
 | `backend/servidor.py`, `backend/asgi.py` | Arranque local (`--limpiar`, `--db`) y punto de entrada para producción | sí |
 | `backend/prueba.py` | Criterio de terminado de M5 y más | sí |

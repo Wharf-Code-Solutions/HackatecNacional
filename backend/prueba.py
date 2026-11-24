@@ -3,12 +3,17 @@
 
     backend\\.venv\\Scripts\\python -I backend/prueba.py
 
+Con Postgres en lugar de SQLite (una base nueva por caso, sobre un servidor de prueba):
+
+    $env:PRUEBA_POSTGRES = 'postgresql://postgres@127.0.0.1:55432/postgres'
+
 Mide el criterio de terminado de M5 (docs/12-estado-y-traspaso.md):
   1. Los cinco escenarios pasan sin errores de contrato y dan las alertas del motor.
   2. Rechaza con los mismos codigos y detalles que el mock, comparado en vivo.
-  3. Los datos persisten tras reiniciar, y reiniciar a mitad de un escenario da
-     exactamente las mismas alertas y folios que no reiniciar.
-Ademas: reenvio idempotente, PATCH, reportes y la prediccion de M3.
+  3. Los datos persisten tras reiniciar, y dos instancias que se reparten un
+     escenario (como las funciones de Vercel) dan las mismas alertas y folios que una.
+Ademas: reenvio idempotente, PATCH, reportes, la prediccion de M3, carga
+concurrente y la funcion de Vercel en /api.
 """
 import importlib.util
 import json
@@ -49,8 +54,22 @@ def paquetes(nombre):
     return d['paquetes'] if isinstance(d, dict) else d
 
 
+PRUEBA_POSTGRES = os.environ.get('PRUEBA_POSTGRES')
+
+
 def base_temporal():
-    return os.path.join(tempfile.mkdtemp(prefix='atoyac_'), 'prueba.sqlite')
+    """Una base vacia por caso: un archivo SQLite nuevo, o una base nueva en Postgres."""
+    if not PRUEBA_POSTGRES:
+        return os.path.join(tempfile.mkdtemp(prefix='atoyac_'), 'prueba.sqlite')
+    import uuid
+    import psycopg
+    nombre = 'prueba_' + uuid.uuid4().hex[:12]
+    with psycopg.connect(PRUEBA_POSTGRES, autocommit=True) as cx:
+        cx.execute('CREATE DATABASE ' + nombre)
+    return PRUEBA_POSTGRES.rsplit('/', 1)[0] + '/' + nombre
+
+
+print('Base de las pruebas: {}'.format('Postgres' if PRUEBA_POSTGRES else 'SQLite'))
 
 
 def enviar(cliente, lista, de_a_uno=True):
@@ -150,6 +169,66 @@ revisar([a['c_alerta'] for a in con_reinicio] == [a['c_alerta'] for a in de_corr
 revisar(con_reinicio == de_corrido, 'mismo contenido de alertas que sin reiniciar')
 revisar(len({a['c_alerta'] for a in con_reinicio}) == len(con_reinicio), 'ningun folio repetido')
 
+# En Vercel cada lote puede caer en una instancia distinta. Dos apps sobre la misma
+# base, turnandose lotes de 5 como los manda reproducir_escenario.py.
+ruta = base_temporal()
+with TestClient(crear_app(ruta)) as a, TestClient(crear_app(ruta)) as b:
+    for k in range(0, len(lista), 5):
+        (a if (k // 5) % 2 == 0 else b).post('/lecturas', json=lista[k:k + 5])
+    turnadas = a.get('/alertas').json()['alertas']
+revisar(turnadas == de_corrido, 'dos instancias turnandose lotes dan lo mismo que una',
+        ', '.join(x['c_alerta'] for x in turnadas))
+
+# Y las dos escribiendo la misma estacion al mismo tiempo: el candado por estacion
+# las pone en fila; ningun folio se repite y no hay errores.
+ruta = base_temporal()
+otro_dia = paquetes('lluvia')
+with TestClient(crear_app(ruta)) as a, TestClient(crear_app(ruta)) as b:
+    def manda(par):
+        cli, k = par
+        return cli.post('/lecturas', json=otro_dia[k:k + 5]).status_code
+    from concurrent.futures import ThreadPoolExecutor as _Pool
+    with _Pool(max_workers=8) as pool:
+        codigos = list(pool.map(manda, [((a, b)[(k // 5) % 2], k) for k in range(0, len(otro_dia), 5)]))
+    juntas = a.get('/alertas').json()['alertas']
+    salud_ab = a.get('/salud').json()
+revisar(all(c == 202 for c in codigos) and salud_ab['lecturas'] == len(otro_dia),
+        'dos instancias escribiendo a la vez, sin errores ni lecturas perdidas',
+        '{} lecturas de {}'.format(salud_ab['lecturas'], len(otro_dia)))
+revisar(len({x['c_alerta'] for x in juntas}) == len(juntas), 'ningun folio repetido entre instancias',
+        '{} alertas'.format(len(juntas)))
+
+# Lo anterior casi nunca choca: hace falta que dos lotes simultaneos de la misma
+# estacion generen alerta. El candado se prueba directo: dos conexiones distintas
+# (dos instancias) entran a la misma estacion; la segunda debe esperar a la primera.
+import time as _t                    # noqa: E402
+from almacen import Almacen          # noqa: E402
+ruta = base_temporal()
+uno, dos = Almacen(ruta), Almacen(ruta)
+marcas = {}
+
+
+def ocupa():
+    with uno.transaccion('EST-ATY-01'):
+        marcas['uno_entra'] = _t.monotonic()
+        _t.sleep(0.6)
+        marcas['uno_sale'] = _t.monotonic()
+
+
+hilo = threading.Thread(target=ocupa)
+hilo.start()
+_t.sleep(0.15)
+with dos.transaccion('EST-ATY-01'):
+    marcas['dos_entra'] = _t.monotonic()
+hilo.join()
+with dos.transaccion('EST-ATY-02'):   # otra estacion no espera... salvo en SQLite, que bloquea toda la base
+    pass
+revisar(marcas['dos_entra'] >= marcas['uno_sale'],
+        'el candado por estacion detiene a otra instancia hasta que la primera termina',
+        'espero {:.2f} s'.format(marcas['dos_entra'] - marcas['uno_entra']))
+uno.cerrar()
+dos.cerrar()
+
 # -------------------------------------------------------------- 4. lo demas
 print('\n4) Reenvio, gestion, reportes y prediccion')
 with TestClient(crear_app(base_temporal())) as c:
@@ -235,6 +314,40 @@ malos = [c for c in codigos if c >= 500]
 revisar(not malos, '1500 peticiones con 32 a la vez sobre 960 lecturas, sin errores del servidor',
         '{} con error 5xx'.format(len(malos)))
 servidor.should_exit = True
+
+# ------------------------------------------------- 6. la funcion de Vercel
+print('\n6) La funcion de Vercel (api/index.py) sirve el backend en /api')
+os.environ['DATABASE_URL'] = base_temporal()
+_spec = importlib.util.spec_from_file_location('funcion_vercel', os.path.join(RAIZ, 'api', 'index.py'))
+funcion = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(funcion)   # importar no debe tocar la base: en Vercel se importa al compilar
+del os.environ['DATABASE_URL']
+with TestClient(funcion.app) as c:
+    s = c.get('/api/salud')
+    r = c.post('/api/lecturas', json=lista[:5])
+    n = c.get('/api/nada')
+    revisar(s.status_code == 200 and s.json()['persistencia'] in ('sqlite', 'postgres'), '/api/salud responde',
+            'persistencia: {}'.format(s.json().get('persistencia')))
+    revisar(r.status_code == 202 and r.json()['aceptados'] == 5, '/api/lecturas acepta un lote')
+    revisar(n.status_code == 404 and n.json().get('error') == 'ruta no encontrada', 'ruta inexistente en /api da 404 del contrato')
+
+# ------------------------------------------------------------- 7. Supabase
+print('\n7) Lo que Supabase necesita')
+from almacen import limpiar_url      # noqa: E402
+sucia = ('postgres://postgres.abc:clave@aws-0-us-east-1.pooler.supabase.com:6543/postgres'
+         '?sslmode=require&supa=base-pooler.x')
+limpia = limpiar_url(sucia)
+revisar('supa=' not in limpia and 'sslmode=require' in limpia and ':6543/postgres' in limpia,
+        'la URL de la integracion de Vercel pierde supa= y conserva sslmode', limpia.split('@')[1])
+if PRUEBA_POSTGRES:
+    import psycopg                   # noqa: E402
+    ruta = base_temporal()
+    Almacen(ruta).cerrar()
+    with psycopg.connect(ruta) as cx:
+        sin_rls = cx.execute("SELECT relname FROM pg_class WHERE relname IN ('lectura','veredicto','alerta','reporte') "
+                             "AND relkind = 'r' AND NOT relrowsecurity").fetchall()
+    revisar(not sin_rls, 'las cuatro tablas con RLS activo (la API REST de Supabase no las ve)',
+            'sin RLS: {}'.format([r[0] for r in sin_rls]) if sin_rls else '')
 
 print('\n{}'.format('Todo pasa.' if not fallas else '{} falla(s): {}'.format(len(fallas), ', '.join(fallas))))
 sys.exit(1 if fallas else 0)

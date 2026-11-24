@@ -128,6 +128,14 @@ Python de MSYS2 no sirve aquí: no tiene paquetes precompilados de `pydantic-cor
 FastAPI) y pide Rust para compilarlo. La validación no usa los modelos de pydantic sino el mismo
 `contrato/validador.py` del mock, para rechazar exactamente lo mismo. Decisión D24.
 
+### Postgres (Supabase) y funciones de Python de Vercel para el backend en producción
+
+En Vercel el backend corre como función de Python (`api/index.py`) y guarda en Postgres por
+`DATABASE_URL`, con `psycopg` 3. La base es Supabase y se entra por su Transaction pooler (puerto
+6543), sin sentencias preparadas. No se usa la librería `@supabase/supabase-js`: el panel no habla
+con la base, habla con el backend. En local se prueba contra un Postgres 17 de prueba con
+`PRUEBA_POSTGRES`. Decisiones D25 y D26.
+
 ### React 18 y Vite para el panel de autoridad (M7)
 
 `panel/` es una aplicación React (JavaScript, sin TypeScript) construida con Vite. Se eligió

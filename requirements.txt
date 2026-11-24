@@ -1,0 +1,4 @@
+# Dependencias de la función de Python que Vercel despliega desde api/index.py (backend M5).
+# Para correr el backend en tu computadora usa backend/requirements.txt.
+fastapi==0.165.0
+psycopg[binary]==3.3.9

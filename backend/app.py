@@ -6,10 +6,12 @@ especificacion es `contrato/servidor_mock.py --motor real`: este backend valida
 con el mismo validador, evalua con el mismo motor (motor/reglas.py, M2) y
 rechaza con los mismos codigos. Lo que agrega:
 
-- Persistencia en SQLite: lecturas, veredictos, alertas y reportes sobreviven a
-  un reinicio.
-- Al arrancar, el motor recupera su estado reproduciendo las ultimas lecturas
-  guardadas, y sus folios continuan donde iban (no se repiten).
+- Persistencia: SQLite en tu computadora, Postgres en Vercel (DATABASE_URL).
+- Sin memoria entre peticiones, para correr como funcion serverless en Vercel:
+  en cada lote, el motor de cada estacion se reconstruye con sus ultimas
+  lecturas guardadas y sus folios siguen desde el mayor guardado. El motor es
+  determinista, asi que da lo mismo que si nunca se hubiera apagado. Un candado
+  por estacion en la base evita que dos instancias la evaluen a la vez.
 - Un reenvio identico de un paquete (el firmware reenvia lo que no recibio ACK)
   se acepta sin evaluarse dos veces.
 - GET /alertas/<c_alerta>/prediccion: la propagacion aguas abajo de M3.
@@ -21,7 +23,8 @@ import json
 import os
 import re
 import sys
-from contextlib import asynccontextmanager
+import threading
+from collections import OrderedDict
 from datetime import datetime
 
 from fastapi import FastAPI, Request
@@ -33,14 +36,15 @@ AQUI = os.path.dirname(os.path.abspath(__file__))
 RAIZ = os.path.dirname(AQUI)
 FIX = os.path.join(RAIZ, 'contrato', 'fixtures')
 sys.path.insert(0, AQUI)
-from almacen import Almacen, huella          # noqa: E402
-from propagacion import Propagacion           # noqa: E402
+from almacen import Almacen, es_postgres, huella   # noqa: E402
+from propagacion import Propagacion                 # noqa: E402
 
 VERSION_CONTRATO = '1.0'
 # Lo unico que la autoridad cambia de una alerta. El resto lo decide el motor.
 CAMPOS_GESTION = ('estado', 'responsable')
-# Paquetes por estacion que se reproducen al arrancar para recuperar el estado del
-# motor. Sus ventanas abarcan 24 paquetes; 200 sobran y arrancan en menos de un segundo.
+# Paquetes de la estacion con que se reconstruye el motor en cada lote. Sus
+# ventanas abarcan 24 paquetes (VENTANA_RECIENTE + BRECHA_GUARDA en reglas.py);
+# 200 sobran y cuestan unos milisegundos.
 REHIDRATAR = 200
 DB_POR_OMISION = os.path.join(AQUI, 'datos', 'atoyac.sqlite')
 
@@ -55,6 +59,22 @@ def _cargar(nombre, ruta):
 validador = _cargar('validador', os.path.join(RAIZ, 'contrato', 'validador.py'))
 reglas = _cargar('reglas', os.path.join(RAIZ, 'motor', 'reglas.py'))
 ESQ = {n: validador.cargar_esquema(n) for n in ('lectura', 'reporte_ciudadano', 'alerta', 'prediccion_propagacion')}
+# Tablas que el motor lee al construirse: se cargan una vez por proceso.
+TABLAS_MOTOR = dict(linea_base=reglas.cargar_linea_base(), estaciones=reglas.cargar_estaciones(),
+                    umbrales=reglas.cargar_escala_conagua())
+
+
+def url_base(url=None):
+    """De donde sale la base, en orden: argumento, DATABASE_URL (la cadena del pooler
+    de Supabase), POSTGRES_URL (la que crea la integracion de Supabase en Vercel),
+    BACKEND_DB, y si no hay nada, SQLite local. En Vercel sin base configurada se usa
+    /tmp, que se borra: /salud lo avisa."""
+    url = url or os.environ.get('DATABASE_URL') or os.environ.get('POSTGRES_URL') or os.environ.get('BACKEND_DB')
+    if url:
+        return url, ('postgres' if es_postgres(url) else 'sqlite')
+    if os.environ.get('VERCEL'):
+        return '/tmp/atoyac.sqlite', 'temporal'
+    return DB_POR_OMISION, 'sqlite'
 
 
 def leer_json(ruta):
@@ -77,30 +97,35 @@ async def leer_cuerpo(request):
         return None, 'JSON invalido: {}'.format(e)
 
 
-def crear_app(ruta_db=None):
-    ruta_db = ruta_db or os.environ.get('BACKEND_DB') or DB_POR_OMISION
-    estaciones = {e['c_estacion']: e for e in leer_json(os.path.join(FIX, 'estaciones.json'))['estaciones']}
+def motor_de_estacion(almacen, c_estacion):
+    """Motor con el estado que tendria si hubiera recibido todo sin apagarse.
+    Llamar dentro de almacen.transaccion(c_estacion)."""
+    motor = reglas.Motor(**TABLAS_MOTOR)
+    for p in almacen.lecturas_recientes(c_estacion, REHIDRATAR):
+        motor.evaluar(p)     # lo que devuelve se descarta: ya esta guardado
+    motor.folio[c_estacion] = almacen.folio_maximo(c_estacion)
+    return motor
+
+
+def crear_app(url=None):
+    url, persistencia = url_base(url)
+    estaciones = TABLAS_MOTOR['estaciones']
+    # Se crea al llegar la primera peticion, no al importar: en Vercel el modulo se
+    # importa al compilar, sin base disponible.
     estado = {}
+    candado_inicio = threading.Lock()
 
-    @asynccontextmanager
-    async def ciclo(app):
-        almacen = Almacen(ruta_db)
-        motor = reglas.Motor()
-        # Recuperar el estado del motor: reproducir las ultimas lecturas guardadas
-        # en el mismo orden. El motor es determinista, asi que queda igual que antes
-        # del reinicio. Lo que devuelve se descarta: ya esta guardado.
-        for ce in estaciones:
-            for p in almacen.lecturas_recientes(ce, REHIDRATAR):
-                motor.evaluar(p)
-        # Los folios continuan desde el mayor guardado, nunca se repiten.
-        for ce, n in almacen.folios_por_estacion().items():
-            motor.folio[ce] = max(motor.folio[ce], n)
-        estado.update(almacen=almacen, motor=motor, propagacion=Propagacion())
-        yield
-        almacen.cx.close()
+    def ctx():
+        if not estado:
+            with candado_inicio:
+                if not estado:
+                    estado['propagacion'] = Propagacion()
+                    estado['almacen'] = Almacen(url)
+        return estado
 
-    app = FastAPI(title='Monitoreo del río Atoyac', version=VERSION_CONTRATO, lifespan=ciclo,
+    app = FastAPI(title='Monitoreo del río Atoyac', version=VERSION_CONTRATO,
                   description='Backend M5. Contrato de datos v1.0; ver contrato/README.md.')
+    app.state.ctx = ctx
     origenes = [o.strip() for o in os.environ.get('CORS_ORIGINS', '*').split(',') if o.strip()]
     app.add_middleware(CORSMiddleware, allow_origins=origenes, allow_methods=['GET', 'POST', 'PATCH', 'OPTIONS'],
                        allow_headers=['Content-Type'])
@@ -114,9 +139,9 @@ def crear_app(ruta_db=None):
     # ------------------------------------------------------------- lectura
     @app.get('/salud')
     def salud():
-        a = estado['almacen']
+        a = ctx()['almacen']
         return {'estado': 'ok', 'version_contrato': VERSION_CONTRATO, 'motor': 'real',
-                'persistencia': 'sqlite',
+                'persistencia': persistencia,
                 'hora': datetime.now().astimezone().isoformat(timespec='seconds'),
                 'estaciones': len(estaciones),
                 'alertas_abiertas': sum(1 for x in a.alertas() if x.get('estado') in ('Abierta', 'En atencion')),
@@ -142,27 +167,26 @@ def crear_app(ruta_db=None):
 
     @app.get('/escenarios/{nombre}')
     def escenario(nombre: str):
-        if not re.fullmatch(r'[a-z_]+', nombre):
-            return error(404, {'error': 'escenario no encontrado'})
         ruta = os.path.join(FIX, 'escenarios', nombre + '.json')
-        if not os.path.exists(ruta):
+        if not re.fullmatch(r'[a-z_]+', nombre) or not os.path.exists(ruta):
             return error(404, {'error': 'escenario no encontrado'})
         return leer_json(ruta)
 
     @app.get('/veredictos')
     def veredictos(c_estacion: str | None = None):
-        return {'veredictos': estado['almacen'].veredictos(c_estacion, 50)}
+        return {'veredictos': ctx()['almacen'].veredictos(c_estacion, 50)}
 
     @app.get('/alertas')
     def alertas():
-        return {'alertas': estado['almacen'].alertas()}
+        return {'alertas': ctx()['almacen'].alertas()}
 
     @app.get('/alertas/{c_alerta}/prediccion')
     def prediccion(c_alerta: str):
-        a = estado['almacen'].alerta(c_alerta)
+        c = ctx()
+        a = c['almacen'].alerta(c_alerta)
         if a is None:
             return error(404, {'error': 'alerta no encontrada'})
-        prop = estado['propagacion']
+        prop = c['propagacion']
         sitio = a.get('c_sitio') or estaciones.get(a['c_estacion'], {}).get('c_sitio')
         p = prop.predecir(sitio, prop.clave_conagua(a['c_parametro']), a.get('valor'),
                           datetime.fromisoformat(a['fecha_hora']), a['c_alerta'])
@@ -174,7 +198,7 @@ def crear_app(ruta_db=None):
     @app.get('/reportes')
     def get_reportes():
         # El correo es solo para avisar del cierre: nunca sale por la API publica.
-        return {'reportes': [{k: v for k, v in r.items() if k != 'correo'} for r in estado['almacen'].reportes()]}
+        return {'reportes': [{k: v for k, v in r.items() if k != 'correo'} for r in ctx()['almacen'].reportes()]}
 
     # ------------------------------------------------------------ escritura
     @app.post('/lecturas')
@@ -182,9 +206,10 @@ def crear_app(ruta_db=None):
         cuerpo, problema = await leer_cuerpo(request)
         if problema:
             return error(400, {'error': problema})
+        almacen = ctx()['almacen']
         paquetes = cuerpo if isinstance(cuerpo, list) else [cuerpo]
-        resultados, errores = [], []
-        almacen, motor = estado['almacen'], estado['motor']
+        errores = []
+        por_estacion = OrderedDict()   # c_estacion -> [(posicion, paquete)], en el orden recibido
         for i, p in enumerate(paquetes):
             e = validador.validar(p, ESQ['lectura'], '$[{}]'.format(i))
             if e:
@@ -193,23 +218,31 @@ def crear_app(ruta_db=None):
             if p['c_estacion'] not in estaciones:
                 errores.append('$[{}].c_estacion: {} no esta registrada'.format(i, p['c_estacion']))
                 continue
-            h = huella(p)
-            with almacen.candado:
-                previo = almacen.veredicto_de_huella(h)
-                if previo is not None:
-                    resultados.append(previo)     # reenvio identico: no se evalua otra vez
-                    continue
-                v = motor.evaluar(p)
-                v['motor'] = 'real'
-                almacen.guardar_evaluacion(p, h, v)
-            resultados.append(v)
+            por_estacion.setdefault(p['c_estacion'], []).append((i, p))
+
+        resultados = {}
+        for ce, lista in por_estacion.items():
+            with almacen.transaccion(ce):
+                motor = None
+                for i, p in lista:
+                    h = huella(p)
+                    previo = almacen.veredicto_de_huella(h)
+                    if previo is not None:
+                        resultados[i] = previo       # reenvio identico: no se evalua otra vez
+                        continue
+                    motor = motor or motor_de_estacion(almacen, ce)
+                    v = motor.evaluar(p)
+                    v['motor'] = 'real'
+                    almacen.guardar_evaluacion(p, h, v)
+                    resultados[i] = v
+        aceptados = [resultados[i] for i in sorted(resultados)]
         if errores:
-            return error(422, {'error': 'contrato no cumplido', 'detalles': errores, 'aceptados': len(resultados)})
-        return JSONResponse({'aceptados': len(resultados), 'veredictos': resultados}, status_code=202)
+            return error(422, {'error': 'contrato no cumplido', 'detalles': errores, 'aceptados': len(aceptados)})
+        return JSONResponse({'aceptados': len(aceptados), 'veredictos': aceptados}, status_code=202)
 
     @app.patch('/alertas/{c_alerta}')
     async def gestionar(c_alerta: str, request: Request):
-        almacen = estado['almacen']
+        almacen = ctx()['almacen']
         alerta = almacen.alerta(c_alerta)
         if alerta is None:
             return error(404, {'error': 'alerta no encontrada'})
@@ -227,7 +260,7 @@ def crear_app(ruta_db=None):
         e = validador.validar(nueva, ESQ['alerta'])
         if e:
             return error(422, {'error': 'contrato no cumplido', 'detalles': e})
-        with almacen.candado:
+        with almacen.transaccion('alerta:' + c_alerta):
             almacen.actualizar_alerta(nueva)
         return nueva
 
@@ -238,8 +271,9 @@ def crear_app(ruta_db=None):
             return error(400, {'error': problema})
         if not isinstance(cuerpo, dict):
             return error(422, {'error': 'contrato no cumplido', 'detalles': ['$: se espera un objeto']})
-        almacen = estado['almacen']
-        with almacen.candado:
+        almacen = ctx()['almacen']
+        # El folio sale del conteo: dos reportes a la vez no deben llevarse el mismo.
+        with almacen.transaccion('reportes'):
             cuerpo.setdefault('version', VERSION_CONTRATO)
             cuerpo.setdefault('estado', 'Recibido')
             cuerpo.setdefault('exif_removido', False)

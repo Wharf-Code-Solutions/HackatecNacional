@@ -458,7 +458,8 @@ datos con rutas `../` fuera de su carpeta, que en Vercel no existen si la raíz 
 `panel/` en el repositorio: los duplicaría y se desincronizarían.
 
 **Consecuencia.** El panel ya no se abre con `python -m http.server`: se corre con
-`npm run dev` (puerto 5173). En Vercel la raíz del proyecto es `panel/` y debe quedar activa la
+`npm run dev` (puerto 5173). (Revisado por D25: la raíz del proyecto en Vercel pasa a ser la del
+repositorio.) En Vercel la raíz del proyecto era `panel/` y debía quedar activa la
 opción de incluir archivos fuera de la raíz en la compilación (es la opción por defecto), porque
 `copiar-datos.mjs` lee `../contrato/` y `../datos/`. Los cambios de estado en modo demostración
 solo viven en la pestaña del navegador, y la pantalla lo dice. La foto envejece: hay que volver a
@@ -493,3 +494,59 @@ contrato. Guardar solo alertas y no lecturas: el motor no podría recuperar su e
 8 peticiones simultáneas del panel daban "bad parameter or other API misuse" (la prueba 5 lo
 reproduce). El backend no va en Vercel, que no conserva archivos: necesita un servicio con disco
 persistente. No tiene autenticación todavía.
+
+**Revisada por D25 (2026-11-24).** El backend sí va en Vercel: se cambió el diseño para que no
+necesite memoria ni archivos entre peticiones.
+
+## D25 · Panel y backend en un solo proyecto de Vercel, con Postgres y el motor sin memoria
+
+**Decisión.** El backend corre en Vercel como función de Python (`api/index.py`) bajo `/api`, en el
+mismo proyecto que el panel. La raíz del proyecto en Vercel es la del repositorio y la configura
+`vercel.json`. La base es Postgres cuando existe `DATABASE_URL` (Neon, desde el Marketplace de
+Vercel) y SQLite en local. El motor ya no vive en memoria: en cada lote se reconstruye para cada
+estación con sus últimas 200 lecturas guardadas, con sus folios desde el mayor guardado, dentro de
+una transacción que toma un candado por estación (`pg_advisory_xact_lock`; `BEGIN IMMEDIATE` en
+SQLite). La creación de tablas también va bajo candado.
+
+**Por qué.** El equipo no quiere un segundo despliegue. En Vercel cada petición puede caer en una
+instancia distinta y no hay disco que se conserve, así que la memoria del motor y SQLite se
+perdían. Reconstruir el motor es correcto porque es determinista, y barato (milisegundos por lote).
+El candado por estación evita que dos instancias evalúen la misma estación a la vez y repitan un
+folio. El mismo dominio para panel y backend quita CORS de en medio.
+
+**Alternativa descartada.** Backend en Render o Railway: funciona sin cambios, pero es un segundo
+despliegue y el disco persistente es de pago en ambos. Guardar el estado del motor en la base:
+duplicaría en otra forma lo que ya está en las lecturas, y se desincronizaría si cambian las reglas.
+
+**Consecuencia.** `backend/prueba.py` corre igual sobre SQLite y sobre Postgres
+(`PRUEBA_POSTGRES`). Dos pruebas nuevas: dos instancias que se turnan los lotes de un escenario dan
+las mismas alertas y folios que una, y el candado detiene a una segunda conexión (sin él, falla).
+Probándolo apareció que dos instancias que arrancan a la vez sobre una base vacía chocaban al crear
+las tablas ("duplicate key ... pg_type_typname_nsp_index"); se corrigió con el candado de esquema.
+Desde Git Bash, `VITE_API_URL=/api` se convierte en `C:/Program Files/Git/api`: compilar en local
+desde PowerShell. En Vercel no pasa.
+
+## D26 · La base en producción es Supabase, por su Transaction pooler
+
+**Decisión.** El backend en Vercel guarda en el Postgres de Supabase, conectándose con
+`DATABASE_URL` a su **Transaction pooler** (puerto 6543). La conexión va sin sentencias
+preparadas (`prepare_threshold=None`), la URL se limpia de parámetros que agregan las
+integraciones (`supa=`, `pgbouncer=`) y las cuatro tablas se crean con RLS activo. El esquema solo
+se toca si falta algo: se consulta el catálogo antes.
+
+**Por qué.** El equipo eligió Supabase. Su conexión directa es solo IPv6 y las funciones de Vercel
+pueden no alcanzarla; el pooler en modo transacción es el que Supabase recomienda para serverless.
+Ese pooler reparte las transacciones entre conexiones, así que una sentencia preparada en una no
+existe en otra. Los candados del backend son `pg_advisory_xact_lock`, de transacción, y sí
+funcionan ahí. Supabase publica toda tabla de `public` por su API REST con la llave `anon`, que no
+es secreta: con RLS y sin políticas esa API no ve nada, y el backend, dueño de las tablas, no se ve
+afectado. No se usa `@supabase/supabase-js`: el panel no habla con la base.
+
+**Alternativa descartada.** Neon (D25 la sugería): funciona igual, pero el equipo prefirió
+Supabase. Usar la librería de Supabase desde el panel: sacaría la lógica del backend y obligaría a
+abrir la base con políticas de RLS.
+
+**Consecuencia.** Aplicar el esquema en cada conexión (como antes) trababa a las instancias que
+escribían: `ALTER TABLE ... ENABLE ROW LEVEL SECURITY` toma un candado exclusivo y Postgres
+reportó "deadlock detected" en la prueba de dos instancias. Ahora se consulta `pg_class` primero.
+`backend/prueba.py` comprueba la limpieza de la URL y, con Postgres, que las tablas queden con RLS.

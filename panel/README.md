@@ -42,13 +42,15 @@ Abrir `http://localhost:5173/`. Sin el escenario la lista sale vacía. Otro back
 
 ## Desplegar en Vercel
 
-1. En Vercel, importar el repositorio y poner **Root Directory: `panel`**. Lo demás lo toma de
-   `vercel.json` (Vite, `npm run build`, salida `dist/`).
-2. Dejar activa la opción de incluir archivos fuera de la raíz en la compilación (viene activa):
-   `scripts/copiar-datos.mjs` lee `../contrato/fixtures/` y `../datos/procesados/red/`.
-3. Si hay un backend publicado, poner la variable de entorno `VITE_API_URL` con su dirección. Si
-   no, el sitio abre en **modo demostración** con `public/demo/foto.json` y lo dice en pantalla;
-   ahí los cambios de estado y responsable solo viven en la pestaña.
+El panel y el backend se despliegan juntos, en un solo proyecto de Vercel: el panel como sitio
+estático y el backend como función de Python en `/api` (D25). La configuración está en el
+`vercel.json` de la raíz del repositorio; los pasos completos, en `backend/README.md`.
+
+1. Importar el repositorio con **Root Directory vacío** (la raíz, no `panel`) y Framework **Other**.
+2. Sin más, el sitio abre en **modo demostración** con `public/demo/foto.json` y lo dice en
+   pantalla; ahí los cambios de estado y responsable solo viven en la pestaña.
+3. Con `DATABASE_URL` de Supabase, `VITE_API_URL` = `/api` y un redeploy, el panel lee el backend real
+   del mismo dominio.
 
 Para revisar en local lo mismo que servirá Vercel: `npm run build` y `npm run preview`.
 

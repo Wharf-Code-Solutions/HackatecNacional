@@ -35,7 +35,7 @@ punta (M9).
 | M2 Motor de reglas | **Construido.** 0 alertas en el día de control contra 31 del provisional; los tres eventos detectados y clasificados | `motor/`, `docs/15-motor-reglas.md` |
 | M3 Propagación | **Construida.** Modelo calibrado con 90 tramos del propio río, cobertura 78 % fuera de muestra | `scripts/80_propagacion.py`, `docs/14-propagacion.md` |
 | M4 Dispositivo | **Simulador construido y probado; sin hardware.** Figura 3D y línea de tiempo de recepción | `dispositivo/` |
-| M5 Backend | **Construido.** FastAPI y SQLite; mismas respuestas que el mock, comparado en vivo; datos y folios sobreviven a un reinicio; predicción de M3. Sin autenticación | `backend/` |
+| M5 Backend | **Construido.** FastAPI; SQLite en local y Postgres en Vercel, en `/api` del mismo proyecto que el panel; mismas respuestas que el mock, comparado en vivo; sin memoria entre peticiones; predicción de M3. Sin autenticación | `backend/`, `api/` |
 | M6 Mapa | **Prototipo**: cuenca delimitada y confluencias (aún no colorea por índice ni está probado a ancho de teléfono) | `mapa/` |
 | M7 Panel de autoridad | **Prototipo.** Lista alertas con evidencia y gráficas, cambia estado y responsable; React con Vite, listo para Vercel con modo demostración; aún no muestra la predicción de M3 ni pide sesión | `panel/` |
 | M8 App ciudadana | Pendiente | — |
