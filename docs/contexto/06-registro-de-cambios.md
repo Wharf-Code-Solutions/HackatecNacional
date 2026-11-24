@@ -21,6 +21,35 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · M4: estados en palabras llanas, envío visible en comunicación y líneas sin cruzar rótulos
+
+**Qué cambió.** Los estados se dicen sin jerga del firmware: "En reposo hasta las 10:30" en lugar de
+"Dormido", "Preparando las sondas", "Enviando los datos", "Datos recibidos", "Esperando la próxima
+medición". La vista de comunicación ya no frena el enlace y el envío a tiempo real: a la velocidad elegida
+cada envío se dibuja completo y se repite a los pocos segundos. En las vistas de cerca, un rótulo que no
+cabe afuera de su pieza (antena y torre, en los bordes) va junto a ella del lado de adentro, y su línea ya
+no lo atraviesa.
+**Por qué.** El usuario encontró los estados poco claros, el paquete aparecía pocas veces en la vista de
+comunicación y las líneas de los rótulos de los extremos los cruzaban.
+**Qué arrastró.** `escena.js?v=32`, `CLAUDE.md`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
+## 2026-11-24 · M4: rótulos legibles y vistas de cerca del gabinete, la energía y la comunicación
+
+**Qué cambió.** Los rótulos de la figura 3D son tinta con contorno blanco grueso (sin fondo) y la vista
+general queda con cinco cortos: Sondas, Gabinete, Energía, Comunicación y Corriente, con su dato vivo.
+Como las sondas, el gabinete, la energía y la comunicación tienen vista de cerca con un rótulo por pieza
+(qué es y su estado). En cada vista van a tiempo real las fases que muestra (`Escena.tiempoReal`, que
+usa `ui.js`).
+**Por qué.** Los textos se perdían contra la vegetación, había especificaciones repetidas en la vista
+general y el usuario pidió ver cada componente de cerca. Pidió explícitamente no usar fondo blanco.
+**Qué arrastró.** `escena.js?v=30`, `ui.js?v=9`, `estilos.css?v=9`, D19, `CLAUDE.md`.
+**Impacto en otros módulos.** Ninguno: la lógica del firmware y los paquetes no cambian.
+
+---
+
 ## 2026-11-24 · M7: sin sitios de CONAGUA en el mapa de la red de estaciones
 
 **Qué cambió.** `panel/src/graficas/MapaEstaciones.jsx` ya no dibuja los 219 sitios oficiales en gris

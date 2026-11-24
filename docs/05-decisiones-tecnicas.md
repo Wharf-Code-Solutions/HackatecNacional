@@ -382,6 +382,13 @@ sigue diciendo "Sin sol" de noche). Color con gestión sRGB y mapeo de tonos ACE
 calculan una vez. La figura se dibuja en cada cuadro de la animación (antes, 20 veces por segundo
 junto con los textos), y así girarla y el viaje del paquete van a 60 cuadros por segundo.
 
+**Rótulos y vistas de cerca por componente (2026-11-24).** La vista general queda con cinco rótulos
+cortos (nombre y dato vivo) en tinta con contorno blanco grueso, sin fondo, para que se lean sobre la
+vegetación. Las especificaciones pasan a las vistas de cerca: además de las sondas, el gabinete (ESP32,
+reloj, microSD, módem y baterías), la energía (panel, baterías y consumo de la fase actual) y la
+comunicación (antena, SD, paquete y torre del operador). Cada vista acelera a tiempo real solo las
+fases que muestra.
+
 **Vista de cerca de las sondas (2026-11-24).** Un clic en el tubo o en el rótulo "Sondas" acerca
 la cámara de frente al corte, bajo la lámina de agua (que se aclara); "Vista general" o Esc regresa.
 Cada sonda tiene su cabeza distinta (anillos de acero de la celda de conductividad, membrana del OD,

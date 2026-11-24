@@ -120,10 +120,10 @@
   function bucle(ahora) {
     var dt = (ahora - estado.ultimo) / 1000; estado.ultimo = ahora;
     if (!estado.pausa) {
-      // En la vista de cerca de las sondas, el calentamiento y la medición van a tiempo real para
-      // que se vea cada sonda estabilizarse y tomar sus cinco lecturas; el resto, a la velocidad elegida.
+      // En una vista de cerca, las fases que muestra esa vista van a tiempo real (Escena.tiempoReal):
+      // se ve cada sonda estabilizarse, la SD guardar y el módem enviar; el resto, a la velocidad elegida.
       var v = estado.vel, fase = actual().fw.fase.nombre;
-      if (Escena.vista() === 'sondas' && (fase === 'CALENTAMIENTO' || fase === 'MEDICIÓN')) v = 1;
+      if (Escena.tiempoReal(fase)) v = 1;
       dt = Math.min(dt, 0.25) * v;
       estado.est.forEach(function (e) { estado.por[e.c_estacion].fw.tick(dt); });
     }

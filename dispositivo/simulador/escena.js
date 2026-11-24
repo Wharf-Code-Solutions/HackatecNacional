@@ -16,10 +16,18 @@
   'use strict';
   var M = window.Modelo;
   var TINTA = 0x16222c, AGUA = 0x1d6fa5, ALARMA = 0xb3261e;
+  // Lo que hace la estación en cada fase del firmware, dicho para quien no conoce el firmware.
   var ESTADO = {
-    'SUEÑO': 'Dormido', 'CALENTAMIENTO': 'Calentando sondas', 'MEDICIÓN': 'Midiendo', 'EMPAQUETADO': 'Guardando en la SD',
-    'ENLACE': 'Conectando', 'ENVÍO': 'Enviando', 'ESPERA': 'Sin red, reintenta', 'APAGADA': 'Apagado'
+    'SUEÑO': 'En reposo', 'CALENTAMIENTO': 'Preparando las sondas', 'MEDICIÓN': 'Midiendo el agua',
+    'EMPAQUETADO': 'Guardando la medición', 'ENLACE': 'Conectándose a la red', 'ENVÍO': 'Enviando los datos',
+    'ESPERA': 'Sin red: lo intentará de nuevo', 'APAGADA': 'Apagada: batería baja'
   };
+  // En reposo se dice cuándo despierta; en las demás fases, solo lo que hace.
+  function estado(fw) {
+    var f = fw.fase;
+    if (f.nombre === 'SUEÑO') return 'En reposo hasta las ' + M.iso(fw.t + Math.max(0, f.resta || 0)).substr(11, 5);
+    return ESTADO[f.nombre] || f.nombre;
+  }
   var $ = function (id) { return document.getElementById(id); };
   var G = {}, T, ok = false;
   // La estación se dibuja a 1.6× respecto a la base del mástil para que se lea junto al río.
@@ -353,18 +361,18 @@
   }
 
   // ------------------------------------------------------------ rótulos HTML
-  // Un rótulo por componente: nombre y dato vivo. Se colocan proyectando un punto 3D.
+  // Vista general: un rótulo corto por componente, nombre y dato vivo, sobre fondo blanco para que no
+  // se pierda contra la vegetación. Cada uno abre su vista de cerca (clic en el rótulo o en la pieza).
   var ROTULOS = [
-    { id: 'sondas', nombre: 'Sondas', equipo: 'OD, pH, conductividad, temperatura, turbiedad', ancla: [0.6, -1.15, 0.9], lado: 'izq' },
-    { id: 'ctrl', nombre: 'Controlador', equipo: 'ESP32, reloj y microSD', ancla: S([-4.62, 2.15, 0.45]), lado: 'izq' },
-    { id: 'modem', nombre: 'Módem LTE-M', equipo: '', ancla: S([-3.48, 2.45, 0.45]), lado: 'der' },
-    { id: 'bat', nombre: 'Baterías', equipo: '2 × 18650, 22 Wh', ancla: S([-4.62, 1.55, 0.45]), lado: 'izq' },
-    { id: 'panel', nombre: 'Panel solar', equipo: '5 W', ancla: S([-5.1, 4.95, 0.2]), lado: 'izq' },
-    { id: 'torre', nombre: 'Torre celular', equipo: 'red del operador', ancla: [11.4, 7.4, -9], lado: 'der' },
-    { id: 'rio', nombre: 'Corriente', equipo: '', ancla: [6.2, SUP_AGUA, -5], lado: 'der' }
+    { id: 'sondas', nombre: 'Sondas', ancla: [0.6, -1.15, 0.9], lado: 'izq', vista: 'sondas' },
+    { id: 'ctrl', nombre: 'Gabinete', ancla: S([-4.62, 2.15, 0.45]), lado: 'izq', vista: 'gabinete' },
+    { id: 'panel', nombre: 'Energía', ancla: S([-5.1, 4.95, 0.2]), lado: 'izq', vista: 'energia' },
+    { id: 'torre', nombre: 'Comunicación', ancla: [11.4, 7.4, -9], lado: 'der', vista: 'enlace' },
+    { id: 'rio', nombre: 'Corriente', ancla: [6.2, SUP_AGUA, -5], lado: 'der' }
   ];
-  // Vista de cerca de las sondas: un rótulo por sensor, en dos columnas, con una línea a su punta.
-  // Qué es y cómo mide sale de la ficha técnica; el estado y el dato, de la estación simulada.
+
+  // Vistas de cerca: un rótulo por pieza, en dos columnas a los lados, con una línea a la pieza.
+  // Qué es sale de la ficha técnica; el estado y el dato, de la estación simulada.
   var SENSOR = {
     COND: { nombre: 'Conductividad', como: 'dos electrodos, K = 1.0', dec: 0 },
     OD:   { nombre: 'Oxígeno disuelto', como: 'membrana; la más lenta en estabilizar', dec: 2 },
@@ -372,59 +380,139 @@
     TEMP: { nombre: 'Temperatura', como: 'compensa a las demás sondas', dec: 1 },
     TURB: { nombre: 'Turbiedad', como: 'óptica, con limpiador', dec: 1 }
   };
-  var COLUMNA = { COND: [-1, -0.2], OD: [-1, 0.02], PH: [-1, 0.24], TEMP: [1, -0.1], TURB: [1, 0.14] };
+  var FILAS_SONDAS = { COND: [-1, -0.2], OD: [-1, 0.02], PH: [-1, 0.24], TEMP: [1, -0.1], TURB: [1, 0.14] };
+  function v3(p) { return new T.Vector3(p[0], p[1], p[2]); }
+  function enSD(n) { return n ? n + (n === 1 ? ' paquete por enviar' : ' paquetes por enviar') : 'Vacía: todo enviado'; }
+  function hora(t) { return M.iso(t).substr(11, 5); }
+  // Cada detalle: centro de las columnas (punto 3D) y sus piezas. valor(e) devuelve [texto, alarma],
+  // con e = { s, nom, f, transcurrido, env, nSD }.
+  function detalles() {
+    var d = {};
+    d.sondas = { centro: G.centroSondas, items: M.PARAMS.map(function (q) {
+      return { nombre: SENSOR[q].nombre, como: SENSOR[q].como, ancla: G.puntaSensor[q], col: FILAS_SONDAS[q][0], fila: FILAS_SONDAS[q][1],
+        valor: function (e) {
+          var son = e.s.sondas[q], esp = son.espec, med = e.s.fw.detalleMed && e.s.fw.detalleMed[q];
+          if (son.falla === 'sin_respuesta') return ['No responde: se envía vacío', true];
+          if (son.falla === 'menos999') return ['Rota: se envía −999', true];
+          if (son.falla === 'congelado') return ['Congelada: repite el valor', true];
+          if (e.nom === 'CALENTAMIENTO') return [e.transcurrido < esp.estabS ? 'Estabilizando, faltan ' + Math.ceil(esp.estabS - e.transcurrido) + ' s' : 'Estable, en espera'];
+          if (e.nom === 'MEDICIÓN') return ['Lectura ' + Math.min(5, Math.floor(e.transcurrido) + 1) + ' de 5'];
+          if (!med || med.valor === null || med.valor === undefined) return ['Sin medición todavía'];
+          return [('Enviado: ' + med.valor.toFixed(SENSOR[q].dec).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' ' + (esp.unidad === 'pH' ? '' : esp.unidad)).trim()];
+        } };
+    }) };
+    d.gabinete = { centro: v3(S([-4.05, 2.0, 0.45])), items: [
+      { nombre: 'Controlador ESP32', como: 'despierta, mide, guarda y envía', ancla: v3(S([-4.25, 2.22, 0.33])), col: -1, fila: -0.22,
+        valor: function (e) { return [e.env ? 'Enviando los datos' : estado(e.s.fw)]; } },
+      { nombre: 'Reloj', como: 'pone la hora a cada medición', ancla: v3(S([-4.32, 2.12, 0.37])), col: -1, fila: -0.02,
+        valor: function (e) { return [hora(e.s.fw.t)]; } },
+      { nombre: 'Baterías', como: '2 × 18650, 22 Wh', ancla: v3(S([-4.2, 1.55, 0.42])), col: -1, fila: 0.2,
+        valor: function (e) { var c = e.s.energia.soc(); return ['Carga ' + Math.round(c * 100) + ' %', c < 0.2]; } },
+      { nombre: 'Módem LTE-M', como: 'envía por la red celular', ancla: v3(S([-3.85, 2.42, 0.37])), col: 1, fila: -0.16,
+        valor: function (e) { return e.s.enlace.caido ? ['Sin red', true] : ['Señal ' + Math.round(e.s.enlace.rssi) + ' dBm']; } },
+      { nombre: 'Memoria microSD', como: 'guarda cada paquete antes de enviarlo', ancla: v3(S([-4.08, 1.95, 0.4])), col: 1, fila: 0.1,
+        valor: function (e) { return [enSD(e.nSD), e.nSD > 1 && !e.env]; } }
+    ] };
+    d.energia = { centro: v3(S([-4.15, 3.6, 0.3])), items: [
+      { nombre: 'Panel solar', como: '5 W, inclinado al sur', ancla: v3(S([-4.75, 4.95, 0.2])), col: -1, fila: -0.2,
+        valor: function (e) { var w = e.s.energia.solarW; return [w > 0.05 ? 'Genera ' + w.toFixed(1) + ' W' : 'Sin sol']; } },
+      { nombre: 'Baterías', como: '22 Wh: ≈ 14 días sin sol', ancla: v3(S([-4.2, 1.55, 0.42])), col: -1, fila: 0.18,
+        valor: function (e) { var c = e.s.energia.soc(); return ['Carga ' + Math.round(c * 100) + ' %', c < 0.2]; } },
+      { nombre: 'Consumo', como: '≈ 1.4 Wh al día; casi todo dormida', ancla: v3(S([-4.25, 2.22, 0.33])), col: 1, fila: 0.05,
+        valor: function (e) { return ['Gasta ' + Math.round(e.f.mW || 0) + ' mW: ' + (ESTADO[e.nom] || e.nom).toLowerCase()]; } }
+    ] };
+    var antena = v3(S([-3.65, 3.98, 0.35]));
+    d.enlace = { centro: antena.clone().add(G.torreTope).multiplyScalar(0.5), items: [
+      { nombre: 'Antena del módem', como: 'LTE-M, con SIM de datos', ancla: antena, col: -1, fila: -0.12,
+        valor: function (e) { return e.s.enlace.caido ? ['Sin red: guarda y reintenta', true] : ['Señal ' + Math.round(e.s.enlace.rssi) + ' dBm']; } },
+      { nombre: 'Memoria microSD', como: 'lo que no se envía se queda', ancla: v3(S([-4.08, 1.95, 0.4])), col: -1, fila: 0.16,
+        valor: function (e) { return [enSD(e.nSD), e.nSD > 1 && !e.env]; } },
+      { nombre: 'Paquete', como: 'lecturas por HTTPS a la plataforma', ancla: G.rutaAire.getPoint(0.5), col: 1, fila: -0.26,
+        valor: function (e) { return [e.env ? (e.env.k < ENV.llega ? 'Viajando a la torre' : e.env.k < ENV.ack ? 'Llegó: vuelve la confirmación' : 'Confirmado') : 'Esperando la próxima medición']; } },
+      { nombre: 'Torre celular', como: 'del operador; no es nuestra', ancla: G.torreTope, col: 1, fila: 0.04,
+        valor: function (e) { return e.s.enlace.caido ? ['Sin cobertura en el sitio', true] : [e.env && e.env.k < ENV.ack ? 'Recibiendo los datos' : 'Con cobertura']; } }
+    ] };
+    return d;
+  }
+
   function construyeRotulos() {
     var capa = $('rotulos3d'); capa.innerHTML = '';
     ROTULOS.forEach(function (r) {
       var d = document.createElement('div');
-      d.className = 'rot3d ' + r.lado + (r.id === 'sondas' ? ' clic' : '');
-      d.innerHTML = '<b>' + r.nombre + '</b>' + (r.equipo ? ' <span class="eq">' + r.equipo + '</span>' : '') + '<span class="val" id="rv_' + r.id + '"></span>';
+      d.className = 'rot3d ' + r.lado + (r.vista ? ' clic' : '');
+      d.innerHTML = '<b>' + r.nombre + '</b><span class="val" id="rv_' + r.id + '"></span>';
       capa.appendChild(d);
       r.el = d; r.v = new T.Vector3(r.ancla[0], r.ancla[1], r.ancla[2]);
-      if (r.id === 'sondas') d.addEventListener('click', function () { irA('sondas'); });
+      if (r.vista) d.addEventListener('click', function () { irA(r.vista); });
     });
     G.lineas = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     G.lineas.setAttribute('class', 'lineas3d');
     capa.appendChild(G.lineas);
-    G.sensores = M.PARAMS.map(function (q) {
-      var izq = COLUMNA[q][0] < 0, d = document.createElement('div');
-      d.className = 'rot3d sensor ' + (izq ? 'izq' : 'der');
-      d.innerHTML = '<b>' + SENSOR[q].nombre + '</b><span class="eq">' + SENSOR[q].como + '</span><span class="val"></span>';
-      capa.appendChild(d);
-      var l = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
-      G.lineas.appendChild(l);
-      return { q: q, el: d, val: d.querySelector('.val'), linea: l, izq: izq, fila: COLUMNA[q][1] };
+    G.detalle = detalles();
+    Object.keys(G.detalle).forEach(function (k) {
+      G.detalle[k].items.forEach(function (it) {
+        var izq = it.col < 0, d = document.createElement('div');
+        d.className = 'rot3d sensor ' + (izq ? 'izq' : 'der');
+        d.innerHTML = '<b>' + it.nombre + '</b><span class="eq">' + it.como + '</span><span class="val"></span>';
+        d.style.display = 'none';
+        capa.appendChild(d);
+        it.el = d; it.val = d.querySelector('.val'); it.izq = izq;
+        it.linea = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+        G.lineas.appendChild(it.linea);
+      });
     });
-    // volver a la vista general: botón dentro de la figura, solo en la vista de cerca
+    // volver a la vista general: botón dentro de la figura, solo en una vista de cerca
     G.volver = document.createElement('button');
     G.volver.className = 'boton volver3d'; G.volver.textContent = 'Vista general'; G.volver.hidden = true;
     G.volver.addEventListener('click', function () { irA('general'); });
     $('escena3d').appendChild(G.volver);
   }
   function colocaRotulos() {
-    var w = G.lienzo.clientWidth, h = G.lienzo.clientHeight, cerca = G.vista === 'sondas' && !G.trans;
+    var w = G.lienzo.clientWidth, h = G.lienzo.clientHeight, quieto = !G.trans;
     function pantalla(v) { var p = v.clone().project(G.camara); return { x: (p.x + 1) / 2 * w, y: (1 - p.y) / 2 * h, z: p.z }; }
     ROTULOS.forEach(function (r) {
       var p = pantalla(r.v);
       r.el.style.left = p.x.toFixed(1) + 'px';
       r.el.style.top = p.y.toFixed(1) + 'px';
-      r.el.style.display = p.z < 1 && G.vista === 'general' && !G.trans ? '' : 'none';
+      r.el.style.display = p.z < 1 && G.vista === 'general' && quieto ? '' : 'none';
     });
-    G.lineas.style.display = cerca ? '' : 'none';
-    var c = pantalla(G.centroSondas), dx = Math.min(0.2 * w, 260);
-    G.sensores.forEach(function (s) {
-      s.el.style.display = cerca ? '' : 'none';
-      if (!cerca) return;
-      var x = c.x + (s.izq ? -dx : dx), y = c.y + s.fila * h, punta = pantalla(G.puntaSensor[s.q]);
-      s.el.style.left = x.toFixed(1) + 'px'; s.el.style.top = y.toFixed(1) + 'px';
-      var codo = punta.x + (s.izq ? -18 : 18);
-      s.linea.setAttribute('points', [x + (s.izq ? 4 : -4), y, codo, y, punta.x, punta.y].map(function (n) { return n.toFixed(1); }).join(' '));
+    var activo = G.vista !== 'general' && quieto ? G.detalle[G.vista] : null;
+    G.lineas.style.display = activo ? '' : 'none';
+    var dx = Math.min(0.22 * w, 280);
+    Object.keys(G.detalle).forEach(function (k) {
+      var det = G.detalle[k], mostrar = det === activo, c = mostrar ? pantalla(det.centro) : null;
+      det.items.forEach(function (it) {
+        it.el.style.display = mostrar ? '' : 'none';
+        it.linea.style.display = mostrar ? '' : 'none';
+        if (!mostrar) return;
+        // El rótulo queda del lado de su columna pero siempre por fuera de su pieza: si la pieza está más
+        // allá de la columna, el rótulo se corre hacia afuera.
+        var y = h / 2 + it.fila * h, punta = pantalla(it.ancla), ancho = it.el.offsetWidth || 160;
+        var col = M.acota(c.x, dx + 10, w - dx - 10), izq = it.izq;
+        var x = izq ? Math.min(col - dx, punta.x - 36) : Math.max(col + dx, punta.x + 36);
+        // sin espacio afuera (pieza en el borde de la figura): el rótulo va junto a la pieza, del lado de adentro
+        if (izq && x - 10 - ancho < 4) { izq = false; x = punta.x + 36; }
+        else if (!izq && x + 10 + ancho > w - 4) { izq = true; x = punta.x - 36; }
+        it.el.classList.toggle('izq', izq); it.el.classList.toggle('der', !izq);
+        it.el.style.left = x.toFixed(1) + 'px'; it.el.style.top = y.toFixed(1) + 'px';
+        var codo = punta.x + (izq ? -18 : 18);
+        it.linea.setAttribute('points', [x + (izq ? 4 : -4), y, codo, y, punta.x, punta.y].map(function (n) { return n.toFixed(1); }).join(' '));
+      });
     });
   }
   function rotulo(id, texto, alarma) {
     var e = $('rv_' + id);
     if (e.textContent !== texto) e.textContent = texto;
     e.classList.toggle('mal', !!alarma);
+  }
+  function pintaDetalle(e) {
+    var det = G.detalle[G.vista];
+    if (!det) return;
+    det.items.forEach(function (it) {
+      var v = it.valor(e), txt = v[0];
+      if (it.val.textContent !== txt) it.val.textContent = txt;
+      it.val.classList.toggle('mal', !!v[1]);
+    });
   }
 
   // ------------------------------------------------------------ la escena
@@ -529,9 +617,10 @@
       G.puntaSensor[p] = new T.Vector3(x, ancla, z);
     });
     // Zona de clic más ancha que el tubo (invisible): el tubo mide pocos píxeles en la vista general.
-    var zona = new T.Mesh(new T.CylinderGeometry(0.5, 0.5, 2.6, 12), new T.MeshBasicMaterial());
-    zona.position.set(0.9, -0.5, 0.9); zona.visible = false; zona.userData.sinSombra = true; G.escena.add(zona);
-    G.pickSondas = G.escena.children.slice(antesSondas).filter(function (o) { return o.isMesh; });
+    var zonaTubo = new T.Mesh(new T.CylinderGeometry(0.5, 0.5, 2.6, 12), new T.MeshBasicMaterial());
+    zonaTubo.position.set(0.9, -0.5, 0.9); zonaTubo.visible = false; zonaTubo.userData.sinSombra = true; G.escena.add(zonaTubo);
+    G.zonas = G.escena.children.slice(antesSondas).filter(function (o) { return o.isMesh; });
+    G.zonas.forEach(function (o) { o.userData.vista = 'sondas'; });
 
     // Cable de las sondas al gabinete, por la orilla.
     G.matCable = mate(0x55626c);
@@ -636,6 +725,13 @@
       new T.LineDashedMaterial({ color: TINTA, dashSize: 0.25, gapSize: 0.2, transparent: true, opacity: 0.5 }));
     G.trazoAire.computeLineDistances(); G.trazoAire.visible = false; G.escena.add(G.trazoAire);
 
+    // zonas de clic de las demás vistas de cerca
+    zona('gabinete', S([-4.05, 2.0, 0.45]), [2.3, 2.6, 1.4]);
+    zona('energia', S([-4.3, 4.95, 0.2]), [3.0, 1.4, 2.2]);
+    zona('energia', S([-4.3, 3.4, 0.1]), [0.5, 3.2, 0.5]);              // el mástil, que lleva el cable del panel
+    zona('enlace', S([-3.65, 3.5, 0.35]), [0.6, 2.0, 0.6]);
+    zona('enlace', [G.torreTope.x, G.torreTope.y - 3.4, G.torreTope.z], [2.2, 7.2, 2.2]);
+
     // Sombras: todo lo opaco las proyecta y las recibe, salvo el terreno, el corte y el fondo.
     G.escena.traverse(function (o) {
       if (!o.isMesh || o.userData.sinSombra || o.material.transparent || o.material.isMeshBasicMaterial) return;
@@ -671,22 +767,24 @@
 
   // Girar arrastrando, dentro de un rango que no deja ver la escena por detrás ni por debajo.
   function arrastre() {
-    // Un clic sin arrastrar sobre el tubo o una sonda abre la vista de cerca.
+    // Un clic sin arrastrar sobre una pieza abre su vista de cerca (zonas invisibles, G.zonas).
     var x0 = null, y0 = null, recorrido = 0, rayo = new T.Raycaster(), puntero = new T.Vector2();
-    function sobreSondas(e) {
+    function bajo(e) {
       var r = G.lienzo.getBoundingClientRect();
       puntero.set((e.clientX - r.left) / r.width * 2 - 1, -(e.clientY - r.top) / r.height * 2 + 1);
       rayo.setFromCamera(puntero, G.camara);
-      return rayo.intersectObjects(G.pickSondas, false).length > 0;
+      var hit = rayo.intersectObjects(G.zonas, false)[0];
+      return hit ? hit.object.userData.vista : null;
     }
     G.lienzo.addEventListener('pointerdown', function (e) { x0 = e.clientX; y0 = e.clientY; recorrido = 0; G.lienzo.setPointerCapture(e.pointerId); });
     G.lienzo.addEventListener('pointerup', function (e) {
-      if (x0 !== null && recorrido < 5 && G.vista === 'general' && sobreSondas(e)) irA('sondas');
+      var v = x0 !== null && recorrido < 5 && G.vista === 'general' ? bajo(e) : null;
+      if (v) irA(v);
       x0 = null;
     });
     G.lienzo.addEventListener('pointermove', function (e) {
-      if (x0 === null) {                         // sin botón: la mano indica que las sondas se pueden abrir
-        if (G.vista === 'general' && !G.trans) G.lienzo.classList.toggle('apunta', sobreSondas(e));
+      if (x0 === null) {                         // sin botón: la mano indica qué se puede abrir
+        if (G.vista === 'general' && !G.trans) G.lienzo.classList.toggle('apunta', !!bajo(e));
         return;
       }
       recorrido += Math.abs(e.clientX - x0) + Math.abs(e.clientY - y0);
@@ -695,22 +793,39 @@
       G.orbita.pitch = M.acota(G.orbita.pitch + (e.clientY - y0) * 0.004, lim[2], lim[3]);
       x0 = e.clientX; y0 = e.clientY; G.sucio = true;
     });
-    window.addEventListener('keydown', function (e) { if (e.key === 'Escape' && G.vista === 'sondas') irA('general'); });
+    window.addEventListener('keydown', function (e) { if (e.key === 'Escape' && G.vista !== 'general') irA('general'); });
+  }
+  // Zonas de clic invisibles, más anchas que cada pieza (en la vista general miden pocos píxeles).
+  function zona(vista, centro, tam) {
+    var m = new T.Mesh(new T.BoxGeometry(tam[0], tam[1], tam[2]), new T.MeshBasicMaterial());
+    m.position.set(centro[0], centro[1], centro[2]); m.visible = false; m.userData = { vista: vista, sinSombra: true };
+    G.escena.add(m); G.zonas.push(m);
   }
 
   // ------------------------------------------------------------ vistas
-  // General: toda la estación. Sondas: de frente al corte, bajo la lámina de agua, con el agua del
-  // corte más clara para ver las cabezas. El paso entre una y otra dura 0.8 s.
+  // General: toda la estación. Sondas: de frente al corte, bajo la lámina de agua, con el agua del corte
+  // más clara. Gabinete: de frente a la puerta abierta. Energía: del panel a las baterías. Comunicación:
+  // la antena, la trayectoria del paquete y la torre. El paso entre vistas dura 0.8 s.
   var VISTAS = {
-    general: { obj: [-0.4, 3.0, -2.2], yaw: -0.42, pitch: 0.16, dist: 24, lim: [-1.1, 0.7, 0.04, 0.75], agua: 0.72, tubo: 0.38 },
-    sondas:  { obj: [0.9, -1.1, 0.9], yaw: -0.18, pitch: 0.1, dist: 1.9, lim: [-0.8, 0.45, -0.05, 0.5], agua: 0.45, tubo: 0.16 }
+    general:  { obj: [-0.4, 3.0, -2.2], yaw: -0.42, pitch: 0.16, dist: 24, lim: [-1.1, 0.7, 0.04, 0.75], agua: 0.72, tubo: 0.38 },
+    sondas:   { obj: [0.9, -1.1, 0.9], yaw: -0.18, pitch: 0.1, dist: 1.9, lim: [-0.8, 0.45, -0.05, 0.5], agua: 0.45, tubo: 0.16 },
+    gabinete: { obj: S([-4.05, 2.0, 0.45]), yaw: 0.05, pitch: 0.1, dist: 5.2, lim: [-0.6, 0.6, 0, 0.5], agua: 0.72, tubo: 0.38 },
+    energia:  { obj: S([-4.15, 3.6, 0.3]), yaw: -0.15, pitch: 0.22, dist: 10.5, lim: [-0.7, 0.6, 0.05, 0.6], agua: 0.72, tubo: 0.38 },
+    enlace:   { obj: [3.8, 6.6, -4.3], yaw: 0.6, pitch: 0.1, dist: 23, lim: [0.1, 1.0, 0.02, 0.45], agua: 0.72, tubo: 0.38 }
+  };
+  // En la vista de cerca, las fases que se quieren ver van a tiempo real (ui.js lo consulta).
+  var TIEMPO_REAL = {
+    sondas: ['CALENTAMIENTO', 'MEDICIÓN'],
+    gabinete: ['CALENTAMIENTO', 'MEDICIÓN', 'EMPAQUETADO']
+    // comunicación no se frena: a la velocidad elegida cada envío se dibuja completo (2.3 s, ver ENV) y
+    // vuelve a pasar a los pocos segundos; frenarlo dejaba largos ratos sin paquete en el aire
   };
   function irA(nombre) {
     if (G.vista === nombre && !G.trans) return;
     G.trans = { de: { obj: G.objetivo.toArray(), yaw: G.orbita.yaw, pitch: G.orbita.pitch, dist: G.orbita.dist,
       agua: G.matCaraAgua.opacity, tubo: G.tuboSondas.material.opacity }, a: VISTAS[nombre], t0: performance.now() };
     G.vista = nombre;
-    G.volver.hidden = nombre !== 'sondas';
+    G.volver.hidden = nombre === 'general';
     G.lienzo.classList.remove('apunta');
     G.sucio = true;
   }
@@ -724,24 +839,6 @@
     G.tuboSondas.material.opacity = mezcla(de.tubo, a.tubo);
     G.sucio = true;
     if (k >= 1) G.trans = null;
-  }
-
-  // Estado de cada sensor en la vista de cerca: qué hace ahora y su último dato enviado.
-  function pintaSensores(s, nom, f) {
-    var transcurrido = f.dur - f.resta;
-    G.sensores.forEach(function (x) {
-      var son = s.sondas[x.q], esp = son.espec, med = s.fw.detalleMed && s.fw.detalleMed[x.q], txt, mal = false;
-      if (son.falla === 'sin_respuesta') { txt = 'No responde: se envía vacío'; mal = true; }
-      else if (son.falla === 'menos999') { txt = 'Rota: se envía −999'; mal = true; }
-      else if (son.falla === 'congelado') { txt = 'Congelada: repite el valor'; mal = true; }
-      else if (nom === 'CALENTAMIENTO') txt = transcurrido < esp.estabS ? 'Estabilizando, faltan ' + Math.ceil(esp.estabS - transcurrido) + ' s' : 'Estable, en espera';
-      else if (nom === 'MEDICIÓN') txt = 'Lectura ' + Math.min(5, Math.floor(transcurrido) + 1) + ' de 5';
-      else txt = med && med.valor !== null && med.valor !== undefined
-        ? 'Enviado: ' + med.valor.toFixed(SENSOR[x.q].dec).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' ' + (esp.unidad === 'pH' ? '' : esp.unidad)
-        : 'Sin medición todavía';
-      txt = txt.trim(); if (x.val.textContent !== txt) x.val.textContent = txt;
-      x.val.classList.toggle('mal', mal);
-    });
   }
 
   // ------------------------------------------------------------ luz
@@ -801,7 +898,7 @@
     var ahora = performance.now(), dtr = Math.min(0.1, (ahora - (G.tAgua || ahora)) / 1000), vel = s.agua.velocidad(fw.t);
     G.tAgua = ahora;
     G.ondas.forEach(function (t) { t.offset.y = (t.offset.y + EXAGERA_CORRIENTE * vel * dtr / 3.84) % 1; });
-    rotulo('rio', 'Simulada: ' + vel.toFixed(2) + ' m/s');
+    rotulo('rio', vel.toFixed(2) + ' m/s, simulada');
 
     var midiendo = nom === 'CALENTAMIENTO' || nom === 'MEDICIÓN';
     M.PARAMS.forEach(function (q) {
@@ -809,28 +906,24 @@
       G.puntas[q].material.color.setHex(fa ? ALARMA : (midiendo ? TINTA : AGUA));
     });
     G.matCable.color.setHex(midiendo ? TINTA : 0x55626c);
-    if (G.vista === 'sondas') pintaSensores(s, nom, f);
     var fallas = M.PARAMS.filter(function (q) { return s.sondas[q].falla !== 'ninguna'; }).length;
-    rotulo('sondas', midiendo ? (nom === 'MEDICIÓN' ? 'Midiendo: 5 lecturas por sonda' : 'Estabilizando las sondas') :
-      (fallas ? fallas + (fallas === 1 ? ' sonda con falla' : ' sondas con falla') : 'En el agua, sin medir'), fallas);
+    rotulo('sondas', midiendo ? (nom === 'MEDICIÓN' ? 'Midiendo' : 'Estabilizando') :
+      (fallas ? fallas + (fallas === 1 ? ' con falla' : ' con falla') : 'Esperando la próxima medición'), fallas);
 
     var n = fw.cola.length, env = envio(s, nom), nSD = env && env.k < ENV.ack ? Math.max(n, env.nAntes) : n;
     G.cola.forEach(function (c, i) { c.visible = i < nSD; });
-    var estadoCtrl = env ? (env.k < ENV.ack ? 'Enviando' : 'Confirmado: borra de la SD') : (ESTADO[nom] || nom);
-    rotulo('ctrl', estadoCtrl + (nSD ? ' · ' + nSD + (nSD === 1 ? ' paquete en la SD' : ' paquetes en la SD') : ''), !env && nSD > 1);
+    var estadoCtrl = env ? (env.k < ENV.ack ? 'Enviando los datos' : 'Datos recibidos') : (ESTADO[nom] || nom);
+    rotulo('ctrl', estadoCtrl + (nSD ? ' · ' + nSD + ' en la SD' : ''), !env && nSD > 1);
 
     var caido = s.enlace.caido;
     G.matAntena.color.setHex(caido ? ALARMA : TINTA);
-    rotulo('modem', caido ? 'Sin red' : 'Señal ' + Math.round(s.enlace.rssi) + ' dBm', caido);
 
     var soc = s.energia.soc(), sol = s.energia.solarW;
     G.carga.scale.x = Math.max(soc, 0.02); G.carga.position.x = (-4.2 - BASE[0]) - 0.3 * (1 - G.carga.scale.x);   // coordenada local del grupo
     G.carga.material.color.setHex(soc < 0.2 ? ALARMA : AGUA);
-    rotulo('bat', 'Carga ' + Math.round(soc * 100) + ' %', soc < 0.2);
     G.matPanel.emissive.setRGB(0.05 * M.acota(sol / 2.5, 0, 1), 0.18 * M.acota(sol / 2.5, 0, 1), 0.3 * M.acota(sol / 2.5, 0, 1));
-    rotulo('panel', sol > 0.05 ? 'Genera ' + sol.toFixed(1) + ' W' : 'Sin sol');
-    var torre = caido ? 'Sin cobertura en el sitio' : env ? (env.k < ENV.llega ? 'Recibiendo' : 'Recibido: confirma a la estación')
-      : (nom === 'ENVÍO' ? 'Recibiendo' : '');
+    rotulo('panel', (sol > 0.05 ? sol.toFixed(1) + ' W' : 'Sin sol') + ' · ' + Math.round(soc * 100) + ' %', soc < 0.2);
+    var torre = caido ? 'Sin red' : env ? (env.k < ENV.llega ? 'Enviando los datos' : 'Datos recibidos') : (nom === 'ENVÍO' ? 'Enviando los datos' : 'Señal ' + Math.round(s.enlace.rssi) + ' dBm');
     rotulo('torre', torre, caido);
 
     // antena: azul tenue al buscar red, intensa al enviar; roja y apagada si no hay cobertura
@@ -855,6 +948,7 @@
       G.paquete.position.copy(G.rutaAire.getPoint(p)); G.paquete.visible = true; G.trazoAire.visible = true;
     }
     G.paquete.material.color.setHex(ext && ext.alarma ? ALARMA : TINTA);
+    if (G.vista !== 'general') pintaDetalle({ s: s, nom: nom, f: f, transcurrido: f.dur - f.resta, env: env, nSD: nSD });
 
     if (G.trans) avanzaTransicion();
     if (G.sucio) { colocaCamara(); G.relleno.position.copy(G.camara.position); }
@@ -862,5 +956,9 @@
     if (G.sucio) { colocaRotulos(); G.sucio = false; }
   }
 
-  window.Escena = { construye: construye, pinta: pinta, vista: function () { return ok ? G.vista : 'general'; } };
+  window.Escena = {
+    construye: construye, pinta: pinta,
+    vista: function () { return ok ? G.vista : 'general'; },
+    tiempoReal: function (fase) { return ok && (TIEMPO_REAL[G.vista] || []).indexOf(fase) >= 0; }
+  };
 })();

@@ -63,8 +63,14 @@ No conviertas "pendiente" en "construido" sin verificarlo contra el repo.
     fondo); corte frontal con el perfil en tinta. Sondas en su tubo, cable, gabinete abierto con
     controlador, SD (un cubo por paquete pendiente), módem y baterías, panel, antena y torre celular. Rótulos
     HTML con nombre y dato vivo. La estación está a 1.6× respecto al río para que se lea. Se gira arrastrando.
-    Clic en las sondas (o su rótulo): vista de cerca con la cabeza de cada sonda, qué mide y su estado vivo;
-    calentamiento y medición a tiempo real mientras está abierta; "Vista general" o Esc regresa.
+    Rótulos generales cortos (Sondas, Gabinete, Energía, Comunicación, Corriente: nombre y dato vivo), en tinta con
+    contorno blanco grueso, sin fondo. Cada uno abre su vista de cerca (clic en el rótulo o en la pieza, zonas
+    invisibles `G.zonas`): sondas, gabinete (ESP32, reloj, microSD, módem, baterías), energía (panel, baterías,
+    consumo) y comunicación (antena, SD, paquete, torre). En cada una, un rótulo por pieza con qué es y su estado
+    vivo; sondas y gabinete pasan a tiempo real las fases que muestran (`Escena.tiempoReal`), comunicación no (así el
+    envío se repite cada pocos segundos). Estados en palabras llanas ("En reposo hasta las 10:30", "Enviando los
+    datos"). Un rótulo de detalle nunca queda atravesado por su línea: si no cabe afuera, va junto a su pieza.
+    "Vista general" o Esc regresa.
     Cada envío (ACK del firmware) se dibuja en 2.3 s reales: antena encendida, paquete a la torre,
     confirmación de vuelta y la SD se vacía; el reloj no se detiene.
   - Recepción: pestañas con el último valor de cada parámetro y línea de tiempo de 12 h; punto lleno =
