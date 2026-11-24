@@ -112,6 +112,9 @@ main { flex: 1; padding-top: 24px; padding-bottom: 48px; height: auto; }
 .minis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 .mini { border: 1px solid var(--linea); border-radius: 4px; padding: 10px 12px; min-width: 0; }
 .mini.actual { border-color: var(--principal); box-shadow: inset 0 3px 0 var(--principal); }
+.mini.elegible { cursor: pointer; }
+.mini.elegible:hover:not(.actual) { border-color: #b9a1a8; }
+.mini.elegible:focus-visible { outline: 2px solid var(--principal); outline-offset: 2px; }
 .mini p { font-size: 13px; }
 .mini svg { display: block; margin: 6px 0 2px; max-width: 100%; height: auto; }
 .tip { position: fixed; z-index: 10; pointer-events: none; max-width: 300px; background: var(--neutro800); color: #fff;

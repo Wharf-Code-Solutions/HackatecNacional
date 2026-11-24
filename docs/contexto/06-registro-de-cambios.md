@@ -40,6 +40,18 @@ versionada): si cambia el criterio, se regenera con el script, no se edita.
 
 ---
 
+## 2026-11-24 · M7: en el expediente se elige la sonda que se grafica
+
+**Qué cambió.** Un clic en cualquier miniatura de "Todas las sondas de la estación" la muestra en la serie
+grande de "Evidencia", con la banda de su sitio. Empieza en la sonda de la alerta y vuelve a ella al cambiar
+de alerta; regla, criterio y respaldo solo se muestran para esa sonda.
+**Por qué.** Petición del usuario: ver la serie de cualquier parámetro de la estación, no solo el alterado.
+**Qué arrastró.** `Expediente.jsx`, `Serie.jsx` (prop `parametro`), `Miniaturas.jsx` (`elegido`, `onElegir`),
+`estilos.css`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
 ## 2026-11-24 · M7: el mapa vuelve a la mitad, junto al estado de las estaciones
 
 **Qué cambió.** Corrige el orden de la entrada "orden de la vista de alertas": resumen; mapa y "Cómo están

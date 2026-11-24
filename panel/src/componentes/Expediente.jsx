@@ -123,6 +123,34 @@ function Medidas({ ms }) {
   );
 }
 
+// La serie grande muestra la sonda que se elija en las miniaturas; empieza en la de la alerta.
+// Se monta de nuevo al cambiar de alerta (key), así vuelve a la sonda alterada.
+function Sondas({ alerta, estacion, banda, veredictos, lineaBase, evidencia }) {
+  const [param, setParam] = useState(alerta.c_parametro);
+  const propia = param === alerta.c_parametro;
+  const bandaParam = propia ? banda : (lineaBase[alerta.c_sitio || estacion.c_sitio] || {})[param];
+  return (
+    <>
+      <section className="bloque">
+        <h3>Evidencia</h3>
+        <Serie alerta={alerta} parametro={param} banda={bandaParam} veredictos={veredictos} />
+        {propia && (
+          <dl className="datos">
+            {evidencia.map(([k, v]) => <div key={k} style={{ display: 'contents' }}><dt>{k}</dt><dd>{v}</dd></div>)}
+          </dl>
+        )}
+      </section>
+
+      <section className="bloque">
+        <h3>Todas las sondas de la estación</h3>
+        <p className="nota" style={{ margin: '-6px 0 12px' }}>Un clic en una sonda la muestra arriba. Recuadro guinda: la que se ve; franja azul clara: lo habitual del sitio.</p>
+        <Miniaturas alerta={alerta} estacion={estacion} lineaBase={lineaBase} veredictos={veredictos}
+          elegido={param} onElegir={setParam} />
+      </section>
+    </>
+  );
+}
+
 export default function Expediente({ alerta, veredictos, motor, guardar, prediccion, demo }) {
   const { estaciones, lineaBase, nombreEstacion, banda, unidad } = useDatos();
   if (!alerta) {
@@ -168,19 +196,8 @@ export default function Expediente({ alerta, veredictos, motor, guardar, predicc
         <Gestion key={a.c_alerta} alerta={a} guardar={guardar} demo={demo} />
       </section>
 
-      <section className="bloque">
-        <h3>Evidencia</h3>
-        <Serie alerta={a} banda={b} veredictos={veredictos} />
-        <dl className="datos">
-          {evidencia.map(([k, v]) => <div key={k} style={{ display: 'contents' }}><dt>{k}</dt><dd>{v}</dd></div>)}
-        </dl>
-      </section>
-
-      <section className="bloque">
-        <h3>Todas las sondas de la estación</h3>
-        <p className="nota" style={{ margin: '-6px 0 12px' }}>Recuadro guinda: la sonda de esta alerta. Franja azul clara: lo habitual del sitio.</p>
-        <Miniaturas alerta={a} estacion={e} lineaBase={lineaBase} veredictos={veredictos} />
-      </section>
+      <Sondas key={a.c_alerta} alerta={a} estacion={e} banda={b} veredictos={veredictos} lineaBase={lineaBase}
+        evidencia={evidencia} />
 
       {/* A todo lo ancho: con los candidatos del DENUE la tabla no cabe en media columna. */}
       <section className="bloque"><h3>Fuente probable</h3><Fuente f={a.fuente_probable} motor={motor} /></section>

@@ -4,11 +4,12 @@ import { hora, num } from '../lib/formato.js';
 import { Leyenda, Mensaje } from './marcas.jsx';
 
 // Serie reciente de un parámetro contra la banda histórica del sitio, con el momento de la alerta.
-export default function Serie({ alerta, banda, veredictos }) {
+export default function Serie({ alerta, parametro, banda, veredictos }) {
+  const cp = parametro || alerta.c_parametro;
   const [ref, W] = useAncho(280);
   const serie = (veredictos || []).map((v) => {
-    const p = (v.parametros || []).find((x) => x.c_parametro === alerta.c_parametro);
-    return p && p.valor != null ? { t: new Date(v.fecha_hora).getTime(), v: p.valor } : null;
+    const p = (v.parametros || []).find((x) => x.c_parametro === cp);
+    return p && p.valor != null && p.valor > -100 ? { t: new Date(v.fecha_hora).getTime(), v: p.valor } : null;
   }).filter(Boolean).sort((p, q) => p.t - q.t);   // llegan en orden de recepción
   if (serie.length < 2) {
     return <div ref={ref}><Mensaje>Sin lecturas recientes de este parámetro en el backend para graficar.</Mensaje></div>;
@@ -22,7 +23,7 @@ export default function Serie({ alerta, banda, veredictos }) {
   const y = (v) => A + (H - A - B) * (1 - (v - lo) / (hi - lo));
   const ta = new Date(alerta.fecha_hora).getTime();
   const dentro = ta >= t0 && ta <= t1;
-  const nombre = PARAM[alerta.c_parametro] || alerta.c_parametro;
+  const nombre = PARAM[cp] || cp;
   return (
     <div ref={ref} className="lienzo">
       <Leyenda items={[

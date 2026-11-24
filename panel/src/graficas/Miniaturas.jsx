@@ -4,7 +4,8 @@ import { num } from '../lib/formato.js';
 import { Mensaje } from './marcas.jsx';
 
 // Las sondas de la estación, cada una contra su banda. La de la alerta va marcada.
-export default function Miniaturas({ alerta, estacion, lineaBase, veredictos }) {
+export default function Miniaturas({ alerta, estacion, lineaBase, veredictos, elegido, onElegir }) {
+  const marcado = elegido || alerta.c_parametro;
   const [ref, ancho] = useAncho(150);
   const vs = [...(veredictos || [])].sort((p, q) => (p.fecha_hora < q.fecha_hora ? -1 : 1));
   if (vs.length < 2) return <div ref={ref}><Mensaje>Sin lecturas recientes de la estación.</Mensaje></div>;
@@ -33,7 +34,10 @@ export default function Miniaturas({ alerta, estacion, lineaBase, veredictos }) 
         const fuera = b ? (ultimo > b.p90 ? 'sobre lo habitual' : ultimo < b.p10 ? 'bajo lo habitual' : 'dentro de lo habitual') : 'sin línea base';
         const tip = `${PARAM[p] || p}: última ${num(ultimo)}${u}, ${fuera}` + (b ? ` (banda ${num(b.p10)} a ${num(b.p90)}, n = ${b.n})` : '');
         return (
-          <div key={p} className={'mini' + (p === alerta.c_parametro ? ' actual' : '')} data-tip={tip}>
+          <div key={p} className={'mini' + (p === marcado ? ' actual' : '') + (onElegir ? ' elegible' : '')} data-tip={tip}
+            role={onElegir ? 'button' : undefined} tabIndex={onElegir ? 0 : undefined} aria-pressed={onElegir ? p === marcado : undefined}
+            onClick={onElegir ? () => onElegir(p) : undefined}
+            onKeyDown={onElegir ? (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); onElegir(p); } } : undefined}>
             <p><b>{PARAM[p] || p}</b> <span className="tenue">{num(ultimo)}{u}</span></p>
             <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H} aria-hidden="true">
               {b && <rect x="0" y={y(b.p90)} width={W} height={Math.max(1, y(b.p10) - y(b.p90))} fill="#EDF2FE" />}
