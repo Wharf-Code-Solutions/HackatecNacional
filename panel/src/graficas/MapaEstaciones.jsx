@@ -174,7 +174,12 @@ export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir,
         setListo(true);
       });
     }).catch(() => { if (vivo) setFalla(true); });
-    return () => { vivo = false; mapa.current?.remove(); mapa.current = null; marcas.current = {}; };
+    return () => {
+      vivo = false;
+      // MapLibre lanza AbortError si se quita mientras aún carga el estilo (al cambiar de pestaña): no es falla.
+      try { mapa.current?.remove(); } catch (e) { /* nada */ }
+      mapa.current = null; marcas.current = {};
+    };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Rojo si la estacion tiene una alerta por atender; contorno azul si es la elegida en el panel.

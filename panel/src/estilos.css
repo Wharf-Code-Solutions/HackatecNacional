@@ -514,3 +514,5 @@ main.tablero-main { padding: 0; flex: 1; display: flex; }
 .dashinfo-pista span { display: block; height: 100%; border-radius: 5px; }
 .dashinfo-vacio { margin: 12px 0; font-size: 14px; color: #777; }
 @media (max-width: 600px) { .dashinfo-rangos { width: 100%; } .dashinfo-rangos button { flex: 1; } .dashinfo-filtros select { flex: 1; } }
+.filtros-escuelas { max-width: 640px; }
+.riesgo-marca { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }

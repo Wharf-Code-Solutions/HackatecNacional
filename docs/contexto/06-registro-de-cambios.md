@@ -21,6 +21,18 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Módulo B: panorama de escuelas
+
+**Qué cambió.** La pestaña Escuelas tiene cuatro cifras (riesgo alto o muy alto, escuelas en la cuenca, con mecanismo,
+alumnos), barras por nivel de riesgo, por el riesgo que pesa más (el mayor de los subíndices de contaminación y derrumbe)
+y por municipio, y la lista ordenada por índice con filtros de riesgo, tipo y municipio. Colores del mapa. El mapa ignora
+el AbortError de MapLibre al desmontarse mientras carga.
+**Por qué.** Paso 2 del módulo B (docs/19 §6, punto 1).
+**Qué arrastró.** `Escuelas.jsx`, `MapaEstaciones.jsx`, `estilos.css`.
+**Impacto en otros módulos.** A: faltan `matricula` en todas y `fuente_agua` en casi todas; el panel muestra "sin dato".
+
+---
+
 ## 2026-11-24 · Módulo A: datos y escenarios del módulo de ladera (docs/20 §3)
 
 **Qué cambió.** (1) Criterio y lista de las 5 escuelas con módulo de ladera (`100_escuelas_ladera.py` → `escuelas_ladera.json`):
