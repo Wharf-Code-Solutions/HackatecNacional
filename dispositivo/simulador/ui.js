@@ -28,8 +28,8 @@
 
   // ----------------------------------------------------------------------- carga
   Promise.all([
-    fetch('../../contrato/fixtures/estaciones.json').then(function (r) { return r.json(); }),
-    fetch('../../contrato/fixtures/linea_base.json').then(function (r) { return r.json(); })
+    fetch('../../contrato/fixtures/estaciones.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }),
+    fetch('../../contrato/fixtures/linea_base.json', { cache: 'no-cache' }).then(function (r) { return r.json(); })
   ]).then(function (d) { arranca(d[0].estaciones, d[1]); }).catch(function (e) {
     var a = $('aviso'); a.hidden = false;
     a.innerHTML = 'No se pudieron leer los fixtures del contrato (' + e.message + '). Sirve el repositorio desde su raíz con ' +

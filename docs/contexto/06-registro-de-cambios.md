@@ -21,6 +21,43 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · M10, M0: red de 5 estaciones elegida por cobertura; fixtures con esas 5
+
+**Qué cambió.** `scripts/96_red_estaciones.py` elige la red entre los 69 sitios con historia de campo
+por el número de establecimientos DENUE que vigila cada uno a 20 km aguas arriba, y escribe
+`red/red_estaciones.csv`. `40_generar_fixtures.py` toma de ahí las estaciones: EST-ATY-01 Zahuapan
+(DLTLA2554), 02 Tepetitla (DLTLA2577), 03 Papalotla (DLTLA2544), 04 Puebla (DLPUE1977) y 05 Alseseca
+(DLPUE2064), numeradas de aguas arriba hacia aguas abajo. Nuevo `docs/18-red-de-estaciones.md` con la
+curva de cobertura, el enlace por la red celular existente y costos por cotizar; D27.
+**Por qué.** El número de estaciones lo limita el presupuesto. Las 5 anteriores, elegidas por ser las
+más deterioradas, vigilaban 265 establecimientos (9 %); estas, 1 124 (39 %). De la sexta en adelante
+cada estación agrega menos de 70.
+**Qué arrastró.** Fixtures y escenarios regenerados; el motor da 0, 1, 5, 3 y 0 alertas (antes 0, 2, 5,
+5, 0) y cumple su criterio (`docs/15` regenerado); `backend/prueba.py` (`ESPERADO`) y
+`backend/README.md`; el mock reproduce los cinco escenarios sin errores de contrato; `ficha-tecnica.md`,
+`docs/12`, `docs/README.md`, `02-mapa-del-repo.md`, `CLAUDE.md`.
+**Impacto en otros módulos.** M5: `backend/prueba.py` no se corrió aquí (falta el entorno del backend).
+M7: `panel/public/demo/foto.json` sigue con las estaciones anteriores; hay que recapturarlo con el backend
+real (`npm run capturar-demo`). `prediccion_ejemplo.json` sigue sobre DLTLA2582: es un ejemplo de M3 y
+regenerarlo pide `muestreo_nucleo.csv`.
+
+---
+
+## 2026-11-24 · M6, M4: menú del mapa plegable y estación bien encuadrada; sin volcán
+
+**Qué cambió.** La barra lateral del mapa se pliega con un botón junto al título y queda una columna
+con los números de las estaciones. Al abrir una estación se pliega sola, el mapa ocupa ≈ 40 % y centra
+la estación a zoom 12.6 al terminar la transición, y el simulador ocupa 58 %; en el marco, la figura 3D
+limita su alto al de la ventana para verse completa. Al cerrar, el menú vuelve como estaba. En la
+figura 3D se quita el volcán del fondo.
+**Por qué.** Con el menú fijo de 220 px el mapa quedaba en una franja de ≈ 170 px y la figura se cortaba
+por abajo; el usuario pidió un menú desplegable y ver bien la zona y la figura.
+**Qué arrastró.** `mapa/index.html`, `mapa.js?v=9`, `estilos.css?v=7`, `mapa/README.md`; en el
+simulador `estilos.css?v=8` (modo incrustado) y `escena.js?v=28`; D19, `CLAUDE.md`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
 ## 2026-11-24 · M4: vuelven las nubes difusas; cielo más azul
 
 **Qué cambió.** Se quitan los cúmulos de base plana y vuelven las nubes difusas de antes, en su lugar.

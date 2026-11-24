@@ -31,6 +31,7 @@ Orden de lectura recomendado. Los primeros seis documentos se mantienen a mano; 
 | 08 | [Verificación de datos](08-verificacion-datos.md) | El estado del conjunto de datos, con veredicto por sección | **generado** por `scripts/30_verificacion_datos.py` |
 | 09 | [Hallazgos del exploratorio](09-hallazgos-exploratorio.md) | Qué dicen los datos | **generado** por `scripts/20_analisis_exploratorio.py` |
 | 10 | [Revisión crítica del plan](10-revision-critica-plan.md) | Seis objeciones al plan de etapas 2 a 8, con alternativas | a mano |
+| 18 | [Red de estaciones](18-red-de-estaciones.md) | Cuántas estaciones, dónde, cómo se comunican y cuánto cuestan, con la curva de cobertura | a mano; cifras de `scripts/96_red_estaciones.py` |
 | 17 | [Plan de la app ciudadana](17-plan-app-ciudadana.md) | Especificación completa de M8: decisiones, alternativas descartadas, contrato y criterio de terminado | a mano |
 | 16 | [Modelos proxy](16-modelos-proxy.md) | Qué parámetro de laboratorio se puede estimar desde un sensor y cuál no | **generado** por `scripts/90_modelos_proxy.py` |
 | 15 | [Motor de reglas](15-motor-reglas.md) | Resultado contra los cinco escenarios y el intercambio que se eligió | **generado** por `motor/prueba.py` |

@@ -40,7 +40,7 @@ punta (M9).
 | M7 Panel de autoridad | **Construido.** Alertas con evidencia y gráficas, fuente probable con puntaje, predicción de M3 y cambio de estado y responsable; React con Vite, desplegado en Vercel. Sin inicio de sesión | `panel/` |
 | M8 App ciudadana | Pendiente | — |
 | M9 Integración | Pendiente | — |
-| M10 Documentación y costos | En curso; faltan costos, manual por usuario y propuesta por fases | `docs/` |
+| M10 Documentación y costos | En curso. **Red de 5 estaciones decidida** (cobertura, enlace por la red celular existente y costos por cotizar, `docs/18`); faltan cotización, manual por usuario y propuesta por fases | `docs/`, `scripts/96_red_estaciones.py` |
 
 ## Qué se puede tomar hoy sin esperar a nadie
 
@@ -69,8 +69,11 @@ punta (M9).
 
 ### M10, documentación del reto
 
-- Pendientes que no dependen de código: estimación de costos (incluida calibración y reposición de
-  sondas), manual breve por tipo de usuario y propuesta de implementación por fases. La ficha del
+- La red está decidida en [18-red-de-estaciones.md](18-red-de-estaciones.md): 5 estaciones en cadena
+  del Zahuapan y Tepetitla a Puebla y el Alseseca, elegidas por cobertura de establecimientos DENUE.
+  Los fixtures ya son esas 5. Falta cotizar (empezar por la sonda de turbiedad con limpiador) y medir
+  la señal LTE-M en cada sitio.
+- Pendientes que no dependen de código: manual breve por tipo de usuario y propuesta de implementación por fases. La ficha del
   dispositivo ya existe: [`dispositivo/ficha-tecnica.md`](../dispositivo/ficha-tecnica.md).
 
 ## App ciudadana (M8)

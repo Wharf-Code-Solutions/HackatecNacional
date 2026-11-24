@@ -43,7 +43,8 @@ después el **análisis**. Las vistas actuales no anuncian el análisis en panta
 | Modelos proxy | Conductividad→SDT **publicado** (2 % de error fuera de muestra); turbiedad→SST **descartado** (35 %) |
 | M5 backend | **Construido** (`backend/`): FastAPI, SQLite en local y Postgres en Vercel (`/api` del mismo proyecto que el panel, D25); mismas respuestas que el mock (`backend/prueba.py` lo compara en vivo); motor sin memoria entre peticiones; `GET /alertas/<c_alerta>/prediccion` con M3. Sin autenticación |
 | M8 app ciudadana | **Pendiente, especificada.** Plan completo en `docs/17-plan-app-ciudadana.md`: PWA en React y Vite bajo `/ciudadano/`. Sus dos dependencias de backend ya están resueltas (`GET /reportes/<folio>` y la asignación al tramo en `backend/asignacion.py`). Queda el `buildCommand` de `vercel.json`, que va junto con el andamio |
-| M9, M10 | Pendientes |
+| Red de estaciones | **Decidida** (`scripts/96_red_estaciones.py`, `docs/18-red-de-estaciones.md`): 5 estaciones con historia de campo que vigilan 1 124 de 2 863 establecimientos DENUE (39 %) a 20 km aguas arriba; las anteriores vigilaban 265. Enlace por la red celular existente, sin antenas propias. Los fixtures son estas 5 |
+| M9, M10 | Pendientes (M10: falta cotizar, manual y propuesta por fases) |
 
 No conviertas "pendiente" en "construido" sin verificarlo contra el repo.
 
@@ -58,8 +59,8 @@ No conviertas "pendiente" en "construido" sin verificarlo contra el repo.
 - **Pantalla (D19, D20)**: solo tres cosas.
   - Figura 3D (Three.js r149 desde unpkg; materiales físicos, texturas dibujadas en código sin descargas,
     sombras y luz fija de día soleado aunque la hora simulada sea de noche, D19; se dibuja en cada cuadro): valle casi plano con el río en un cauce de taludes de tierra que
-    serpentea, agua verde grisácea que se vuelve café con la turbiedad, cielo con nubes, 12 ahuejotes al fondo, pasto, carrizo y macollos de zacatón en las orillas, corriente simulada (`Agua.velocidad`) que mueve el agua y un volcán
-    tenue al fondo (niebla); corte frontal con el perfil en tinta. Sondas en su tubo, cable, gabinete abierto con
+    serpentea, agua verde grisácea que se vuelve café con la turbiedad, cielo con nubes, 12 ahuejotes al fondo, pasto, carrizo y macollos de zacatón en las orillas, corriente simulada (`Agua.velocidad`) que mueve el agua (sin volcán al
+    fondo); corte frontal con el perfil en tinta. Sondas en su tubo, cable, gabinete abierto con
     controlador, SD (un cubo por paquete pendiente), módem y baterías, panel, antena y torre celular. Rótulos
     HTML con nombre y dato vivo. La estación está a 1.6× respecto al río para que se lea. Se gira arrastrando.
     Clic en las sondas (o su rótulo): vista de cerca con la cabeza de cada sonda, qué mide y su estado vivo;
@@ -86,8 +87,10 @@ No conviertas "pendiente" en "construido" sin verificarlo contra el repo.
   satélite de Mapbox respondió 429 con nuestra cuenta) y **Relieve**. **Sitios oficiales** encendida.
 - Cuenca RH18A (10 subcuencas, 31 480 km²) delimitada: máscara fuera, contorno en tinta. Ríos con grosor por
   orden y zoom. 14 confluencias; se rotulan solo las que el INEGI nombra como río en ambos brazos.
-- Barra lateral: título, 5 estaciones y las casillas. Fuentes en el botón de atribución.
-- Al elegir una estación se acerca y abre su simulador en un marco **por URL**
+- Barra lateral plegable (botón junto al título): plegada queda una columna con los números de las 5 estaciones.
+  Título, estaciones y casillas. Fuentes en el botón de atribución.
+- Al elegir una estación la barra se pliega, el mapa (≈ 40 %) centra la estación a zoom 12.6 cuando termina la
+  transición, y su simulador (58 %) se abre en un marco **por URL**, con la figura 3D completa a la vista
   (`?incrustado=1&estacion=...&vel=...&backend=...`). Lee `GET /alertas` solo para poner en rojo la estación.
 
 **Datos para el mapa**: `scripts/60_red_para_mapa.py` lee la red del INEGI (F08) y escribe
@@ -167,7 +170,7 @@ El usuario rechazó explícitamente el diseño con aspecto "hecho por IA" y lo h
   número al cambiarlos o el navegador seguirá usando la versión vieja.
 - **Panel del navegador de la app**: si está oculto, `requestAnimationFrame` se pausa y MapLibre/Mapbox y
   Three.js no dibujan (capturas en blanco). Muéstralo antes de verificar; para el estado sin animación usa
-  `window.mapaAtoyac.jumpTo({center, zoom})`. Con el panel angosto (< 900 px) la barra lateral del mapa se oculta.
+  `window.mapaAtoyac.jumpTo({center, zoom})`. Con el panel angosto (< 900 px) la barra lateral del mapa empieza plegada y, con una estación abierta, el mapa se oculta.
 - Barras invertidas y comillas dentro de un heredoc de `python -` se estropean al pasar por la herramienta de
   shell: escribe un archivo `.py` en el scratchpad y ejecútalo.
 - Los nombres de las confluencias salen de la toponimia dispersa del INEGI y pueden fallar en barrancas; por eso
@@ -206,5 +209,5 @@ Ya hay datos (M0), sensor simulado (M4), mapa (M6), topología (M1), motor de re
 - Rama `main` del remoto del equipo. Sin líneas de coautor en los commits.
 - El estado para traspaso vive en `docs/12-estado-y-traspaso.md`: se actualiza al hacer push, no en cada cambio.
 - Commit y push solo cuando el usuario lo pide. Remoto: `Wharf-Code-Solutions/HackatecNacional`.
-- Decisiones técnicas numeradas en `docs/05-decisiones-tecnicas.md` (hoy D1 a D21).
+- Decisiones técnicas numeradas en `docs/05-decisiones-tecnicas.md` (hoy D1 a D27).
 - Cada cifra de la documentación sale de un archivo o de una corrida; si no puedes rastrearla, verifícala.

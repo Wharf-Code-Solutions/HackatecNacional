@@ -37,7 +37,7 @@ from app import crear_app, validador, ESQ    # noqa: E402
 FIX = os.path.join(RAIZ, 'contrato', 'fixtures')
 ESCENARIOS = ['normal', 'descarga_organica', 'descarga_industrial', 'lluvia', 'falla_sensor']
 # Lo que da el motor de M2 en cada escenario (motor/README.md).
-ESPERADO = {'normal': 0, 'descarga_organica': 2, 'descarga_industrial': 5, 'lluvia': 5, 'falla_sensor': 0}
+ESPERADO = {'normal': 0, 'descarga_organica': 1, 'descarga_industrial': 5, 'lluvia': 3, 'falla_sensor': 0}
 
 fallas = []
 

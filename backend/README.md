@@ -56,7 +56,7 @@ $env:PRUEBA_POSTGRES = 'postgresql://postgres@127.0.0.1:55432/postgres'
 
 Sale con código 1 si algo falla. Comprueba:
 
-1. Los cinco escenarios pasan sin errores de contrato y dan las alertas del motor (0, 2, 5, 5, 0).
+1. Los cinco escenarios pasan sin errores de contrato y dan las alertas del motor (0, 1, 5, 3, 0).
 2. Rechaza con el mismo código y el mismo detalle que el mock, comparando en vivo contra el mock
    arrancado en el mismo proceso (lectura incompleta, estación inexistente, parámetro fuera del
    contrato, lote mixto, JSON roto, foto con EXIF, reporte fuera de la cuenca, ruta inexistente).

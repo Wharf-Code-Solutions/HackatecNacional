@@ -11,23 +11,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2126.768
+     "valor": 706.315
     },
     {
      "c_parametro": "OD",
-     "valor": 0.685
+     "valor": 2.507
     },
     {
      "c_parametro": "PH",
-     "valor": 6.468
+     "valor": 7.758
     },
     {
      "c_parametro": "TEMP",
-     "valor": 19.294
+     "valor": 18.734
     },
     {
      "c_parametro": "TURB",
-     "valor": 456.904
+     "valor": 443.62
     }
    ],
    "bateria": 80,
@@ -40,23 +40,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2248.266
+     "valor": 744.287
     },
     {
      "c_parametro": "OD",
-     "valor": 0.674
+     "valor": 2.487
     },
     {
      "c_parametro": "PH",
-     "valor": 6.636
+     "valor": 7.851
     },
     {
      "c_parametro": "TEMP",
-     "valor": 21.405
+     "valor": 20.296
     },
     {
      "c_parametro": "TURB",
-     "valor": 371.051
+     "valor": 234.295
     }
    ],
    "bateria": 82,
@@ -69,23 +69,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2401.397
+     "valor": 792.146
     },
     {
      "c_parametro": "OD",
-     "valor": 0.924
+     "valor": 2.976
     },
     {
      "c_parametro": "PH",
-     "valor": 6.332
+     "valor": 7.683
     },
     {
      "c_parametro": "TEMP",
-     "valor": 21.112
+     "valor": 20.079
     },
     {
      "c_parametro": "TURB",
-     "valor": 395.565
+     "valor": 294.064
     }
    ],
    "bateria": 74,
@@ -98,23 +98,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 1815.359
+     "valor": 608.989
     },
     {
      "c_parametro": "OD",
-     "valor": 0.966
+     "valor": 3.058
     },
     {
      "c_parametro": "PH",
-     "valor": 6.809
+     "valor": 7.948
     },
     {
      "c_parametro": "TEMP",
-     "valor": 21.275
+     "valor": 20.199
     },
     {
      "c_parametro": "TURB",
-     "valor": 161.608
+     "valor": 12.88
     }
    ],
    "bateria": 82,
@@ -127,23 +127,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2307.656
+     "valor": 762.849
     },
     {
      "c_parametro": "OD",
-     "valor": 1.377
+     "valor": 3.863
     },
     {
      "c_parametro": "PH",
-     "valor": 6.384
+     "valor": 7.711
     },
     {
      "c_parametro": "TEMP",
-     "valor": 22.623
+     "valor": 21.197
     },
     {
      "c_parametro": "TURB",
-     "valor": 410.469
+     "valor": 330.403
     }
    ],
    "bateria": 98,
@@ -156,23 +156,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2303.526
+     "valor": 761.558
     },
     {
      "c_parametro": "OD",
-     "valor": 0.416
+     "valor": 1.982
     },
     {
      "c_parametro": "PH",
-     "valor": 6.252
+     "valor": 7.638
     },
     {
      "c_parametro": "TEMP",
-     "valor": 23.89
+     "valor": 22.134
     },
     {
      "c_parametro": "TURB",
-     "valor": 418.207
+     "valor": 349.27
     }
    ],
    "bateria": 81,
@@ -185,23 +185,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2107.109
+     "valor": 700.171
     },
     {
      "c_parametro": "OD",
-     "valor": 0.985
+     "valor": 3.095
     },
     {
      "c_parametro": "PH",
-     "valor": 6.15
+     "valor": 7.581
     },
     {
      "c_parametro": "TEMP",
-     "valor": 19.385
+     "valor": 18.801
     },
     {
      "c_parametro": "TURB",
-     "valor": 254.298
+     "valor": 12.88
     }
    ],
    "bateria": 79,
@@ -214,23 +214,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2431.898
+     "valor": 801.678
     },
     {
      "c_parametro": "OD",
-     "valor": 1.121
+     "valor": 3.361
     },
     {
      "c_parametro": "PH",
-     "valor": 6.1
+     "valor": 7.554
     },
     {
      "c_parametro": "TEMP",
-     "valor": 22.7
+     "valor": 21.253
     },
     {
      "c_parametro": "TURB",
-     "valor": 415.829
+     "valor": 343.471
     }
    ],
    "bateria": 98,
@@ -243,23 +243,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2258.874
+     "valor": 747.602
     },
     {
      "c_parametro": "OD",
-     "valor": 1.067
+     "valor": 3.256
     },
     {
      "c_parametro": "PH",
-     "valor": 6.323
+     "valor": 7.677
     },
     {
      "c_parametro": "TEMP",
-     "valor": 17.744
+     "valor": 17.587
     },
     {
      "c_parametro": "TURB",
-     "valor": 447.595
+     "valor": 420.924
     }
    ],
    "bateria": 89,
@@ -272,23 +272,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 1950.523
+     "valor": 651.232
     },
     {
      "c_parametro": "OD",
-     "valor": 1.29
+     "valor": 3.692
     },
     {
      "c_parametro": "PH",
-     "valor": 6.301
+     "valor": 7.665
     },
     {
      "c_parametro": "TEMP",
-     "valor": 20.063
+     "valor": 19.302
     },
     {
      "c_parametro": "TURB",
-     "valor": 377.398
+     "valor": 249.771
     }
    ],
    "bateria": 99,
@@ -301,23 +301,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 1739.514
+     "valor": 585.285
     },
     {
      "c_parametro": "OD",
-     "valor": 0.692
+     "valor": 2.522
     },
     {
      "c_parametro": "PH",
-     "valor": 6.081
+     "valor": 7.543
     },
     {
      "c_parametro": "TEMP",
-     "valor": 19.887
+     "valor": 19.173
     },
     {
      "c_parametro": "TURB",
-     "valor": 383.582
+     "valor": 264.848
     }
    ],
    "bateria": 88,
@@ -330,23 +330,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2028.769
+     "valor": 675.687
     },
     {
      "c_parametro": "OD",
-     "valor": 1.183
+     "valor": 3.482
     },
     {
      "c_parametro": "PH",
-     "valor": 6.333
+     "valor": 7.683
     },
     {
      "c_parametro": "TEMP",
-     "valor": 20.121
+     "valor": 19.345
     },
     {
      "c_parametro": "TURB",
-     "valor": 395.637
+     "valor": 294.241
     }
    ],
    "bateria": 77,
@@ -359,23 +359,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 1852.69
+     "valor": 620.656
     },
     {
      "c_parametro": "OD",
-     "valor": 1.216
+     "valor": 3.549
     },
     {
      "c_parametro": "PH",
-     "valor": 6.111
+     "valor": 7.559
     },
     {
      "c_parametro": "TEMP",
-     "valor": 18.874
+     "valor": 18.423
     },
     {
      "c_parametro": "TURB",
-     "valor": 346.521
+     "valor": 174.488
     }
    ],
    "bateria": 87,
@@ -388,23 +388,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 1535.264
+     "valor": 521.45
     },
     {
      "c_parametro": "OD",
-     "valor": 1.104
+     "valor": 3.328
     },
     {
      "c_parametro": "PH",
-     "valor": 6.218
+     "valor": 7.619
     },
     {
      "c_parametro": "TEMP",
-     "valor": 21.309
+     "valor": 20.225
     },
     {
      "c_parametro": "TURB",
-     "valor": 454.885
+     "valor": 438.698
     }
    ],
    "bateria": 72,
@@ -417,23 +417,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 1733.802
+     "valor": 583.5
     },
     {
      "c_parametro": "OD",
-     "valor": 0.949
+     "valor": 3.026
     },
     {
      "c_parametro": "PH",
-     "valor": 6.268
+     "valor": 7.647
     },
     {
      "c_parametro": "TEMP",
-     "valor": 19.739
+     "valor": 19.063
     },
     {
      "c_parametro": "TURB",
-     "valor": 368.936
+     "valor": 229.139
     }
    ],
    "bateria": 96,
@@ -446,23 +446,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2593.689
+     "valor": 852.243
     },
     {
      "c_parametro": "OD",
-     "valor": 0.4
+     "valor": 1.349
     },
     {
      "c_parametro": "PH",
-     "valor": 6.464
+     "valor": 7.756
     },
     {
      "c_parametro": "TEMP",
-     "valor": 22.061
+     "valor": 20.781
     },
     {
      "c_parametro": "TURB",
-     "valor": 315.543
+     "valor": 98.956
     }
    ],
    "bateria": 85,
@@ -475,23 +475,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2400.625
+     "valor": 791.904
     },
     {
      "c_parametro": "OD",
-     "valor": 0.999
+     "valor": 3.123
     },
     {
      "c_parametro": "PH",
-     "valor": 6.781
+     "valor": 7.932
     },
     {
      "c_parametro": "TEMP",
-     "valor": 21.878
+     "valor": 20.646
     },
     {
      "c_parametro": "TURB",
-     "valor": 286.395
+     "valor": 27.89
     }
    ],
    "bateria": 99,
@@ -504,23 +504,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 1736.574
+     "valor": 584.366
     },
     {
      "c_parametro": "OD",
-     "valor": 0.671
+     "valor": 2.48
     },
     {
      "c_parametro": "PH",
-     "valor": 6.235
+     "valor": 7.629
     },
     {
      "c_parametro": "TEMP",
-     "valor": 20.341
+     "valor": 19.508
     },
     {
      "c_parametro": "TURB",
-     "valor": 280.033
+     "valor": 12.88
     }
    ],
    "bateria": 72,
@@ -533,23 +533,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2309.341
+     "valor": 763.375
     },
     {
      "c_parametro": "OD",
-     "valor": 0.6
+     "valor": 2.342
     },
     {
      "c_parametro": "PH",
-     "valor": 6.346
+     "valor": 7.69
     },
     {
      "c_parametro": "TEMP",
-     "valor": 19.213
+     "valor": 18.674
     },
     {
      "c_parametro": "TURB",
-     "valor": 425.259
+     "valor": 366.463
     }
    ],
    "bateria": 95,
@@ -562,23 +562,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2209.826
+     "valor": 732.273
     },
     {
      "c_parametro": "OD",
-     "valor": 0.706
+     "valor": 2.548
     },
     {
      "c_parametro": "PH",
-     "valor": 6.612
+     "valor": 7.838
     },
     {
      "c_parametro": "TEMP",
-     "valor": 21.472
+     "valor": 20.345
     },
     {
      "c_parametro": "TURB",
-     "valor": 461.307
+     "valor": 454.355
     }
    ],
    "bateria": 93,
@@ -591,19 +591,19 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 1836.679
+     "valor": 615.652
     },
     {
      "c_parametro": "OD",
-     "valor": 0.4
+     "valor": 1.928
     },
     {
      "c_parametro": "PH",
-     "valor": 6.555
+     "valor": 7.806
     },
     {
      "c_parametro": "TEMP",
-     "valor": 21.644
+     "valor": 20.472
     },
     {
      "c_parametro": "TURB",
@@ -621,19 +621,19 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2577.398
+     "valor": 847.152
     },
     {
      "c_parametro": "OD",
-     "valor": 0.897
+     "valor": 2.922
     },
     {
      "c_parametro": "PH",
-     "valor": 7.361
+     "valor": 8.255
     },
     {
      "c_parametro": "TEMP",
-     "valor": 20.068
+     "valor": 19.307
     },
     {
      "c_parametro": "TURB",
@@ -651,19 +651,19 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2892.551
+     "valor": 945.648
     },
     {
      "c_parametro": "OD",
-     "valor": 1.128
+     "valor": 3.375
     },
     {
      "c_parametro": "PH",
-     "valor": 6.945
+     "valor": 8.023
     },
     {
      "c_parametro": "TEMP",
-     "valor": 21.848
+     "valor": 20.623
     },
     {
      "c_parametro": "TURB",
@@ -681,19 +681,19 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2578.102
+     "valor": 847.372
     },
     {
      "c_parametro": "OD",
-     "valor": 1.447
+     "valor": 4.0
     },
     {
      "c_parametro": "PH",
-     "valor": 6.71
+     "valor": 7.893
     },
     {
      "c_parametro": "TEMP",
-     "valor": 18.948
+     "valor": 18.478
     },
     {
      "c_parametro": "TURB",
@@ -711,19 +711,19 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 1959.578
+     "valor": 654.063
     },
     {
      "c_parametro": "OD",
-     "valor": 0.581
+     "valor": 2.304
     },
     {
      "c_parametro": "PH",
-     "valor": 5.487
+     "valor": 7.213
     },
     {
      "c_parametro": "TEMP",
-     "valor": 22.461
+     "valor": 21.076
     },
     {
      "c_parametro": "TURB",
@@ -741,19 +741,19 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2793.407
+     "valor": 914.662
     },
     {
      "c_parametro": "OD",
-     "valor": 1.06
+     "valor": 3.243
     },
     {
      "c_parametro": "PH",
-     "valor": 6.394
+     "valor": 7.717
     },
     {
      "c_parametro": "TEMP",
-     "valor": 19.617
+     "valor": 18.973
     },
     {
      "c_parametro": "TURB",
@@ -771,19 +771,19 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2271.846
+     "valor": 751.657
     },
     {
      "c_parametro": "OD",
-     "valor": 1.301
+     "valor": 3.714
     },
     {
      "c_parametro": "PH",
-     "valor": 6.517
+     "valor": 7.785
     },
     {
      "c_parametro": "TEMP",
-     "valor": 23.042
+     "valor": 21.506
     },
     {
      "c_parametro": "TURB",
@@ -801,19 +801,19 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 1991.496
+     "valor": 664.038
     },
     {
      "c_parametro": "OD",
-     "valor": 1.069
+     "valor": 3.26
     },
     {
      "c_parametro": "PH",
-     "valor": 6.283
+     "valor": 7.655
     },
     {
      "c_parametro": "TEMP",
-     "valor": 21.922
+     "valor": 20.678
     },
     {
      "c_parametro": "TURB",
@@ -831,19 +831,19 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 1967.636
+     "valor": 656.581
     },
     {
      "c_parametro": "OD",
-     "valor": 0.803
+     "valor": 2.738
     },
     {
      "c_parametro": "PH",
-     "valor": 6.086
+     "valor": 7.545
     },
     {
      "c_parametro": "TEMP",
-     "valor": 20.637
+     "valor": 19.727
     },
     {
      "c_parametro": "TURB",
@@ -861,19 +861,19 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2538.312
+     "valor": 834.936
     },
     {
      "c_parametro": "OD",
-     "valor": 1.157
+     "valor": 3.433
     },
     {
      "c_parametro": "PH",
-     "valor": 6.402
+     "valor": 7.721
     },
     {
      "c_parametro": "TEMP",
-     "valor": 18.457
+     "valor": 18.115
     },
     {
      "c_parametro": "TURB",
@@ -891,19 +891,19 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2634.83
+     "valor": 865.101
     },
     {
      "c_parametro": "OD",
-     "valor": 0.502
+     "valor": 2.149
     },
     {
      "c_parametro": "PH",
-     "valor": 6.473
+     "valor": 7.761
     },
     {
      "c_parametro": "TEMP",
-     "valor": 20.887
+     "valor": 19.912
     },
     {
      "c_parametro": "TURB",
@@ -921,19 +921,19 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2229.931
+     "valor": 738.557
     },
     {
      "c_parametro": "OD",
-     "valor": 0.4
+     "valor": 1.879
     },
     {
      "c_parametro": "PH",
-     "valor": 6.177
+     "valor": 7.596
     },
     {
      "c_parametro": "TEMP",
-     "valor": 20.408
+     "valor": 19.558
     },
     {
      "c_parametro": "TURB",
@@ -951,19 +951,19 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2400.848
+     "valor": 791.974
     },
     {
      "c_parametro": "OD",
-     "valor": 0.899
+     "valor": 2.927
     },
     {
      "c_parametro": "PH",
-     "valor": 6.651
+     "valor": 7.86
     },
     {
      "c_parametro": "TEMP",
-     "valor": 22.65
+     "valor": 21.216
     },
     {
      "c_parametro": "TURB",
@@ -981,19 +981,19 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2384.578
+     "valor": 786.889
     },
     {
      "c_parametro": "OD",
-     "valor": 1.217
+     "valor": 3.55
     },
     {
      "c_parametro": "PH",
-     "valor": 7.039
+     "valor": 8.075
     },
     {
      "c_parametro": "TEMP",
-     "valor": 20.041
+     "valor": 19.287
     },
     {
      "c_parametro": "TURB",
@@ -1011,19 +1011,19 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 1623.386
+     "valor": 548.991
     },
     {
      "c_parametro": "OD",
-     "valor": 0.432
+     "valor": 2.012
     },
     {
      "c_parametro": "PH",
-     "valor": 6.175
+     "valor": 7.595
     },
     {
      "c_parametro": "TEMP",
-     "valor": 20.241
+     "valor": 19.435
     },
     {
      "c_parametro": "TURB",
@@ -1041,19 +1041,19 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2286.305
+     "valor": 756.176
     },
     {
      "c_parametro": "OD",
-     "valor": 1.043
+     "valor": 3.208
     },
     {
      "c_parametro": "PH",
-     "valor": 6.124
+     "valor": 7.567
     },
     {
      "c_parametro": "TEMP",
-     "valor": 19.803
+     "valor": 19.11
     },
     {
      "c_parametro": "TURB",
@@ -1071,19 +1071,19 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 1776.74
+     "valor": 596.919
     },
     {
      "c_parametro": "OD",
-     "valor": 1.37
+     "valor": 3.85
     },
     {
      "c_parametro": "PH",
-     "valor": 6.465
+     "valor": 7.756
     },
     {
      "c_parametro": "TEMP",
-     "valor": 23.659
+     "valor": 21.963
     },
     {
      "c_parametro": "TURB",
@@ -1101,19 +1101,19 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 1817.537
+     "valor": 609.67
     },
     {
      "c_parametro": "OD",
-     "valor": 0.509
+     "valor": 2.163
     },
     {
      "c_parametro": "PH",
-     "valor": 6.074
+     "valor": 7.539
     },
     {
      "c_parametro": "TEMP",
-     "valor": 19.589
+     "valor": 18.952
     },
     {
      "c_parametro": "TURB",
@@ -1131,19 +1131,19 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2216.49
+     "valor": 734.356
     },
     {
      "c_parametro": "OD",
-     "valor": 0.77
+     "valor": 2.674
     },
     {
      "c_parametro": "PH",
-     "valor": 6.569
+     "valor": 7.814
     },
     {
      "c_parametro": "TEMP",
-     "valor": 20.975
+     "valor": 19.978
     },
     {
      "c_parametro": "TURB",
@@ -1161,19 +1161,19 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 3362.191
+     "valor": 1092.426
     },
     {
      "c_parametro": "OD",
-     "valor": 0.855
+     "valor": 2.841
     },
     {
      "c_parametro": "PH",
-     "valor": 6.209
+     "valor": 7.614
     },
     {
      "c_parametro": "TEMP",
-     "valor": 20.595
+     "valor": 19.697
     },
     {
      "c_parametro": "TURB",
@@ -1191,11 +1191,11 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 1472.686
+     "valor": 501.892
     },
     {
      "c_parametro": "OD",
-     "valor": 1.13
+     "valor": 3.379
     },
     {
      "c_parametro": "PH",
@@ -1203,11 +1203,11 @@
     },
     {
      "c_parametro": "TEMP",
-     "valor": 22.225
+     "valor": 20.902
     },
     {
      "c_parametro": "TURB",
-     "valor": 265.703
+     "valor": 12.88
     }
    ],
    "bateria": 96,
@@ -1221,11 +1221,11 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2210.259
+     "valor": 732.409
     },
     {
      "c_parametro": "OD",
-     "valor": 1.034
+     "valor": 3.192
     },
     {
      "c_parametro": "PH",
@@ -1233,11 +1233,11 @@
     },
     {
      "c_parametro": "TEMP",
-     "valor": 21.091
+     "valor": 20.064
     },
     {
      "c_parametro": "TURB",
-     "valor": 352.377
+     "valor": 188.765
     }
    ],
    "bateria": 99,
@@ -1251,11 +1251,11 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 1836.771
+     "valor": 615.681
     },
     {
      "c_parametro": "OD",
-     "valor": 0.927
+     "valor": 2.981
     },
     {
      "c_parametro": "PH",
@@ -1263,11 +1263,11 @@
     },
     {
      "c_parametro": "TEMP",
-     "valor": 21.613
+     "valor": 20.45
     },
     {
      "c_parametro": "TURB",
-     "valor": 517.043
+     "valor": 535.2
     }
    ],
    "bateria": 79,
@@ -1281,11 +1281,11 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2611.293
+     "valor": 857.745
     },
     {
      "c_parametro": "OD",
-     "valor": 1.176
+     "valor": 3.469
     },
     {
      "c_parametro": "PH",
@@ -1293,11 +1293,11 @@
     },
     {
      "c_parametro": "TEMP",
-     "valor": 22.434
+     "valor": 21.057
     },
     {
      "c_parametro": "TURB",
-     "valor": 335.144
+     "valor": 146.749
     }
    ],
    "bateria": 78,
@@ -1311,23 +1311,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 1812.242
+     "valor": 608.015
     },
     {
      "c_parametro": "OD",
-     "valor": 0.721
+     "valor": 2.579
     },
     {
      "c_parametro": "PH",
-     "valor": 7.135
+     "valor": 8.129
     },
     {
      "c_parametro": "TEMP",
-     "valor": 19.13
+     "valor": 18.613
     },
     {
      "c_parametro": "TURB",
-     "valor": 370.637
+     "valor": 233.286
     }
    ],
    "bateria": 80,
@@ -1340,23 +1340,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2435.885
+     "valor": 802.924
     },
     {
      "c_parametro": "OD",
-     "valor": 1.144
+     "valor": 3.406
     },
     {
      "c_parametro": "PH",
-     "valor": 6.296
+     "valor": 7.662
     },
     {
      "c_parametro": "TEMP",
-     "valor": 17.502
+     "valor": 17.408
     },
     {
      "c_parametro": "TURB",
-     "valor": 343.981
+     "valor": 168.293
     }
    ],
    "bateria": 90,
@@ -1369,23 +1369,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 1517.986
+     "valor": 516.05
     },
     {
      "c_parametro": "OD",
-     "valor": 0.769
+     "valor": 2.673
     },
     {
      "c_parametro": "PH",
-     "valor": 6.986
+     "valor": 8.046
     },
     {
      "c_parametro": "TEMP",
-     "valor": 19.525
+     "valor": 18.905
     },
     {
      "c_parametro": "TURB",
-     "valor": 264.303
+     "valor": 12.88
     }
    ],
    "bateria": 79,
@@ -1398,23 +1398,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 1992.307
+     "valor": 664.291
     },
     {
      "c_parametro": "OD",
-     "valor": 0.716
+     "valor": 2.568
     },
     {
      "c_parametro": "PH",
-     "valor": 6.889
+     "valor": 7.992
     },
     {
      "c_parametro": "TEMP",
-     "valor": 20.829
+     "valor": 19.869
     },
     {
      "c_parametro": "TURB",
-     "valor": 249.746
+     "valor": 12.88
     }
    ],
    "bateria": 78,
@@ -1427,23 +1427,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2451.172
+     "valor": 807.702
     },
     {
      "c_parametro": "OD",
-     "valor": 1.261
+     "valor": 3.637
     },
     {
      "c_parametro": "PH",
-     "valor": 6.578
+     "valor": 7.819
     },
     {
      "c_parametro": "TEMP",
-     "valor": 18.107
+     "valor": 17.856
     },
     {
      "c_parametro": "TURB",
-     "valor": 365.919
+     "valor": 221.783
     }
    ],
    "bateria": 72,
@@ -1456,23 +1456,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2084.818
+     "valor": 693.204
     },
     {
      "c_parametro": "OD",
-     "valor": 0.724
+     "valor": 2.585
     },
     {
      "c_parametro": "PH",
-     "valor": 6.855
+     "valor": 7.973
     },
     {
      "c_parametro": "TEMP",
-     "valor": 19.035
+     "valor": 18.542
     },
     {
      "c_parametro": "TURB",
-     "valor": 460.642
+     "valor": 452.733
     }
    ],
    "bateria": 87,
@@ -1485,23 +1485,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2602.61
+     "valor": 855.031
     },
     {
      "c_parametro": "OD",
-     "valor": 0.843
+     "valor": 2.818
     },
     {
      "c_parametro": "PH",
-     "valor": 5.715
+     "valor": 7.339
     },
     {
      "c_parametro": "TEMP",
-     "valor": 22.441
+     "valor": 21.062
     },
     {
      "c_parametro": "TURB",
-     "valor": 355.457
+     "valor": 196.273
     }
    ],
    "bateria": 93,
@@ -1514,23 +1514,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2272.701
+     "valor": 751.924
     },
     {
      "c_parametro": "OD",
-     "valor": 0.914
+     "valor": 2.957
     },
     {
      "c_parametro": "PH",
-     "valor": 6.513
+     "valor": 7.783
     },
     {
      "c_parametro": "TEMP",
-     "valor": 22.794
+     "valor": 21.323
     },
     {
      "c_parametro": "TURB",
-     "valor": 320.63
+     "valor": 111.36
     }
    ],
    "bateria": 82,
@@ -1543,23 +1543,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2205.109
+     "valor": 730.799
     },
     {
      "c_parametro": "OD",
-     "valor": 0.792
+     "valor": 2.717
     },
     {
      "c_parametro": "PH",
-     "valor": 6.294
+     "valor": 7.661
     },
     {
      "c_parametro": "TEMP",
-     "valor": 21.9
+     "valor": 20.662
     },
     {
      "c_parametro": "TURB",
-     "valor": 238.755
+     "valor": 12.88
     }
    ],
    "bateria": 94,
@@ -1572,23 +1572,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2521.099
+     "valor": 829.557
     },
     {
      "c_parametro": "OD",
-     "valor": 1.56
+     "valor": 4.222
     },
     {
      "c_parametro": "PH",
-     "valor": 6.904
+     "valor": 8.0
     },
     {
      "c_parametro": "TEMP",
-     "valor": 18.676
+     "valor": 18.277
     },
     {
      "c_parametro": "TURB",
-     "valor": 296.917
+     "valor": 53.544
     }
    ],
    "bateria": 89,
@@ -1601,23 +1601,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 1863.413
+     "valor": 624.008
     },
     {
      "c_parametro": "OD",
-     "valor": 1.088
+     "valor": 3.297
     },
     {
      "c_parametro": "PH",
-     "valor": 5.353
+     "valor": 7.138
     },
     {
      "c_parametro": "TEMP",
-     "valor": 20.994
+     "valor": 19.992
     },
     {
      "c_parametro": "TURB",
-     "valor": 245.26
+     "valor": 12.88
     }
    ],
    "bateria": 96,
@@ -1630,23 +1630,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 1949.663
+     "valor": 650.964
     },
     {
      "c_parametro": "OD",
-     "valor": 0.856
+     "valor": 2.842
     },
     {
      "c_parametro": "PH",
-     "valor": 6.46
+     "valor": 7.753
     },
     {
      "c_parametro": "TEMP",
-     "valor": 20.217
+     "valor": 19.417
     },
     {
      "c_parametro": "TURB",
-     "valor": 332.976
+     "valor": 141.463
     }
    ],
    "bateria": 81,
@@ -1659,23 +1659,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2483.616
+     "valor": 817.842
     },
     {
      "c_parametro": "OD",
-     "valor": 0.941
+     "valor": 3.01
     },
     {
      "c_parametro": "PH",
-     "valor": 6.629
+     "valor": 7.848
     },
     {
      "c_parametro": "TEMP",
-     "valor": 19.053
+     "valor": 18.555
     },
     {
      "c_parametro": "TURB",
-     "valor": 258.185
+     "valor": 12.88
     }
    ],
    "bateria": 95,
@@ -1688,23 +1688,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2015.796
+     "valor": 671.632
     },
     {
      "c_parametro": "OD",
-     "valor": 1.685
+     "valor": 4.577
     },
     {
      "c_parametro": "PH",
-     "valor": 5.594
+     "valor": 7.272
     },
     {
      "c_parametro": "TEMP",
-     "valor": 19.327
+     "valor": 18.758
     },
     {
      "c_parametro": "TURB",
-     "valor": 365.543
+     "valor": 220.866
     }
    ],
    "bateria": 92,
@@ -1717,23 +1717,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2206.222
+     "valor": 731.147
     },
     {
      "c_parametro": "OD",
-     "valor": 0.734
+     "valor": 2.603
     },
     {
      "c_parametro": "PH",
-     "valor": 6.165
+     "valor": 7.589
     },
     {
      "c_parametro": "TEMP",
-     "valor": 21.684
+     "valor": 20.502
     },
     {
      "c_parametro": "TURB",
-     "valor": 273.309
+     "valor": 12.88
     }
    ],
    "bateria": 94,
@@ -1746,23 +1746,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2602.199
+     "valor": 854.903
     },
     {
      "c_parametro": "OD",
-     "valor": 1.459
+     "valor": 4.023
     },
     {
      "c_parametro": "PH",
-     "valor": 6.343
+     "valor": 7.689
     },
     {
      "c_parametro": "TEMP",
-     "valor": 16.277
+     "valor": 16.502
     },
     {
      "c_parametro": "TURB",
-     "valor": 389.841
+     "valor": 280.109
     }
    ],
    "bateria": 95,
@@ -1775,7 +1775,7 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2757.573
+     "valor": 903.462
     },
     {
      "c_parametro": "OD",
@@ -1783,15 +1783,15 @@
     },
     {
      "c_parametro": "PH",
-     "valor": 6.089
+     "valor": 7.547
     },
     {
      "c_parametro": "TEMP",
-     "valor": 19.291
+     "valor": 18.731
     },
     {
      "c_parametro": "TURB",
-     "valor": 226.822
+     "valor": 12.88
     }
    ],
    "bateria": 79,
@@ -1805,7 +1805,7 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2749.984
+     "valor": 901.091
     },
     {
      "c_parametro": "OD",
@@ -1813,15 +1813,15 @@
     },
     {
      "c_parametro": "PH",
-     "valor": 6.362
+     "valor": 7.699
     },
     {
      "c_parametro": "TEMP",
-     "valor": 21.574
+     "valor": 20.421
     },
     {
      "c_parametro": "TURB",
-     "valor": 461.538
+     "valor": 454.918
     }
    ],
    "bateria": 85,
@@ -1835,7 +1835,7 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 1943.038
+     "valor": 648.893
     },
     {
      "c_parametro": "OD",
@@ -1843,15 +1843,15 @@
     },
     {
      "c_parametro": "PH",
-     "valor": 6.93
+     "valor": 8.015
     },
     {
      "c_parametro": "TEMP",
-     "valor": 21.422
+     "valor": 20.308
     },
     {
      "c_parametro": "TURB",
-     "valor": 376.862
+     "valor": 248.465
     }
    ],
    "bateria": 88,
@@ -1865,7 +1865,7 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 1918.619
+     "valor": 641.261
     },
     {
      "c_parametro": "OD",
@@ -1873,15 +1873,15 @@
     },
     {
      "c_parametro": "PH",
-     "valor": 5.939
+     "valor": 7.464
     },
     {
      "c_parametro": "TEMP",
-     "valor": 20.253
+     "valor": 19.444
     },
     {
      "c_parametro": "TURB",
-     "valor": 425.396
+     "valor": 366.798
     }
    ],
    "bateria": 84,
@@ -1895,23 +1895,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2998.618
+     "valor": 978.797
     },
     {
      "c_parametro": "OD",
-     "valor": 1.303
+     "valor": 3.718
     },
     {
      "c_parametro": "PH",
-     "valor": 6.705
+     "valor": 7.89
     },
     {
      "c_parametro": "TEMP",
-     "valor": 20.799
+     "valor": 19.848
     },
     {
      "c_parametro": "TURB",
-     "valor": 402.828
+     "valor": 311.773
     }
    ],
    "bateria": 87,
@@ -1924,23 +1924,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2472.765
+     "valor": 814.451
     },
     {
      "c_parametro": "OD",
-     "valor": 1.441
+     "valor": 3.988
     },
     {
      "c_parametro": "PH",
-     "valor": 6.426
+     "valor": 7.735
     },
     {
      "c_parametro": "TEMP",
-     "valor": 19.658
+     "valor": 19.003
     },
     {
      "c_parametro": "TURB",
-     "valor": 448.215
+     "valor": 422.434
     }
    ],
    "bateria": 94,
@@ -1953,23 +1953,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2051.442
+     "valor": 682.773
     },
     {
      "c_parametro": "OD",
-     "valor": 0.956
+     "valor": 3.038
     },
     {
      "c_parametro": "PH",
-     "valor": 6.113
+     "valor": 7.561
     },
     {
      "c_parametro": "TEMP",
-     "valor": 18.896
+     "valor": 18.44
     },
     {
      "c_parametro": "TURB",
-     "valor": 399.252
+     "valor": 303.053
     }
    ],
    "bateria": 74,
@@ -1982,23 +1982,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 1962.652
+     "valor": 655.023
     },
     {
      "c_parametro": "OD",
-     "valor": 0.781
+     "valor": 2.697
     },
     {
      "c_parametro": "PH",
-     "valor": 6.344
+     "valor": 7.689
     },
     {
      "c_parametro": "TEMP",
-     "valor": 20.831
+     "valor": 19.871
     },
     {
      "c_parametro": "TURB",
-     "valor": 260.139
+     "valor": 12.88
     }
    ],
    "bateria": 77,
@@ -2011,23 +2011,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2161.529
+     "valor": 717.179
     },
     {
      "c_parametro": "OD",
-     "valor": 0.507
+     "valor": 2.159
     },
     {
      "c_parametro": "PH",
-     "valor": 6.084
+     "valor": 7.545
     },
     {
      "c_parametro": "TEMP",
-     "valor": 21.027
+     "valor": 20.016
     },
     {
      "c_parametro": "TURB",
-     "valor": 515.594
+     "valor": 535.2
     }
    ],
    "bateria": 82,
@@ -2040,23 +2040,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2537.897
+     "valor": 834.807
     },
     {
      "c_parametro": "OD",
-     "valor": 0.725
+     "valor": 2.586
     },
     {
      "c_parametro": "PH",
-     "valor": 5.939
+     "valor": 7.464
     },
     {
      "c_parametro": "TEMP",
-     "valor": 20.674
+     "valor": 19.755
     },
     {
      "c_parametro": "TURB",
-     "valor": 519.922
+     "valor": 535.2
     }
    ],
    "bateria": 81,
@@ -2069,23 +2069,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 1969.325
+     "valor": 657.109
     },
     {
      "c_parametro": "OD",
-     "valor": 1.224
+     "valor": 3.564
     },
     {
      "c_parametro": "PH",
-     "valor": 6.441
+     "valor": 7.743
     },
     {
      "c_parametro": "TEMP",
-     "valor": 18.732
+     "valor": 18.318
     },
     {
      "c_parametro": "TURB",
-     "valor": 351.559
+     "valor": 186.771
     }
    ],
    "bateria": 95,
@@ -2098,23 +2098,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2725.734
+     "valor": 893.512
     },
     {
      "c_parametro": "OD",
-     "valor": 1.115
+     "valor": 3.35
     },
     {
      "c_parametro": "PH",
-     "valor": 6.938
+     "valor": 8.019
     },
     {
      "c_parametro": "TEMP",
-     "valor": 20.348
+     "valor": 19.513
     },
     {
      "c_parametro": "TURB",
-     "valor": 295.683
+     "valor": 50.536
     }
    ],
    "bateria": 95,
@@ -2127,23 +2127,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2708.505
+     "valor": 888.127
     },
     {
      "c_parametro": "OD",
-     "valor": 0.95
+     "valor": 3.028
     },
     {
      "c_parametro": "PH",
-     "valor": 6.05
+     "valor": 7.526
     },
     {
      "c_parametro": "TEMP",
-     "valor": 21.525
+     "valor": 20.384
     },
     {
      "c_parametro": "TURB",
-     "valor": 237.787
+     "valor": 12.88
     }
    ],
    "bateria": 82,
@@ -2156,23 +2156,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 1734.423
+     "valor": 583.694
     },
     {
      "c_parametro": "OD",
-     "valor": 0.404
+     "valor": 1.958
     },
     {
      "c_parametro": "PH",
-     "valor": 6.47
+     "valor": 7.759
     },
     {
      "c_parametro": "TEMP",
-     "valor": 19.491
+     "valor": 18.879
     },
     {
      "c_parametro": "TURB",
-     "valor": 342.016
+     "valor": 163.503
     }
    ],
    "bateria": 84,
@@ -2185,23 +2185,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2511.025
+     "valor": 826.408
     },
     {
      "c_parametro": "OD",
-     "valor": 0.8
+     "valor": 2.734
     },
     {
      "c_parametro": "PH",
-     "valor": 6.639
+     "valor": 7.853
     },
     {
      "c_parametro": "TEMP",
-     "valor": 20.663
+     "valor": 19.746
     },
     {
      "c_parametro": "TURB",
-     "valor": 483.8
+     "valor": 509.196
     }
    ],
    "bateria": 80,
@@ -2214,23 +2214,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2439.705
+     "valor": 804.118
     },
     {
      "c_parametro": "OD",
-     "valor": 0.998
+     "valor": 3.122
     },
     {
      "c_parametro": "PH",
-     "valor": 6.764
+     "valor": 7.922
     },
     {
      "c_parametro": "TEMP",
-     "valor": 20.421
+     "valor": 19.568
     },
     {
      "c_parametro": "TURB",
-     "valor": 233.838
+     "valor": 12.88
     }
    ],
    "bateria": 92,
@@ -2243,23 +2243,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2495.069
+     "valor": 821.421
     },
     {
      "c_parametro": "OD",
-     "valor": 0.4
+     "valor": 1.464
     },
     {
      "c_parametro": "PH",
-     "valor": 6.009
+     "valor": 7.503
     },
     {
      "c_parametro": "TEMP",
-     "valor": 19.836
+     "valor": 19.135
     },
     {
      "c_parametro": "TURB",
-     "valor": 338.247
+     "valor": 154.314
     }
    ],
    "bateria": 74,
@@ -2272,23 +2272,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2859.551
+     "valor": 935.334
     },
     {
      "c_parametro": "OD",
-     "valor": 0.648
+     "valor": 2.436
     },
     {
      "c_parametro": "PH",
-     "valor": 5.926
+     "valor": 7.457
     },
     {
      "c_parametro": "TEMP",
-     "valor": 20.796
+     "valor": 19.845
     },
     {
      "c_parametro": "TURB",
-     "valor": 348.121
+     "valor": 178.389
     }
    ],
    "bateria": 88,
@@ -2301,23 +2301,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2273.017
+     "valor": 752.023
     },
     {
      "c_parametro": "OD",
-     "valor": 1.084
+     "valor": 3.29
     },
     {
      "c_parametro": "PH",
-     "valor": 6.639
+     "valor": 7.853
     },
     {
      "c_parametro": "TEMP",
-     "valor": 20.772
+     "valor": 19.827
     },
     {
      "c_parametro": "TURB",
-     "valor": 379.01
+     "valor": 253.701
     }
    ],
    "bateria": 83,
@@ -2330,23 +2330,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2187.106
+     "valor": 725.173
     },
     {
      "c_parametro": "OD",
-     "valor": 0.9
+     "valor": 2.93
     },
     {
      "c_parametro": "PH",
-     "valor": 6.067
+     "valor": 7.535
     },
     {
      "c_parametro": "TEMP",
-     "valor": 18.971
+     "valor": 18.495
     },
     {
      "c_parametro": "TURB",
-     "valor": 277.185
+     "valor": 12.88
     }
    ],
    "bateria": 79,
@@ -2359,23 +2359,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 1838.167
+     "valor": 616.118
     },
     {
      "c_parametro": "OD",
-     "valor": 0.76
+     "valor": 2.656
     },
     {
      "c_parametro": "PH",
-     "valor": 5.81
+     "valor": 7.392
     },
     {
      "c_parametro": "TEMP",
-     "valor": 21.412
+     "valor": 20.301
     },
     {
      "c_parametro": "TURB",
-     "valor": 345.118
+     "valor": 171.065
     }
    ],
    "bateria": 12,
@@ -2389,23 +2389,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2024.676
+     "valor": 674.408
     },
     {
      "c_parametro": "OD",
-     "valor": 1.061
+     "valor": 3.245
     },
     {
      "c_parametro": "PH",
-     "valor": 6.852
+     "valor": 7.972
     },
     {
      "c_parametro": "TEMP",
-     "valor": 22.4
+     "valor": 21.031
     },
     {
      "c_parametro": "TURB",
-     "valor": 420.006
+     "valor": 353.656
     }
    ],
    "bateria": 12,
@@ -2419,23 +2419,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2352.634
+     "valor": 776.906
     },
     {
      "c_parametro": "OD",
-     "valor": 0.4
+     "valor": 0.897
     },
     {
      "c_parametro": "PH",
-     "valor": 6.276
+     "valor": 7.651
     },
     {
      "c_parametro": "TEMP",
-     "valor": 21.988
+     "valor": 20.727
     },
     {
      "c_parametro": "TURB",
-     "valor": 448.231
+     "valor": 422.473
     }
    ],
    "bateria": 12,
@@ -2449,23 +2449,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 3062.73
+     "valor": 998.834
     },
     {
      "c_parametro": "OD",
-     "valor": 0.788
+     "valor": 2.71
     },
     {
      "c_parametro": "PH",
-     "valor": 5.92
+     "valor": 7.453
     },
     {
      "c_parametro": "TEMP",
-     "valor": 18.723
+     "valor": 18.312
     },
     {
      "c_parametro": "TURB",
-     "valor": 380.74
+     "valor": 257.919
     }
    ],
    "bateria": 12,
@@ -2479,23 +2479,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2590.178
+     "valor": 851.146
     },
     {
      "c_parametro": "OD",
-     "valor": 1.187
+     "valor": 3.491
     },
     {
      "c_parametro": "PH",
-     "valor": 5.922
+     "valor": 7.455
     },
     {
      "c_parametro": "TEMP",
-     "valor": 21.887
+     "valor": 20.652
     },
     {
      "c_parametro": "TURB",
-     "valor": 373.297
+     "valor": 239.771
     }
    ],
    "bateria": 12,
@@ -2509,23 +2509,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2145.32
+     "valor": 712.113
     },
     {
      "c_parametro": "OD",
-     "valor": 0.951
+     "valor": 3.029
     },
     {
      "c_parametro": "PH",
-     "valor": 6.212
+     "valor": 7.615
     },
     {
      "c_parametro": "TEMP",
-     "valor": 20.119
+     "valor": 19.344
     },
     {
      "c_parametro": "TURB",
-     "valor": 307.272
+     "valor": 78.792
     }
    ],
    "bateria": 12,
@@ -2539,23 +2539,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2415.848
+     "valor": 796.662
     },
     {
      "c_parametro": "OD",
-     "valor": 0.402
+     "valor": 1.954
     },
     {
      "c_parametro": "PH",
-     "valor": 6.117
+     "valor": 7.563
     },
     {
      "c_parametro": "TEMP",
-     "valor": 17.857
+     "valor": 17.671
     },
     {
      "c_parametro": "TURB",
-     "valor": 517.031
+     "valor": 535.2
     }
    ],
    "bateria": 12,
@@ -2569,23 +2569,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2302.016
+     "valor": 761.086
     },
     {
      "c_parametro": "OD",
-     "valor": 0.858
+     "valor": 2.848
     },
     {
      "c_parametro": "PH",
-     "valor": 5.896
+     "valor": 7.44
     },
     {
      "c_parametro": "TEMP",
-     "valor": 19.691
+     "valor": 19.028
     },
     {
      "c_parametro": "TURB",
-     "valor": 588.627
+     "valor": 535.2
     }
    ],
    "bateria": 12,
@@ -2599,23 +2599,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 1087.218
+     "valor": 381.421
     },
     {
      "c_parametro": "OD",
-     "valor": 0.819
+     "valor": 2.77
     },
     {
      "c_parametro": "PH",
-     "valor": 6.407
+     "valor": 7.724
     },
     {
      "c_parametro": "TEMP",
-     "valor": 20.879
+     "valor": 19.906
     },
     {
      "c_parametro": "TURB",
-     "valor": 331.93
+     "valor": 138.911
     }
    ],
    "bateria": 12,
@@ -2629,23 +2629,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2620.29
+     "valor": 860.557
     },
     {
      "c_parametro": "OD",
-     "valor": 1.296
+     "valor": 3.704
     },
     {
      "c_parametro": "PH",
-     "valor": 6.575
+     "valor": 7.817
     },
     {
      "c_parametro": "TEMP",
-     "valor": 16.96
+     "valor": 17.007
     },
     {
      "c_parametro": "TURB",
-     "valor": 221.018
+     "valor": 12.88
     }
    ],
    "bateria": 12,
@@ -2659,23 +2659,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2137.075
+     "valor": 709.536
     },
     {
      "c_parametro": "OD",
-     "valor": 0.584
+     "valor": 2.31
     },
     {
      "c_parametro": "PH",
-     "valor": 6.397
+     "valor": 7.718
     },
     {
      "c_parametro": "TEMP",
-     "valor": 24.811
+     "valor": 22.815
     },
     {
      "c_parametro": "TURB",
-     "valor": 343.975
+     "valor": 168.279
     }
    ],
    "bateria": 12,
@@ -2689,23 +2689,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2208.269
+     "valor": 731.787
     },
     {
      "c_parametro": "OD",
-     "valor": 1.157
+     "valor": 3.432
     },
     {
      "c_parametro": "PH",
-     "valor": 6.423
+     "valor": 7.733
     },
     {
      "c_parametro": "TEMP",
-     "valor": 22.888
+     "valor": 21.393
     },
     {
      "c_parametro": "TURB",
-     "valor": 417.707
+     "valor": 348.051
     }
    ],
    "bateria": 12,
@@ -2719,23 +2719,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2518.789
+     "valor": 828.835
     },
     {
      "c_parametro": "OD",
-     "valor": 0.948
+     "valor": 3.023
     },
     {
      "c_parametro": "PH",
-     "valor": 6.592
+     "valor": 7.827
     },
     {
      "c_parametro": "TEMP",
-     "valor": 18.65
+     "valor": 18.258
     },
     {
      "c_parametro": "TURB",
-     "valor": 553.787
+     "valor": 535.2
     }
    ],
    "bateria": 12,
@@ -2749,23 +2749,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2516.581
+     "valor": 828.144
     },
     {
      "c_parametro": "OD",
-     "valor": 1.064
+     "valor": 3.249
     },
     {
      "c_parametro": "PH",
-     "valor": 6.656
+     "valor": 7.863
     },
     {
      "c_parametro": "TEMP",
-     "valor": 22.392
+     "valor": 21.026
     },
     {
      "c_parametro": "TURB",
-     "valor": 394.386
+     "valor": 291.19
     }
    ],
    "bateria": 12,
@@ -2779,23 +2779,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2266.189
+     "valor": 749.889
     },
     {
      "c_parametro": "OD",
-     "valor": 0.744
+     "valor": 2.624
     },
     {
      "c_parametro": "PH",
-     "valor": 6.421
+     "valor": 7.732
     },
     {
      "c_parametro": "TEMP",
-     "valor": 22.538
+     "valor": 21.134
     },
     {
      "c_parametro": "TURB",
-     "valor": 412.569
+     "valor": 335.524
     }
    ],
    "bateria": 12,
@@ -2809,23 +2809,23 @@
    "lecturas": [
     {
      "c_parametro": "COND",
-     "valor": 2314.983
+     "valor": 765.139
     },
     {
      "c_parametro": "OD",
-     "valor": 0.826
+     "valor": 2.784
     },
     {
      "c_parametro": "PH",
-     "valor": 5.618
+     "valor": 7.286
     },
     {
      "c_parametro": "TEMP",
-     "valor": 19.597
+     "valor": 18.958
     },
     {
      "c_parametro": "TURB",
-     "valor": 370.086
+     "valor": 231.943
     }
    ],
    "bateria": 12,

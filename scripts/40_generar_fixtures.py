@@ -5,7 +5,7 @@ escenario, calibradas con los datos reales de la Etapa 1.
 Sirve para que cada modulo (dispositivo, backend, mapa, panel, app) trabaje
 contra datos realistas sin esperar a los demas.
 
-Lee    : datos/procesados/*.csv
+Lee    : datos/procesados/*.csv y datos/procesados/red/red_estaciones.csv (96_red_estaciones.py)
 Escribe: contrato/fixtures/*.json y contrato/fixtures/escenarios/*.json
 
 Es determinista: misma semilla, mismos archivos. Asi todo el equipo ve lo mismo.
@@ -52,25 +52,20 @@ ranking = leer('ranking_sitios_criticos.csv', 'analisis')
 lb = {(r['c_sitio'], r['c_parametro']): r for r in base}
 
 # ---------------------------------------------------------------- estaciones
-# Se eligen sitios que tengan linea base en al menos 4 de los 5 parametros de
-# campo: son los unicos donde una lectura de sensor se puede comparar contra
-# historia propia. De esos, los mas deteriorados segun el ranking.
-candidatos = []
-for r in ranking:
+# La red la decide scripts/96_red_estaciones.py: los 5 sitios con historia de
+# campo que mas establecimientos con giro contaminante vigilan aguas arriba,
+# numerados de aguas arriba hacia aguas abajo (docs/18-red-de-estaciones.md).
+# Cada estacion mide los parametros de campo con historia propia (n >= 12).
+red = sorted((r for r in leer('red_estaciones.csv', 'red') if r['estacion']),
+             key=lambda r: r['estacion'])
+estaciones = []
+for r in red:
     cs = r['c_sitio']
     conocidos = [c for c, (cp, _, _, _) in CAMPO.items()
                  if (cs, cp) in lb and int(lb[(cs, cp)]['n']) >= 12]
-    if len(conocidos) >= 4:
-        candidatos.append((cs, conocidos,
-                           int(r['parametros_fuera_ultima_medicion'] or 0),
-                           float(r['pct_malas'] or 0)))
-candidatos.sort(key=lambda t: (-t[2], -t[3]))
-
-estaciones = []
-for i, (cs, conocidos, _, _) in enumerate(candidatos[:5], start=1):
     s = sitios[cs]
     estaciones.append({
-        'c_estacion': 'EST-ATY-{:02d}'.format(i),
+        'c_estacion': r['estacion'],
         'c_sitio': cs,
         'nombre': s['nombre'],
         'cuerpo_agua': s['cuerpo_agua'],

@@ -6,11 +6,11 @@ Generado por `motor/prueba.py`.
 
 | Escenario | Alertas del motor | Alertas del stub | Deteccion | Intensidad plena | Avisos tecnicos |
 |---|---|---|---|---|---|
-| `normal` | **0** | 31 | — | — | 2 |
-| `descarga_organica` | **2** | 28 | **75 min** | 90 min | 5 |
-| `descarga_industrial` | **5** | 35 | **15 min** | inmediata | 0 |
-| `lluvia` | **5** | 36 | **90 min** | 120 min | 1 |
-| `falla_sensor` | **0** | 7 | — | — | 19 |
+| `normal` | **0** | 31 | — | — | 1 |
+| `descarga_organica` | **1** | 28 | **75 min** | 90 min | 2 |
+| `descarga_industrial` | **5** | 35 | **15 min** | inmediata | 2 |
+| `lluvia` | **3** | 36 | **120 min** | 120 min | 3 |
+| `falla_sensor` | **0** | 7 | — | — | 18 |
 
 El stub es el evaluador provisional del servidor mock, que implementa la regla obvia: salio de la banda p10-p90 tres lecturas seguidas. Daba 31 alertas en un dia sin incidentes y 35 con una descarga industrial, es decir no discriminaba.
 
@@ -30,9 +30,9 @@ El incidente solo entra en la estacion 1. Una alerta en otra estacion el mismo d
 
 | Escenario | Estacion del evento | Alertas ahi | Alertas en las otras 4 |
 |---|---|---|---|
-| `descarga_organica` | `EST-ATY-01` | 2 | **0** |
+| `descarga_organica` | `EST-ATY-01` | 1 | **0** |
 | `descarga_industrial` | `EST-ATY-01` | 5 | **0** |
-| `lluvia` | `EST-ATY-01` | 5 | **0** |
+| `lluvia` | `EST-ATY-01` | 3 | **0** |
 
 ## Fallas del sensor que no se confunden con contaminacion
 
@@ -40,7 +40,7 @@ En `falla_sensor` se inyectaron una turbiedad congelada 5 h, un pH en -999, un s
 
 - `lectura_congelada`: 12
 - `valor_imposible`: 4
-- `salto_imposible`: 3
+- `salto_imposible`: 2
 
 El orden de las capas es lo que lo hace posible. La turbiedad congelada valia 37.5 en un sitio cuya mediana historica es 368: evaluada como dato ambiental habria parecido un evento enorme. Se detecta como falla primero y se saca de la evaluacion.
 
@@ -48,11 +48,11 @@ El orden de las capas es lo que lo hace posible. La turbiedad congelada valia 37
 
 | Escenario | Fuente probable | Puntaje | Niveles emitidos |
 |---|---|---|---|
-| `descarga_organica` | aguas_residuales_municipales (2) | 0.90 | 2 Critica |
+| `descarga_organica` | aguas_residuales_municipales (1) | 0.90 | 1 Critica |
 | `descarga_industrial` | descarga_industrial (5) | 0.80 | 5 Critica |
-| `lluvia` | escurrimiento_o_arrastre (5) | 0.70 | 5 Critica |
+| `lluvia` | escurrimiento_o_arrastre (3) | 0.70 | 3 Critica |
 
-La evidencia que el motor reporta en el escenario de lluvia: turbiedad x4.0 con conductividad a la baja (x0.57): firma de arrastre, no de descarga.
+La evidencia que el motor reporta en el escenario de lluvia: turbiedad x21.4 con conductividad a la baja (x0.47): firma de arrastre, no de descarga.
 
 ## Contrato
 

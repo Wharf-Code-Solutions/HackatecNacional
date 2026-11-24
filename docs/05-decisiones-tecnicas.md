@@ -391,6 +391,8 @@ faltan (su `estabS`), lectura k de 5, último valor enviado o la falla. Mientras
 calentamiento y la medición van a tiempo real; el resto del ciclo, a la velocidad elegida: a 300× la
 medición dura una fracción de segundo y no se vería.
 
+**Sin volcán (2026-11-24).** Se quita el cono del fondo: distraía y no aportaba al mecanismo.
+
 **Cielo, vegetación y corriente (2026-11-24).** Bóveda azul intenso que se aclara solo en una franja
 delgada sobre el horizonte, con nubes difusas quietas en lo alto y niebla del color del horizonte; los reflejos de metal y agua
 toman ese mismo cielo. Vegetación instanciada y determinista: matas de pasto en las orillas, carrizo
@@ -595,3 +597,22 @@ abrir la base con políticas de RLS.
 escribían: `ALTER TABLE ... ENABLE ROW LEVEL SECURITY` toma un candado exclusivo y Postgres
 reportó "deadlock detected" en la prueba de dos instancias. Ahora se consulta `pg_class` primero.
 `backend/prueba.py` comprueba la limpieza de la URL y, con Postgres, que las tablas queden con RLS.
+
+## D27 · Red de 5 estaciones elegidas por lo que vigilan aguas arriba, con la red celular existente
+
+**Decisión.** Se presentan 5 estaciones: Zahuapan en Tlaxcala, Atoyac en Tepetitla, Papalotla y
+Puebla, y Alseseca en Totimehuacán. Las elige `scripts/96_red_estaciones.py` entre los 69 sitios con
+historia de campo, uno a uno, por el número de establecimientos DENUE con giro contaminante que dejan
+a 20 km o menos aguas arriba. Se comunican por LTE-M con la red de un operador comercial.
+
+**Por qué.** El presupuesto limita el número de estaciones: cada una cuesta equipo y, sobre todo,
+visitas mensuales y reposición de sondas. Con 5 se vigila el 39 % de los establecimientos; de ahí en
+adelante cada estación agrega menos de 70. Las 5 anteriores (los sitios más deteriorados) vigilaban
+el 9 %. Torres propias exigirían terreno, permisos y espectro sin ganar nada en un corredor urbano.
+
+**Alternativa descartada.** Más estaciones (rendimiento decreciente), estaciones en los sitios más
+contaminados (vigilan poco) y enlace propio por radio o satélite.
+
+**Consecuencia.** Fixtures, escenarios y simulador usan estas 5; el motor da 0, 1, 5, 3 y 0 alertas en
+los cinco escenarios. Falta medir la señal en cada sitio y confirmar el flujo todo el año en el
+Zahuapan y el Alseseca. Detalle en `docs/18-red-de-estaciones.md`.

@@ -36,7 +36,7 @@ Leyenda de "editable":
 | `contrato/validador.py` | Validador de JSON Schema sin dependencias | — | sí |
 | `contrato/servidor_mock.py` | Servidor HTTP con evaluador stub | las rutas de la API | sí |
 | `contrato/reproducir_escenario.py` | Envía un escenario a un servidor | — | sí |
-| `contrato/fixtures/estaciones.json` | 5 estaciones del piloto | — | **NO** |
+| `contrato/fixtures/estaciones.json` | Las 5 estaciones de la red propuesta (docs/18) | `40_generar_fixtures.py`, que las toma de `red/red_estaciones.csv` | **NO** |
 | `contrato/fixtures/linea_base.json` | Banda de esas 5 estaciones | — | **NO** |
 | `contrato/fixtures/sitios.geojson` | Los 219 sitios para el mapa | — | **NO** |
 | `contrato/fixtures/escenarios/*.json` | 5 escenarios de un día | — | **NO** |
@@ -140,6 +140,7 @@ repositorio (`python -m http.server 8000`).
 | `datos/procesados/red/sitio_pares.csv` | Los 6 276 pares arriba-abajo | `70_topologia_red.py` | **NO** |
 | `datos/procesados/red/red_asignacion.json` | 11 765 tramos con su trazo simplificado y su sitio aguas abajo, 1.6 MB. **Se versiona**: la función de Vercel la necesita | `71_red_para_asignacion.py` | **NO** |
 | `datos/procesados/red/atenuacion_observada.csv` | Razón medida abajo/arriba por parámetro: la calibración del modelo | `80_propagacion.py` | **NO** |
+| `datos/procesados/red/red_estaciones.csv` | Curva de cobertura (establecimientos DENUE vigilados por 1 a 12 estaciones) y las 5 elegidas con su número | `96_red_estaciones.py` | **NO** |
 | `datos/procesados/red/tiempo_viaje.csv` | Ventana horaria de llegada de los 5 769 pares utilizables | `80_propagacion.py` | **NO** |
 | `contrato/fixtures/prediccion_ejemplo.json` | Una predicción completa para que el panel y el mapa trabajen sin M5 | `80_propagacion.py` | **NO** |
 
@@ -168,6 +169,7 @@ El prefijo numérico indica el orden de ejecución. `_comun.py` no se ejecuta so
 | `motor/reglas.py` | **M2.** `evaluar(paquete) → veredicto`. **Fuente de verdad de los umbrales de deteccion y de la firma de fuente probable** | fixtures, `umbral.csv` | nada en disco |
 | `motor/prueba.py` | Banco de pruebas de M2: mide el criterio de terminado | escenarios | `docs/15-...` |
 | `scripts/90_modelos_proxy.py` | Ajusta y **valida fuera de muestra** los modelos proxy sensor→laboratorio. **Fuente de verdad del criterio de publicación** (`MAX_ERROR_MEDIANO`) | `muestreo_nucleo.csv` | `proxy_modelos.csv`, `contrato/fixtures/modelos_proxy.json`, `docs/16-...` |
+| `scripts/96_red_estaciones.py` | Elige la red de estaciones: sitios con historia de campo que más establecimientos DENUE vigilan a 20 km aguas arriba. **Fuente de verdad de `N_ESTACIONES`** | `sitio.csv`, `analisis/linea_base_...`, `red/`, `denue/establecimientos_cuenca.csv` | `red/red_estaciones.csv` |
 | `scripts/71_red_para_asignacion.py` | Poda la red a los tramos que alcanzan un sitio en 20 km y la simplifica, para que la asignación quepa en la función de Vercel. **Fuente de verdad de `ALCANCE_M`** | `datos/geo/`, `red/` | `red/red_asignacion.json` |
 | `scripts/50_verificar_repo.py` | **Revisión de salud del repositorio.** Automatiza nueve comprobaciones de invariantes y sale con código 1 si falla. **Fuente de verdad de los conteos esperados** (`FILAS_ESPERADAS`) | todo | stdout |
 

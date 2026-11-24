@@ -20,7 +20,7 @@ diseño**. La diferencia importa: la estación se presenta simulada, no instalad
 |---|---|---|---|
 | ① | **Sondas** | OD, pH, conductividad (K = 1.0), temperatura, turbiedad óptica con limpiador. Grado de campo. Circuitos de interfaz **aislados entre sí**. | Mide cinco señales cada 15 minutos. |
 | ② | **Controlador** | ESP32, reloj en tiempo real (DS3231), tarjeta microSD, perro guardián. | Duerme, mide, empaqueta, guarda y envía. |
-| ③ | **Comunicación** | Módem celular LTE-M/4G con `POST /lecturas` por HTTPS. LoRa queda como alternativa para barrancas sin cobertura. | Entrega el JSON del contrato sin traducción. |
+| ③ | **Comunicación** | Módem celular LTE-M/4G con SIM de datos de un operador comercial: usa sus torres, no hay antenas propias (docs/18). `POST /lecturas` por HTTPS. LoRaWAN con un concentrador en un punto alto queda como alternativa para sitios sin cobertura. | Entrega el JSON del contrato sin traducción. |
 | ④ | **Energía** | Panel solar de 5 W y dos baterías 18650 (≈22 Wh). | Autonomía sin toma de corriente. |
 
 El aislamiento entre sondas no es un lujo: varias sondas en la misma agua conductiva se
@@ -135,8 +135,8 @@ Todo lo siguiente es **supuesto de diseño** hasta que alguien lo mida o lo coti
 - **Consumo por fase.** Medir en banco; el módem celular tiene picos de hasta 2 A.
 - **Cobertura celular por sitio.** Las intensidades de señal del simulador (−66 a −84 dBm)
   están en el rango que traen los fixtures, no medidas en campo.
-- **Costos.** No hay cotización. Corresponde a M10 y debe incluir calibración y reposición
-  de sondas.
+- **Costos.** No hay cotización. Órdenes de magnitud y lo que hay que cotizar primero, en
+  [docs/18-red-de-estaciones.md](../docs/18-red-de-estaciones.md).
 - **Carcasa, montaje y antivandalismo.** Sin diseñar.
 
 ## Cómo correrlo
