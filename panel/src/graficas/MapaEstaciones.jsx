@@ -15,7 +15,12 @@ const sinAcentos = (t) => (t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toU
 const miles = (n) => Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 const getJSON = (url) => fetch(url).then((r) => { if (!r.ok) throw new Error(url + ' ' + r.status); return r.json(); });
 
-export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir }) {
+// Escuelas (docs/19): punto guinda, mas oscuro y grande cuanto mayor su nivel de riesgo.
+const RIESGO_TXT = { muy_alto: 'muy alto', alto: 'alto', medio: 'medio', bajo: 'bajo' };
+const FUENTE_TXT = { red_publica: 'red pública', pozo: 'pozo', manantial: 'manantial', rio: 'río', pipa: 'pipa',
+  captacion_lluvia: 'captación de lluvia', desconocida: 'sin dato' };
+
+export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir, escuelas = [] }) {
   const caja = useRef(null);
   const mapa = useRef(null);
   const marcas = useRef({});
@@ -36,7 +41,10 @@ export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir 
       const gl = mod.default || mod;
       const [cuenca, subcuencas, red, confluencias, toponimia] = capas;
       const cods = Object.keys(estaciones).sort();
-      const lons = cods.map((c) => estaciones[c].longitud), lats = cods.map((c) => estaciones[c].latitud);
+      // La vista inicial abarca estaciones y escuelas.
+      const conCoord = escuelas.filter((e) => e.longitud != null && e.latitud != null);
+      const lons = cods.map((c) => estaciones[c].longitud).concat(conCoord.map((e) => e.longitud));
+      const lats = cods.map((c) => estaciones[c].latitud).concat(conCoord.map((e) => e.latitud));
       const m = new gl.Map({
         container: caja.current, style: ESTILO, attributionControl: false, dragRotate: false, pitchWithRotate: false,
         bounds: [[Math.min(...lons), Math.min(...lats)], [Math.max(...lons), Math.max(...lats)]],
@@ -100,12 +108,31 @@ export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir 
           layout: { 'text-field': ['get', 'rotulo'], 'text-font': ITALICA, 'text-size': 11.5, 'text-anchor': 'left', 'text-offset': [0.9, 0] },
           paint: { 'text-color': '#14527a', 'text-halo-color': '#fff', 'text-halo-width': 1.5 } });
 
+        // Escuelas de escuelas.json, encima de la red y debajo de las estaciones.
+        m.addSource('escuelas', { type: 'geojson', data: { type: 'FeatureCollection', features: conCoord.map((e) => ({
+          type: 'Feature', geometry: { type: 'Point', coordinates: [e.longitud, e.latitud] },
+          properties: { cct: e.cct, nombre: e.nombre, nivel: e.nivel || '', municipio: e.municipio || '', localidad: e.localidad || '',
+            riesgo: (e.riesgo || {}).nivel || '', indice: (e.riesgo || {}).indice, fuente: e.fuente_agua || '', estacion: e.c_estacion || '' },
+        })) } });
+        m.addLayer({ id: 'escuelas', type: 'circle', source: 'escuelas',
+          paint: {
+            'circle-radius': ['interpolate', ['linear'], ['zoom'], 7,
+              ['match', ['get', 'riesgo'], 'muy_alto', 5, 'alto', 4.5, 3], 12,
+              ['match', ['get', 'riesgo'], 'muy_alto', 9, 'alto', 8, 6]],
+            'circle-color': ['match', ['get', 'riesgo'], 'muy_alto', '#5c0f24', 'alto', '#9D2449', 'medio', '#d58ea3', '#f1d3dc'],
+            'circle-stroke-color': '#fff', 'circle-stroke-width': 1,
+          } });
+
         // Ventanas al pasar el cursor, como en mapa/.
         const emergente = (capa, html) => {
           const pop = new gl.Popup({ closeButton: false, closeOnClick: false, offset: 8 });
           m.on('mousemove', capa, (e) => { m.getCanvas().style.cursor = 'pointer'; pop.setLngLat(e.lngLat).setHTML(html(e.features[0].properties)).addTo(m); });
           m.on('mouseleave', capa, () => { m.getCanvas().style.cursor = ''; pop.remove(); });
         };
+        emergente('escuelas', (p) => '<b>' + p.nombre + '</b><br>' + p.cct + ' · ' + inicial(p.nivel) + '<br>' +
+          inicial(p.localidad) + ', ' + inicial(p.municipio) + '<br>Riesgo ' + (RIESGO_TXT[p.riesgo] || 'sin dato') +
+          (p.indice != null && p.indice !== 'null' ? ' (índice ' + Number(p.indice).toFixed(2) + ')' : '') +
+          '<br>Agua: ' + (FUENTE_TXT[p.fuente] || 'sin dato') + (p.estacion ? '<br>Mecanismo ' + p.estacion : ''));
         emergente('confluencias', (p) => '<b>Confluencia</b><br>' + p.detalle + '<br>Red aguas arriba: ' +
           miles(p.km_red_principal) + ' y ' + miles(p.km_red_afluente) + ' km');
 

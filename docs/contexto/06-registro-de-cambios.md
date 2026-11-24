@@ -21,6 +21,17 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Módulo B: Alertas vuelve primero y el mapa marca las escuelas
+
+**Qué cambió.** Alertas es la primera pestaña y abre por defecto; vuelven el mapa de la red, la matriz y la tabla de
+estaciones. `MapaEstaciones.jsx` dibuja las escuelas de `escuelas.json` (punto guinda, más oscuro y grande cuanto
+mayor su nivel de riesgo, con ventana al cursor) y la vista inicial abarca estaciones y escuelas.
+**Por qué.** Petición del usuario: sin el mapa el panel perdía sentido; las escuelas van sobre el mapa existente.
+**Qué arrastró.** `App.jsx`, `Panorama.jsx`, `MapaEstaciones.jsx`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
 ## 2026-11-24 · Módulo A: susceptibilidad de laderas de CENAPRED en el índice de escuelas
 
 **Qué cambió.** `98_escuelas_candidatas.py` lee el Mapa Nacional de Susceptibilidad por Inestabilidad de Laderas de CENAPRED

@@ -11,12 +11,13 @@ import ListaAlertas from './componentes/ListaAlertas.jsx';
 import Panorama from './componentes/Panorama.jsx';
 import Reportes from './componentes/Reportes.jsx';
 import Resumen from './componentes/Resumen.jsx';
+import TablaEstaciones from './componentes/TablaEstaciones.jsx';
 import Tooltip from './componentes/Tooltip.jsx';
 
 // Cambio de rumbo (docs/19 §6): la unidad es la escuela. Escuelas en riesgo, alertas de los mecanismos,
 // autorizaciones de CEASPUE y CAPCEE, y la gestión de lo que reportan las personas.
 // [id, nombre corto, resto]: en el teléfono la barra solo muestra el nombre corto.
-const SECCIONES = [['escuelas', 'Escuelas', ''], ['monitoreo', 'Alertas', ''], ['autorizaciones', 'Autorizaciones', ''], ['reportes', 'Reportes', ' ciudadanos']];
+const SECCIONES = [['monitoreo', 'Alertas', ''], ['escuelas', 'Escuelas', ''], ['autorizaciones', 'Autorizaciones', ''], ['reportes', 'Reportes', ' ciudadanos']];
 const BAJADA = {
   escuelas: 'Escuelas rurales en riesgo de contaminación o derrumbe: cuáles atender primero y por qué.',
   monitoreo: 'Alertas de los mecanismos de calidad del agua: qué se midió, de dónde pudo venir y quién la atiende.',
@@ -44,7 +45,7 @@ export default function App() {
   const codigos = useMemo(() => (fijos ? Object.keys(fijos.estaciones).sort() : []), [fijos]);
   const be = useBackend(codigos);
   const ctx = useMemo(() => (fijos ? ayudantes(fijos) : null), [fijos]);
-  const [seccion, setSeccion] = useState('escuelas');
+  const [seccion, setSeccion] = useState('monitoreo');
   const [vista, setVista] = useState('alertas');
   const [sel, setSel] = useState(null);
   const [filtros, setFiltros] = useState({ estado: 'activas', nivel: 'todos', estacion: 'todas' });
@@ -140,8 +141,12 @@ export default function App() {
             {seccion === 'monitoreo' && vista === 'alertas' && (
               <section className="vista">
                 <Resumen alertas={be.alertas} veredictos={be.veredictos} totalEstaciones={codigos.length} corte={corte} />
-                {/* Sin el mapa de la red, la matriz ni la tabla de estaciones del Atoyac (docs/19 §6): se
-                    conservan en Panorama.jsx y TablaEstaciones.jsx. */}
+                {/* El mapa de la red marca también las escuelas de escuelas.json (docs/19 §6, punto 6). */}
+                <Panorama parte="mapa" alertas={be.alertas} veredictos={be.veredictos} corte={corte} elegida={filtros.estacion}
+                  escuelas={ctx.escuelas}
+                  onElegir={(c) => setFiltros({ ...filtros, estacion: filtros.estacion === c ? 'todas' : c })} />
+                <TablaEstaciones alertas={be.alertas} veredictos={be.veredictos} elegida={filtros.estacion}
+                  onElegir={(c) => setFiltros({ ...filtros, estacion: c })} />
                 <div className="trabajo">
                   <ListaAlertas alertas={be.alertas} filtros={filtros} setFiltros={setFiltros} sel={sel}
                     onElegir={elegirAlerta} conectado={be.conectado} />
