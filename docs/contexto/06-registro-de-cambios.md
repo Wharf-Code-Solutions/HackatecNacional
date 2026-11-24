@@ -21,6 +21,18 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · M7: el mapa vuelve a la mitad, junto al estado de las estaciones
+
+**Qué cambió.** Corrige el orden de la entrada "orden de la vista de alertas": resumen; mapa y "Cómo están
+las estaciones ahora" lado a lado; tabla de estaciones a todo el ancho; alertas con expediente; y al final
+las gráficas (huella, por hora, por estación, por parámetro, avance).
+**Por qué.** Al usuario no le gustó el mapa a todo el ancho; prefiere el arreglo original con la tabla y las
+alertas antes de las gráficas.
+**Qué arrastró.** Nada más.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
 ## 2026-11-24 · M6: el mapa con las estaciones se publica en /mapa/
 
 **Qué cambió.** `panel/scripts/ensamblar-sitio.mjs` publica también el mapa: `mapa/` en `/mapa/`, sus capas

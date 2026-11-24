@@ -133,15 +133,14 @@ export default function App() {
                 <Resumen alertas={be.alertas} veredictos={be.veredictos} totalEstaciones={codigos.length} corte={corte} />
                 <Panorama parte="mapa" alertas={be.alertas} veredictos={be.veredictos} corte={corte} elegida={filtros.estacion}
                   onElegir={(c) => setFiltros({ ...filtros, estacion: filtros.estacion === c ? 'todas' : c })} />
+                <TablaEstaciones alertas={be.alertas} veredictos={be.veredictos} elegida={filtros.estacion}
+                  onElegir={(c) => setFiltros({ ...filtros, estacion: c })} />
                 <div className="trabajo">
                   <ListaAlertas alertas={be.alertas} filtros={filtros} setFiltros={setFiltros} sel={sel}
                     onElegir={elegirAlerta} conectado={be.conectado} />
                   <Expediente alerta={alerta} veredictos={alerta ? be.veredictos[alerta.c_estacion] : []}
                     motor={be.motor} guardar={be.guardar} prediccion={be.prediccion} demo={demo} />
                 </div>
-                <TablaEstaciones alertas={be.alertas} veredictos={be.veredictos} elegida={filtros.estacion}
-                  onElegir={(c) => setFiltros({ ...filtros, estacion: c })} />
-                <Panorama parte="estado" alertas={be.alertas} veredictos={be.veredictos} corte={corte} />
                 <Panorama parte="conteos" alertas={be.alertas} veredictos={be.veredictos} corte={corte} />
               </section>
             )}

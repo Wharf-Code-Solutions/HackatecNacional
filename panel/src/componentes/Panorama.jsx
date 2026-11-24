@@ -33,27 +33,23 @@ export default function Panorama({ parte, alertas, veredictos, corte, elegida, o
   const porParametro = Object.keys(cuenta).sort((a, b) => cuenta[b] - cuenta[a])
     .map((k) => ({ nombre: PARAM[k] || k, partes: { n: cuenta[k] }, total: cuenta[k] }));
 
-  // Tres partes en el orden en que se lee el panel: el mapa (junto a la lista de alertas que
-  // filtra), el estado de las estaciones y, al final, los conteos de las alertas.
+  // Dos partes: arriba el mapa y el estado de las estaciones lado a lado; abajo, despues de la
+  // tabla de estaciones y de las alertas, las graficas.
   if (parte === 'mapa') return (
     <div className="panorama">
-      <Tarjeta titulo="La red de estaciones" subtitulo="El mapa de la cuenca. En rojo, las estaciones con una alerta por atender; un clic filtra la lista de alertas." ancha>
+      <Tarjeta titulo="La red de estaciones" subtitulo="El mapa de la cuenca. En rojo, las estaciones con una alerta por atender; un clic filtra la lista de alertas.">
         <MapaEstaciones estaciones={estaciones} alertas={alertas} elegida={elegida} onElegir={onElegir} />
       </Tarjeta>
-    </div>
-  );
-  if (parte === 'estado') return (
-    <div className="panorama">
-      <Tarjeta titulo="Cómo están las estaciones ahora" subtitulo="Última lectura de cada sonda frente a la historia de su sitio." ancha>
+      <Tarjeta titulo="Cómo están las estaciones ahora" subtitulo="Última lectura de cada sonda frente a la historia de su sitio.">
         <MatrizEstaciones estaciones={estaciones} lineaBase={lineaBase} veredictos={veredictos} corte={corte} />
-      </Tarjeta>
-      <Tarjeta titulo="Huella de las últimas horas" subtitulo="Dónde y cuándo se salió cada sonda de lo habitual." ancha>
-        <Huella estaciones={estaciones} veredictos={veredictos} />
       </Tarjeta>
     </div>
   );
   return (
     <div className="panorama">
+      <Tarjeta titulo="Huella de las últimas horas" subtitulo="Dónde y cuándo se salió cada sonda de lo habitual." ancha>
+        <Huella estaciones={estaciones} veredictos={veredictos} />
+      </Tarjeta>
       <Tarjeta titulo="Alertas por hora" ancha><GraficaHoras alertas={alertas} /></Tarjeta>
       <Tarjeta titulo="Alertas por atender, por estación">
         <BarrasH filas={porEstacion} claves={NIVELES} colores={COLOR_NIVEL} nombreClave={txt} plural
