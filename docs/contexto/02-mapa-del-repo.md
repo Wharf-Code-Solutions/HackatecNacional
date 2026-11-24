@@ -124,8 +124,48 @@ El prefijo numérico indica el orden de ejecución. `_comun.py` no se ejecuta so
 | `scripts/80_propagacion.py` | **M3.** Calibra la atenuación con los datos, calcula ventanas de llegada y produce la predicción. **Fuente de verdad de la velocidad supuesta y del alcance útil** | `red/`, `muestreo_nucleo.csv` | `red/atenuacion_observada.csv`, `red/tiempo_viaje.csv`, `contrato/fixtures/prediccion_ejemplo.json`, `docs/14-...` |
 | `scripts/50_verificar_repo.py` | **Revisión de salud del repositorio.** Automatiza nueve comprobaciones de invariantes y sale con código 1 si falla. **Fuente de verdad de los conteos esperados** (`FILAS_ESPERADAS`) | todo | stdout |
 
-**Orden de dependencia:** 00 → 10 → 20 → 30 y 40. El 30 y el 40 dependen del 20 porque
-usan la línea base.
+**Orden de ejecución.** Reconstruir todo desde las fuentes originales requiere
+`pip install openpyxl pyxlsb pypdf` y esta secuencia:
+
+```powershell
+python -I scripts/00_descargar_fuentes.py
+```
+
+```powershell
+python -I scripts/10_construir_tablas.py
+```
+
+```powershell
+python -I scripts/20_analisis_exploratorio.py
+```
+
+```powershell
+python -I scripts/30_verificacion_datos.py
+```
+
+```powershell
+python -I scripts/40_generar_fixtures.py
+```
+
+```powershell
+python -I scripts/60_red_para_mapa.py
+```
+
+```powershell
+python -I scripts/70_topologia_red.py
+```
+
+```powershell
+python -I scripts/80_propagacion.py
+```
+
+```powershell
+python -I scripts/50_verificar_repo.py
+```
+
+Las dependencias reales: 30, 40 y 70 necesitan lo que produce el 20; el 80 necesita el 70;
+el 50 comprueba el resultado de todos y es el único que corre sin los archivos crudos. Los
+scripts `01` y `02` son diagnóstico y no forman parte de la secuencia.
 
 ---
 

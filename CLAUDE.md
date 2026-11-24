@@ -138,7 +138,11 @@ reemplaza al mock; M7 y M8 son pantallas para la autoridad y la ciudadanía; M9 
 
 ## Convenciones
 
-- Commits: prefijo del módulo, primera línea corta, cuerpo con el por qué y el número si lo hay.
+- Commits: **cortos y concretos.** Prefijo del módulo, primera línea de una sola idea, y a lo
+  más tres o cuatro líneas de cuerpo con el por qué y el número si lo hay. El detalle largo va
+  al registro de cambios (`docs/contexto/06-registro-de-cambios.md`), no al mensaje del commit.
+- El `README.md` es una descripción general del proyecto para quien llega. Las instrucciones
+  para agentes de IA van en este archivo y en `docs/contexto/`, no ahí.
 - Rama `main` del remoto del equipo. Sin líneas de coautor en los commits.
 - El estado para traspaso a compañeros vive en `docs/12-estado-y-traspaso.md`: actualízalo al
   terminar un módulo.
