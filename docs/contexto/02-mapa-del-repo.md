@@ -61,11 +61,32 @@ estaciones leyendo `GET /alertas` del backend. Se sirve desde la raíz del repo.
 
 | Ruta | Qué es | Editable |
 |---|---|---|
-| `panel/index.html`, `panel.js`, `estilos.css` | Panel de autoridad: lista de alertas con su evidencia (banda histórica con `n` y fechas), fuente probable, medidas, sitios aguas abajo y aguas arriba; cambia estado y responsable. Avisos técnicos y reportes ciudadanos en pestañas aparte | sí |
+| `panel/src/` | Aplicación React (Vite): `App.jsx`, `componentes/` (resumen, lista, expediente, avisos, reportes), `graficas/` (SVG a mano), `lib/` (datos, formato, etiquetas) | sí |
+| `panel/scripts/copiar-datos.mjs` | Copia las tablas que el panel lee a `panel/public/datos/` antes de `dev` y `build` | sí |
+| `panel/public/datos/` | Copia de `contrato/fixtures/` y `datos/procesados/red/` | **NO** (generado, no versionado) |
+| `panel/scripts/capturar-demo.mjs` | Captura la foto del backend para el modo demostración | sí |
+| `panel/public/demo/foto.json` | Respuestas del mock con `--motor real` sobre `descarga_industrial` | **NO**: se regenera con `npm run capturar-demo` |
+| `panel/vercel.json`, `package.json` | Despliegue en Vercel (raíz del proyecto: `panel/`) | sí |
 
 El panel **no evalúa nada**: lee `GET /alertas`, `GET /veredictos`, `GET /reportes` y escribe
-con `PATCH /alertas/<c_alerta>`. Por su cuenta solo lee tablas publicadas: la línea base del
-contrato y `datos/procesados/red/sitio_pares.csv`. Se sirve desde la raíz del repo.
+con `PATCH /alertas/<c_alerta>`. Por su cuenta solo lee tablas publicadas. Se corre con
+`npm run dev` dentro de `panel/` (D23).
+
+---
+
+## `backend/` — módulo M5
+
+| Ruta | Qué es | Editable |
+|---|---|---|
+| `backend/app.py` | Aplicación FastAPI: las rutas del contrato, igual que el mock, más `GET /alertas/<c_alerta>/prediccion` | sí |
+| `backend/almacen.py` | Persistencia en SQLite, con candado para leer y escribir | sí |
+| `backend/propagacion.py` | Predicción de M3 a partir de las tablas que M3 publica | sí, pero debe dar lo mismo que `scripts/80_propagacion.py` (la prueba lo exige) |
+| `backend/servidor.py`, `backend/asgi.py` | Arranque local (`--limpiar`, `--db`) y punto de entrada para producción | sí |
+| `backend/prueba.py` | Criterio de terminado de M5 y más | sí |
+| `backend/requirements.txt` | FastAPI, uvicorn, httpx (pruebas) | sí |
+| `backend/datos/atoyac.sqlite` | La base | **NO** (generada, no versionada) |
+
+El backend no inventa reglas: decide `motor/reglas.py`, valida `contrato/validador.py`.
 
 ---
 

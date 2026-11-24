@@ -208,7 +208,8 @@ else:
 print('\n8) Enlaces relativos en los .md')
 rotos = []
 for raiz, _, archivos in os.walk(RAIZ):
-    if any(p in raiz for p in ('.git', 'crudos', 'geo', '__pycache__')):
+    # node_modules y dist son de terceros o generados (panel/ es React con Vite, D23).
+    if any(p in raiz for p in ('.git', 'crudos', 'geo', '__pycache__', 'node_modules', 'dist')):
         continue
     for a in archivos:
         if not a.endswith('.md'):

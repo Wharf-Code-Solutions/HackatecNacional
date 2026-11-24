@@ -1,0 +1,6 @@
+node_modules/
+dist/
+# Copia de contrato/fixtures y datos/procesados que hace scripts/copiar-datos.mjs
+public/datos/
+.env.local
+.vercel

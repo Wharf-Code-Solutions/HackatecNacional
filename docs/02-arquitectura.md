@@ -137,7 +137,7 @@ Mientras los módulos no existen, sus reemplazos sí:
 |---|---|---|
 | Dispositivo físico | `dispositivo/simulador/` (firmware simulado) o `contrato/reproducir_escenario.py`, que emiten el mismo payload | M4 tenga hardware armado y medido |
 | Motor de reglas | el evaluador stub del mock, marcado `"motor": "stub"` | M2 esté listo |
-| Backend real | `contrato/servidor_mock.py` | M5 esté listo |
+| Backend real | `contrato/servidor_mock.py` (ya no hace falta: M5 existe en `backend/`; el mock queda como especificación y para trabajar sin instalar nada) | M5 esté listo |
 | Orden del río | un orden a mano de las 5 estaciones del piloto | M1 esté listo |
 
 Esto no es deuda técnica accidental: es el mecanismo que permite que ocho módulos avancen

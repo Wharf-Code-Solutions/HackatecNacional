@@ -435,3 +435,61 @@ nivel siempre va escrito junto a su color y el guinda no se usa para nada que si
 alarma. Patria (la tipografía de encabezados del SND) no está en Google Fonts y no se usa. El
 mapa (`mapa/`) conserva por ahora su estilo anterior; si se quiere unificar, se aplica la misma
 paleta allí.
+
+## D23 · El panel de autoridad es una aplicación React con Vite, desplegable en Vercel
+
+**Decisión.** `panel/` pasa de HTML y JavaScript plano a React 18 con Vite, en JavaScript.
+Las tablas que lee se copian a `public/datos/` con `scripts/copiar-datos.mjs` antes de
+`npm run dev` y `npm run build`. El backend se elige así: `?api=` en la URL, luego la variable
+`VITE_API_URL`, luego el mock local en desarrollo. En producción sin backend configurado el
+panel entra en **modo demostración** y muestra `public/demo/foto.json`, una foto de las
+respuestas del mock con `--motor real` que se captura con `npm run capturar-demo`.
+
+**Por qué.** El equipo quiere desplegar el panel en Vercel. Vite es el caso que Vercel
+detecta sin configuración, y React reparte el panel en componentes que el equipo puede tocar
+por separado. JavaScript y no TypeScript porque el resto del repositorio es JavaScript plano.
+El modo demostración existe porque en Vercel no corre el mock: sin él, el sitio publicado
+saldría vacío. La foto se copia del backend, no se calcula en el panel, así que no rompe la
+frontera de M7 (el panel no evalúa).
+
+**Alternativa descartada.** Seguir con HTML plano y subirlo tal cual: funciona, pero lee los
+datos con rutas `../` fuera de su carpeta, que en Vercel no existen si la raíz del proyecto es
+`panel/`. Next.js: trae servidor y rutas que el panel no necesita. Copiar los datos dentro de
+`panel/` en el repositorio: los duplicaría y se desincronizarían.
+
+**Consecuencia.** El panel ya no se abre con `python -m http.server`: se corre con
+`npm run dev` (puerto 5173). En Vercel la raíz del proyecto es `panel/` y debe quedar activa la
+opción de incluir archivos fuera de la raíz en la compilación (es la opción por defecto), porque
+`copiar-datos.mjs` lee `../contrato/` y `../datos/`. Los cambios de estado en modo demostración
+solo viven en la pestaña del navegador, y la pantalla lo dice. La foto envejece: hay que volver a
+capturarla si cambia el motor o el contrato.
+
+## D24 · El backend es FastAPI con SQLite y valida con el validador del contrato
+
+**Decisión.** M5 vive en `backend/`: FastAPI con uvicorn, persistencia en SQLite, el motor de
+`motor/reglas.py` y el mismo `contrato/validador.py` que el mock. Cada objeto del contrato se
+guarda como JSON, con unas pocas columnas para filtrar. Al arrancar, el motor reproduce las últimas
+200 lecturas de cada estación y sus folios siguen desde el mayor guardado. La predicción de M3 se
+calcula con las tablas que M3 publica (`tiempo_viaje.csv`, `atenuacion_observada.csv`). Un reenvío
+idéntico de un paquete no se evalúa dos veces.
+
+**Por qué.** FastAPI lo pidió el equipo y da documentación de la API sin escribirla (`/docs`).
+SQLite viene con Python, no exige un servidor de base de datos y cumple el criterio de terminado
+("los datos persisten tras reiniciar"). Validar con `contrato/validador.py` y no con modelos de
+pydantic es la única forma de garantizar que el backend rechaza exactamente lo que rechaza el mock:
+dos validadores distintos discrepan en los bordes. Reproducir lecturas al arrancar es posible porque
+el motor es determinista; sin eso, un reinicio repetía folios (`AL-...-01` otra vez) y perdía la
+ventana de 4 h que usa para detectar escalones. La predicción no importa `scripts/80_propagacion.py`
+porque ese script calibra con `muestreo_nucleo.csv`, que no se versiona, y escribe archivos al
+importarse.
+
+**Alternativa descartada.** Postgres: mejor para varios servidores, pero exige otro servicio para
+correr la demo. Modelos de pydantic para validar: más idiomático en FastAPI, pero se separa del
+contrato. Guardar solo alertas y no lecturas: el motor no podría recuperar su estado al reiniciar.
+
+**Consecuencia.** `backend/prueba.py` compara en vivo contra el mock y contra
+`prediccion_ejemplo.json` de M3: si M3 cambia su fórmula, la prueba falla y hay que actualizar
+`backend/propagacion.py`. SQLite comparte una conexión entre hilos bajo un candado: sin él, las
+8 peticiones simultáneas del panel daban "bad parameter or other API misuse" (la prueba 5 lo
+reproduce). El backend no va en Vercel, que no conserva archivos: necesita un servicio con disco
+persistente. No tiene autenticación todavía.

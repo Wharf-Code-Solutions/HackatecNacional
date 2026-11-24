@@ -71,7 +71,7 @@ planeado es lo primero que se pierde al documentar y lo primero que un jurado de
 | Modelo de propagación | **Construido**: transporte conservativo calibrado con los datos, con ventana de llegada y banda de valor | `scripts/80_propagacion.py` |
 | Simulador del dispositivo (firmware como máquina de estados, modelo de agua, sondas, energía y enlace) y su ficha técnica | **Construido y probado**: 96 paquetes por día y estación, 0 pérdidas en un corte de 4 h, `POST /lecturas` responde 202 | `dispositivo/` |
 | Dispositivo físico (hardware armado y medido) | **Pendiente**: no hay hardware comprado; las especificaciones son supuestos de diseño | módulo M4 |
-| Backend y base de datos | **Pendiente** | módulo M5 |
+| Backend y base de datos | **Construido**: FastAPI y SQLite, mismas respuestas que el mock, datos que sobreviven a un reinicio, predicción de M3 | `backend/` |
 | Mapa de la cuenca con las 5 estaciones y zoom al simulador de la estación (prototipo de M6) | **Construido**: ríos, subcuencas, 219 sitios con "sin dato" visible; lee alertas del backend por contrato | `mapa/` |
 | Mapa público definitivo, panel de autoridad, app ciudadana | **Pendiente** | módulos M6, M7, M8 |
 | Estimación de costos y propuesta de implementación | **Pendiente** | módulo M10 |

@@ -35,9 +35,9 @@ punta (M9).
 | M2 Motor de reglas | **Construido.** 0 alertas en el día de control contra 31 del provisional; los tres eventos detectados y clasificados | `motor/`, `docs/15-motor-reglas.md` |
 | M3 Propagación | **Construida.** Modelo calibrado con 90 tramos del propio río, cobertura 78 % fuera de muestra | `scripts/80_propagacion.py`, `docs/14-propagacion.md` |
 | M4 Dispositivo | **Simulador construido y probado; sin hardware.** Figura 3D y línea de tiempo de recepción | `dispositivo/` |
-| M5 Backend | Pendiente. Puede empezarse contra el contrato | — |
+| M5 Backend | **Construido.** FastAPI y SQLite; mismas respuestas que el mock, comparado en vivo; datos y folios sobreviven a un reinicio; predicción de M3. Sin autenticación | `backend/` |
 | M6 Mapa | **Prototipo**: cuenca delimitada y confluencias (aún no colorea por índice ni está probado a ancho de teléfono) | `mapa/` |
-| M7 Panel de autoridad | **Prototipo.** Lista alertas con evidencia y gráficas, cambia estado y responsable; aún no muestra la predicción de M3 ni pide sesión | `panel/` |
+| M7 Panel de autoridad | **Prototipo.** Lista alertas con evidencia y gráficas, cambia estado y responsable; React con Vite, listo para Vercel con modo demostración; aún no muestra la predicción de M3 ni pide sesión | `panel/` |
 | M8 App ciudadana | Pendiente | — |
 | M9 Integración | Pendiente | — |
 | M10 Documentación y costos | En curso; faltan costos, manual por usuario y propuesta por fases | `docs/` |
@@ -106,7 +106,8 @@ python contrato/servidor_mock.py
 ```
 
 - Mapa: `http://127.0.0.1:8000/mapa/`
-- Panel de autoridad: `http://127.0.0.1:8000/panel/`
+- Backend real (M5), en lugar del mock y en el mismo puerto: ver `backend/README.md`
+- Panel de autoridad: `cd panel`, `npm install` la primera vez y `npm run dev` → `http://localhost:5173/`
 - Simulador: `http://127.0.0.1:8000/dispositivo/simulador/`
 - Pruebas del firmware: `node dispositivo/simulador/prueba.js`
 - Verificación del repositorio, antes de entregar cualquier cambio: `python -I scripts/50_verificar_repo.py`

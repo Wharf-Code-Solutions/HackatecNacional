@@ -21,6 +21,67 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · M5: backend real con FastAPI y SQLite
+
+**Qué cambió.** Nueva carpeta `backend/` (D24): FastAPI con las rutas del contrato y las mismas
+respuestas que `servidor_mock.py --motor real`, persistencia en SQLite, el motor de M2 y la
+predicción de M3 en `GET /alertas/<c_alerta>/prediccion`. Al arrancar reproduce las últimas 200
+lecturas de cada estación para recuperar el estado del motor, y sus folios siguen desde el mayor
+guardado. Un reenvío idéntico de un paquete no se evalúa dos veces. `scripts/50_verificar_repo.py`
+ya no revisa `node_modules/` ni `dist/`.
+
+**Verificación.** `backend/prueba.py`, 29 comprobaciones, todas pasan: los cinco escenarios dan
+0, 2, 5, 5 y 0 alertas como el motor; nueve rechazos con el mismo código y detalle que el mock,
+comparado en vivo; reiniciar a mitad de `descarga_industrial` da las mismas cinco alertas y folios
+que no reiniciar; la predicción es idéntica a `prediccion_ejemplo.json` de M3 (26 destinos); 1500
+peticiones con 32 a la vez sin errores. Con servidores reales: `reproducir_escenario.py normal --url`
+termina sin errores de contrato y con 0 alertas, `descarga_industrial` con 5, y tras matar y volver a
+arrancar el proceso siguen las 960 lecturas, las 5 alertas y el reporte. El panel funciona contra él
+sin cambios.
+
+**Un error que hubo que corregir.** La conexión de SQLite se compartía entre hilos con candado solo
+para escribir. El panel pide 8 cosas a la vez y algunas lecturas fallaban con "bad parameter or other
+API misuse"; el navegador lo mostraba como error de CORS porque la respuesta 500 sale sin esas
+cabeceras. Ahora todo pasa por el candado. La prueba 5 reproduce el fallo sin él (2 errores en 1500)
+y pasa con él.
+
+**Qué arrastró.** `contrato/README.md` (ruta nueva, solo en el backend), `01-que-construimos.md`,
+`02-arquitectura.md`, `03-tecnologias.md`, D24, `02-mapa-del-repo.md`, `12-estado-y-traspaso.md`,
+`CLAUDE.md`, `.gitignore` (`backend/datos/`).
+
+**Impacto en otros módulos.** El panel, el mapa, el simulador y `reproducir_escenario.py` funcionan
+con el backend sin cambiar nada: mismo puerto 8080 y mismas respuestas. Si M3 cambia su fórmula o sus
+constantes, `backend/prueba.py` falla y hay que actualizar `backend/propagacion.py`. M6 ya puede pintar
+la pluma con `GET /alertas/<c_alerta>/prediccion`, pero el mock no tiene esa ruta.
+
+---
+
+## 2026-11-24 · M7: el panel pasa a React con Vite para desplegarse en Vercel
+
+**Qué cambió.** `panel/` deja el HTML plano y es una aplicación React 18 con Vite (D23), con las
+mismas vistas, gráficas y reglas. `scripts/copiar-datos.mjs` copia las cuatro tablas que lee a
+`public/datos/` (no versionado) antes de `dev` y `build`. Sin backend configurado, la compilación
+de producción entra en modo demostración con `public/demo/foto.json` (5 alertas y 2 reportes del
+mock con `--motor real` sobre `descarga_industrial`). Dos arreglos que estaban pendientes en el
+HTML plano quedaron incluidos: la columna de fuente probable ya no se aplasta y el texto de
+propagación ya no dice que M3 está pendiente.
+
+**Por qué.** Desplegar en Vercel. El HTML plano leía los datos con rutas `../` que no existen
+cuando la raíz del proyecto en Vercel es `panel/`.
+
+**Verificación.** `npm run build` sin errores (181 kB de JS, 59 kB comprimido). En desarrollo,
+contra el mock: pestañas, expediente y guardado de responsable con clics reales (el texto escrito
+sobrevive al sondeo de 3 s). La compilación de producción sin backend abre en modo demostración
+y no hace ninguna llamada al puerto 8080. Sin desborde horizontal a 375 px.
+
+**Qué arrastró.** `03-tecnologias.md`, D23, `02-mapa-del-repo.md`, `12-estado-y-traspaso.md`,
+`CLAUDE.md`, `panel/README.md`.
+
+**Impacto en otros módulos.** Ninguno en el contrato. Quien abría `http://127.0.0.1:8000/panel/`
+ahora usa `npm run dev` en `panel/`.
+
+---
+
 ## 2026-11-24 · Terreno de la figura 3D parecido a la cuenca
 
 **Qué cambió.** `escena.js` reemplaza las cajas del corte por un valle con el río en un cauce de

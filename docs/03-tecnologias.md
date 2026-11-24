@@ -120,6 +120,23 @@ Mapbox respondió 429 con nuestra cuenta). El código es el mismo porque la API 
 se versiona (`.gitignore`); `config.ejemplo.js` muestra el formato. Sin él, todo sigue con
 OpenFreeMap. Mapbox exige su logo visible y no es software libre desde la versión 2 (D21).
 
+### FastAPI, uvicorn y SQLite para el backend (M5)
+
+`backend/` usa FastAPI con uvicorn y guarda en SQLite (`sqlite3` de la biblioteca estándar).
+Versiones fijadas en `backend/requirements.txt`, probadas con Python 3.14 de python.org. El
+Python de MSYS2 no sirve aquí: no tiene paquetes precompilados de `pydantic-core` (dependencia de
+FastAPI) y pide Rust para compilarlo. La validación no usa los modelos de pydantic sino el mismo
+`contrato/validador.py` del mock, para rechazar exactamente lo mismo. Decisión D24.
+
+### React 18 y Vite para el panel de autoridad (M7)
+
+`panel/` es una aplicación React (JavaScript, sin TypeScript) construida con Vite. Se eligió
+para desplegarla en Vercel sin configuración: `npm run build` deja un sitio estático en
+`panel/dist/`. Las gráficas son SVG escrito a mano en componentes, sin biblioteca de gráficas.
+Las tablas que el panel lee (`estaciones.json`, `linea_base.json`, `sitio_aguas_abajo.csv`,
+`sitio_pares.csv`) se copian a `panel/public/datos/` antes de cada arranque y compilación; no se
+versionan ahí. Decisión D23.
+
 ### Git y GitHub
 
 Con una regla que se verifica: `datos/crudos/` y `datos/geo/` **no se versionan**. Son
@@ -143,7 +160,7 @@ documentarlo como construido.
 
 ### Sin decidir
 
-- **Framework de los frontends** (M6, M7, M8). Deliberadamente abierto: cada módulo
+- **Framework de los frontends** (M6, M8). M7 ya eligió React con Vite (D23). Deliberadamente abierto: cada módulo
   consume el contrato por HTTP, así que puede ser React, Svelte, Vue o HTML con
   JavaScript a secas. Quien lo desarrolle elige lo que domine; es la clase de libertad que
   el contrato permite y que acelera a un equipo que no comparte el mismo stack.
@@ -156,7 +173,7 @@ documentarlo como construido.
 | Descartado | Razón |
 |---|---|
 | **`jsonschema` de PyPI** | Habría metido una dependencia a la pieza que todos comparten. Se escribió un validador del subconjunto necesario. Los esquemas siguen siendo válidos para `jsonschema` si alguien lo quiere usar. |
-| **Flask / FastAPI para el mock** | Misma razón. Para el backend real (M5) sí son candidatos razonables. |
+| **Flask / FastAPI para el mock** | Misma razón. El backend real (M5) sí usa FastAPI (D24). |
 | **pandas para el procesamiento** | Está instalado y se usó para explorar, pero los scripts de construcción usan `csv` y lectura por filas. El motivo es la memoria: `RESULTADOS-PUEBLA.xlsb` declara 126 070 filas de las cuales 123 165 están vacías, y recorrerlo por filas evita materializar una tabla de 325 columnas que es casi toda nula. |
 | **SQLite o Parquet para las tablas procesadas** | Habrían ganado velocidad que nadie necesita y perdido la revisabilidad en git y la apertura en Excel. |
 | **Modelos de pronóstico temporal (LSTM, Prophet)** | Los datos no lo soportan: 49 días de mediana entre muestreos consecutivos del mismo sitio, con un hueco de densidad entre 2019 y 2024. No es una serie de tiempo. El razonamiento completo está en [10-revision-critica-plan.md](10-revision-critica-plan.md). |
