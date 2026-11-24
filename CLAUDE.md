@@ -57,7 +57,7 @@ No conviertas "pendiente" en "construido" sin verificarlo contra el repo.
 - **Pantalla (D19, D20)**: solo tres cosas.
   - Figura 3D (Three.js r149 desde unpkg; materiales físicos, texturas dibujadas en código sin descargas,
     sombras y luz fija de día soleado aunque la hora simulada sea de noche, D19; se dibuja en cada cuadro): valle casi plano con el río en un cauce de taludes de tierra que
-    serpentea, agua verde grisácea que se vuelve café con la turbiedad, cielo con nubes, 12 ahuejotes al fondo, pasto, carrizo y arbustos en las orillas, corriente simulada (`Agua.velocidad`) que mueve el agua y un volcán
+    serpentea, agua verde grisácea que se vuelve café con la turbiedad, cielo con nubes, 12 ahuejotes al fondo, pasto, carrizo y macollos de zacatón en las orillas, corriente simulada (`Agua.velocidad`) que mueve el agua y un volcán
     tenue al fondo (niebla); corte frontal con el perfil en tinta. Sondas en su tubo, cable, gabinete abierto con
     controlador, SD (un cubo por paquete pendiente), módem y baterías, panel, antena y torre celular. Rótulos
     HTML con nombre y dato vivo. La estación está a 1.6× respecto al río para que se lea. Se gira arrastrando.

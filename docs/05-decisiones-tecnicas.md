@@ -391,10 +391,10 @@ faltan (su `estabS`), lectura k de 5, último valor enviado o la falla. Mientras
 calentamiento y la medición van a tiempo real; el resto del ciclo, a la velocidad elegida: a 300× la
 medición dura una fracción de segundo y no se vería.
 
-**Cielo, vegetación y corriente (2026-11-24).** Bóveda con degradado de horizonte casi blanco a cenit
-azul claro, nubes quietas al fondo y niebla del color del horizonte; los reflejos de metal y agua
+**Cielo, vegetación y corriente (2026-11-24).** Bóveda azul intenso que se aclara solo en una franja
+delgada sobre el horizonte, con nubes difusas quietas en lo alto y niebla del color del horizonte; los reflejos de metal y agua
 toman ese mismo cielo. Vegetación instanciada y determinista: matas de pasto en las orillas, carrizo
-al pie del talud junto al agua y arbustos; la estación, el cable, la torre y el frente del corte
+al pie del talud junto al agua y macollos de zacatón (en lugar de arbustos redondos); la estación, el cable, la torre y el frente del corte
 quedan libres. Los árboles son 12 ahuejotes (copa angosta y alta, en huso, verde grisáceo), al fondo
 y a los lados: las copas redondas anteriores, en mayor número, distraían de la estación. El agua corre aguas abajo, hacia el corte, a la velocidad
 de `Agua.velocidad` (`modelo.js`), en tiempo real, y un rótulo "Corriente" la da con la palabra

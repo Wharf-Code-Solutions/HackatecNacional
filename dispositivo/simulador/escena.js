@@ -131,14 +131,14 @@
     return y;
   }
   // ------------------------------------------------------------ cielo
-  // Bóveda con degradado (horizonte casi blanco, cenit azul claro) y unas nubes quietas al fondo.
+  // Bóveda azul que se aclara solo en la franja del horizonte, y unas nubes quietas al fondo.
   // Sin niebla ni mapeo de tonos, para que el color sea el que se eligió.
-  var HORIZONTE = 0xe8eef2, CENIT = 0x9cc0de;
+  var HORIZONTE = 0xaecbe6, CENIT = 0x3a7fcb;
   function construyeCielo() {
     var g = new T.SphereGeometry(200, 48, 24), p = g.attributes.position, col = [], c = new T.Color(), h = new T.Color(HORIZONTE), z = new T.Color(CENIT);
     for (var i = 0; i < p.count; i++) {
       var y = p.getY(i) / 200;
-      c.copy(h).lerp(z, Math.pow(M.acota(y * 1.15, 0, 1), 0.7)); col.push(c.r, c.g, c.b);
+      c.copy(h).lerp(z, Math.pow(M.acota(y * 6, 0, 1), 0.55)); col.push(c.r, c.g, c.b);   // azul desde pocos grados sobre el horizonte
     }
     g.setAttribute('color', new T.Float32BufferAttribute(col, 3));
     var boveda = new T.Mesh(g, new T.MeshBasicMaterial({ vertexColors: true, side: T.BackSide, fog: false, depthWrite: false, toneMapped: false }));
@@ -162,7 +162,7 @@
   }
 
   // ------------------------------------------------------------ vegetación
-  // Pasto en matas sobre las orillas, carrizo al borde del agua y arbustos dispersos, con mallas
+  // Pasto en matas sobre las orillas, carrizo al borde del agua y macollos de zacatón dispersos, con mallas
   // instanciadas (una llamada de dibujo por tipo). Posiciones deterministas: misma figura siempre.
   // Se deja libre la estación, el cable, la torre y el frente del corte.
   function libre(x, z) {
@@ -182,6 +182,24 @@
     g.computeVertexNormals();
     return g;
   }
+  // Macollo de zacatón (Muhlenbergia), el pasto amacollado de los llanos altos: muchas hojas finas
+  // que salen del centro, suben y se arquean hacia afuera. Hoja de dos tramos, de altura 1.
+  function macollo(hojas) {
+    var p = [], r = M.mulberry32(3);
+    for (var i = 0; i < hojas; i++) {
+      var a = i / hojas * Math.PI * 2 + r() * 0.5, ca = Math.cos(a), sa = Math.sin(a), w = 0.018;
+      var abre = 0.25 + r() * 0.25, alto = 0.75 + r() * 0.25, b0 = 0.04 * r();
+      var m = [ca * (b0 + abre * 0.45), alto * 0.7, sa * (b0 + abre * 0.45)], t = [ca * (b0 + abre), alto * (0.78 + 0.1 * r()), sa * (b0 + abre)];
+      var px = -sa * w, pz = ca * w;
+      p.push(ca * b0 - px, 0, sa * b0 - pz, ca * b0 + px, 0, sa * b0 + pz, m[0] + px * 0.6, m[1], m[2] + pz * 0.6,
+        ca * b0 - px, 0, sa * b0 - pz, m[0] + px * 0.6, m[1], m[2] + pz * 0.6, m[0] - px * 0.6, m[1], m[2] - pz * 0.6,
+        m[0] - px * 0.6, m[1], m[2] - pz * 0.6, m[0] + px * 0.6, m[1], m[2] + pz * 0.6, t[0], t[1], t[2]);
+    }
+    var g = new T.BufferGeometry();
+    g.setAttribute('position', new T.Float32BufferAttribute(p, 3));
+    g.computeVertexNormals();
+    return g;
+  }
   function instancias(geo, mat, lista, sombra) {
     var m = new T.InstancedMesh(geo, mat, lista.length), o = new T.Object3D(), c = new T.Color();
     lista.forEach(function (it, i) {
@@ -192,7 +210,7 @@
     G.escena.add(m);
     return m;
   }
-  function construyeVegetacion(bulto) {
+  function construyeVegetacion() {
     var r = M.mulberry32(41), pasto = [], carrizo = [], arbustos = [], i, x, z, d;
     var VERDES = [0x8f9a6a, 0xa3ab78, 0x7f8c5e, 0x96a06c], CARRIZO = [0x8c9563, 0x9da270, 0x7d8858];
     for (i = 0; i < 9000 && pasto.length < 3200; i++) {
@@ -211,13 +229,13 @@
     for (i = 0; i < 3000 && arbustos.length < 40; i++) {
       x = -13 + r() * 32; z = -30 + r() * (Z_CORTE + 30); d = Math.abs(x - ejeRio(z));
       if (d < 5.2 || !libre(x, z) || Math.hypot(x + 4.3, z - 0.1) < 3) continue;
-      var t = 0.6 + r() * 0.7;
-      arbustos.push({ x: x, y: altura(x, z) + 0.1 * t, z: z, giro: r() * 6.28, s: [t * 1.3, t * 0.75, t], color: r() < 0.5 ? 0x7a8a63 : 0x6c7b57 });
+      var t = 0.55 + r() * 0.4;
+      arbustos.push({ x: x, y: altura(x, z) - 0.02, z: z, giro: r() * 6.28, s: [t * 1.1, t, t * 1.1], color: [0xaba57c, 0x9c9b70, 0xb3ab84][(r() * 3) | 0] });
     }
     var hoja = new T.MeshStandardMaterial({ color: 0xffffff, side: T.DoubleSide, roughness: 0.9, metalness: 0 });
     instancias(matas(7, 0.022), hoja, pasto, false);
     instancias(matas(9, 0.014), hoja, carrizo, false);
-    instancias(bulto(0.32, 77, 2), mate(0xffffff, { roughness: 0.95 }), arbustos, true);
+    instancias(macollo(26), hoja, arbustos, true);
   }
 
   function construyeValle() {
@@ -297,23 +315,11 @@
     G.escena.add(new T.Line(new T.BufferGeometry().setFromPoints([new T.Vector3(mojado[0].x, SUP_AGUA, Z_CORTE + 0.03), new T.Vector3(mojado[mojado.length - 1].x, SUP_AGUA, Z_CORTE + 0.03)]),
       new T.LineBasicMaterial({ color: AGUA })));
 
-    // Follaje: textura de hojas y bultos deformados por ruido (arbustos).
+    // Follaje: textura de hojas para las copas.
     var rf = ruido(31);
     var hojas = textura(128, function (x, y) {
       var k = 0.8 + 0.25 * rf(x / 128 * 16, y / 128 * 16, 2, 16); return [k * 255, k * 255, k * 255];
     }, [3, 3], true);
-    function bulto(r, semilla, detalle) {
-      // La geometría no está indexada: la normal radial evita facetas y las costuras coinciden
-      // porque el ruido depende solo de la posición.
-      var g = new T.IcosahedronGeometry(r, detalle || 3), p = g.attributes.position, nr = g.attributes.normal, v = new T.Vector3();
-      for (var i = 0; i < p.count; i++) {
-        v.fromBufferAttribute(p, i);
-        var n = rf((v.x / r + 1) * 3 + semilla, (v.y / r + 1) * 3 + v.z / r * 2 + 3, 3, 64);
-        nr.setXYZ(i, v.x / r, v.y / r, v.z / r);
-        v.multiplyScalar(0.82 + 0.36 * n); p.setXYZ(i, v.x, v.y, v.z);
-      }
-      return g;
-    }
     // Ahuejotes (Salix bonplandiana), el árbol de las orillas y los canales del valle: copa angosta y
     // alta, en huso, con ramas que suben. Una silueta tranquila que no compite con la estación: pocos,
     // al fondo y a los lados, en verde grisáceo. Copa por revolución de un perfil, con estrías
@@ -342,7 +348,7 @@
     instancias(troncoG, mate(0xffffff, { roughness: 1 }), troncos, true);
     instancias(copaG, mate(0xffffff, { map: hojas, roughness: 0.95 }), arboles, true);
 
-    construyeVegetacion(bulto);
+    construyeVegetacion();
 
     // Un volcán al fondo, apagado por la niebla: la cuenca está entre la Malinche y la Sierra Nevada.
     var volcan = new T.Mesh(new T.ConeGeometry(30, 11, 9, 1, true), mate(0xd3d9dc, { flatShading: true, roughness: 1 }));
@@ -456,8 +462,8 @@
     // Cielo para los reflejos (metal y agua): un degradado claro, sin foto ni descarga.
     var cielo = new T.Scene(), cg = new T.SphereGeometry(50, 32, 16), cc = [], cp = cg.attributes.position;
     for (var ci = 0; ci < cp.count; ci++) {
-      var cy = cp.getY(ci) / 50, ck = cy < 0 ? new T.Color(0xc9ced0).lerp(new T.Color(0xeef2f4), M.acota(cy * 2 + 1, 0, 1))
-        : new T.Color(0xeef2f4).lerp(new T.Color(0x9cc0de), M.acota(cy * 1.6, 0, 1));   // reflejan el mismo cielo que se ve
+      var cy = cp.getY(ci) / 50, ck = cy < 0 ? new T.Color(0xc9ced0).lerp(new T.Color(HORIZONTE), M.acota(cy * 2 + 1, 0, 1))
+        : new T.Color(HORIZONTE).lerp(new T.Color(CENIT), M.acota(cy * 1.6, 0, 1));   // reflejan el mismo cielo que se ve
       cc.push(ck.r, ck.g, ck.b);
     }
     cg.setAttribute('color', new T.Float32BufferAttribute(cc, 3));

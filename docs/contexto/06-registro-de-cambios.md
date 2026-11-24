@@ -21,6 +21,27 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · M4: vuelven las nubes difusas; cielo más azul
+
+**Qué cambió.** Se quitan los cúmulos de base plana y vuelven las nubes difusas de antes, en su lugar.
+El cielo pasa a un azul más intenso (cenit 3A7FCB, horizonte AECBE6) que llega casi hasta el horizonte.
+**Por qué.** El usuario prefirió las nubes originales y pidió el cielo aún más azul.
+**Qué arrastró.** D19, `escena.js?v=27`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
+## 2026-11-24 · M4: cielo más azul con cúmulos y zacatón en lugar de arbustos
+
+**Qué cambió.** El cielo es azul hasta pocos grados sobre el horizonte y lleva ocho cúmulos de base
+plana, bajos para que entren en la vista general. Los 40 arbustos redondos pasan a macollos de
+zacatón: hojas finas que se arquean desde el centro, en tono paja.
+**Por qué.** Lo pidió el usuario; los bultos redondos, como los árboles anteriores, distraían.
+**Qué arrastró.** D19, `CLAUDE.md`, `escena.js?v=26`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
 ## 2026-11-24 · M4: el envío a la torre se ve, con su confirmación
 
 **Qué cambió.** La punta de la antena se ilumina al buscar red y al enviar; cada envío se dibuja en
