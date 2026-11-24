@@ -100,8 +100,10 @@ Las del contrato (`contrato/README.md`) más una:
 El backend corre como función de Python en `/api` del mismo proyecto que el panel: un solo
 despliegue, mismo dominio y sin CORS. Lo configuran tres archivos en la raíz del repositorio:
 
-- `vercel.json`: compila el panel (`panel/dist`), declara la función `api/index.py` con los archivos
-  que lee (`backend/`, `motor/`, `contrato/`, `datos/procesados/`) y manda `/api/*` a ella.
+- `vercel.json`: compila el panel y la app ciudadana con `VITE_API_URL=/api`, junta en `panel/dist`
+  el panel (`/`), la app (`/ciudadano/`) y el simulador (`/dispositivo/simulador/`) con
+  `panel/scripts/ensamblar-sitio.mjs`, declara la función `api/index.py` con los archivos que lee
+  (`backend/`, `motor/`, `contrato/*.py`, fixtures y `datos/procesados/`) y manda `/api/*` a ella.
 - `api/index.py`: monta el backend bajo `/api`.
 - `requirements.txt`: lo que instala Vercel para la función (FastAPI y psycopg).
 
@@ -116,9 +118,9 @@ Pasos en Vercel:
    hacen falta `@supabase/supabase-js` ni las llaves `anon` o `service_role`: el backend habla
    Postgres. Sin `DATABASE_URL` el backend usa `/tmp`, que Vercel borra, y `/api/salud` dice
    `"persistencia": "temporal"`. Las tablas se crean solas en la primera petición, con RLS activo.
-3. En **Settings → Environment Variables**, agregar `VITE_API_URL` = `/api` (Production y Preview).
-   Sin ella el panel abre en modo demostración.
-4. **Redeploy** (Vite mete `VITE_API_URL` al compilar).
+3. En **Settings → Environment Variables**, agregar `GEMINI_API_KEY` para validar las fotos de la app
+   ciudadana. `VITE_API_URL` ya no hace falta: `vercel.json` la fija en `/api` al compilar.
+4. **Redeploy**.
 5. Comprobar `https://<tu-proyecto>.vercel.app/api/salud`: debe decir `"persistencia": "postgres"`.
 6. Cargar un día de lecturas:
    `python contrato\reproducir_escenario.py descarga_industrial --url https://<tu-proyecto>.vercel.app/api`

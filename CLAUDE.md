@@ -151,8 +151,10 @@ raíz**; con doble clic (`file://`) el navegador bloquea la lectura. Mapa y simu
   código de otro**: se hablan por JSON, HTTP o CSV.
 - M4 es dueño de `dispositivo/` y no toca el contrato. `mapa/` muestra el simulador por URL.
 - **Un frontend no decide el análisis ni el color por su cuenta**: lo recibe de la plataforma. El simulador
-  manda cada lote a `POST /lecturas` (backend por defecto `http://127.0.0.1:8080`, `?backend=` vacío lo
-  apaga) y solo muestra las `alertas` que devuelva; si no responde, sigue igual y no inventa nada.
+  manda cada lote a `POST /lecturas` (backend por defecto `http://127.0.0.1:8080` en localhost y `/api` del
+  mismo dominio desplegado; `?backend=` vacío lo apaga) y solo muestra las `alertas` que devuelva; si no
+  responde, sigue igual y no inventa nada. Con backend, su reloj arranca en la hora real o justo después de
+  la última lectura guardada (recargar continúa, no rebobina); sin backend, desde `T0_DEFECTO`.
 - Los datos de entrada del simulador y del mapa se **leen** de `contrato/fixtures/` y `datos/procesados/`;
   no se duplican.
 
@@ -204,7 +206,8 @@ El usuario rechazó explícitamente el diseño con aspecto "hecho por IA" y lo h
 Ya hay datos (M0), sensor simulado (M4), mapa (M6), topología (M1), motor de reglas (M2), propagación
 (M3), backend (M5) y panel de autoridad (M7), desplegados en Vercel. Falta:
 
-1. Desplegar panel y backend en un solo proyecto de Vercel con la base en Supabase (pasos en `backend/README.md`). Antes de un uso real, autenticación en `POST /lecturas` y `PATCH /alertas`.
+1. Un solo proyecto de Vercel con panel (`/`), app (`/ciudadano/`), simulador (`/dispositivo/simulador/`) y
+   backend (`/api`); falta confirmar `DATABASE_URL` de Supabase y `GEMINI_API_KEY` (pasos en `backend/README.md`). Antes de un uso real, autenticación en `POST /lecturas` y `PATCH /alertas`.
 2. M6: pluma aguas abajo con la ventana de llegada de M3 (ya la sirve `GET /alertas/<c_alerta>/prediccion`)
    y color por el índice de la plataforma; probar a ancho de teléfono. Sin añadir ruido a la vista.
 3. M8 app ciudadana. En M7, inicio de sesión antes de un uso real.

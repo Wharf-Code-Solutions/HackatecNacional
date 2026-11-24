@@ -419,7 +419,7 @@ Quedó **una sola**, y es la del despliegue.
 |---|---|
 | `GET /reportes/{c_reporte}` para el folio | **Hecho.** Backend y servidor de pruebas. |
 | La asignación al tramo en el backend | **Hecha.** `backend/asignacion.py`, comprobada de punta a punta. |
-| El `buildCommand` de `vercel.json` | **Pendiente a propósito.** No se puede aplicar antes de que `ciudadano/` exista con su `package.json`, o el despliegue se rompe. Aplícalo **junto con el andamio del paso 1**, con el bloque de la sección 5. Si prefieres no tocar ese archivo, dilo y se hace un segundo proyecto de Vercel. |
+| El `buildCommand` de `vercel.json` | **Aplicado el 2026-11-24** con `panel/scripts/ensamblar-sitio.mjs`, que además publica el simulador. Antes: **Pendiente a propósito.** No se puede aplicar antes de que `ciudadano/` exista con su `package.json`, o el despliegue se rompe. Aplícalo **junto con el andamio del paso 1**, con el bloque de la sección 5. Si prefieres no tocar ese archivo, dilo y se hace un segundo proyecto de Vercel. |
 
 Mientras tanto, trabaja en local con `npm run dev` y el servidor de pruebas: no hay nada
 que te bloquee.

@@ -21,6 +21,30 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Integración: simulador, backend, app y panel sincronizados y en un solo despliegue
+
+**Qué cambió.** (1) El reloj del simulador arranca en la hora real cuando hay backend, o justo después de la
+última lectura guardada; sin backend sigue desde `T0_DEFECTO`. (2) En la prioridad (D30), una alerta cuenta
+como «mismo punto» si su sitio está a menos de 1 km sobre el cauce del sitio del reporte (`MISMO_PUNTO_CAUCE_M`).
+(3) `vercel.json` compila también la app ciudadana y publica el simulador (`panel/scripts/ensamblar-sitio.mjs`),
+todos contra `/api`; el simulador desplegado usa `/api` del mismo dominio. (4) `includeFiles` pasa a `contrato/*.py`.
+(5) `backend/servidor.py --limpiar` revisa el puerto antes de borrar la base.
+**Por qué.** (1) El simulador fechaba siempre el 2026-11-23 y los reportes llevan la hora real: la prioridad
+solo los cruza a menos de 24 h, así que nunca se cruzaban; y cada recarga mandaba lecturas al pasado que se
+mezclaban en el motor. (2) Un reporte en la estación ATY-01 se asigna a DLTLA0279RNL, 167 m aguas abajo de
+DLTLA2554, y no recibía el bono de su propia alerta; ahora recibe +3 (prioridad 4 → 7). (4) Desde M8 el backend
+carga `analisis_foto.py` y `prioridad_huella.py` al arrancar y la función de Vercel no los llevaba.
+(5) Con el puerto ocupado borraba la base y luego no arrancaba.
+**Qué arrastró.** `backend/README.md`, `02-mapa-del-repo.md`, D25 (ampliada), `17-plan-app-ciudadana.md`,
+`12-estado-y-traspaso.md`, `CLAUDE.md`. Probado de punta a punta con el backend real y con una copia que solo
+lleva lo que `includeFiles` incluye, servida en un origen como en Vercel. `vercel.json` es de quien lleva M5/M7:
+el cambio lo pidió el usuario.
+**Impacto en otros módulos.** Desplegado, quien abra el simulador escribe en la base real; dos simuladores a la
+vez cruzan lecturas de las mismas estaciones. A 900× el reloj se adelanta unas 17 h por minuto: pasadas 24 h
+simuladas, un reporte nuevo ya no se cruza con la alerta. `VITE_API_URL` ya no se configura en Vercel.
+
+---
+
 ## 2026-11-24 · M4: la trayectoria del envío queda dibujada en la vista de comunicación
 
 **Qué cambió.** Al abrir la vista de comunicación (antena o torre), la línea punteada de la antena a la

@@ -86,8 +86,8 @@ gob.mx y valida la foto con Gemini (D29). Pendiente:
 - Probarla en un teléfono real (cámara, GPS, un solo pulgar) con un túnel HTTPS: la geolocalización
   exige HTTPS.
 - Medir la validación de fotos con imágenes reales del Atoyac; los umbrales son un punto de partida.
-- El `buildCommand` y el `includeFiles` (`contrato/analisis_foto.py`, `prioridad_huella.py`) de
-  `vercel.json`, que son de quien lleva M5/M7, y la llave `GEMINI_API_KEY` en Vercel.
+- `vercel.json` ya compila la app en `/ciudadano/` e incluye `contrato/*.py` (2026-11-24). Falta en
+  Vercel la llave `GEMINI_API_KEY` y confirmar `DATABASE_URL` (`/api/salud` debe decir `postgres`).
 - Huella de calor y prioridad (D30): construidas, con pesos que son hipótesis sin calibrar.
 - `GET /reportes` expone la coordenada exacta de cada reporte: las vistas la redondean, pero la API
   pública no. Decidir si se redondea en el servidor.

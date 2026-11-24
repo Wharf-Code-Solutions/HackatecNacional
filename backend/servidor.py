@@ -27,6 +27,15 @@ def main():
     ap.add_argument('--limpiar', action='store_true',
                     help='borra la base antes de arrancar (para empezar una demostración desde cero)')
     args = ap.parse_args()
+    # Antes de borrar nada: si el puerto está ocupado (un mock u otro backend), uvicorn fallaría
+    # después de haber vaciado la base.
+    import socket
+    with socket.socket() as s:
+        try:
+            s.bind((args.host, args.puerto))
+        except OSError as e:
+            sys.exit('No se pudo abrir el puerto {}: {}\nOtro servidor lo está usando (¿el mock?). '
+                     'Detenlo y vuelve a arrancar este.'.format(args.puerto, e))
     if args.limpiar:
         for sufijo in ('', '-wal', '-shm'):
             if os.path.exists(args.db + sufijo):

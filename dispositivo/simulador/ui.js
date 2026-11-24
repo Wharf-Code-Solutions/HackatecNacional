@@ -11,7 +11,8 @@
  *
  * Parámetros de URL, para que otro módulo lo muestre sin importar su código:
  *     ?estacion=EST-ATY-01  ?incrustado=1  ?vel=300
- *     ?backend=http://127.0.0.1:8080 (por defecto); ?backend= lo desactiva.
+ *     ?backend=http://127.0.0.1:8080 (por defecto en localhost; desplegado, '/api' del mismo dominio);
+ *     ?backend= lo desactiva.
  * Si el backend no responde, el simulador sigue igual y no muestra alertas.
  */
 (function () {
@@ -22,26 +23,50 @@
   var VENTANA_ALARMA = 3600;          // una alarma sigue vigente 1 h simulada
 
   var Q = new URLSearchParams(location.search);
-  var BACKEND = Q.has('backend') ? Q.get('backend') : 'http://127.0.0.1:8080';
+  // En tu computadora, el mock o el backend en el 8080. Desplegado (Vercel), el backend del mismo
+  // dominio en /api: así el simulador alimenta al mismo panel que la app ciudadana.
+  var LOCAL = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) || location.protocol === 'file:';
+  var BACKEND = Q.has('backend') ? Q.get('backend') : (LOCAL ? 'http://127.0.0.1:8080' : location.origin + '/api');
   var estado = { est: [], por: {}, sel: null, vel: 300, pausa: false, alertas: {} };
   var $ = function (id) { return document.getElementById(id); };
+
+  // ----------------------------------------------------------------------- reloj
+  // Con plataforma, el reloj simulado arranca en la hora real: los reportes ciudadanos llevan la hora
+  // real y la plataforma solo los cruza con una alerta cercana en el tiempo. Si la plataforma ya tiene
+  // lecturas más adelante (una corrida acelerada anterior), sigue después de la última: recargar la
+  // página continúa la historia en lugar de mandar lecturas al pasado. Sin plataforma (?backend=),
+  // la corrida determinista de siempre, desde Modelo.T0_DEFECTO.
+  var CUARTO = 900;
+  function relojInicial() {
+    if (!BACKEND) return Promise.resolve(null);
+    var ahora = Math.floor(Date.now() / 1000 / CUARTO) * CUARTO;
+    return fetch(BACKEND.replace(/\/$/, '') + '/veredictos', { cache: 'no-store' })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        var ult = 0;
+        (d.veredictos || []).forEach(function (v) { ult = Math.max(ult, Date.parse(v.fecha_hora) / 1000 || 0); });
+        return ult ? Math.max(ahora, Math.ceil(ult / CUARTO) * CUARTO + CUARTO) : ahora;
+      })
+      .catch(function () { return ahora; });
+  }
 
   // ----------------------------------------------------------------------- carga
   Promise.all([
     fetch('../../contrato/fixtures/estaciones.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }),
-    fetch('../../contrato/fixtures/linea_base.json', { cache: 'no-cache' }).then(function (r) { return r.json(); })
-  ]).then(function (d) { arranca(d[0].estaciones, d[1]); }).catch(function (e) {
+    fetch('../../contrato/fixtures/linea_base.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }),
+    relojInicial()
+  ]).then(function (d) { arranca(d[0].estaciones, d[1], d[2]); }).catch(function (e) {
     var a = $('aviso'); a.hidden = false;
     a.innerHTML = 'No se pudieron leer los fixtures del contrato (' + e.message + '). Sirve el repositorio desde su raíz con ' +
       '<code>python -m http.server 8000</code>.';
   });
 
-  function arranca(estaciones, linea) {
+  function arranca(estaciones, linea, t0) {
     estado.est = estaciones; estado.sel = estaciones[0].c_estacion;
     estaciones.forEach(function (e) {
       var id = e.c_estacion;
       estado.alertas[id] = [];
-      estado.por[id] = Mont.crearEstacion(e, linea, { alEvento: function (ev) { alEvento(id, ev); } });
+      estado.por[id] = Mont.crearEstacion(e, linea, { t0: t0 || undefined, alEvento: function (ev) { alEvento(id, ev); } });
     });
     estado.ultimo = performance.now();
 

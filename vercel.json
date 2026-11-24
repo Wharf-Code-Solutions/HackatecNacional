@@ -1,12 +1,12 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
-  "installCommand": "cd panel && npm ci",
-  "buildCommand": "cd panel && npm run build",
+  "installCommand": "npm ci --prefix panel && npm ci --prefix ciudadano",
+  "buildCommand": "VITE_API_URL=/api npm run build --prefix panel && VITE_API_URL=/api npm run build --prefix ciudadano && node panel/scripts/ensamblar-sitio.mjs",
   "outputDirectory": "panel/dist",
   "functions": {
     "api/index.py": {
-      "includeFiles": "{backend/*.py,motor/*.py,contrato/validador.py,contrato/esquemas/**,contrato/fixtures/**,datos/procesados/*.csv,datos/procesados/red/*.csv,datos/procesados/red/red_asignacion.json}",
+      "includeFiles": "{backend/*.py,motor/*.py,contrato/*.py,contrato/esquemas/**,contrato/fixtures/**,datos/procesados/*.csv,datos/procesados/red/*.csv,datos/procesados/red/red_asignacion.json}",
       "maxDuration": 60
     }
   },

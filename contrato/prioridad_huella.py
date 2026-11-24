@@ -56,6 +56,8 @@ TOPE_CIUDADANA = 2.0          # tope del aporte de corroboracion ciudadana (log2
 BONO_SENSOR_MISMO_SITIO = 3
 BONO_SENSOR_AGUAS_ABAJO = 2
 VENTANA_SENSOR_H = 24         # alerta y reporte a menos de esto, para el mismo sitio
+MISMO_PUNTO_CAUCE_M = 1000    # dos sitios a menos de esto sobre el cauce cuentan como el mismo punto: un reporte
+                              # junto a una estacion se asigna al sitio siguiente aguas abajo (DLTLA2554 -> DLTLA0279RNL, 167 m)
 MARGEN_LLEGADA_ANTES_H = 2    # tolerancia alrededor de la ventana de llegada de M3
 MARGEN_LLEGADA_DESPUES_H = 12
 BONO_FUENTE = 1
@@ -305,7 +307,8 @@ def huella(reportes, ahora=None):
 
 # ----------------------------------------------------------------- prioridad
 def _bono_sensor(c_sitio, ultima, alertas):
-    """+3 si hay una alerta abierta en el mismo sitio y a menos de 24 h; +2 si la hay en una estacion aguas
+    """+3 si hay una alerta abierta en el mismo sitio (o a menos de MISMO_PUNTO_CAUCE_M sobre el cauce) y a
+    menos de 24 h; +2 si la hay en una estacion aguas
     abajo y su hora cae dentro de la ventana de llegada de M3 (con margen). Devuelve (bono, motivo)."""
     mejor, motivo = 0, None
     viaje = _viaje()
@@ -316,8 +319,11 @@ def _bono_sensor(c_sitio, ultima, alertas):
         if fa is None:
             continue
         dh = (fa - ultima).total_seconds() / 3600
-        if a.get('c_sitio') == c_sitio and abs(dh) <= VENTANA_SENSOR_H and BONO_SENSOR_MISMO_SITIO > mejor:
-            mejor, motivo = BONO_SENSOR_MISMO_SITIO, 'alerta {} en el mismo punto, a {:.0f} h del reporte'.format(a.get('c_alerta'), abs(dh))
+        sa = a.get('c_sitio')
+        cerca = sa == c_sitio or any(
+            par in viaje and viaje[par][2] <= MISMO_PUNTO_CAUCE_M for par in ((c_sitio, sa), (sa, c_sitio)))
+        if cerca and abs(dh) <= VENTANA_SENSOR_H and BONO_SENSOR_MISMO_SITIO > mejor:
+            mejor, motivo = BONO_SENSOR_MISMO_SITIO, 'alerta {} en el mismo punto del cauce, a {:.0f} h del reporte'.format(a.get('c_alerta'), abs(dh))
         elif (c_sitio, a.get('c_sitio')) in viaje and BONO_SENSOR_AGUAS_ABAJO > mejor:
             hmin, hmax, _ = viaje[(c_sitio, a['c_sitio'])]
             if hmin - MARGEN_LLEGADA_ANTES_H <= dh <= hmax + MARGEN_LLEGADA_DESPUES_H:
