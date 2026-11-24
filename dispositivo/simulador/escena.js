@@ -14,7 +14,7 @@
  */
 (function () {
   'use strict';
-  var M = window.Modelo;
+  var M = window.Modelo, R = window.Recolector;
   var TINTA = 0x16222c, AGUA = 0x1d6fa5, ALARMA = 0xb3261e;
   // Lo que hace la estación en cada fase del firmware, dicho para quien no conoce el firmware.
   var ESTADO = {
@@ -127,10 +127,15 @@
   // Atoyac entre Tlaxcala y Puebla. Unidades ≈ metros; la estación está en la orilla izquierda.
   var Z_CORTE = 2.4, SUP_AGUA = -0.1;
   var EXAGERA_CORRIENTE = 4;              // solo en el dibujo del agua; ver pinta()
-  function ejeRio(z) { return 3.25 + 0.9 * Math.sin(z * 0.13 + 0.3); }
+  // El cauce se ensanchó 1.75 m hacia la derecha (la orilla de la estación no se movió): ≈ 12 m de espejo
+  // de agua y ≈ 16 m de corona a corona. El ancho real no está medido (supuesto de diseño); el colector de
+  // residuos lo cruza con su barrera en diagonal y es lo que lo hace notar.
+  var EXT = 1.75;
+  function ejeRio(z) { return 5.0 + 0.9 * Math.sin(z * 0.13 + 0.3); }
+  function dRio(x, z) { return Math.abs(x - ejeRio(z)) - EXT; }
   function suave(t) { t = M.acota(t, 0, 1); return t * t * (3 - 2 * t); }
   function altura(x, z) {
-    var d = Math.abs(x - ejeRio(z));
+    var d = dRio(x, z);
     var y = -1.7 + 2.3 * suave((d - 3.0) / 2.0);                       // lecho, talud y orilla
     var ondula = 0.07 * Math.sin(x * 1.3 + z * 0.7) + 0.05 * Math.sin(x * 0.4 - z * 1.1) + 0.04 * Math.sin(x * 2.3 + z * 1.9);
     var cercaEst = Math.hypot(x + 4.3, z - 0.1) < 2.6 ? 0.15 : 1;       // la base del mástil queda plana
@@ -175,7 +180,7 @@
   // Se deja libre la estación, el cable, la torre y el frente del corte.
   function libre(x, z) {
     return Math.hypot(x + 4.3, z - 0.1) > 1.7 && !(x > -4.3 && x < 1.4 && z > 0.2 && z < 1.6) &&
-      Math.hypot(x - 11, z + 9) > 1.1 && z < Z_CORTE - 0.15;
+      Math.hypot(x - 16.5, z + 12) > 1.1 && !(x > 8.5 && x < 21 && z > -9 && z < -1.2) && z < Z_CORTE - 0.15;
   }
   function matas(hojas, ancho) {             // `hojas` hojas en abanico, de altura 1, para escalar
     var p = [], i;
@@ -222,20 +227,20 @@
     var r = M.mulberry32(41), pasto = [], carrizo = [], arbustos = [], i, x, z, d;
     var VERDES = [0x8f9a6a, 0xa3ab78, 0x7f8c5e, 0x96a06c], CARRIZO = [0x8c9563, 0x9da270, 0x7d8858];
     for (i = 0; i < 9000 && pasto.length < 3200; i++) {
-      x = -13 + r() * 32; z = -30 + r() * (Z_CORTE + 30); d = Math.abs(x - ejeRio(z));
+      x = -13 + r() * 32; z = -30 + r() * (Z_CORTE + 30); d = dRio(x, z);
       if (d < 4.7 || !libre(x, z)) continue;
       var h = 0.14 + r() * 0.22;
       pasto.push({ x: x, y: altura(x, z) - 0.01, z: z, giro: r() * 6.28, s: [h * 1.1, h, h * 1.1], color: VERDES[(r() * 4) | 0] });
     }
     for (i = 0; i < 6000 && carrizo.length < 700; i++) {
-      x = -13 + r() * 32; z = -32 + r() * (Z_CORTE + 32); d = Math.abs(x - ejeRio(z));
+      x = -13 + r() * 32; z = -32 + r() * (Z_CORTE + 32); d = dRio(x, z);
       if (d < 2.85 || d > 3.7 || !libre(x, z) || (x > -2.2 && x < 2.4 && z > -0.8)) continue;
       var y = altura(x, z), alto = 0.55 + r() * 0.75;
       if (y > 0.35) continue;                       // solo al pie del talud, cerca de la lámina de agua
       carrizo.push({ x: x, y: Math.max(y, SUP_AGUA - 0.15), z: z, giro: r() * 6.28, s: [alto * 0.5, alto, alto * 0.5], color: CARRIZO[(r() * 3) | 0] });
     }
     for (i = 0; i < 3000 && arbustos.length < 40; i++) {
-      x = -13 + r() * 32; z = -30 + r() * (Z_CORTE + 30); d = Math.abs(x - ejeRio(z));
+      x = -13 + r() * 32; z = -30 + r() * (Z_CORTE + 30); d = dRio(x, z);
       if (d < 5.2 || !libre(x, z) || Math.hypot(x + 4.3, z - 0.1) < 3) continue;
       var t = 0.55 + r() * 0.4;
       arbustos.push({ x: x, y: altura(x, z) - 0.02, z: z, giro: r() * 6.28, s: [t * 1.1, t, t * 1.1], color: [0xaba57c, 0x9c9b70, 0xb3ab84][(r() * 3) | 0] });
@@ -254,7 +259,7 @@
     var pos = g.attributes.position, col = [], c = new T.Color();
     var PASTO = new T.Color(0xa7b08c), TIERRA = new T.Color(0xae9c7e), LECHO = new T.Color(0x6f675a);
     for (var i = 0; i < pos.count; i++) {
-      var x = pos.getX(i), z = pos.getZ(i), y = altura(x, z), d = Math.abs(x - ejeRio(z));
+      var x = pos.getX(i), z = pos.getZ(i), y = altura(x, z), d = dRio(x, z);
       pos.setY(i, y);
       if (d < 3.2) c.copy(LECHO); else if (d < 4.9) c.copy(TIERRA).lerp(PASTO, suave((d - 4.3) / 0.6)); else c.copy(PASTO);
       c.offsetHSL(0, 0, 0.025 * Math.sin(x * 5.1 + z * 3.7));
@@ -310,8 +315,8 @@
     G.matAgua = new T.MeshStandardMaterial({ color: 0x587a80, roughness: 0.24, metalness: 0, normalMap: ondas, map: vetas,
       normalScale: new T.Vector2(0.35, 0.35), envMap: G.cielo, envMapIntensity: 0.35, transparent: true, opacity: 0.86, depthWrite: false, side: T.DoubleSide });
     G.matCaraAgua = new T.MeshStandardMaterial({ color: 0x587a80, roughness: 0.6, metalness: 0, transparent: true, opacity: 0.72, depthWrite: false, side: T.DoubleSide });
-    var sup = new T.Mesh(new T.PlaneGeometry(16, Z_CORTE - Z0), G.matAgua);
-    sup.rotation.x = -Math.PI / 2; sup.position.set(3.25, SUP_AGUA, (Z0 + Z_CORTE) / 2); sup.receiveShadow = true; G.escena.add(sup);
+    var sup = new T.Mesh(new T.PlaneGeometry(18, Z_CORTE - Z0), G.matAgua);
+    sup.rotation.x = -Math.PI / 2; sup.position.set(4.5, SUP_AGUA, (Z0 + Z_CORTE) / 2); sup.receiveShadow = true; G.escena.add(sup);
     var mojado = perfil.filter(function (q) { return q.y < SUP_AGUA; });
     var fa = new T.Shape();
     fa.moveTo(mojado[0].x, SUP_AGUA);
@@ -346,8 +351,8 @@
     }
     copaG.computeVertexNormals();
     var arboles = [], troncos = [], ra2 = M.mulberry32(17);
-    [[-9.5, -15], [-6.8, -11], [-11, -7.5], [-5.5, -24], [-8.6, -30], [-2.6, -28], [13, -11], [9.8, -19],
-     [15, -5.5], [12, -27], [16.4, -17], [8.8, -31]].forEach(function (a) {
+    [[-9.5, -15], [-6.8, -11], [-11, -7.5], [-5.5, -24], [-8.6, -30], [-2.6, -28], [13.4, -26], [17.8, -18],
+     [18.2, 0.4], [14.4, -31], [17.4, -26], [9.4, -34]].forEach(function (a) {
       var y = altura(a[0], a[1]), H = 3.2 + ra2() * 1.3, R = 0.5 + ra2() * 0.2;
       troncos.push({ x: a[0], y: y, z: a[1], giro: 0, s: [1, H * 0.32, 1], color: 0x6f6250 });
       arboles.push({ x: a[0], y: y + H * 0.18, z: a[1], giro: ra2() * 6.28, s: [R, H * 0.82, R], color: ra2() < 0.5 ? 0x8b9a7a : 0x7d8d6e });
@@ -360,6 +365,252 @@
 
   }
 
+  // ------------------------------------------------------------ colector de residuos
+  // Interceptor de orilla en el lado contrario del río: una barrera flotante cruza el cauce en diagonal
+  // (≈ 17 m) y guía lo que flota hasta un embudo junto a la banda; la banda lo sube a un contenedor con
+  // báscula, y una cámara lo cuenta. Va aguas arriba de la estación (unos 10 m) para que la basura no
+  // ensucie la sonda de turbiedad. Lo de la orilla se dibuja a 1.5× (como la estación, 1.6×) y la barrera
+  // a escala real. Los objetos que flotan son figura: se crean cuando el modelo (recolector.js) dice que
+  // llegó uno y avanzan en tiempo real; el contenedor se llena con los kg del modelo.
+  var COL = { s: 1.5, zf: -5 };
+  COL.w = [ejeRio(COL.zf) + 5.95, SUP_AGUA, COL.zf];         // donde la orilla derecha toca el agua, junto a la banda
+  COL.a = [ejeRio(-20) - 5.7, -20];                           // extremo de la barrera, en la orilla izquierda (x, z)
+  COL.e = [ejeRio(COL.zf - 1.8) + 5.7, COL.zf - 1.8];         // extremo en la orilla derecha (x, z)
+  var BANDA = { t: [-0.9, -0.25], h: [3.4, 2.6], bin: 3.7 };  // coordenadas locales del grupo: x hacia tierra
+  var DUR = { aprox: 2.6, cola: 0.8, banda: 9, cae: 0.7 };    // s reales de cada tramo del dibujo
+  function cwa(x, y, z) { return [COL.w[0] + COL.s * x, COL.w[1] + COL.s * y, COL.w[2] + COL.s * z]; }
+  function cw(x, y, z) { var p = cwa(x, y, z); return new T.Vector3(p[0], p[1], p[2]); }
+  function gy(x, z) { var p = cwa(x, 0, z); return (altura(p[0], p[2]) - COL.w[1]) / COL.s; }   // suelo, en coordenadas locales
+  function bpt(u, off) {                                      // punto de la barrera (u de 0 a 1), desplazado `off` m hacia aguas arriba
+    var bx = COL.e[0] - COL.a[0], bz = COL.e[1] - COL.a[1], bl = Math.hypot(bx, bz);
+    return new T.Vector3(COL.a[0] + bx * u + off * bz / bl, SUP_AGUA + 0.05, COL.a[1] + bz * u - off * bx / bl);
+  }
+
+  function construyeColector() {
+    var acero = metal(0xb9c2c8, 0.4), naranja = mate(0xe08a2e, { roughness: 0.55 }), goma = mate(0x2b3138, { roughness: 0.9 });
+    var gab = mate(0xe9edf0, { roughness: 0.55 }), c = G.col = { vis: [], libres: {}, off: 0 };
+    var g = c.g = new T.Group(); g.position.set(COL.w[0], COL.w[1], COL.w[2]); g.scale.setScalar(COL.s); G.escena.add(g);
+    c.matMotor = mate(0x2a3640, { roughness: 0.6 });
+    c.matLente = mate(0x1d3d55, { roughness: 0.05, metalness: 0.2, envMap: G.cielo, emissive: new T.Color(0x000000) });
+    c.matPunta = mate(TINTA, { emissive: new T.Color(0x000000) });
+    var i, o;
+
+    // --- barrera flotante: flotadores naranja con cable y faldón, de la orilla izquierda al embudo
+    var A = COL.a, E = COL.e, bx = E[0] - A[0], bz = E[1] - A[1], BL = Math.hypot(bx, bz);
+    var dir = new T.Vector3(bx / BL, 0, bz / BL), q = new T.Quaternion().setFromUnitVectors(new T.Vector3(0, 1, 0), dir);
+    c.boom = new T.Group(); G.escena.add(c.boom);
+    var nF = Math.floor(BL / 0.62), flot = new T.InstancedMesh(new T.CylinderGeometry(0.11, 0.11, 0.5, 12), naranja, nF);
+    o = new T.Object3D();
+    for (i = 0; i < nF; i++) {
+      var u = (i + 0.5) / nF;
+      o.position.set(A[0] + bx * u, SUP_AGUA + 0.03, A[1] + bz * u); o.quaternion.copy(q); o.updateMatrix(); flot.setMatrixAt(i, o.matrix);
+    }
+    c.boom.add(flot);
+    var cable = new T.Mesh(new T.CylinderGeometry(0.015, 0.015, BL, 6), acero);
+    cable.position.set(A[0] + bx / 2, SUP_AGUA + 0.03, A[1] + bz / 2); cable.quaternion.copy(q); c.boom.add(cable);
+    var faldon = new T.Mesh(new T.BoxGeometry(BL, 0.35, 0.015), mate(0x39454d, { transparent: true, opacity: 0.5, depthWrite: false }));
+    faldon.position.set(A[0] + bx / 2, SUP_AGUA - 0.2, A[1] + bz / 2); faldon.rotation.y = -Math.atan2(bz, bx); c.boom.add(faldon);
+    var xp = A[0] - 0.5; cilindro(0.07, 1.7, acero, xp, altura(xp, A[1]) + 0.8, A[1]);        // pilote de anclaje, orilla izquierda
+    c.puntoBarrera = new T.Vector3((A[0] + E[0]) / 2, SUP_AGUA + 0.1, (A[1] + E[1]) / 2);
+
+    // --- banda con paletas, inclinada desde el agua hasta sobre el contenedor
+    var dx = BANDA.h[0] - BANDA.t[0], dy = BANDA.h[1] - BANDA.t[1], L = c.L = Math.hypot(dx, dy);
+    var banda = new T.Group(); banda.position.set(BANDA.t[0], BANDA.t[1], 0); banda.rotation.z = Math.atan2(dy, dx); g.add(banda);
+    caja(L, 0.07, 0.8, goma, L / 2, 0, 0, banda, 0.5);
+    caja(L, 0.14, 0.04, acero, L / 2, 0.05, 0.43, banda, 0.5);
+    caja(L, 0.14, 0.04, acero, L / 2, 0.05, -0.43, banda, 0.5);
+    caja(L, 0.05, 0.5, acero, L / 2, -0.07, 0, banda, 0.5);
+    [0, L].forEach(function (x) { var r = cilindro(0.1, 0.88, acero, x, 0, 0, banda, 16); r.rotation.x = Math.PI / 2; });
+    var pal = mate(0x7b8892); c.paletas = [];
+    for (i = 0; i < 14; i++) {
+      var p = caja(0.05, 0.1, 0.72, pal, 0, 0.08, 0, banda, 0); p.userData.sinSombra = true; p.userData.x0 = i * L / 14; p.position.x = p.userData.x0;
+      c.paletas.push(p);
+    }
+    var motor = cilindro(0.11, 0.34, c.matMotor, L, 0, 0.6, banda, 16); motor.rotation.x = Math.PI / 2;   // motorreductor de 24 V
+    [0.06, 0.45, 0.85].forEach(function (f) {                  // patas hasta el fondo o el suelo
+      var x = BANDA.t[0] + f * dx, y = BANDA.t[1] + f * dy - 0.1;
+      [-0.38, 0.38].forEach(function (z) {
+        var s0 = gy(x, z) - 0.1, h = y - s0;
+        if (h > 0.05) cilindro(0.04, h, acero, x, (y + s0) / 2, z, g, 8);
+      });
+    });
+
+    // --- embudo: la barrera llega a la orilla y un tablón flotante cierra aguas abajo
+    caja(1.6, 0.2, 0.05, naranja, -0.8, 0.02, 1.0, g, 0.6);
+    var ex = (E[0] - COL.w[0]) / COL.s, ez = (E[1] - COL.w[2]) / COL.s;
+    cilindro(0.05, 1.0, acero, ex + 0.15, gy(ex + 0.15, ez) + 0.5, ez, g, 8);
+    cilindro(0.05, 1.0, acero, 0.15, gy(0.15, 1.0) + 0.5, 1.0, g, 8);
+
+    // --- cámara sobre la banda y sensor de nivel del río
+    var fc = (2.4 - BANDA.t[0]) / dx, yb = BANDA.t[1] + fc * dy;
+    cilindro(0.025, 1.0, acero, 2.4, yb + 0.55, 0.55, g, 8);
+    caja(0.03, 0.03, 0.55, acero, 2.4, yb + 1.05, 0.3, g, 0);
+    caja(0.16, 0.1, 0.12, c.matMotor, 2.4, yb + 1.0, 0.05, g);
+    cilindro(0.03, 0.02, c.matLente, 2.4, yb + 0.93, 0.05, g, 14);
+    c.puntoCamara = cw(2.4, yb + 1.0, 0.05);
+    var gn = gy(0.18, -0.75);
+    cilindro(0.03, 1.35 - gn, acero, 0.18, (1.35 + gn) / 2, -0.75, g, 8);
+    caja(0.65, 0.03, 0.03, acero, -0.15, 1.35, -0.75, g, 0);
+    cilindro(0.05, 0.09, c.matMotor, -0.45, 1.3, -0.75, g, 12);
+    c.puntoNivel = cw(-0.45, 1.3, -0.75);
+
+    // --- contenedor de 240 L sobre una báscula; paredes translúcidas para ver cómo se llena
+    var gb = gy(BANDA.bin, 0);
+    caja(0.7, 0.07, 0.85, acero, BANDA.bin, gb + 0.035, 0, g, 0.6);
+    caja(0.58, 1.07, 0.73, mate(0x6f9a82, { transparent: true, opacity: 0.4, roughness: 0.4, depthWrite: false }), BANDA.bin, gb + 0.605, 0, g, 0.9);
+    c.piso = gb + 0.09;
+    var pg = new T.IcosahedronGeometry(0.3, 1), pc = [], rp = M.mulberry32(5), PAL = [0xa9c8d8, 0xf1f1ee, 0xf3f3ee, 0x6b8a45, 0xb45a35, 0x8a7a5a], cc = new T.Color();
+    for (i = 0; i < pg.attributes.position.count / 3; i++) { cc.setHex(PAL[(rp() * PAL.length) | 0]); for (var v = 0; v < 3; v++) pc.push(cc.r, cc.g, cc.b); }
+    pg.setAttribute('color', new T.Float32BufferAttribute(pc, 3));
+    c.pila = new T.Mesh(pg, mate(0xffffff, { vertexColors: true, roughness: 0.9 }));
+    c.pila.userData.sinSombra = true; c.pila.visible = false; c.pila.position.set(BANDA.bin, c.piso, 0); g.add(c.pila);
+    c.puntoContenedor = cw(BANDA.bin, gb + 0.6, 0); c.puntoBascula = cw(BANDA.bin, gb + 0.04, 0.4);
+
+    // --- mástil con panel de 100 W, gabinete y antena
+    var gm = gy(4.7, 0.95);
+    cilindro(0.04, 2.6, acero, 4.7, gm + 1.3, 0.95, g, 10);
+    caja(0.34, 0.45, 0.18, gab, 4.7, gm + 1.5, 1.06, g, 0.7);
+    var sop = new T.Group(); sop.position.set(4.7, gm + 2.65, 0.95); sop.rotation.x = 0.42; g.add(sop);
+    caja(1.0, 0.04, 0.7, G.matPanel, 0, 0, 0, sop, 1);
+    cilindro(0.015, 0.8, G.matAntena, 4.95, gm + 1.9, 0.95, g, 8);
+    cilindro(0.035, 0.07, c.matPunta, 4.95, gm + 2.33, 0.95, g, 10);
+    c.puntoPanel = cw(4.7, gm + 2.7, 0.95); c.puntoAntena = cw(4.95, gm + 2.33, 0.95); c.puntoGabinete = cw(4.7, gm + 1.5, 1.06);
+
+    // --- lo que flota: un grupo de figuras que se reciclan
+    var DEFS = {
+      plastico: [new T.CylinderGeometry(0.05, 0.05, 0.24, 10).rotateZ(Math.PI / 2), mate(0xa9d4e6, { transparent: true, opacity: 0.85, roughness: 0.2 })],
+      bolsa:    [new T.SphereGeometry(0.12, 10, 8).scale(1.4, 0.25, 1), mate(0xf4f4f0, { roughness: 0.6 })],
+      unicel:   [new T.BoxGeometry(0.2, 0.08, 0.14), mate(0xf8f8f3, { roughness: 0.9 })],
+      vegetal:  [new T.CylinderGeometry(0.2, 0.2, 0.05, 12), mate(0x5e7d3a, { roughness: 0.95 })],
+      otro:     [new T.BoxGeometry(0.13, 0.1, 0.13), mate(0xb4592f, { roughness: 0.8 })]
+    };
+    Object.keys(DEFS).forEach(function (k) {
+      c.libres[k] = [];
+      for (var j = 0; j < 12; j++) {
+        var m = new T.Mesh(DEFS[k][0], DEFS[k][1]); m.scale.setScalar(1.8); m.visible = false; m.userData.sinSombra = true;
+        G.escena.add(m); c.libres[k].push(m);
+      }
+    });
+    c.rv = M.mulberry32(9);
+
+    // zonas de clic y vistas de cerca
+    for (i = 1; i <= 3; i++) { var pb = bpt(i / 4, 0); zona('barrera', [pb.x, SUP_AGUA + 0.3, pb.z], [3.2, 1.6, 3.2]); }
+    zona('barrera', cwa(-0.8, 0.3, 0), [3.2, 1.6, 3.4]);
+    zona('banda', cwa(1.25, 1.2, 0), [7.4, 4.2, 2.0]);
+    zona('contenedor', cwa(BANDA.bin, 0.9, 0), [1.8, 2.4, 1.8]);
+    zona('contenedor', cwa(4.7, 1.8, 0.95), [1.0, 4.6, 1.0]);
+    var dosis = { agua: 0.72, tubo: 0.38 };
+    VISTAS.barrera = { obj: cwa(-1.5, 0.3, -1.3), yaw: -0.55, pitch: 0.3, dist: 15, lim: [-1.2, 0.3, 0.05, 0.8], agua: dosis.agua, tubo: dosis.tubo };
+    VISTAS.banda = { obj: cwa(1.4, 1.3, 0), yaw: -0.2, pitch: 0.15, dist: 11, lim: [-0.9, 0.5, 0, 0.6], agua: dosis.agua, tubo: dosis.tubo };
+    VISTAS.contenedor = { obj: cwa(3.9, 1.9, 0.4), yaw: -0.3, pitch: 0.12, dist: 13, lim: [-0.9, 0.5, 0, 0.6], agua: dosis.agua, tubo: dosis.tubo };
+  }
+
+  // Un objeto del río se dibuja de principio a fin en tiempo real (la simulación va mucho más rápido):
+  // se acerca a la barrera, resbala hasta el embudo y espera ahí hasta que el modelo lo manda a la banda.
+  function sitioEmbudo(k) { return cw(-1.35 + 0.42 * (k % 3), 0.03, -0.75 + 0.36 * (((k / 3) | 0) % 5)); }
+  function ir(v, estado, ahora) { v.estado = estado; v.tEst = ahora; v.desde.copy(v.mesh.position); }
+  function nuevoVisual(it, estado) {
+    var c = G.col, libres = c.libres[it.tipo];
+    if (!libres || !libres.length) return null;
+    var m = libres.pop(), ahora = performance.now();
+    m.visible = true; m.scale.setScalar(1.8); m.rotation.set(0, c.rv() * 6.28, 0);
+    var v = { id: it.id, tipo: it.tipo, capt: it.captura, mesh: m, u: 0.12 + 0.8 * c.rv(), desde: new T.Vector3(), sube: false, estado: estado, tEst: ahora };
+    if (estado === 'aprox') {
+      var cp = bpt(v.u, 0.2); m.position.set(cp.x, cp.y, cp.z - 5);
+    } else m.position.copy(sitioEmbudo(0));
+    v.desde.copy(m.position);
+    c.vis.push(v);
+    return v;
+  }
+  function quita(v) {
+    var c = G.col; v.mesh.visible = false; c.libres[v.tipo].push(v.mesh);
+    c.vis.splice(c.vis.indexOf(v), 1);
+  }
+  function avanzaVisual(v, ahora) {
+    var c = G.col, e = (ahora - v.tEst) / 1000, k, p, m = v.mesh;
+    switch (v.estado) {
+      case 'aprox':
+        k = M.acota(e / DUR.aprox, 0, 1); p = bpt(v.u, 0.2);
+        m.position.set(p.x, p.y, p.z - 5 * (1 - k));
+        if (k >= 1) ir(v, v.capt ? 'desliza' : 'pasa', ahora);
+        break;
+      case 'desliza':
+        var dur = Math.max(1.5, (1 - v.u) * 7);
+        k = M.acota(e / dur, 0, 1); p = bpt(v.u + (1 - v.u) * k, 0.2); m.position.copy(p);
+        if (k >= 1) { v.k = c.vis.filter(function (w) { return w.estado === 'embudo' || w.estado === 'espera'; }).length; ir(v, 'embudo', ahora); }
+        break;
+      case 'embudo':
+        k = suave(e / 1.2); m.position.lerpVectors(v.desde, sitioEmbudo(v.k || 0), k);
+        if (e >= 1.2) ir(v, 'espera', ahora);
+        break;
+      case 'espera':
+        m.position.y = sitioEmbudo(v.k || 0).y + 0.012 * Math.sin(ahora / 420 + v.id);
+        if (v.sube) ir(v, 'cola', ahora);
+        break;
+      case 'cola':
+        m.position.lerpVectors(v.desde, cw(BANDA.t[0] + 0.2, BANDA.t[1] + 0.25, 0), suave(e / DUR.cola));
+        if (e >= DUR.cola) ir(v, 'banda', ahora);
+        break;
+      case 'banda':
+        k = M.acota(e / DUR.banda, 0, 1);
+        m.position.copy(cw(BANDA.t[0] + 0.2 + (BANDA.h[0] - BANDA.t[0] - 0.2) * k, BANDA.t[1] + 0.25 + (BANDA.h[1] - BANDA.t[1] - 0.15) * k, 0));
+        if (k >= 1) ir(v, 'cae', ahora);
+        break;
+      case 'cae':
+        k = M.acota(e / DUR.cae, 0, 1);
+        m.position.lerpVectors(v.desde, cw(BANDA.bin, c.piso + 1.1 - 0.9 * k, 0), k * k);
+        if (k >= 1) quita(v);
+        break;
+      case 'pasa':
+        k = M.acota(e / 3.2, 0, 1);
+        m.position.copy(v.desde); m.position.z += 7 * k; m.position.y -= 0.12 * k; m.scale.setScalar(1.8 * (1 - 0.8 * k));
+        if (k >= 1) quita(v);
+        break;
+    }
+  }
+  function reiniciaColector(s) {
+    var c = G.col;
+    c.vis.slice().forEach(quita);
+    G.colEst = s.col;
+    s.col.embudo.forEach(function (it, i) { var v = nuevoVisual(it, 'espera'); if (v) { v.k = i; v.mesh.position.copy(sitioEmbudo(i)); } });
+  }
+  function pintaColector(s, ahora, dtr) {
+    var c = G.col, col = s.col, fn = col.fase.nombre;
+    if (G.colEst !== col) reiniciaColector(s);
+    c.vis.slice().forEach(function (v) { avanzaVisual(v, ahora); });
+    // paletas: corren mientras algo sube
+    var corre = fn === 'ELEVACIÓN' || c.vis.some(function (v) { return v.estado === 'banda'; });
+    if (corre) c.off = (c.off + dtr * c.L / DUR.banda) % c.L;
+    c.paletas.forEach(function (p) { p.position.x = (p.userData.x0 + c.off) % c.L; });
+    // barrera: sube sobre el agua con la crecida
+    c.boom.position.y += ((col.crecida ? 0.55 : 0) - c.boom.position.y) * Math.min(1, dtr * 2);
+    // contenedor: la pila crece con los kg que mide el modelo
+    var ll = col.llenado(), h = 0.04 + 0.94 * ll;
+    c.pila.visible = ll > 0.004;
+    if (c.pila.visible) { c.pila.scale.set(0.88, h / 0.6, 1.08); c.pila.position.y = c.piso + h / 2; }
+    // cámara, motor y antena
+    var mira = fn === 'REVISA' || fn === 'ELEVACIÓN';
+    c.matLente.emissive.setHex(AGUA); c.matLente.emissiveIntensity = mira ? 1.4 : 0;
+    c.matMotor.color.setHex(fn === 'REVERSA' ? ALARMA : 0x2a3640);
+    var caido = s.enlace.caido, brillo = caido ? 0 : fn === 'ENVÍO' ? 1.6 : fn === 'ENLACE' ? 0.6 : 0;
+    c.matPunta.color.setHex(caido ? ALARMA : brillo ? AGUA : TINTA); c.matPunta.emissive.setHex(AGUA); c.matPunta.emissiveIntensity = brillo;
+    // rótulos de la vista general
+    var st = col.stats, tot = st.capturados + st.escapados, pct = Math.round(ll * 100);
+    rotulo('barrera', col.crecida ? 'Elevada por la crecida' : tot ? 'Atrapó ' + st.capturados + ' de ' + tot + ' objetos' : 'Esperando basura', col.crecida);
+    rotulo('banda', col.estadoTexto(), col.crecida || col.bloqueado || fn === 'REVERSA');
+    rotulo('contenedor', pct + ' % · ' + col.kgLeido.toFixed(1) + ' kg', pct >= 80);
+  }
+  function objetoDelColector(ev) {
+    if (!ok || !G.col || !G.colEst || ev.datos === null) return;
+    var it = ev.datos, c = G.col, v = null, i;
+    if (ev.tipo === 'objeto') { nuevoVisual(it, 'aprox'); return; }
+    for (i = 0; i < c.vis.length; i++) if (c.vis[i].id === it.id) v = c.vis[i];
+    if (!v) return;
+    var ahora = performance.now();
+    if (ev.tipo === 'sube') { v.sube = true; if (v.estado === 'espera') ir(v, 'cola', ahora); }
+    else if (ev.tipo === 'escapa') { v.capt = false; if (v.estado === 'desliza') ir(v, 'pasa', ahora); }
+  }
+
   // ------------------------------------------------------------ rótulos HTML
   // Vista general: un rótulo corto por componente, nombre y dato vivo, sobre fondo blanco para que no
   // se pierda contra la vegetación. Cada uno abre su vista de cerca (clic en el rótulo o en la pieza).
@@ -367,8 +618,11 @@
     { id: 'sondas', nombre: 'Sondas', ancla: [0.6, -1.15, 0.9], lado: 'izq', vista: 'sondas' },
     { id: 'ctrl', nombre: 'Gabinete', ancla: S([-4.62, 2.15, 0.45]), lado: 'izq', vista: 'gabinete' },
     { id: 'panel', nombre: 'Energía', ancla: S([-5.1, 4.95, 0.2]), lado: 'izq', vista: 'energia' },
-    { id: 'torre', nombre: 'Comunicación', ancla: [11.4, 7.4, -9], lado: 'der', vista: 'enlace' },
-    { id: 'rio', nombre: 'Corriente', ancla: [6.2, SUP_AGUA, -5], lado: 'der' }
+    { id: 'torre', nombre: 'Comunicación', ancla: [16.9, 7.4, -12], lado: 'izq', vista: 'enlace' },
+    { id: 'barrera', nombre: 'Barrera', ancla: [(COL.a[0] + COL.e[0]) / 2, SUP_AGUA + 0.7, (COL.a[1] + COL.e[1]) / 2], lado: 'izq', vista: 'barrera' },
+    { id: 'banda', nombre: 'Banda', ancla: cwa(1.25, 2.4, 0), lado: 'izq', vista: 'banda' },
+    { id: 'contenedor', nombre: 'Contenedor', ancla: cwa(BANDA.bin, 0.2, 0), lado: 'der', vista: 'contenedor' },
+    { id: 'rio', nombre: 'Corriente', ancla: [3.4, SUP_AGUA, 0.2], lado: 'der' }
   ];
 
   // Vistas de cerca: un rótulo por pieza, en dos columnas a los lados, con una línea a la pieza.
@@ -431,6 +685,36 @@
         valor: function (e) { return [e.env ? (e.env.k < ENV.llega ? 'Viajando a la torre' : e.env.k < ENV.ack ? 'Llegó: vuelve la confirmación' : 'Confirmado') : 'Esperando la próxima medición']; } },
       { nombre: 'Torre celular', como: 'del operador; no es nuestra', ancla: G.torreTope, col: 1, fila: 0.04,
         valor: function (e) { return e.s.enlace.caido ? ['Sin cobertura en el sitio', true] : [e.env && e.env.k < ENV.ack ? 'Recibiendo los datos' : 'Con cobertura']; } }
+    ] };
+    var K = G.col;
+    d.barrera = { centro: cw(-1.2, 0.2, -1.0), items: [
+      { nombre: 'Barrera flotante', como: 'flotadores de HDPE con faldón; guía lo que flota a la orilla', ancla: K.puntoBarrera, col: -1, fila: -0.2,
+        valor: function (e) {
+          var c = e.s.col, st = c.stats, tot = st.capturados + st.escapados;
+          return c.crecida ? ['Elevada por la crecida', true] : [tot ? 'Atrapó ' + st.capturados + ' de ' + tot + ' objetos' : 'Esperando basura'];
+        } },
+      { nombre: 'Embudo', como: 'junta lo atrapado frente a la banda', ancla: cw(-0.8, 0.1, 0), col: 1, fila: -0.12,
+        valor: function (e) { var n = e.s.col.embudo.length; return [n ? 'Esperando ' + n + (n === 1 ? ' objeto' : ' objetos') : 'Vacío']; } },
+      { nombre: 'Nivel del río', como: 'ultrasonido; detecta la crecida', ancla: K.puntoNivel, col: -1, fila: 0.2,
+        valor: function (e) { return ['Nivel ' + Math.round(e.s.col.nivelRio()) + ' cm', e.s.col.crecida]; } }
+    ] };
+    d.banda = { centro: cw(1.4, 1.2, 0), items: [
+      { nombre: 'Banda con paletas', como: 'sube lo atrapado al contenedor', ancla: cw(1.0, 0.95, 0.2), col: -1, fila: -0.15,
+        valor: function (e) { var f = e.s.col.fase.nombre; return [f === 'ELEVACIÓN' ? 'Subiendo la basura' : f === 'REVERSA' ? 'Atascada: en reversa' : 'Detenida', f === 'REVERSA']; } },
+      { nombre: 'Motor de 24 V', como: 'vigila su corriente; si se atora, invierte', ancla: cw(BANDA.h[0], BANDA.h[1] + 0.1, 0.55), col: 1, fila: -0.1,
+        valor: function (e) { var f = e.s.col.fase.nombre; return [f === 'ELEVACIÓN' ? 'Corriente 5 A' : f === 'REVERSA' ? 'Corriente alta: invierte' : 'En reposo', f === 'REVERSA']; } },
+      { nombre: 'Cámara', como: 'cuenta y clasifica lo que sube', ancla: K.puntoCamara, col: -1, fila: 0.2,
+        valor: function (e) { var u = e.s.col.ultimoObjeto; return [u ? 'Último: ' + R.TIPOS[u].nombre.toLowerCase() : 'Sin objetos todavía']; } }
+    ] };
+    d.contenedor = { centro: cw(4.0, 1.5, 0.4), items: [
+      { nombre: 'Contenedor', como: '240 L; avisa cuándo retirarlo', ancla: K.puntoContenedor, col: -1, fila: -0.2,
+        valor: function (e) { var c = e.s.col, p = Math.round(c.llenado() * 100); return ['Lleno al ' + p + ' %' + (c.retiroEn !== null ? ' · retiro avisado' : ''), p >= 80]; } },
+      { nombre: 'Báscula', como: 'celda de carga bajo el contenedor', ancla: K.puntoBascula, col: -1, fila: 0.15,
+        valor: function (e) { return ['Pesa ' + e.s.col.kgLeido.toFixed(1) + ' kg']; } },
+      { nombre: 'Panel solar', como: '100 W, con batería de 12 V', ancla: K.puntoPanel, col: 1, fila: -0.22,
+        valor: function (e) { var w = e.s.col.energia.solarW, c = e.s.col.energia.soc(); return [(w > 0.5 ? 'Genera ' + Math.round(w) + ' W' : 'Sin sol') + ' · ' + Math.round(c * 100) + ' %', c < 0.25]; } },
+      { nombre: 'Antena y módem', como: 'LTE-M, el mismo operador de la estación', ancla: K.puntoAntena, col: 1, fila: 0.1,
+        valor: function (e) { var f = e.s.col.fase.nombre; return e.s.enlace.caido ? ['Sin red: guarda y reintenta', true] : [f === 'ENVÍO' ? 'Enviando los datos' : 'Señal ' + Math.round(e.s.enlace.rssi) + ' dBm']; } }
     ] };
     return d;
   }
@@ -541,8 +825,8 @@
     G.escena = new T.Scene();
     G.escena.fog = new T.Fog(HORIZONTE, 32, 120);   // la niebla funde el valle con el horizonte del cielo
     G.camara = new T.PerspectiveCamera(30, 2, 0.1, 250);
-    G.objetivo = new T.Vector3(-0.4, 3.0, -2.2);
-    G.orbita = { yaw: -0.42, pitch: 0.16, dist: 24 }; G.vista = 'general'; G.trans = null;
+    G.objetivo = new T.Vector3(2.6, 2.4, -3.2);
+    G.orbita = { yaw: -0.14, pitch: 0.2, dist: 31 }; G.vista = 'general'; G.trans = null;
 
     // Cielo para los reflejos (metal y agua): un degradado claro, sin foto ni descarga.
     var cielo = new T.Scene(), cg = new T.SphereGeometry(50, 32, 16), cc = [], cp = cg.attributes.position;
@@ -566,8 +850,8 @@
     sol.castShadow = true;
     sol.shadow.mapSize.set(2048, 2048);
     sol.shadow.bias = -0.0004; sol.shadow.normalBias = 0.03;
-    var sc = sol.shadow.camera; sc.left = -18; sc.right = 18; sc.top = 18; sc.bottom = -18; sc.near = 1; sc.far = 60;
-    sol.target.position.set(1, 0, -6); G.escena.add(sol.target); G.solMira = sol.target.position;
+    var sc = sol.shadow.camera; sc.left = -20; sc.right = 20; sc.top = 18; sc.bottom = -18; sc.near = 1; sc.far = 60;
+    sol.target.position.set(3, 0, -6); G.escena.add(sol.target); G.solMira = sol.target.position;
     G.escena.add(sol);
 
     var pvc = mate(0xf4f6f7, { roughness: 0.5 }), acero = metal(0xb9c2c8, 0.4), oscuro = mate(0x2a3640, { roughness: 0.6 });
@@ -694,7 +978,7 @@
     G.escena.add(est);
 
     // Torre celular al fondo: celosía simple.
-    var mt = metal(0xa3adb4, 0.5), base = [11, altura(11, -9), -9];
+    var mt = metal(0xa3adb4, 0.5), base = [16.5, altura(16.5, -12), -12];
     [[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]].forEach(function (d) {
       var a = new T.Vector3(base[0] + d[0], base[1], base[2] + d[1]), b = new T.Vector3(base[0] + d[0] * 0.15, base[1] + 6.6, base[2] + d[1] * 0.15);
       var l = new T.Mesh(new T.CylinderGeometry(0.04, 0.04, a.distanceTo(b), 6), mt);
@@ -731,6 +1015,8 @@
     zona('energia', S([-4.3, 3.4, 0.1]), [0.5, 3.2, 0.5]);              // el mástil, que lleva el cable del panel
     zona('enlace', S([-3.65, 3.5, 0.35]), [0.6, 2.0, 0.6]);
     zona('enlace', [G.torreTope.x, G.torreTope.y - 3.4, G.torreTope.z], [2.2, 7.2, 2.2]);
+
+    construyeColector();
 
     // Sombras: todo lo opaco las proyecta y las recibe, salvo el terreno, el corte y el fondo.
     G.escena.traverse(function (o) {
@@ -807,11 +1093,11 @@
   // más clara. Gabinete: de frente a la puerta abierta. Energía: del panel a las baterías. Comunicación:
   // la antena, la trayectoria del paquete y la torre. El paso entre vistas dura 0.8 s.
   var VISTAS = {
-    general:  { obj: [-0.4, 3.0, -2.2], yaw: -0.42, pitch: 0.16, dist: 24, lim: [-1.1, 0.7, 0.04, 0.75], agua: 0.72, tubo: 0.38 },
+    general:  { obj: [2.6, 2.4, -3.2], yaw: -0.14, pitch: 0.2, dist: 31, lim: [-1.1, 0.7, 0.04, 0.75], agua: 0.72, tubo: 0.38 },
     sondas:   { obj: [0.9, -1.1, 0.9], yaw: -0.18, pitch: 0.1, dist: 1.9, lim: [-0.8, 0.45, -0.05, 0.5], agua: 0.45, tubo: 0.16 },
     gabinete: { obj: S([-4.05, 2.0, 0.45]), yaw: 0.05, pitch: 0.1, dist: 5.2, lim: [-0.6, 0.6, 0, 0.5], agua: 0.72, tubo: 0.38 },
     energia:  { obj: S([-4.15, 3.6, 0.3]), yaw: -0.15, pitch: 0.22, dist: 10.5, lim: [-0.7, 0.6, 0.05, 0.6], agua: 0.72, tubo: 0.38 },
-    enlace:   { obj: [3.8, 6.6, -4.3], yaw: 0.6, pitch: 0.1, dist: 23, lim: [0.1, 1.0, 0.02, 0.45], agua: 0.72, tubo: 0.38 }
+    enlace:   { obj: [5.8, 6.6, -5.5], yaw: 0.6, pitch: 0.1, dist: 26, lim: [0.1, 1.0, 0.02, 0.45], agua: 0.72, tubo: 0.38 }
   };
   // En la vista de cerca, las fases que se quieren ver van a tiempo real (ui.js lo consulta).
   var TIEMPO_REAL = {
@@ -899,6 +1185,7 @@
     G.tAgua = ahora;
     G.ondas.forEach(function (t) { t.offset.y = (t.offset.y + EXAGERA_CORRIENTE * vel * dtr / 3.84) % 1; });
     rotulo('rio', vel.toFixed(2) + ' m/s, simulada');
+    pintaColector(s, ahora, dtr);
 
     var midiendo = nom === 'CALENTAMIENTO' || nom === 'MEDICIÓN';
     M.PARAMS.forEach(function (q) {
@@ -965,6 +1252,12 @@
   window.Escena = {
     construye: construye, pinta: pinta,
     vista: function () { return ok ? G.vista : 'general'; },
-    tiempoReal: function (fase) { return ok && (TIEMPO_REAL[G.vista] || []).indexOf(fase) >= 0; }
+    // Con una vista del colector abierta, sus fases cortas (subir, pesar, revisar) van a tiempo real.
+    tiempoReal: function (fase, faseColector) {
+      if (!ok) return false;
+      if (/^(barrera|banda|contenedor)$/.test(G.vista)) return G.vista !== 'barrera' && ['ELEVACIÓN', 'REVERSA', 'REVISA', 'PESAJE'].indexOf(faseColector) >= 0;
+      return (TIEMPO_REAL[G.vista] || []).indexOf(fase) >= 0;
+    },
+    objeto: function (ev) { objetoDelColector(ev); }
   };
 })();

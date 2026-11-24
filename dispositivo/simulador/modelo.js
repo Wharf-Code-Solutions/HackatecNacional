@@ -119,6 +119,15 @@
     }
     return VEL_BASE * (1 + 0.1 * Math.sin(2 * Math.PI * t / 10800 + this.fase.TURB[1])) * Math.pow(q, 0.4);
   };
+  // Intensidad de la lluvia en t: 0 sin lluvia, 1 en la meseta de un evento (suma si se traslapan).
+  // La usa el colector de residuos (llega más basura y el río sube) y la velocidad de arriba.
+  Agua.prototype.lluvia = function (t) {
+    var k = 0;
+    for (var i = 0; i < this.eventos.length; i++) {
+      if (this.eventos[i].tipo === 'lluvia') k += this._env(this.eventos[i], t);
+    }
+    return k;
+  };
   Agua.prototype.eventoActivo = function (t) {
     for (var i = 0; i < this.eventos.length; i++) {
       var ev = this.eventos[i];

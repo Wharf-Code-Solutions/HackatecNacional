@@ -5,8 +5,9 @@
  * coincide.
  *
  * Muestra solo lo que se lee de un vistazo: la cuenca, sus ríos (INEGI, scripts/60_red_para_mapa.py)
- * con el flujo animado aguas abajo (casilla "Flujo del agua"), las confluencias principales y las 5
- * estaciones (contrato/fixtures). Abre en la zona de la red (scripts/96_red_estaciones.py). Al elegir
+ * con el flujo animado aguas abajo (casilla "Flujo del agua"), las confluencias principales y los 5
+ * mecanismos (estación + colector) reubicados junto a escuelas rurales (contrato/fixtures/mecanismos.json,
+ * scripts/99_reubicacion.py). Abre en la zona de los mecanismos. Al elegir
  * una estación el mapa se acerca y se abre su simulador en un marco. Sin satélite, relieve ni sitios
  * oficiales: se quitaron para que el mapa diga una sola cosa.
  *
@@ -27,7 +28,6 @@
   var MOCK = Q.has('mock') ? Q.get('mock') : (LOCAL ? 'http://127.0.0.1:8080' : location.origin + '/api');
   var $ = function (id) { return document.getElementById(id); };
   var AGUA = '#1d6fa5', TINTA = '#16222c';
-  var VALSEQUILLO = 'DLPUE2068';     // presa Manuel Ávila Camacho: donde termina la red de estaciones
   var ROTULOS = ['RIO ATOYAC', 'RIO ZAHUAPAN', 'RIO ALSESECA', 'RIO XOPANAC', 'RIO XOCHIAC', 'RIO NEXAPA', 'RIO ATENCO', 'RIO MIXTECO', 'RIO ACATLAN'];
 
   function sinAcentos(t) { return (t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase(); }
@@ -56,7 +56,7 @@
   mapa.touchZoomRotate.disableRotation();
   mapa.addControl(new gl.NavigationControl({ showCompass: false }), 'top-left');
   mapa.addControl(new gl.ScaleControl({ unit: 'metric' }), 'bottom-left');
-  mapa.addControl(new gl.AttributionControl({ compact: true, customAttribution: 'Ríos: INEGI · Estaciones sobre sitios de CONAGUA' }), 'bottom-right');
+  mapa.addControl(new gl.AttributionControl({ compact: true, customAttribution: 'Ríos: INEGI · Escuelas: datos provisionales · Sitios de referencia: CONAGUA' }), 'bottom-right');
   window.mapaAtoyac = mapa;
 
   var marcadores = {}, vistaRed = null, abierta = null;
@@ -67,8 +67,8 @@
     get('../datos/procesados/mapa/confluencias.geojson'),
     get('../datos/procesados/mapa/toponimia_hidrografica.geojson'),
     get('../contrato/fixtures/sitios.geojson'),
-    get('../contrato/fixtures/estaciones.json'),
-    get('../datos/procesados/mapa/red_vigilada.geojson')
+    get('../contrato/fixtures/mecanismos.json'),
+    get('../datos/procesados/mapa/red_mecanismos.geojson')
   ]);
   var estilo = new Promise(function (ok) { mapa.on('load', ok); });
 
@@ -79,15 +79,14 @@
     agregaRios(d[1], d[3], d[6]);
     agregaConfluencias(d[2]);
     agregaEstaciones(d[5].estaciones);
-    // Se abre en la zona de la red: los tramos vigilados, las estaciones y la presa de Valsequillo,
-    // donde termina. La cuenca completa sigue a la vista al alejar.
+    // Se abre en la zona de los mecanismos: sus estaciones y los tramos donde están. La cuenca completa
+    // sigue a la vista al alejar.
     var puntos = [];
     d[6].features.forEach(function (f) {
       (f.geometry.type === 'MultiLineString' ? f.geometry.coordinates : [f.geometry.coordinates])
         .forEach(function (l) { puntos.push.apply(puntos, l); });
     });
     d[5].estaciones.forEach(function (e) { puntos.push([e.longitud, e.latitud]); });
-    d[4].features.forEach(function (f) { if (f.properties.c_sitio === VALSEQUILLO) puntos.push(f.geometry.coordinates); });
     vistaRed = limites(puntos);
     mapa.fitBounds(vistaRed, { padding: 50, duration: 0 });
     if (MOCK) { consultaBackend(); setInterval(consultaBackend, 3000); }
@@ -228,19 +227,21 @@
   }
 
   // ---------------------------------------------------------------- estaciones
+  // Un mecanismo reubicado se nombra por la localidad de su escuela; una estación del Atoyac, por su río.
+  function lugar(e) { return e.localidad || inicial(e.cuerpo_agua); }
   function agregaEstaciones(lista) {
     var ol = $('listaEstaciones');
     lista.forEach(function (e, i) {
       var li = document.createElement('li'); li.id = 'li_' + e.c_estacion;
-      li.innerHTML = '<button type="button"><span class="num">' + (i + 1) + '</span><span><b>' + inicial(e.cuerpo_agua) +
+      li.innerHTML = '<button type="button"><span class="num">' + (i + 1) + '</span><span><b>' + lugar(e) +
         '</b><span class="det">' + inicial(e.municipio) + '</span></span></button>';
       li.querySelector('button').onclick = function () { abre(e); };
       ol.appendChild(li);
 
       var el = document.createElement('div');
       el.className = 'est-marca'; el.id = 'm_' + e.c_estacion;
-      el.innerHTML = '<div class="punto">' + (i + 1) + '</div><div class="nombre">' + inicial(e.cuerpo_agua) + '</div>';
-      el.title = e.c_estacion + ' · ' + inicial(e.cuerpo_agua);
+      el.innerHTML = '<div class="punto">' + (i + 1) + '</div><div class="nombre">' + lugar(e) + '</div>';
+      el.title = e.c_estacion + ' · ' + (e.escuela || inicial(e.cuerpo_agua));
       el.onclick = function () { abre(e); };
       marcadores[e.c_estacion] = new gl.Marker({ element: el, anchor: 'left', offset: [-13, 0] }).setLngLat([e.longitud, e.latitud]).addTo(mapa);
     });
@@ -278,7 +279,7 @@
 
   function abre(e) {
     abierta = e;
-    $('detTitulo').textContent = e.c_estacion + ' · ' + inicial(e.cuerpo_agua) + ', ' + inicial(e.municipio);
+    $('detTitulo').textContent = e.c_estacion + ' · ' + lugar(e) + ', ' + inicial(e.municipio);
     // El simulador arma su escena 3D en el mismo hilo que el mapa: si se carga a la vez, el
     // desplazamiento se detiene un momento. Se carga cuando el mapa termina de moverse.
     var src = '../dispositivo/simulador/index.html?incrustado=1&vel=300&estacion=' + encodeURIComponent(e.c_estacion) +

@@ -5,7 +5,7 @@
 //   /mapa/                   mapa de la cuenca con las estaciones; al elegir una abre su simulador
 //   /dispositivo/simulador/  simulador de la estación (archivos estáticos, sin compilar)
 //   /contrato/fixtures/      las tablas que leen el mapa y el simulador
-//   /datos/procesados/mapa/  las capas del mapa (cuenca, ríos, confluencias, toponimia, red vigilada)
+//   /datos/procesados/mapa/  las capas del mapa (cuenca, ríos, confluencias, toponimia, red vigilada, tramos de los mecanismos)
 //   /api/                    backend: función de Python (api/index.py), no pasa por aquí
 //
 // Todos hablan con el mismo backend en /api del mismo dominio, así que alertas, reportes y
@@ -54,14 +54,14 @@ writeFileSync(join(mapaDestino, 'config.js'), 'window.MAPBOX_TOKEN = ' + JSON.st
 
 const capasDestino = join(DIST, 'datos', 'procesados', 'mapa');
 mkdirSync(capasDestino, { recursive: true });
-for (const f of ['cuenca.geojson', 'red_hidrografica.geojson', 'confluencias.geojson', 'toponimia_hidrografica.geojson', 'red_vigilada.geojson']) {
+for (const f of ['cuenca.geojson', 'red_hidrografica.geojson', 'confluencias.geojson', 'toponimia_hidrografica.geojson', 'red_vigilada.geojson', 'red_mecanismos.geojson']) {
   exige(join(RAIZ, 'datos', 'procesados', 'mapa', f));
   cpSync(join(RAIZ, 'datos', 'procesados', 'mapa', f), join(capasDestino, f));
 }
 
 const fixDestino = join(DIST, 'contrato', 'fixtures');
 mkdirSync(fixDestino, { recursive: true });
-for (const f of ['estaciones.json', 'linea_base.json', 'sitios.geojson']) {
+for (const f of ['estaciones.json', 'mecanismos.json', 'linea_base.json', 'sitios.geojson']) {
   exige(join(RAIZ, 'contrato', 'fixtures', f));
   cpSync(join(RAIZ, 'contrato', 'fixtures', f), join(fixDestino, f));
 }

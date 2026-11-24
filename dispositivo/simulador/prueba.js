@@ -18,6 +18,8 @@ var Mont = require('./montaje.js');
 var RAIZ = path.resolve(__dirname, '..', '..');
 var estaciones = JSON.parse(fs.readFileSync(path.join(RAIZ, 'contrato/fixtures/estaciones.json'), 'utf8')).estaciones;
 var lineaBase = JSON.parse(fs.readFileSync(path.join(RAIZ, 'contrato/fixtures/linea_base.json'), 'utf8'));
+var rutaMec = path.join(RAIZ, 'contrato/fixtures/mecanismos.json');
+var mecanismos = fs.existsSync(rutaMec) ? JSON.parse(fs.readFileSync(rutaMec, 'utf8')).estaciones : [];
 
 var fallas = 0;
 function ok(cond, msg) {
@@ -124,6 +126,103 @@ estaciones.forEach(function (e) {
   ok(x.enviados.length >= 96 && x.s.fw.cola.length === 0, e.c_estacion + ': ' + x.enviados.length + ' paquetes, SD vacía');
 });
 
+// ---------------------------------------------------------------- colector de residuos
+var R = require('./recolector.js');
+function correCol(est, horas, antes) {
+  var eventos = [], enviados = [];
+  var s = Mont.crearEstacion(est, lineaBase, {
+    alEventoCol: function (e) { eventos.push(e); if (e.tipo === 'envio') enviados = enviados.concat(e.datos); }
+  });
+  if (antes) antes(s);
+  var fin = M.T0_DEFECTO + horas * 3600;
+  while (s.col.t < fin) { s.col.tick(5); if (s._hook) s._hook(s); }
+  return { s: s, c: s.col, eventos: eventos, enviados: enviados };
+}
+function tipos(r, t) { return r.eventos.filter(function (e) { return e.tipo === t; }); }
+
+console.log('\n8. Colector: día normal (24 h)');
+var c1 = correCol(e1, 24);
+ok(c1.enviados.length >= 96 && c1.enviados.length <= 100, 'paquetes del colector: ' + c1.enviados.length + ' (uno por revisión de 15 min)');
+ok(c1.c.cola.length === 0, 'la SD queda vacía tras los ACK');
+ok(c1.c.stats.llegados > 40 && c1.c.stats.llegados < 200, 'llegaron ' + c1.c.stats.llegados + ' objetos a la barrera (tasa supuesta ' + R.CFG.tasaBase + '/h)');
+var frac = c1.c.stats.capturados / Math.max(1, c1.c.stats.capturados + c1.c.stats.escapados);
+ok(frac > 0.8 && frac < 0.97, 'la barrera atrapa ' + Math.round(frac * 100) + ' % con corriente normal');
+var suma = c1.enviados.reduce(function (a, p) { return a + p.kg_ciclo; }, 0);
+ok(Math.abs(suma - c1.c.kgLeido) < 0.5, 'los kg por ciclo suman lo que pesa el contenedor: ' + suma.toFixed(2) + ' vs ' + c1.c.kgLeido.toFixed(2) + ' kg');
+var nObj = c1.enviados.reduce(function (a, p) { return a + R.CLASES.reduce(function (b, k) { return b + p.objetos[k]; }, 0); }, 0);
+ok(nObj === c1.c.stats.elevados, 'la cámara contó cada objeto que subió: ' + nObj);
+ok(!c1.eventos.some(function (e) { return e.tipo === 'alerta'; }), 'el colector no emite alertas: eso es del backend (I10)');
+ok(c1.enviados.every(function (p) { return p.version === '0.1-propuesta' && /-06:00$/.test(p.fecha_hora) && p.c_colector === 'COL-ATY-01'; }), 'los paquetes llevan versión de propuesta, zona y su código');
+ok(c1.c.energia.soc() > 0.6, 'batería sana tras 24 h: ' + Math.round(c1.c.energia.soc() * 100) + ' %');
+
+console.log('\n9. Colector: lluvia (llega más basura)');
+var c2 = correCol(e1, 24, function (s) { s.agua.agregaEvento('lluvia', M.T0_DEFECTO + 6 * 3600); });
+ok(c2.c.stats.llegados > c1.c.stats.llegados * 1.5, 'con lluvia llegan ' + c2.c.stats.llegados + ' objetos contra ' + c1.c.stats.llegados);
+var f2 = c2.c.stats.capturados / Math.max(1, c2.c.stats.capturados + c2.c.stats.escapados);
+ok(f2 < frac, 'la captura baja con la corriente: ' + Math.round(f2 * 100) + ' % contra ' + Math.round(frac * 100) + ' %');
+ok(tipos(c2, 'crecida').length === 0, 'la lluvia de prueba (nivel ≈ ' + Math.round(c2.c.nivelRio(M.T0_DEFECTO + 8 * 3600)) + ' cm) no activa la crecida');
+
+console.log('\n10. Colector: crecida (dos lluvias traslapadas)');
+var enCrecida = [];
+var c3 = correCol(e1, 30, function (s) {
+  s.agua.agregaEvento('lluvia', M.T0_DEFECTO + 6 * 3600); s.agua.agregaEvento('lluvia', M.T0_DEFECTO + 7 * 3600);
+  s._hook = function (x) { if (x.col.crecida && x.col.fase.nombre === 'ELEVACIÓN') enCrecida.push(x.col.t); };
+});
+ok(tipos(c3, 'crecida').length === 1 && tipos(c3, 'crecida_fin').length === 1, 'entra y sale de la crecida una vez cada vez');
+ok(enCrecida.length <= 12 / 5, 'la banda no arranca con el río crecido (solo termina el objeto que ya subía)');
+ok(c3.enviados.some(function (p) { return p.estado === 'crecida'; }), 'reporta el estado "crecida"');
+var tFin3 = tipos(c3, 'crecida_fin')[0].t;
+ok(c3.eventos.some(function (e) { return e.tipo === 'contenedor' && e.t > tFin3; }), 'al bajar el río vuelve a subir lo que quedó en el embudo');
+
+console.log('\n11. Colector: contenedor lleno y retiro');
+var c4 = correCol(e1, 48, function (s) { s.col.tasa = 60; });
+ok(tipos(c4, 'aviso_retiro').length >= 1, 'pide retiro al pasar del 80 %');
+ok(tipos(c4, 'retiro').length >= 1 && c4.c.stats.retiros >= 1, 'el retiro vacía el contenedor');
+ok(c4.enviados.every(function (p) { return p.kg_contenedor <= R.CFG.capKg * R.CFG.lleno + 0.5; }), 'la banda nunca pasa del 95 %: máx ' +
+  Math.max.apply(null, c4.enviados.map(function (p) { return p.kg_contenedor; })).toFixed(1) + ' kg de ' + R.CFG.capKg);
+ok(c4.enviados.some(function (p) { return p.estado === 'lleno'; }), 'reporta el estado "lleno" mientras espera el retiro');
+
+console.log('\n12. Colector: atasco de la banda');
+var c5 = correCol(e1, 20, function (s) { s.col.atascoP = 1; s.col.reversaOk = 0; });
+ok(tipos(c5, 'atasco').length >= 1, 'tras dos reversas se bloquea');
+var tAtasco = tipos(c5, 'atasco')[0].t;
+ok(!c5.eventos.some(function (e) { return e.tipo === 'contenedor' && e.t > tAtasco && e.t < tAtasco + R.CFG.visitaS - 900; }), 'bloqueada no sube nada hasta la visita');
+ok(c5.enviados.some(function (p) { return p.estado === 'atasco'; }), 'reporta el estado "atasco"');
+ok(tipos(c5, 'despejada').length >= 1, 'la cuadrilla la despeja y vuelve a intentar');
+
+console.log('\n13. Colector: corte de red de 4 h');
+var c6 = correCol(e1, 24, function (s) {
+  s._hook = function (x) { var h = M.horaLocal(x.col.t); x.enlace.caido = h >= 6 && h < 10; };
+});
+var h6 = c6.enviados.map(function (p) { return p.fecha_hora; }), u6 = {};
+h6.forEach(function (h) { u6[h] = true; });
+ok(Object.keys(u6).length === h6.length && h6.length === c1.enviados.length, 'sin pérdida ni duplicados: ' + h6.length + ' paquetes');
+ok(JSON.stringify(h6) === JSON.stringify(h6.slice().sort()), 'llegan en orden cronológico con su hora original');
+
+console.log('\n14. Colector: consumo y autonomía');
+var c7 = correCol(e1, 24, function (s) { s.col.energia.panelW = 0; });
+var whC = c7.c.energia.consumidoWh;
+console.log('  INFO   consumo medido: ' + whC.toFixed(1) + ' Wh/día (' + c7.c.stats.elevados + ' objetos subidos) → autonomía sin sol ≈ ' +
+  (256 * 0.9 / whC).toFixed(1) + ' días desde 90 %');
+var c8 = correCol(e1, 24 * 4, function (s) { s.col.energia.clima = 0.25; });
+ok(c8.c.energia.soc() > 0.5, 'con clima nublado 4 días sigue viva: ' + Math.round(c8.c.energia.soc() * 100) + ' %');
+
+console.log('\n15. Las cinco estaciones tienen su colector');
+estaciones.forEach(function (e) {
+  var x = correCol(e, 24);
+  ok(x.enviados.length >= 96 && x.c.cola.length === 0, e.c_estacion + ': ' + x.enviados.length + ' paquetes, ' + x.c.stats.elevados + ' objetos subidos, ' + x.c.kgLeido.toFixed(1) + ' kg');
+});
+
+console.log('\n16. Mecanismos reubicados junto a escuelas: estación y colector');
+ok(mecanismos.length === 5, mecanismos.length + ' mecanismos en mecanismos.json');
+mecanismos.forEach(function (e) {
+  var x = corre(e, 24), y = correCol(e, 24);
+  var banda = Object.keys(Mont.lineaDeSitio(lineaBase, e.banda_simulacion || e.c_sitio)).length;
+  ok(banda === 5 && x.enviados.length >= 96 && y.c.cola.length === 0,
+    e.c_estacion + ' (' + e.localidad + '): agua con la banda de ' + (e.banda_simulacion || e.c_sitio) + ', ' +
+    x.enviados.length + ' paquetes, colector ' + y.enviados.length + ' paquetes y ' + y.c.stats.elevados + ' objetos');
+});
+
 // salida para el validador del contrato
 var salida = path.join(os.tmpdir(), 'paquetes_simulador.json');
 var todos = [];
@@ -131,6 +230,7 @@ estaciones.forEach(function (e) {
   var x = corre(e, 24, function (s) { if (e === e1) s.agua.agregaEvento('descarga_industrial', M.T0_DEFECTO + 10 * 3600); });
   todos = todos.concat(x.enviados);
 });
+mecanismos.forEach(function (e) { todos = todos.concat(corre(e, 24).enviados); });
 fs.writeFileSync(salida, JSON.stringify(todos));
 console.log('\nPaquetes para validar contra el contrato: ' + todos.length + ' → ' + salida);
 console.log(fallas ? '\n' + fallas + ' FALLA(S)' : '\nTodo en orden.');

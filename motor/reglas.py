@@ -429,9 +429,16 @@ def cargar_linea_base(ruta=None):
 
 
 def cargar_estaciones(ruta=None):
-    ruta = ruta or os.path.join(FIX, 'estaciones.json')
-    with open(ruta, encoding='utf-8') as f:
-        return {e['c_estacion']: e for e in json.load(f)['estaciones']}
+    """Las estaciones registradas. Sin ruta: estaciones.json y, si existe, mecanismos.json (las estaciones
+    reubicadas junto a escuelas, scripts/99_reubicacion.py). Una reubicada sin c_sitio no tiene linea base:
+    el motor la compara solo contra su propia historia reciente."""
+    rutas = [ruta] if ruta else [os.path.join(FIX, 'estaciones.json'), os.path.join(FIX, 'mecanismos.json')]
+    est = {}
+    for r in rutas:
+        if os.path.exists(r) or r == ruta:
+            with open(r, encoding='utf-8') as f:
+                est.update({e['c_estacion']: e for e in json.load(f)['estaciones']})
+    return est
 
 
 def cargar_escala_conagua(ruta=None):

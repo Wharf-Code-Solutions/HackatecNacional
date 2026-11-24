@@ -34,7 +34,7 @@ después el **análisis**. Las vistas actuales no anuncian el análisis en panta
 | Módulo | Estado |
 |---|---|
 | M0 datos y contrato | Construido: 219 sitios, 145 703 resultados 2012-2025, 7 esquemas v1.0, fixtures, servidor mock |
-| M4 dispositivo | Simulador web construido y probado (`dispositivo/`): figura 3D con vista de cerca de cada componente (sondas, gabinete, energía, comunicación) y línea de tiempo de recepción. **Sin hardware**: las especificaciones son supuestos de diseño |
+| M4 dispositivo | Simulador web construido y probado (`dispositivo/`): figura 3D con vista de cerca de cada componente (sondas, gabinete, energía, comunicación) y línea de tiempo de recepción. **Sin hardware**: las especificaciones son supuestos de diseño. **Colector de residuos flotantes** simulado en la misma figura (ver "Lo construido"); falta su ficha |
 | M6 mapa | Prototipo (`mapa/`): abre en la zona de la red, ríos del INEGI con el flujo animado aguas abajo, 14 confluencias y las 5 estaciones con su simulador. Sin sitios oficiales ni capas opcionales. No colorea por índice ni está probado a ancho de teléfono |
 | M1 topología (orden aguas arriba → abajo) | **Construida** (`scripts/70_topologia_red.py` → `datos/procesados/red/`): 210 de 219 sitios con sucesor y distancia sobre el cauce; 14 marcados para revisión |
 | M2 motor de reglas | **Construido** (`motor/reglas.py`): 0 alertas en el día de control contra 31 del stub, 0 ambientales con el sensor roto, los tres eventos detectados antes de su intensidad plena y su fuente bien clasificada. `servidor_mock.py --motor real` lo usa |
@@ -85,6 +85,31 @@ No conviertas "pendiente" en "construido" sin verificarlo contra el repo.
 - Reglas del firmware: escribe en la SD antes de enviar y borra tras el ACK; reenvía con la hora original;
   no corrige valores (manda el crudo, `null` si la sonda no responde, `-999` si está rota); **nunca emite
   alertas** (eso es del backend, invariante I10); muestreo adaptativo; ahorro por batería.
+
+**Colector de residuos (`dispositivo/simulador/recolector.js`, escena y pruebas 8-15)**: el mecanismo de recolección que
+pide el reto SECIHTI ("robots o mecanismos automatizados para la recolección de residuos"); la estación mide el agua,
+esto retira lo flotante. Sin hardware ni contrato: todo número es supuesto de diseño.
+- Diseño: interceptor de orilla **en la orilla derecha, aguas arriba de la estación** (≈ 10 m, para no ensuciar la sonda
+  de turbiedad): barrera flotante en diagonal (≈ 17 m) → embudo → banda con paletas y motor de 24 V → contenedor de 240 L
+  sobre báscula; cámara que cuenta y clasifica (la IA sería Gemini, como en la app); sensor de nivel del río; panel de 100 W,
+  batería 12 V (256 Wh) y módem LTE-M propios.
+- `recolector.js`: máquina de estados pura como `firmware.js`. Revisa cada 15 min (alineado a la estación), sube objetos,
+  pesa y manda paquete. **Nunca emite alertas** (I10); solo decide seguridad: crecida (> 65 cm: barrera arriba, banda parada),
+  atasco (2 reversas y se bloquea hasta la cuadrilla), contenedor lleno (95 %), batería < 25 %. Manda el dato crudo (kg_ciclo
+  puede ser negativo: es un retiro). Retiro simulado 8 h después del aviso al 80 %.
+- Supuestos a medir en piloto: 4 objetos/h (6× con lluvia), captura 90 % (cae con la corriente), 24 kg de capacidad,
+  tirante base 35 cm. Medido en la simulación: captura 89 % normal y 75 % con lluvia, 54 Wh/día con 100 objetos, autonomía
+  sin sol ≈ 4.2 días.
+- El paquete (`version: '0.1-propuesta'`, `c_colector`, `kg_ciclo`, `kg_contenedor`, `llenado`, `objetos`, `nivel_rio_cm`,
+  `estado`, `bateria`, `senal`) **no está en el contrato v1.0** y el simulador no lo manda al backend. Agregarlo toca
+  contrato y backend (Evaristo y Carlos): protocolo de `05-protocolo-de-cambios.md`.
+- Figura: rótulos Barrera, Banda y Contenedor (sin fondo, estados en palabras llanas) y una vista de cerca por cada uno
+  (`VISTAS.barrera/banda/contenedor`). Los objetos que flotan se dibujan en tiempo real al recibir el evento del modelo
+  (`Escena.objeto`); el contenedor se llena con los kg del modelo. `Agua.lluvia(t)` (en `modelo.js`) alimenta llegada y nivel.
+  Colector a 1.5× en la orilla (estación a 1.6×), barrera a escala real. La prueba "Lluvia" también lo mueve.
+- **Cauce ensanchado** a ≈ 12 m de espejo y ≈ 16 m de corona (antes ≈ 8.5 m): `EXT = 1.75` y `ejeRio` corridos a la derecha
+  en `escena.js`; la orilla de la estación no se movió. **El ancho real no está medido** (el INEGI solo da el eje): supuesto,
+  por medir en imagen satelital en los 5 puentes. La torre celular pasó a (16.5, -12) y la cámara general ve más de frente.
 
 **Mapa (`mapa/`)** (D20, D21):
 - Con token en `mapa/config.js` usa **Mapbox GL JS 3.8** (`light-v11`). Sin token usa **MapLibre GL** con la base
@@ -215,7 +240,17 @@ El usuario rechazó explícitamente el diseño con aspecto "hecho por IA" y lo h
   nunca (el mapa no se puede revisar: pide al usuario que muestre el panel o que lo revise él). El simulador sí
   carga. La captura recorta a 800 × 600: usa `resize_window` a 1280 × 800 y regresa a `desktop` al terminar.
 - Los servidores de vista previa están en `.claude/launch.json` de la carpeta **padre** (`nacional/`, fuera del
-  repo): `estatico` (8000) y `mock` (8080, `--motor real`). El mock guarda alertas entre corridas: reinícialo.
+  repo): `estatico` (8000), `mock` (8080, `--motor real`) y `sitio` (8001, sirve `panel/dist` para probar el
+  despliegue ensamblado). El mock guarda alertas entre corridas: reinícialo.
+- **Despliegue**: lo que se publica lo decide `panel/scripts/ensamblar-sitio.mjs` (copia mapa, simulador, capas
+  y fixtures a `panel/dist`, y escribe `mapa/config.js` desde `MAPBOX_ACCESS_TOKEN`). Si una vista nueva lee otro
+  archivo, agrégalo ahí o en Vercel dará 404. Para probarlo en local sin compilar: crea `panel/dist/index.html` y
+  `ciudadano/dist/index.html` de relleno, corre el script, sirve con `sitio` y borra ambos `dist` al terminar.
+- **Dos simuladores a la vez en el sitio desplegado** mandan historias distintas de las mismas estaciones al
+  mismo backend. La base no se corrompe (candado por estación, reenvío idempotente), pero el motor se rehidrata
+  por orden de llegada y las alertas pueden salir mezcladas. Propuesto y sin respuesta del usuario: un "turno"
+  (un solo simulador alimenta la plataforma y los demás solo miran). Toca backend y contrato (Evaristo y
+  Carlos): no implementarlo sin su visto bueno.
 - **Rebase con conflicto en `06-registro-de-cambios.md`**: pasa casi siempre (todos escriben arriba). Se conservan
   las entradas de los dos lados, las nuestras primero, separadas por `---`; luego se vuelve a verificar.
 - Mapbox GL 3: no animar `line-dasharray` (rehace los teselados de toda la red); usar una imagen `line-pattern`
@@ -227,6 +262,13 @@ El usuario rechazó explícitamente el diseño con aspecto "hecho por IA" y lo h
 Ya hay datos (M0), sensor simulado (M4), mapa (M6), topología (M1), motor de reglas (M2), propagación (M3),
 backend (M5), panel de autoridad (M7), prototipo de app ciudadana (M8) y la red de estaciones decidida. Falta:
 
+0. **Cambio de rumbo (docs/19): mecanismos junto a escuelas rurales.** El usuario eligió el **colector completo** (banda,
+   motor, cámara, panel y módem propios), que va con cada estación reubicada. `scripts/99_reubicacion.py` escribe
+   `contrato/fixtures/mecanismos.json` (`EST-ESC-01..05` con `COL-ESC-01..05`); simulador y mapa ya los leen, y el motor y el
+   mock los registran junto a las 5 del Atoyac. Pendiente: línea base de sus sitios CONAGUA (hoy ninguno está en
+   `linea_base.json`: el motor solo los compara contra su historia reciente y el simulador usa `banda_simulacion`;
+   regenerarla pide los crudos F05); la Sierra Norte queda fuera hasta bajar su red del INEGI; mecanismo para derrumbe;
+   ficha del colector (`dispositivo/ficha-colector.md`), D32 y propuesta de contrato para su paquete; costos (M10).
 1. **Pendientes de la red nueva de estaciones** (fixtures regenerados con las 5 de docs/18):
    - correr `backend/prueba.py` (ya espera 0, 1, 5, 3 y 0 alertas; necesita el entorno del backend);
    - recapturar `panel/public/demo/foto.json` con el backend real (`npm run capturar-demo`);
@@ -235,6 +277,8 @@ backend (M5), panel de autoridad (M7), prototipo de app ciudadana (M8) y la red 
    se desplaza fluido (se cambió a `line-pattern` y no se vio animado).
 3. Un solo proyecto de Vercel con panel (`/`), app (`/ciudadano/`), mapa con las estaciones (`/mapa/`), simulador
    (`/dispositivo/simulador/`) y backend (`/api`); `MAPBOX_ACCESS_TOKEN` opcional para la base de Mapbox; falta confirmar `DATABASE_URL` de Supabase y `GEMINI_API_KEY` (pasos en `backend/README.md`).
+   `/mapa/` se agregó en `43de9b7` y se probó en local ensamblado; falta confirmar que carga en Vercel. Decidir
+   el "turno" de simuladores (ver Trampas).
    Antes de un uso real, autenticación en `POST /lecturas` y `PATCH /alertas`, e inicio de sesión en M7.
 4. M6: pluma aguas abajo con la ventana de llegada de M3 (`GET /alertas/<c_alerta>/prediccion`) y color por el
    índice de la plataforma; probar a ancho de teléfono. Sin añadir ruido a la vista.

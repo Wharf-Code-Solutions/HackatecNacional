@@ -79,6 +79,10 @@ def leer_json(ruta):
 
 ESTACIONES = {e['c_estacion']: e
               for e in leer_json(os.path.join(FIX, 'estaciones.json'))['estaciones']}
+# Las estaciones reubicadas junto a escuelas (scripts/99_reubicacion.py), si existen.
+if os.path.exists(os.path.join(FIX, 'mecanismos.json')):
+    ESTACIONES.update({e['c_estacion']: e
+                       for e in leer_json(os.path.join(FIX, 'mecanismos.json'))['estaciones']})
 LB = defaultdict(dict)
 for r in leer_json(os.path.join(FIX, 'linea_base.json'))['linea_base']:
     LB[r['c_sitio']][r['c_parametro']] = r

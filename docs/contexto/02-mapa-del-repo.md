@@ -41,6 +41,7 @@ Leyenda de "editable":
 | `contrato/prioridad_huella.py` | Huella de calor sobre el río y prioridad de los reportes; los pesos son hipótesis ajustables arriba del archivo | `GET /huella`, `GET /prioridades` | sí |
 | `contrato/reproducir_escenario.py` | Envía un escenario a un servidor | — | sí |
 | `contrato/fixtures/estaciones.json` | Las 5 estaciones de la red propuesta (docs/18) | `40_generar_fixtures.py`, que las toma de `red/red_estaciones.csv` | **NO** |
+| `contrato/fixtures/mecanismos.json` | Los 5 mecanismos (estación + colector) reubicados junto a escuelas rurales, forma de estación v2.0 (docs/19 §5). Los leen simulador, mapa, motor y mock | `99_reubicacion.py`, de `escuelas.json` y la red de asignación | **NO** |
 | `contrato/fixtures/linea_base.json` | Banda de esas 5 estaciones | — | **NO** |
 | `contrato/fixtures/sitios.geojson` | Los 219 sitios para el mapa | — | **NO** |
 | `contrato/fixtures/escenarios/*.json` | 5 escenarios de un día | — | **NO** |
@@ -127,8 +128,9 @@ El backend no inventa reglas: decide `motor/reglas.py`, valida `contrato/validad
 | `dispositivo/ficha-tecnica.md` | Bloques, rangos, ciclo, consumos, lo medido y lo pendiente | **las especificaciones de diseño del dispositivo** | sí |
 | `dispositivo/simulador/modelo.js` | El agua, las sondas (`ESPEC`), la energía y el enlace | los rangos y errores de sonda, los eventos inyectables | sí |
 | `dispositivo/simulador/firmware.js` | Máquina de estados del ESP32 | el ciclo, los umbrales de muestreo adaptativo y los consumos por fase (`CFG`, `CARGA`) | sí |
-| `dispositivo/simulador/montaje.js` | Arma una estación desde los fixtures | el RSSI supuesto por estación | sí |
-| `dispositivo/simulador/prueba.js` | Siete pruebas del firmware en Node | — | sí |
+| `dispositivo/simulador/montaje.js` | Arma una estación y su colector desde los fixtures (`banda_simulacion` si su sitio no tiene línea base) | el RSSI supuesto por estación | sí |
+| `dispositivo/simulador/recolector.js` | Máquina de estados del colector de residuos flotantes | capacidad, captura, umbrales de crecida, atasco y llenado | sí |
+| `dispositivo/simulador/prueba.js` | Pruebas del firmware, del colector y de los mecanismos reubicados en Node | — | sí |
 | `dispositivo/simulador/escena.js` | Figura: sonda en el río, estación y plataforma con su resultado (alarma o no) | — | sí |
 | `dispositivo/simulador/index.html`, `ui.js`, `estilos.css` | Interfaz del simulador | — | sí |
 
@@ -153,6 +155,7 @@ repositorio (`python -m http.server 8000`).
 | `datos/procesados/indicador_sitio_periodo.csv` | Indicadores CONAGUA por sitio | `10_construir_tablas.py` | **NO** |
 | `datos/procesados/diccionario_conagua.csv` | Diccionario oficial de campos | `10_construir_tablas.py` | **NO** |
 | `datos/procesados/proxy_modelos.csv` | Los dos modelos proxy con su validación y si se publican | `90_modelos_proxy.py` | **NO** |
+| `datos/procesados/mapa/red_mecanismos.geojson` | El tramo donde queda cada mecanismo reubicado, con `conexion: true` para dibujarlo con flujo | `99_reubicacion.py` | **NO** |
 | `datos/procesados/mapa/red_vigilada.geojson` | Los tramos del mapa que vigila cada estación (20 km aguas arriba), con su `estacion` | `96_red_estaciones.py` | **NO** |
 | `datos/procesados/mapa/rios_orden3.json` | Cauces de orden 3 (barrancas) para el mapa de la app ciudadana, que los pide solo al acercar | `61_rios_menores_para_app.py` | **NO** |
 | `datos/procesados/mapa/*.geojson` (el resto) | Cauces (orden ≥ 4), subcuencas, contorno de la cuenca, confluencias principales y toponimia hidrográfica, simplificados para el mapa | `60_red_para_mapa.py` | **NO** |
@@ -188,6 +191,7 @@ El prefijo numérico indica el orden de ejecución. `_comun.py` no se ejecuta so
 | `scripts/40_generar_fixtures.py` | Genera los fixtures del contrato | `datos/procesados/` | `contrato/fixtures/` |
 | `scripts/60_red_para_mapa.py` | Lee las capas de la red hidrográfica y las simplifica para pintar el mapa. **Fuente de verdad de** qué orden de cauce se dibuja (`ORDEN_MINIMO`) y de las tolerancias de simplificación. Calcula el contorno de la cuenca y las confluencias por longitud de red acumulada; **no** ordena los sitios (eso es M1, `70_topologia_red.py`) | `datos/geo/F08_red_hidrografica/` | `datos/procesados/mapa/` |
 | `scripts/61_rios_menores_para_app.py` | Saca los cauces de orden 3 de la red del INEGI para la app ciudadana; reutiliza la lectura y la simplificación de `60_red_para_mapa.py` | `datos/geo/F08_red_hidrografica/` | `datos/procesados/mapa/rios_orden3.json` |
+| `scripts/99_reubicacion.py` | Reubica los 5 mecanismos: escuelas con cauce a menos de 2.5 km, por riesgo de contaminación, a más de 3 km entre sí; sitio CONAGUA aguas abajo y autorizaciones. **Fuente de verdad de `N_MECANISMOS`** | `escuelas.json`, `linea_base.json`, `sitio.csv`, `red/red_asignacion.json`, `mapa/red_hidrografica.geojson` | `contrato/fixtures/mecanismos.json`, `mapa/red_mecanismos.geojson` |
 | `scripts/97_escuelas_riesgo.py` | Índice de riesgo de escuelas (pesos como hipótesis; el índice es la suma del desglose). Escribe `escuelas.json` (las 400 de mayor riesgo) y `zonas_riesgo.geojson` (agrupadas a partir de los datos); con la lista provisional si no existe `factores_escuelas.csv` | `datos/procesados/escuelas/factores_escuelas.csv` | `contrato/fixtures/escuelas.json`, `zonas_riesgo.geojson` |
 | `scripts/98_escuelas_candidatas.py` | Escuelas públicas rurales de Puebla (catálogo SEP) con un puntaje por factor: pendiente, urbanización reciente, fuente contaminante cercana, calidad del agua, sin drenaje y marginación | `datos/crudos/F12`, `F16`, `F17`, `F18`, `F19` | `datos/procesados/escuelas/factores_escuelas.csv` |
 | `scripts/70_topologia_red.py` | **M1.** Engancha los sitios a la red del INEGI, orienta los tramos y calcula el siguiente sitio aguas abajo. **Fuente de verdad de la topología** | `datos/geo/`, `sitio.csv` | `datos/procesados/red/`, `docs/13-...` |

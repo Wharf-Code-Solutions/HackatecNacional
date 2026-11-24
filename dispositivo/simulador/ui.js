@@ -5,12 +5,13 @@
  * En pantalla solo hay tres cosas: la estación en 3D, lo que llega a la
  * plataforma y, si la plataforma abre una alerta, una línea en rojo. Nada más.
  *
- * Corre las 5 estaciones del piloto con el mismo reloj. Los datos de entrada se
+ * Corre las 5 estaciones reubicadas junto a escuelas (contrato/fixtures/mecanismos.json, cada una con su
+ * colector de residuos) con el mismo reloj; si ese archivo no existe, las 5 del Atoyac (estaciones.json). Los datos de entrada se
  * leen de contrato/fixtures/, así que se sirve el repo desde su raíz:
  *     python -m http.server 8000   →   /dispositivo/simulador/
  *
  * Parámetros de URL, para que otro módulo lo muestre sin importar su código:
- *     ?estacion=EST-ATY-01  ?incrustado=1  ?vel=300
+ *     ?estacion=EST-ESC-01  ?incrustado=1  ?vel=300
  *     ?backend=http://127.0.0.1:8080 (por defecto en localhost; desplegado, '/api' del mismo dominio);
  *     ?backend= lo desactiva.
  * Si el backend no responde, el simulador sigue igual y no muestra alertas.
@@ -52,7 +53,9 @@
 
   // ----------------------------------------------------------------------- carga
   Promise.all([
-    fetch('../../contrato/fixtures/estaciones.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }),
+    fetch('../../contrato/fixtures/mecanismos.json', { cache: 'no-cache' })
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .catch(function () { return fetch('../../contrato/fixtures/estaciones.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }); }),
     fetch('../../contrato/fixtures/linea_base.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }),
     relojInicial()
   ]).then(function (d) { arranca(d[0].estaciones, d[1], d[2]); }).catch(function (e) {
@@ -66,13 +69,14 @@
     estaciones.forEach(function (e) {
       var id = e.c_estacion;
       estado.alertas[id] = [];
-      estado.por[id] = Mont.crearEstacion(e, linea, { t0: t0 || undefined, alEvento: function (ev) { alEvento(id, ev); } });
+      estado.por[id] = Mont.crearEstacion(e, linea, { t0: t0 || undefined, alEvento: function (ev) { alEvento(id, ev); },
+        alEventoCol: function (ev) { if (id === estado.sel) Escena.objeto(ev); } });
     });
     estado.ultimo = performance.now();
 
     var se = $('selEstacion');
     estaciones.forEach(function (e) {
-      var o = document.createElement('option'); o.value = e.c_estacion; o.textContent = e.c_estacion + ' · ' + nombre(e.cuerpo_agua); se.appendChild(o);
+      var o = document.createElement('option'); o.value = e.c_estacion; o.textContent = e.c_estacion + ' · ' + lugar(e); se.appendChild(o);
     });
     se.onchange = function () { estado.sel = se.value; refresca(); };
     var sv = $('selVel');
@@ -96,13 +100,15 @@
   }
 
   function actual() { return estado.por[estado.sel]; }
+  // La reubicada se nombra por la localidad de su escuela; la del Atoyac, por su río.
+  function lugar(e) { return e.localidad || nombre(e.cuerpo_agua); }
   function nombre(t) {
     return (t || '').toLowerCase().replace(/(^|[\s(])([a-záéíóúñ])/g, function (m, a, b) { return a + b.toUpperCase(); })
       .replace(/ (De|Del|La|Las|El|Los|Y) /g, function (m) { return m.toLowerCase(); });
   }
   function refresca() {
     var s = actual(), e = s.est;
-    $('titulo').textContent = e.c_estacion + ' · ' + nombre(e.cuerpo_agua);
+    $('titulo').textContent = e.c_estacion + ' · ' + lugar(e);
     document.title = e.c_estacion + ' · simulador de la estación';
     $('btnCorte').textContent = s.enlace.caido ? 'Restablecer enlace' : 'Cortar enlace';
     $('btnCorte').classList.toggle('activo', s.enlace.caido);
@@ -148,9 +154,9 @@
       // En una vista de cerca, las fases que muestra esa vista van a tiempo real (Escena.tiempoReal):
       // se ve cada sonda estabilizarse, la SD guardar y el módem enviar; el resto, a la velocidad elegida.
       var v = estado.vel, fase = actual().fw.fase.nombre;
-      if (Escena.tiempoReal(fase)) v = 1;
+      if (Escena.tiempoReal(fase, actual().col.fase.nombre)) v = 1;
       dt = Math.min(dt, 0.25) * v;
-      estado.est.forEach(function (e) { estado.por[e.c_estacion].fw.tick(dt); });
+      estado.est.forEach(function (e) { var s = estado.por[e.c_estacion]; s.fw.tick(dt); s.col.tick(dt); });
     }
     // Textos y gráficas 20 veces por segundo; la figura 3D en cada cuadro, para que girar y el
     // viaje del paquete se vean fluidos.

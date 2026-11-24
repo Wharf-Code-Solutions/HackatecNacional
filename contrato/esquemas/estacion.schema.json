@@ -2,15 +2,15 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://hackatec2026.local/esquemas/estacion.schema.json",
   "title": "Estacion de monitoreo",
-  "description": "Punto con dispositivo instalado. Siempre cuelga de un sitio CONAGUA (c_sitio): de ahi saca su linea base. Una estacion sin sitio asociado no se puede evaluar contra historia, solo contra umbral fijo.",
+  "description": "Punto con dispositivo instalado o propuesto. Si cuelga de un sitio CONAGUA (c_sitio) saca de ahi su linea base; si no (c_sitio null), el motor solo la compara contra su propia historia reciente hasta que tenga una. Los campos de escuela, autorizaciones y colector son de la v2.0 (docs/19, seccion 4.4) y son opcionales: las estaciones v1.0 siguen siendo validas.",
   "type": "object",
   "required": ["c_estacion", "c_sitio", "latitud", "longitud", "parametros", "estado_dispositivo"],
   "additionalProperties": false,
   "properties": {
     "c_estacion": { "type": "string", "pattern": "^EST-[A-Z]{3}-[0-9]{2}$" },
     "c_sitio": {
-      "description": "Clave del sitio CONAGUA. Es la llave con datos/procesados/sitio.csv.",
-      "type": "string"
+      "description": "Clave del sitio CONAGUA sobre el mismo cauce, aguas abajo. Es la llave con datos/procesados/sitio.csv. null si no hay sitio de CONAGUA aguas abajo dentro del alcance de la red (v2.0).",
+      "type": ["string", "null"]
     },
     "nombre": { "type": "string" },
     "cuerpo_agua": { "type": "string" },
@@ -34,6 +34,57 @@
     "es_descarga": {
       "description": "true si el punto mide un efluente y no el cauce. Cambia el criterio legal aplicable: a una descarga si le aplica la NOM-001-SEMARNAT-2021, a un sitio de cauce no.",
       "type": "boolean", "default": false
+    },
+    "cct": {
+      "description": "v2.0. Escuela que protege (clave de la SEP, llave con escuelas.json).",
+      "type": ["string", "null"]
+    },
+    "escuela": { "description": "v2.0. Nombre de la escuela.", "type": ["string", "null"] },
+    "localidad": { "description": "v2.0. Localidad de la escuela: el nombre de la zona en el mapa.", "type": ["string", "null"] },
+    "escuelas_protegidas": {
+      "description": "v2.0. Todas las escuelas (CCT) que este mecanismo cubre: la de cct y las elegibles a menos de 3 km de el.",
+      "type": "array", "items": { "type": "string" }
+    },
+    "distancia_escuela_m": {
+      "description": "v2.0. Linea recta de la escuela al punto del cauce donde va la estacion.",
+      "type": ["number", "null"], "minimum": 0
+    },
+    "distancia_al_sitio_m": {
+      "description": "v2.0. Metros sobre el cauce de la estacion a su c_sitio, aproximados por tramo (red_asignacion.json).",
+      "type": ["number", "null"], "minimum": 0
+    },
+    "banda_simulacion": {
+      "description": "v2.0. Sitio cuya banda historica usa SOLO el simulador para fabricar el agua cuando c_sitio no tiene linea base en el fixture. El motor no la usa.",
+      "type": ["string", "null"]
+    },
+    "instalacion": {
+      "description": "v2.0. 'propuesta' hasta que CEASPUE otorgue su autorizacion (docs/19, seccion 4.3).",
+      "type": "string", "enum": ["propuesta", "autorizada", "instalada"]
+    },
+    "autorizaciones": {
+      "description": "v2.0. Mismo formato que en escuela.schema.json.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["organismo", "tramite", "estado", "fecha"],
+        "additionalProperties": false,
+        "properties": {
+          "organismo": { "type": "string", "enum": ["CEASPUE", "CAPCEE"] },
+          "tramite": { "type": "string" },
+          "estado": { "type": "string", "enum": ["pendiente", "solicitada", "otorgada", "negada"] },
+          "fecha": { "type": ["string", "null"], "format": "date" }
+        }
+      }
+    },
+    "colector": {
+      "description": "v2.0. Colector de residuos flotantes en la misma orilla, aguas arriba de la estacion. Su paquete aun no esta en el contrato.",
+      "type": ["object", "null"],
+      "required": ["c_colector", "posicion"],
+      "additionalProperties": false,
+      "properties": {
+        "c_colector": { "type": "string", "pattern": "^COL-[A-Z]{3}-[0-9]{2}$" },
+        "posicion": { "type": "string" }
+      }
     }
   }
 }

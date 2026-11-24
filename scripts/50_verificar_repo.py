@@ -190,6 +190,25 @@ for archivo, esquema in (('escuelas.json', 'escuela'), ('zonas_riesgo.geojson', 
     else:
         ok(archivo, '{} objetos'.format(len(objetos)))
 
+# Mecanismos reubicados (docs/19 §5): forma de estacion v2.0, su escuela existe y su colector viene con ella
+ruta = os.path.join(FIX, 'mecanismos.json')
+if not os.path.exists(ruta):
+    aviso('mecanismos.json', 'no existe; corre scripts/99_reubicacion.py')
+else:
+    objetos = json.load(open(ruta, encoding='utf-8'))['estaciones']
+    esq = val.cargar_esquema('estacion')
+    err = [e for i, o in enumerate(objetos) for e in val.validar(o, esq, '$[{}]'.format(i))]
+    ruta_esc = os.path.join(FIX, 'escuelas.json')
+    cct = {e['cct'] for e in json.load(open(ruta_esc, encoding='utf-8'))} if os.path.exists(ruta_esc) else set()
+    err += ['{}: su escuela {} no esta en escuelas.json'.format(o['c_estacion'], o.get('cct')) for o in objetos
+            if o.get('cct') not in cct]
+    err += ['{}: sin colector'.format(o['c_estacion']) for o in objetos if not o.get('colector')]
+    total_err += len(err)
+    if err:
+        falla('mecanismos.json', '{} errores, el primero: {}'.format(len(err), err[0]))
+    else:
+        ok('mecanismos.json', '{} mecanismos (estacion + colector)'.format(len(objetos)))
+
 carpeta = os.path.join(FIX, 'escenarios')
 if os.path.isdir(carpeta):
     esq = val.cargar_esquema('lectura')

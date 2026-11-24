@@ -21,6 +21,38 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Módulo A: los 5 mecanismos se reubican junto a escuelas rurales
+
+**Qué cambió.** `scripts/99_reubicacion.py` escribe `contrato/fixtures/mecanismos.json` y `datos/procesados/mapa/red_mecanismos.geojson`:
+5 mecanismos (`EST-ESC-01..05`, cada uno con su colector `COL-ESC-01..05`) en el punto del cauce más cercano a escuelas de
+`escuelas.json` con un cauce a menos de 2.5 km, en orden de riesgo de contaminación y a más de 3 km entre sí. Protegen 13
+escuelas (Tehuitzingo, Guadalupe Tlatelpa en Puebla, San Matías Tlalancaleca, Coronango y San Martín Texmelucan); quedan 23
+elegibles sin mecanismo y 364 sin cauce en la red que tenemos. `estacion.schema.json` pasa a v2.0 compatible: `c_sitio` admite
+`null` y se agregan escuela, escuelas protegidas, autorizaciones (CEASPUE y CAPCEE), `banda_simulacion` y colector. El motor y el
+mock registran también los mecanismos; simulador y mapa los muestran en lugar de las 5 del Atoyac.
+**Por qué.** Cambio de rumbo (docs/19 §5). La estación y el colector son instrumentos de cauce: van donde la escuela tiene uno.
+Los 5 se conservan por presupuesto (docs/18).
+**Qué arrastró.** `02-mapa-del-repo.md`, `CLAUDE.md` (pendiente 0), `50_verificar_repo.py` (valida `mecanismos.json`),
+`prueba.js` (prueba 16), `ensamblar-sitio.mjs` (publica los dos archivos nuevos).
+**Impacto en otros módulos.** Ninguno de sus sitios CONAGUA está en `linea_base.json`: el motor los compara solo contra su
+historia reciente (en la simulación, 0 alertas en un día normal y la descarga industrial detectada a los 20 min en los 5) y el
+simulador fabrica su agua con la banda del sitio con línea base más cercano. `GET /estaciones` devuelve 10 (las 5 del Atoyac
+siguen para los escenarios y el panel). Todos quedan como «propuesta»: ninguna escuela tiene aún la autorización de CEASPUE.
+
+---
+
+## 2026-11-24 · M4: colector de residuos flotantes en el simulador
+
+**Qué cambió.** `dispositivo/simulador/recolector.js` (máquina de estados pura, como `firmware.js`) y su figura en `escena.js`:
+barrera flotante, banda con motor, contenedor de 240 L sobre báscula, cámara, sensor de nivel, panel de 100 W, batería y módem
+propios; `montaje.js` arma uno por estación y `prueba.js` suma las pruebas 8 a 15. Cauce de la escena ensanchado a ≈ 12 m.
+**Por qué.** El reto pide mecanismos automatizados de recolección de residuos; el usuario eligió el colector completo sobre la
+versión simple de canasta.
+**Qué arrastró.** `CLAUDE.md`. Pendiente: ficha del colector y D32.
+**Impacto en otros módulos.** Su paquete (`0.1-propuesta`) no está en el contrato y el simulador no lo manda al backend.
+
+---
+
 ## 2026-11-24 · Módulo A: escuelas y zonas con datos reales
 
 **Qué cambió.** `escuelas.json` y `zonas_riesgo.geojson` dejan de ser provisionales. `98_escuelas_candidatas.py` toma el
