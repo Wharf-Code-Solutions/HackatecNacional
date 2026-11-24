@@ -42,7 +42,8 @@ después el **análisis**. Las vistas actuales no anuncian el análisis en panta
 | M7 panel de autoridad | **Construido** (`panel/`): alertas con evidencia y gráficas, fuente probable con puntaje, predicción de M3 (ventanas de llegada aguas abajo), estado y responsable vía `PATCH /alertas/<c_alerta>`; React con Vite en Vercel, modo demostración sin backend (D23). Sin inicio de sesión |
 | Modelos proxy | Conductividad→SDT **publicado** (2 % de error fuera de muestra); turbiedad→SST **descartado** (35 %) |
 | M5 backend | **Construido** (`backend/`): FastAPI, SQLite en local y Postgres en Vercel (`/api` del mismo proyecto que el panel, D25); mismas respuestas que el mock (`backend/prueba.py` lo compara en vivo); motor sin memoria entre peticiones; `GET /alertas/<c_alerta>/prediccion` con M3. Sin autenticación |
-| M8 app, M9, M10 | Pendientes |
+| M8 app ciudadana | **Pendiente, especificada.** Plan completo en `docs/17-plan-app-ciudadana.md`: PWA en React y Vite bajo `/ciudadano/`. Sus dos dependencias de backend ya están resueltas (`GET /reportes/<folio>` y la asignación al tramo en `backend/asignacion.py`). Queda el `buildCommand` de `vercel.json`, que va junto con el andamio |
+| M9, M10 | Pendientes |
 
 No conviertas "pendiente" en "construido" sin verificarlo contra el repo.
 

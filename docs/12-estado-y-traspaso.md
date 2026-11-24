@@ -73,6 +73,15 @@ punta (M9).
   sondas), manual breve por tipo de usuario y propuesta de implementación por fases. La ficha del
   dispositivo ya existe: [`dispositivo/ficha-tecnica.md`](../dispositivo/ficha-tecnica.md).
 
+## App ciudadana (M8)
+
+No está construida, pero **su especificación completa sí**, en
+[17-plan-app-ciudadana.md](17-plan-app-ciudadana.md): PWA en React y Vite bajo
+`/ciudadano/`, con las decisiones tomadas, las alternativas descartadas y un criterio de
+terminado medible. Sus dos dependencias de backend ya están resueltas: la consulta de folio
+y la asignación al tramo. Lo único pendiente es el `buildCommand` del despliegue, que se
+aplica junto con el andamio.
+
 ## Modelos proxy
 
 La conductividad estima los sólidos disueltos con un **2 %** de error mediano, validado en

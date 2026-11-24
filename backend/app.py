@@ -38,6 +38,7 @@ FIX = os.path.join(RAIZ, 'contrato', 'fixtures')
 sys.path.insert(0, AQUI)
 from almacen import Almacen, es_postgres, huella   # noqa: E402
 from propagacion import Propagacion                 # noqa: E402
+from asignacion import Asignador               # noqa: E402
 
 VERSION_CONTRATO = '1.0'
 # Lo unico que la autoridad cambia de una alerta. El resto lo decide el motor.
@@ -120,6 +121,7 @@ def crear_app(url=None):
             with candado_inicio:
                 if not estado:
                     estado['propagacion'] = Propagacion()
+                    estado['asignacion'] = Asignador()
                     estado['almacen'] = Almacen(url)
         return estado
 
@@ -199,6 +201,18 @@ def crear_app(url=None):
     def get_reportes():
         # El correo es solo para avisar del cierre: nunca sale por la API publica.
         return {'reportes': [{k: v for k, v in r.items() if k != 'correo'} for r in ctx()['almacen'].reportes()]}
+
+    @app.get('/reportes/{c_reporte}')
+    def get_reporte(c_reporte: str):
+        # Consulta de folio para la app ciudadana (M8). Devuelve un solo reporte
+        # para no obligarla a descargar todos. El correo no sale, igual que en
+        # la lista: es solo para avisar del cierre.
+        r = ctx()['almacen'].reporte(c_reporte)
+        if r is None:
+            return error(404, {'error': 'folio no encontrado',
+                               'detalle': 'revisa que este completo, con el formato '
+                                          'RC-AAAAMMDD-0000'})
+        return {k: v for k, v in r.items() if k != 'correo'}
 
     # ------------------------------------------------------------ escritura
     @app.post('/lecturas')
@@ -280,6 +294,13 @@ def crear_app(url=None):
             cuerpo.setdefault('c_reporte', 'RC-{}-{:04d}'.format(
                 datetime.now().strftime('%Y%m%d'), almacen.contar('reporte') + 1))
             cuerpo.setdefault('fecha_hora', datetime.now().astimezone().isoformat(timespec='seconds'))
+            # El tramo lo decide el backend, no la app: asignar al sitio mas
+            # cercano en linea recta esta mal, porque dos puntos a 200 m pueden
+            # estar en barrancas que no se comunican. Se sigue el agua.
+            if cuerpo.get('latitud') is not None and cuerpo.get('longitud') is not None:
+                a = ctx()['asignacion'].asignar(cuerpo['latitud'], cuerpo['longitud'])
+                cuerpo['c_sitio_asignado'] = a['c_sitio_asignado']
+                cuerpo['distancia_al_cauce_m'] = a['distancia_al_cauce_m']
             e = validador.validar(cuerpo, ESQ['reporte_ciudadano'])
             if e:
                 return error(422, {'error': 'contrato no cumplido', 'detalles': e})

@@ -6,7 +6,7 @@
   "outputDirectory": "panel/dist",
   "functions": {
     "api/index.py": {
-      "includeFiles": "{backend/*.py,motor/*.py,contrato/validador.py,contrato/esquemas/**,contrato/fixtures/**,datos/procesados/*.csv,datos/procesados/red/*.csv}",
+      "includeFiles": "{backend/*.py,motor/*.py,contrato/validador.py,contrato/esquemas/**,contrato/fixtures/**,datos/procesados/*.csv,datos/procesados/red/*.csv,datos/procesados/red/red_asignacion.json}",
       "maxDuration": 60
     }
   },

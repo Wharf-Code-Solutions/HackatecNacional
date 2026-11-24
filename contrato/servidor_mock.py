@@ -221,6 +221,13 @@ class Manejador(BaseHTTPRequestHandler):
         if ruta == '/reportes':
             publico = [{k: v for k, v in r.items() if k != 'correo'} for r in REPORTES]
             return self._responder(200, {'reportes': publico})
+        m = re.match(r'^/reportes/(RC-[0-9]{8}-[0-9]{4})$', ruta)
+        if m:
+            # Consulta de folio para la app ciudadana (M8). Sin el correo.
+            r = next((x for x in REPORTES if x['c_reporte'] == m.group(1)), None)
+            if r is None:
+                return self._responder(404, {'error': 'folio no encontrado'})
+            return self._responder(200, {k: v for k, v in r.items() if k != 'correo'})
         return self._responder(404, {'error': 'ruta no encontrada', 'ruta': ruta})
 
     def _leer_cuerpo(self):

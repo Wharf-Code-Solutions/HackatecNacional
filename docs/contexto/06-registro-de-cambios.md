@@ -283,6 +283,54 @@ orillas y un volcán tenue al fondo. Las sondas, el cable y la torre se recoloca
 `05-decisiones-tecnicas.md` (consecuencia de D19), `CLAUDE.md`.
 **Impacto en otros módulos.** Ninguno.
 
+## 2026-11-24 · M8 especificada, y sus dos dependencias de backend resueltas
+
+**Qué cambió.** Nuevo `docs/17-plan-app-ciudadana.md`: la especificación completa de la app
+ciudadana como **PWA en React y Vite** bajo `/ciudadano/`, con las decisiones tomadas y
+justificadas, las alternativas descartadas, el contrato campo por campo y un criterio de
+terminado medible. Y se implementaron las dos piezas de backend que el plan listaba como
+dependencias:
+
+- **`GET /reportes/{c_reporte}`** en el backend y en el servidor de pruebas. Devuelve un
+  reporte sin el campo `correo` y 404 si el folio no existe.
+- **Asignación al tramo del río** en `POST /reportes`, vía `backend/asignacion.py` y la red
+  podada que produce `scripts/71_red_para_asignacion.py`.
+
+**Por qué PWA y no Flutter.** El equipo ya tiene React, Vite y Vercel funcionando con el
+backend en el mismo despliegue; Flutter sería un segundo toolchain, un APK que distribuir y
+un emulador en la máquina del pitch. Y para una app de participación, pedir una instalación
+es una barrera de adopción real: el reporte se levanta junto al río o no se levanta. SIGRIV
+se quedó en web, así que tampoco hay código Flutter que reutilizar.
+
+**La red podada.** La red completa son 65 342 tramos y 61 MB de shapefiles: no cabe en una
+función de Vercel. Se conservan los tramos cuya cadena aguas abajo alcanza un sitio en
+20 km o menos, que son **11 765**, con el trazo simplificado a unos 30 m. Resultado:
+**1.6 MB**, versionado porque la función lo necesita desde el repositorio.
+
+**Dos decisiones del asignador que conviene conocer.** La tolerancia es de **1 500 m**, no
+los 150 m que se usaron para los sitios de monitoreo: un sitio de muestreo está en el río,
+una persona reporta desde donde puede pararse y el GPS falla en una barranca. Si el punto
+queda más lejos, el sitio va en `null` pero la distancia se reporta igual. Y se asigna el
+sitio **aguas abajo**, no el más cercano, porque ahí es donde la contaminación reportada se
+va a medir y es lo que permite cruzar el reporte con una alerta de sensor.
+
+**Comprobado.** Las coordenadas exactas de un sitio enganchan entre 2 y 8 m; un punto en el
+centro de Puebla da 1 064 m y se asigna; uno en Ciudad de México se rechaza. De punta a
+punta contra el backend real, un reporte junto al río San Francisco quedó asignado a
+`DLPUE1975` a 4.5 m del cauce. Las pruebas de `backend/prueba.py` siguen pasando, incluidas
+las de concurrencia y la de la función de Vercel.
+
+**Qué arrastró.** `backend/almacen.py` (busca un reporte por folio),
+`contrato/servidor_mock.py` (misma ruta, el mock es la referencia ejecutable), `vercel.json`
+(incluye el JSON en el bundle), `docs/README.md`,
+`docs/contexto/02-mapa-del-repo.md`, `docs/12-estado-y-traspaso.md` y `CLAUDE.md`.
+
+**Impacto en otros módulos.** Quien construya M8 ya no tiene dependencias de backend. Queda
+pendiente a propósito el `buildCommand` de `vercel.json`, que no se puede aplicar antes de
+que `ciudadano/` exista o el despliegue se rompe: va junto con el andamio.
+
+---
+
 ## 2026-11-24 · Modelos proxy: uno sirve, el otro no, y una correccion
 
 **Qué cambió.** Nuevo `scripts/90_modelos_proxy.py`. Ajusta las dos relaciones

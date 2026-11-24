@@ -295,3 +295,9 @@ class Almacen:
     def reportes(self):
         self._vigente()
         return [json.loads(f[0]) for f in self._q('SELECT reporte FROM reporte ORDER BY id').fetchall()]
+
+    @con_candado
+    def reporte(self, c_reporte):
+        self._vigente()
+        fila = self._q('SELECT reporte FROM reporte WHERE c_reporte = ?', (c_reporte,)).fetchone()
+        return json.loads(fila[0]) if fila else None
