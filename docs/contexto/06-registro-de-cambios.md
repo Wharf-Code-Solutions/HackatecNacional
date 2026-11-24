@@ -21,6 +21,18 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Módulo B: escuelas encimadas se agrupan en el mapa
+
+**Qué cambió.** `MapaEstaciones.jsx` junta las escuelas que comparten coordenada en un solo punto con el número de
+escuelas y el color del mayor riesgo; la ventana al cursor las lista todas. Las 43 de la cuenca quedan en 28 puntos
+(15 pares). Puntos un poco más grandes para distinguirlos de las estaciones.
+**Por qué.** El usuario veía muy pocas: 14 escuelas caían exactamente sobre otra.
+**Qué arrastró.** Nada más.
+**Impacto en otros módulos.** A: revisar si esas coordenadas son del plantel o de la localidad (otro turno en el
+mismo edificio explicaría la coincidencia).
+
+---
+
 ## 2026-11-24 · Módulo B: el panel solo muestra escuelas de la cuenca
 
 **Qué cambió.** `panel/src/lib/datos.js` filtra `escuelas.json` a las escuelas de Puebla (CCT 21…) dentro del

@@ -108,20 +108,42 @@ export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir,
           layout: { 'text-field': ['get', 'rotulo'], 'text-font': ITALICA, 'text-size': 11.5, 'text-anchor': 'left', 'text-offset': [0.9, 0] },
           paint: { 'text-color': '#14527a', 'text-halo-color': '#fff', 'text-halo-width': 1.5 } });
 
-        // Escuelas de escuelas.json, encima de la red y debajo de las estaciones.
-        m.addSource('escuelas', { type: 'geojson', data: { type: 'FeatureCollection', features: conCoord.map((e) => ({
-          type: 'Feature', geometry: { type: 'Point', coordinates: [e.longitud, e.latitud] },
-          properties: { cct: e.cct, nombre: e.nombre, nivel: e.nivel || '', municipio: e.municipio || '', localidad: e.localidad || '',
-            riesgo: (e.riesgo || {}).nivel || '', indice: (e.riesgo || {}).indice, fuente: e.fuente_agua || '', estacion: e.c_estacion || '' },
-        })) } });
+        // Escuelas de escuelas.json, encima de la red y debajo de las estaciones. Varias comparten
+        // coordenada (otro turno en el mismo plantel, o la coordenada de la localidad): se dibujan
+        // como un punto con el numero de escuelas y el color del mayor riesgo del grupo.
+        const ORDEN_RIESGO = { muy_alto: 4, alto: 3, medio: 2, bajo: 1 };
+        const grupos = {};
+        conCoord.forEach((e) => {
+          const k = e.longitud.toFixed(4) + ',' + e.latitud.toFixed(4);
+          (grupos[k] = grupos[k] || []).push(e);
+        });
+        const fila = (e) => '<b>' + e.nombre + '</b><br>' + e.cct + ' · ' + inicial(e.nivel || '') + ' · riesgo ' +
+          (RIESGO_TXT[(e.riesgo || {}).nivel] || 'sin dato') +
+          ((e.riesgo || {}).indice != null ? ' (' + Number(e.riesgo.indice).toFixed(2) + ')' : '') +
+          '<br>Agua: ' + (FUENTE_TXT[e.fuente_agua] || 'sin dato') + (e.c_estacion ? ' · mecanismo ' + e.c_estacion : '');
+        const puntosEsc = Object.values(grupos).map((g) => {
+          g.sort((p, q) => ((q.riesgo || {}).indice || 0) - ((p.riesgo || {}).indice || 0));
+          const peor = g.reduce((m, e) => Math.max(m, ORDEN_RIESGO[(e.riesgo || {}).nivel] || 0), 0);
+          const riesgo = Object.keys(ORDEN_RIESGO).find((k) => ORDEN_RIESGO[k] === peor) || '';
+          const lugar = inicial(g[0].localidad || '') + ', ' + inicial(g[0].municipio || '');
+          const html = (g.length > 1 ? '<b>' + g.length + ' escuelas en ' + lugar + '</b><br><br>' : '') +
+            g.map(fila).join('<br><br>') + (g.length > 1 ? '' : '<br>' + lugar);
+          return { type: 'Feature', geometry: { type: 'Point', coordinates: [g[0].longitud, g[0].latitud] },
+            properties: { n: g.length, riesgo, html } };
+        });
+        m.addSource('escuelas', { type: 'geojson', data: { type: 'FeatureCollection', features: puntosEsc } });
         m.addLayer({ id: 'escuelas', type: 'circle', source: 'escuelas',
           paint: {
-            'circle-radius': ['interpolate', ['linear'], ['zoom'], 7,
-              ['match', ['get', 'riesgo'], 'muy_alto', 5, 'alto', 4.5, 3], 12,
-              ['match', ['get', 'riesgo'], 'muy_alto', 9, 'alto', 8, 6]],
-            'circle-color': ['match', ['get', 'riesgo'], 'muy_alto', '#5c0f24', 'alto', '#9D2449', 'medio', '#d58ea3', '#f1d3dc'],
-            'circle-stroke-color': '#fff', 'circle-stroke-width': 1,
+            'circle-radius': ['interpolate', ['linear'], ['zoom'],
+              7, ['case', ['>', ['get', 'n'], 1], 8, ['match', ['get', 'riesgo'], 'muy_alto', 6, 'alto', 5.5, 4.5]],
+              12, ['case', ['>', ['get', 'n'], 1], 12, ['match', ['get', 'riesgo'], 'muy_alto', 10, 'alto', 9, 7]]],
+            'circle-color': ['match', ['get', 'riesgo'], 'muy_alto', '#5c0f24', 'alto', '#9D2449', 'medio', '#c56a87', '#e3a9ba'],
+            'circle-stroke-color': '#fff', 'circle-stroke-width': 1.5,
           } });
+        m.addLayer({ id: 'escuelas_n', type: 'symbol', source: 'escuelas', filter: ['>', ['get', 'n'], 1],
+          layout: { 'text-field': ['to-string', ['get', 'n']], 'text-font': ['Noto Sans Bold'], 'text-size': 11,
+            'text-allow-overlap': true, 'text-ignore-placement': true },
+          paint: { 'text-color': '#fff' } });
 
         // Ventanas al pasar el cursor, como en mapa/.
         const emergente = (capa, html) => {
@@ -129,10 +151,7 @@ export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir,
           m.on('mousemove', capa, (e) => { m.getCanvas().style.cursor = 'pointer'; pop.setLngLat(e.lngLat).setHTML(html(e.features[0].properties)).addTo(m); });
           m.on('mouseleave', capa, () => { m.getCanvas().style.cursor = ''; pop.remove(); });
         };
-        emergente('escuelas', (p) => '<b>' + p.nombre + '</b><br>' + p.cct + ' · ' + inicial(p.nivel) + '<br>' +
-          inicial(p.localidad) + ', ' + inicial(p.municipio) + '<br>Riesgo ' + (RIESGO_TXT[p.riesgo] || 'sin dato') +
-          (p.indice != null && p.indice !== 'null' ? ' (índice ' + Number(p.indice).toFixed(2) + ')' : '') +
-          '<br>Agua: ' + (FUENTE_TXT[p.fuente] || 'sin dato') + (p.estacion ? '<br>Mecanismo ' + p.estacion : ''));
+        emergente('escuelas', (p) => p.html);
         emergente('confluencias', (p) => '<b>Confluencia</b><br>' + p.detalle + '<br>Red aguas arriba: ' +
           miles(p.km_red_principal) + ' y ' + miles(p.km_red_afluente) + ' km');
 
