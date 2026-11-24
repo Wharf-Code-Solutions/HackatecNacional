@@ -10,7 +10,12 @@ Solo biblioteca estandar, para que el mock y el backend lo carguen igual. Ningun
 importa al otro: lo comparten por el contrato, igual que el validador.
 
 Llave: variable de entorno GEMINI_API_KEY, o la misma linea en el .env de la raiz del repo (no se
-versiona). Nunca se imprime ni se manda en una URL. Modelo: GEMINI_MODEL (por omision gemini-2.5-flash).
+versiona). Nunca se imprime ni se manda en una URL.
+
+Modelos: GEMINI_MODEL admite una lista separada por comas y se prueban en orden; si uno no existe para la
+cuenta (404, p. ej. gemini-2.5-flash ya no se ofrece a cuentas nuevas) o esta saturado (503), se pasa al
+siguiente. Por omision van primero los modelos "lite", que contestaron en ~1 s al medirlos; los "flash"
+completos llegaron a tardar mas de 40 s por saturacion.
 
 Politica: si el servicio no esta disponible (sin llave, sin red, error) responde estado
 'no_disponible' y la app deja enviar con un aviso; no se bloquea a nadie por una falla nuestra.
@@ -28,7 +33,8 @@ RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TIPOS = ['descarga_visible', 'espuma', 'color_anormal', 'mal_olor', 'basura_o_residuos', 'peces_muertos']
 UMBRAL = 0.6                  # menos confianza que esto cuenta como 'no corresponde'
 MAX_BYTES = 600 * 1024        # la miniatura real pesa ~60 KB; esto corta abusos
-TIEMPO_MAX_S = 15
+TIEMPO_MAX_S = 12             # por modelo
+MODELOS = ['gemini-flash-lite-latest', 'gemini-3.5-flash-lite', 'gemini-3.8-flash']
 POR_MINUTO = 10               # por IP, en este proceso (en Vercel es por instancia: es un freno, no una garantia)
 
 PROMPT = (
@@ -118,31 +124,37 @@ def analizar(foto):
     llave = _llave()
     if not llave:
         return {'estado': 'no_disponible', 'razon': 'sin_llave'}
-    modelo = os.environ.get('GEMINI_MODEL', 'gemini-2.5-flash')
+    modelos = [m.strip() for m in os.environ.get('GEMINI_MODEL', '').split(',') if m.strip()] or MODELOS
     base = os.environ.get('GEMINI_URL_BASE', 'https://generativelanguage.googleapis.com/v1beta')
-    cuerpo = {
+    cuerpo = json.dumps({
         'contents': [{'parts': [{'text': PROMPT}, {'inline_data': {'mime_type': mime, 'data': datos}}]}],
         'generationConfig': {'temperature': 0, 'responseMimeType': 'application/json', 'responseSchema': ESQUEMA},
-    }
-    req = urllib.request.Request(
-        '{}/models/{}:generateContent'.format(base, modelo),
-        data=json.dumps(cuerpo).encode('utf-8'),
-        headers={'Content-Type': 'application/json', 'x-goog-api-key': llave}, method='POST')
-    try:
-        with urllib.request.urlopen(req, timeout=TIEMPO_MAX_S) as r:
-            resp = json.loads(r.read().decode('utf-8'))
-        texto = resp['candidates'][0]['content']['parts'][0]['text']
-        d = json.loads(texto)
-        tipo = d['tipo']
-        confianza = max(0.0, min(1.0, float(d['confianza'])))
-        if tipo not in TIPOS + ['ninguno']:
-            raise ValueError('tipo fuera del catalogo')
-    except urllib.error.HTTPError as e:
-        return {'estado': 'no_disponible', 'razon': 'http_{}'.format(e.code)}
-    except (urllib.error.URLError, TimeoutError, OSError):
-        return {'estado': 'no_disponible', 'razon': 'sin_red'}
-    except (KeyError, IndexError, ValueError, TypeError):
-        return {'estado': 'no_disponible', 'razon': 'respuesta_inesperada'}
-    return {'estado': 'ok', 'tipo': tipo, 'confianza': round(confianza, 2),
-            'motivo': str(d.get('motivo', ''))[:200], 'modelo': modelo,
-            'valida': tipo != 'ninguno' and confianza >= UMBRAL}
+    }).encode('utf-8')
+    razon = 'sin_modelo'
+    for modelo in modelos:
+        req = urllib.request.Request(
+            '{}/models/{}:generateContent'.format(base, modelo), data=cuerpo,
+            headers={'Content-Type': 'application/json', 'x-goog-api-key': llave}, method='POST')
+        try:
+            with urllib.request.urlopen(req, timeout=TIEMPO_MAX_S) as r:
+                resp = json.loads(r.read().decode('utf-8'))
+            d = json.loads(resp['candidates'][0]['content']['parts'][0]['text'])
+            tipo = d['tipo']
+            confianza = max(0.0, min(1.0, float(d['confianza'])))
+            if tipo not in TIPOS + ['ninguno']:
+                raise ValueError('tipo fuera del catalogo')
+        except urllib.error.HTTPError as e:
+            razon = 'http_{}'.format(e.code)
+            if e.code in (404, 429, 500, 502, 503, 504):
+                continue                       # este modelo no esta o esta saturado: prueba el siguiente
+            break                              # 400/401/403: la llave o la peticion estan mal, otro modelo no lo arregla
+        except (urllib.error.URLError, TimeoutError, OSError):
+            razon = 'sin_red'
+            continue
+        except (KeyError, IndexError, ValueError, TypeError):
+            razon = 'respuesta_inesperada'
+            continue
+        return {'estado': 'ok', 'tipo': tipo, 'confianza': round(confianza, 2),
+                'motivo': str(d.get('motivo', ''))[:200], 'modelo': modelo,
+                'valida': tipo != 'ninguno' and confianza >= UMBRAL}
+    return {'estado': 'no_disponible', 'razon': razon}
