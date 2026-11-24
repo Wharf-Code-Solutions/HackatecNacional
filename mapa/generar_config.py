@@ -58,7 +58,7 @@ def leer_env(ruta):
 
 def enmascarar(token):
     # Nunca se imprime el token completo: la salida de la terminal se comparte y se copia.
-    return '{}…{} ({} caracteres)'.format(token[:3], token[-4:], len(token))
+    return '{}...{} ({} caracteres)'.format(token[:3], token[-4:], len(token))
 
 
 def main():
