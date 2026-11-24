@@ -56,9 +56,9 @@ Para revisar en local lo mismo que servirá Vercel: `npm run build` y `npm run p
 
 ## La foto del modo demostración
 
-`public/demo/foto.json` es una copia de lo que respondió el mock con `--motor real` después de
-reproducir `descarga_industrial`. No se calcula en el panel. Si cambia el motor o el contrato, se
-vuelve a capturar con el mock corriendo:
+`public/demo/foto.json` es una copia de lo que respondió el backend (M5) después de reproducir
+`descarga_industrial`, con la predicción de cada alerta. No se calcula en el panel. Si cambia el motor,
+M3 o el contrato, se vuelve a capturar con el backend corriendo (el mock no calcula la predicción):
 
 ```powershell
 npm run capturar-demo
@@ -79,7 +79,10 @@ npm run capturar-demo
     sus fechas (I12), más las lecturas recientes de la estación contra esa banda;
   - las cinco sondas de la estación, cada una contra su banda;
   - fuente probable con puntaje y medidas sugeridas, si el motor las envía;
-  - sitios aguas abajo y aguas arriba con su distancia sobre el cauce (topología M1).
+  - **hasta dónde llega** (M3): a qué sitios aguas abajo, entre qué horas y con qué valor esperado,
+    con su confianza y los supuestos del modelo; si el backend no la calcula (el mock), la lista de
+    sitios aguas abajo;
+  - sitios aguas arriba con su distancia sobre el cauce (topología M1).
 - **Avisos técnicos**, en su propia pestaña: son del dispositivo, no del río (I8).
 - **Reportes ciudadanos**, sin el correo de quien reporta.
 
@@ -116,7 +119,6 @@ guinda, Noto Sans. Las variables están al inicio de `src/estilos.css` con los n
 
 ## Lo que falta
 
-- **Predicción de llegada** de M3 (`contrato/fixtures/prediccion_ejemplo.json` ya existe).
 - **Sesión de usuario**: el panel aún no pide identificarse.
 - **Backend real (M5)**: debe implementar `PATCH /alertas/<c_alerta>` con la misma regla que
   el mock (solo `estado` y `responsable`; lo demás, 422).

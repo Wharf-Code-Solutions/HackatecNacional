@@ -35,7 +35,7 @@ después el **análisis**. Las vistas actuales no anuncian el análisis en panta
 | M1 topología (orden aguas arriba → abajo) | **Construida** (`scripts/70_topologia_red.py` → `datos/procesados/red/`): 210 de 219 sitios con sucesor y distancia sobre el cauce; 14 marcados para revisión |
 | M2 motor de reglas | **Construido** (`motor/reglas.py`): 0 alertas en el día de control contra 31 del stub, 0 ambientales con el sensor roto, los tres eventos detectados antes de su intensidad plena y su fuente bien clasificada. `servidor_mock.py --motor real` lo usa |
 | M3 propagación | **Construida** (`scripts/80_propagacion.py`): transporte conservativo con k = 0, porque la razón medida abajo/arriba en 90 tramos tiene mediana 1.00. Ventana de llegada por velocidad declarada 0.3-1.0 m/s; valor como banda p10-p90; cobertura 78 % fuera de muestra |
-| M7 panel de autoridad | **Prototipo** (`panel/`): alertas con evidencia y gráficas, estado y responsable vía `PATCH /alertas/<c_alerta>`; React con Vite para Vercel, modo demostración sin backend (D23); aún no muestra la predicción de M3 ni pide sesión |
+| M7 panel de autoridad | **Construido** (`panel/`): alertas con evidencia y gráficas, fuente probable con puntaje, predicción de M3 (ventanas de llegada aguas abajo), estado y responsable vía `PATCH /alertas/<c_alerta>`; React con Vite en Vercel, modo demostración sin backend (D23). Sin inicio de sesión |
 | Modelos proxy | Conductividad→SDT **publicado** (2 % de error fuera de muestra); turbiedad→SST **descartado** (35 %) |
 | M5 backend | **Construido** (`backend/`): FastAPI, SQLite en local y Postgres en Vercel (`/api` del mismo proyecto que el panel, D25); mismas respuestas que el mock (`backend/prueba.py` lo compara en vivo); motor sin memoria entre peticiones; `GET /alertas/<c_alerta>/prediccion` con M3. Sin autenticación |
 | M8 app, M9, M10 | Pendientes |
@@ -167,12 +167,12 @@ El usuario rechazó explícitamente el diseño con aspecto "hecho por IA" y lo h
 ## Lo que sigue (en orden)
 
 Ya hay datos (M0), sensor simulado (M4), mapa (M6), topología (M1), motor de reglas (M2), propagación
-(M3), backend (M5) y panel de autoridad (M7, prototipo). Falta mostrarlo completo y desplegarlo:
+(M3), backend (M5) y panel de autoridad (M7), desplegados en Vercel. Falta:
 
 1. Desplegar panel y backend en un solo proyecto de Vercel con la base en Supabase (pasos en `backend/README.md`). Antes de un uso real, autenticación en `POST /lecturas` y `PATCH /alertas`.
 2. M6: pluma aguas abajo con la ventana de llegada de M3 (ya la sirve `GET /alertas/<c_alerta>/prediccion`)
    y color por el índice de la plataforma; probar a ancho de teléfono. Sin añadir ruido a la vista.
-3. M7: mostrar la predicción de M3 en el expediente. M8 app ciudadana.
+3. M8 app ciudadana. En M7, inicio de sesión antes de un uso real.
 4. M9 demo de punta a punta y M10 costos, manual y propuesta por fases.
 5. Hardware: validar especificaciones de sondas, medir consumo en banco y cobertura celular por sitio; cotizar
    costos incluyendo calibración y reposición de sondas.

@@ -1,13 +1,14 @@
 // Captura una foto del backend para el modo demostración del panel.
 //
-// En Vercel no corre el servidor mock. Si el despliegue no tiene VITE_API_URL, el panel
-// muestra esta foto, marcada como demostración. La foto NO se calcula aquí: se copia tal
-// cual de lo que respondió el backend con el motor real.
+// Si el despliegue no tiene VITE_API_URL, el panel muestra esta foto, marcada como
+// demostración. La foto NO se calcula aquí: se copia tal cual de lo que respondió el
+// backend con el motor real, incluida la predicción de propagación de cada alerta.
 //
-// Uso (con el mock corriendo y un escenario reproducido):
-//   python contrato/servidor_mock.py --motor real
+// Uso, con el backend real (M5) corriendo y un escenario reproducido:
+//   backend\.venv\Scripts\python backend\servidor.py --limpiar
 //   python contrato/reproducir_escenario.py descarga_industrial
 //   npm run capturar-demo                    # o: node scripts/capturar-demo.mjs http://host:puerto
+// El mock con --motor real también sirve, pero no calcula la predicción y la foto sale sin ella.
 import { writeFileSync, mkdirSync, readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -35,10 +36,19 @@ const veredictos = {};
 for (const e of estaciones) {
   veredictos[e.c_estacion] = (await get('/veredictos?c_estacion=' + encodeURIComponent(e.c_estacion))).veredictos;
 }
+const predicciones = {};
+for (const a of alertas) {
+  const r = await fetch(API + '/alertas/' + encodeURIComponent(a.c_alerta) + '/prediccion');
+  if (r.ok) predicciones[a.c_alerta] = await r.json();
+}
+if (alertas.length && !Object.keys(predicciones).length) {
+  console.warn('Este backend no calcula la predicción (¿es el mock?): la foto sale sin ella.');
+}
 mkdirSync(dirname(DESTINO), { recursive: true });
 writeFileSync(DESTINO, JSON.stringify({
   capturado: new Date().toISOString(),
-  origen: 'servidor_mock.py --motor real',
-  salud, alertas, reportes, veredictos,
+  origen: salud.persistencia ? 'backend M5 (' + salud.persistencia + ')' : 'servidor_mock.py --motor real',
+  salud, alertas, reportes, veredictos, predicciones,
 }) + '\n');
-console.log('Foto guardada en public/demo/foto.json: ' + alertas.length + ' alertas, ' + reportes.length + ' reportes.');
+console.log('Foto guardada en public/demo/foto.json: ' + alertas.length + ' alertas, ' + reportes.length +
+  ' reportes, ' + Object.keys(predicciones).length + ' predicciones.');

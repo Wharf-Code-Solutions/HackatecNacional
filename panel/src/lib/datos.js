@@ -70,7 +70,7 @@ export function useBackend(codigos) {
       getJSON(import.meta.env.BASE_URL + 'demo/foto.json').then((f) => {
         if (!vivo.current) return;
         setEstado({ conectado: true, motor: f.salud.motor, alertas: f.alertas, reportes: f.reportes,
-          veredictos: f.veredictos, capturado: f.capturado });
+          veredictos: f.veredictos, capturado: f.capturado, predicciones: f.predicciones || {} });
       }).catch(() => setEstado((s) => ({ ...s, conectado: false })));
       return undefined;
     }
@@ -110,7 +110,35 @@ export function useBackend(codigos) {
     return { ...nueva };
   }, [origen]);
 
-  return { ...estado, origen, guardar };
+  // Propagacion aguas abajo de una alerta (M3), calculada por el backend. Una alerta no
+  // cambia, asi que su prediccion se pide una vez. Devuelve { prediccion } o { motivo }.
+  const cache = useRef({});
+  const prediccion = useCallback(async (c_alerta) => {
+    if (origen.modo === 'demo') {
+      const p = (estado.predicciones || {})[c_alerta];
+      return p ? { prediccion: p } : { motivo: 'La foto de demostración no trae la predicción de esta alerta.' };
+    }
+    if (cache.current[c_alerta]) return cache.current[c_alerta];
+    let r;
+    try {
+      r = await fetch(origen.url + '/alertas/' + encodeURIComponent(c_alerta) + '/prediccion');
+    } catch {
+      return { motivo: 'Sin conexión con el backend.' };
+    }
+    if (r.status === 404) {
+      const cuerpo = await r.json().catch(() => ({}));
+      // El mock no tiene esta ruta; el backend real (M5) si.
+      return { motivo: cuerpo.error === 'ruta no encontrada'
+        ? 'Este backend no calcula la propagación: es el servidor de prueba. El backend real (M5) sí.'
+        : 'El backend no encontró la alerta.' };
+    }
+    if (!r.ok) return { motivo: 'El backend respondió ' + r.status + ' al pedir la predicción.' };
+    const res = { prediccion: await r.json() };
+    cache.current[c_alerta] = res;
+    return res;
+  }, [origen, estado.predicciones]);
+
+  return { ...estado, origen, guardar, prediccion };
 }
 
 // Ancho real de un elemento, para dibujar las gráficas a su tamaño (el texto no se encoge).

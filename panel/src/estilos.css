@@ -103,6 +103,18 @@ main { flex: 1; padding-top: 24px; padding-bottom: 40px; }
 .tip { position: fixed; z-index: 10; pointer-events: none; max-width: 300px; background: var(--neutro800); color: #fff;
   font-size: 13px; line-height: 1.4; padding: 6px 10px; border-radius: 4px; }
 
+/* ---------------------------------------------------------------- prediccion (M3) */
+.lead-prediccion { font-size: 15px; color: var(--titulo); line-height: 1.55; }
+.lead-prediccion b { font-weight: 600; }
+.sin-corte { white-space: nowrap; }
+.confianza { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.confianza i { width: 10px; height: 10px; border-radius: 2px; flex: none; }
+.enlace { font: inherit; font-size: inherit; color: var(--principal); background: none; border: 0; padding: 0;
+  text-decoration: underline; cursor: pointer; }
+.supuestos { margin-top: 14px; font-size: 14px; }
+.supuestos summary { cursor: pointer; color: var(--principal); font-weight: 600; }
+.supuestos .nota { margin-top: 8px; }
+
 /* ---------------------------------------------------------------- estaciones */
 .estaciones-bloque { margin-top: 24px; }
 .estaciones-bloque .titulo-seccion { margin-bottom: 8px; }

@@ -107,7 +107,7 @@ export default function App() {
                   <ListaAlertas alertas={be.alertas} filtros={filtros} setFiltros={setFiltros} sel={sel}
                     onElegir={elegirAlerta} conectado={be.conectado} />
                   <Expediente alerta={alerta} veredictos={alerta ? be.veredictos[alerta.c_estacion] : []}
-                    motor={be.motor} guardar={be.guardar} demo={demo} />
+                    motor={be.motor} guardar={be.guardar} prediccion={be.prediccion} demo={demo} />
                 </div>
               </section>
             )}

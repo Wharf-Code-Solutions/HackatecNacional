@@ -73,7 +73,8 @@ planeado es lo primero que se pierde al documentar y lo primero que un jurado de
 | Dispositivo físico (hardware armado y medido) | **Pendiente**: no hay hardware comprado; las especificaciones son supuestos de diseño | módulo M4 |
 | Backend y base de datos | **Construido**: FastAPI y SQLite, mismas respuestas que el mock, datos que sobreviven a un reinicio, predicción de M3 | `backend/` |
 | Mapa de la cuenca con las 5 estaciones y zoom al simulador de la estación (prototipo de M6) | **Construido**: ríos, subcuencas, 219 sitios con "sin dato" visible; lee alertas del backend por contrato | `mapa/` |
-| Mapa público definitivo, panel de autoridad, app ciudadana | **Pendiente** | módulos M6, M7, M8 |
+| Panel de autoridad: alertas con evidencia, fuente probable, predicción de propagación y atención | **Construido**, desplegado en Vercel; sin inicio de sesión | `panel/` |
+| Mapa público definitivo, app ciudadana | **Pendiente** | módulos M6, M8 |
 | Estimación de costos y propuesta de implementación | **Pendiente** | módulo M10 |
 
 El reparto de módulos y el criterio de terminado de cada uno están en

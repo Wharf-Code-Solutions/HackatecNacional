@@ -37,7 +37,7 @@ punta (M9).
 | M4 Dispositivo | **Simulador construido y probado; sin hardware.** Figura 3D y línea de tiempo de recepción | `dispositivo/` |
 | M5 Backend | **Construido.** FastAPI; SQLite en local y Postgres en Vercel, en `/api` del mismo proyecto que el panel; mismas respuestas que el mock, comparado en vivo; sin memoria entre peticiones; predicción de M3. Sin autenticación | `backend/`, `api/` |
 | M6 Mapa | **Prototipo**: cuenca delimitada y confluencias (aún no colorea por índice ni está probado a ancho de teléfono) | `mapa/` |
-| M7 Panel de autoridad | **Prototipo.** Lista alertas con evidencia y gráficas, cambia estado y responsable; React con Vite, listo para Vercel con modo demostración; aún no muestra la predicción de M3 ni pide sesión | `panel/` |
+| M7 Panel de autoridad | **Construido.** Alertas con evidencia y gráficas, fuente probable con puntaje, predicción de M3 y cambio de estado y responsable; React con Vite, desplegado en Vercel. Sin inicio de sesión | `panel/` |
 | M8 App ciudadana | Pendiente | — |
 | M9 Integración | Pendiente | — |
 | M10 Documentación y costos | En curso; faltan costos, manual por usuario y propuesta por fases | `docs/` |

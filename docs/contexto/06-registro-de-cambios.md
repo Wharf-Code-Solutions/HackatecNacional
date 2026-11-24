@@ -21,6 +21,30 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · M7: el panel muestra hasta dónde llega la contaminación
+
+**Qué cambió.** El expediente de cada alerta pide `GET /alertas/<c_alerta>/prediccion` (M3, servida
+por el backend) y muestra: una frase con el primer sitio aguas abajo y su ventana de llegada, tres
+cifras (llegada al primer sitio, sitios a menos de 50 km, valor esperado), una gráfica de ventanas
+de llegada por sitio coloreada por confianza, la tabla con el valor esperado como banda p10 a p90 y
+los supuestos del modelo. Con el mock, que no tiene esa ruta, lo dice y muestra la topología. La foto
+del modo demostración (`panel/public/demo/foto.json`) se recapturó del backend y trae las 5
+predicciones. Con esto M7 cumple su criterio de terminado y pasa a construido.
+
+**Por qué.** Era lo único que le faltaba al criterio de M7, y responde lo que una autoridad pregunta
+primero ante una descarga: a quién le llega y cuándo.
+
+**Verificación.** Contra el backend local: la alerta de conductividad de ATY-01 llega primero a 0.5 km
+entre +9 y +31 min, 22 sitios dentro de 50 km. Con el mock (`?api=`): mensaje y topología. Compilación
+de producción sin backend: modo demostración con la predicción y ninguna llamada de red al backend.
+A 375 px sin desborde. Los colores de confianza pasan el validador de paletas como escala ordinal.
+
+**Qué arrastró.** `panel/README.md`, `CLAUDE.md`, `01-que-construimos.md`, `12-estado-y-traspaso.md`.
+
+**Impacto en otros módulos.** Ninguno. M6 puede usar la misma ruta para pintar la pluma.
+
+---
+
 ## 2026-11-24 · M5: la base en producción es Supabase
 
 **Qué cambió.** El backend en Vercel guarda en el Postgres de Supabase por su Transaction pooler

@@ -3,6 +3,15 @@ export function hora(iso) {
   return new Date(iso).toLocaleString('es-MX', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
 }
 
+// Solo la hora si es el mismo dia que `referencia`; si no, tambien el dia.
+export function horaCorta(iso, referencia) {
+  if (!iso) return 'sin dato';
+  const d = new Date(iso);
+  const t = d.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
+  if (referencia && d.toDateString() === new Date(referencia).toDateString()) return t;
+  return d.toLocaleDateString('es-MX', { day: 'numeric', month: 'short' }) + ', ' + t;
+}
+
 export function num(v, dec = 2) {
   if (v == null || Number.isNaN(Number(v))) return 'sin dato';
   return Number(v).toLocaleString('es-MX', { maximumFractionDigits: dec });

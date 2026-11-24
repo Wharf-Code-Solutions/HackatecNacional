@@ -6,6 +6,7 @@ import Miniaturas from '../graficas/Miniaturas.jsx';
 import Serie from '../graficas/Serie.jsx';
 import { Mensaje } from '../graficas/marcas.jsx';
 import { Nivel } from './ListaAlertas.jsx';
+import Prediccion from './Prediccion.jsx';
 
 // Estado y responsable. Se monta de nuevo al cambiar de alerta (key), así el sondeo no pisa
 // lo que se está escribiendo.
@@ -122,7 +123,7 @@ function Medidas({ ms }) {
   );
 }
 
-export default function Expediente({ alerta, veredictos, motor, guardar, demo }) {
+export default function Expediente({ alerta, veredictos, motor, guardar, prediccion, demo }) {
   const { estaciones, lineaBase, nombreEstacion, banda, unidad } = useDatos();
   if (!alerta) {
     return (
@@ -187,12 +188,9 @@ export default function Expediente({ alerta, veredictos, motor, guardar, demo })
       </div>
 
       <section className="bloque">
-        <h3>Propagación aguas abajo</h3>
-        <Mensaje tipo="info">
-          El panel todavía no muestra la predicción de llegada del modelo de propagación (M3). Mientras tanto,
-          estos son los sitios de monitoreo que quedan río abajo, por distancia sobre el cauce.
-        </Mensaje>
-        <TablaRed sitio={a.c_sitio || e.c_sitio} sentido="abajo" />
+        <h3>Hasta dónde llega</h3>
+        <Prediccion alerta={a} unidad={unidad(a)} obtener={prediccion}
+          sinPrediccion={<TablaRed sitio={a.c_sitio || e.c_sitio} sentido="abajo" />} />
       </section>
 
       <section className="bloque">
