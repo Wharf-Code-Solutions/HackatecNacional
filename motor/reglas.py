@@ -96,10 +96,12 @@ class Motor:
     los contadores de persistencia. Nada se escribe a disco.
     """
 
-    def __init__(self, linea_base=None, estaciones=None, umbrales=None):
+    def __init__(self, linea_base=None, estaciones=None, umbrales=None,
+                 candidatos=None):
         self.lb = linea_base if linea_base is not None else cargar_linea_base()
         self.est = estaciones if estaciones is not None else cargar_estaciones()
         self.esc = umbrales if umbrales is not None else cargar_escala_conagua()
+        self.cand = candidatos if candidatos is not None else cargar_candidatos()
         self.reciente = defaultdict(
             lambda: deque(maxlen=VENTANA_RECIENTE + BRECHA_GUARDA))
         self.congelado = defaultdict(int)
@@ -313,12 +315,12 @@ class Motor:
                       else 'cambio_brusco'),
             'criterio_aplicado': 'LINEA_BASE_SITIO',
             'lecturas_consecutivas': necesaria,
-            'fuente_probable': self._fuente_probable(senales, valores, refs),
+            'fuente_probable': self._fuente_probable(senales, valores, refs, sitio),
             'medidas_sugeridas': [], 'estado': 'Abierta', 'responsable': None,
         })
 
     # -------------------------------------------------------- fuente probable
-    def _fuente_probable(self, senales, valores, refs):
+    def _fuente_probable(self, senales, valores, refs, sitio=None):
         """Firma de la descarga a partir de los 5 parametros de campo.
 
         Se razona en RAZONES contra la mediana reciente, no en z. El z sirve
@@ -391,11 +393,34 @@ class Motor:
             tipo = 'mixta'
         return {'tipo': tipo, 'puntaje': round(min(1.0, p), 2),
                 'evidencia': evidencia,
-                # se llena cuando el DENUE y el REPDA esten procesados
-                'candidatos_aguas_arriba': []}
+                'candidatos_aguas_arriba': self._candidatos(sitio, tipo)}
+
+    def _candidatos(self, sitio, tipo):
+        """Establecimientos del DENUE aguas arriba del sitio cuyo giro es
+        compatible con la fuente. Son sospechosos para inspeccion: el DENUE no
+        dice que descarguen. REPDA sigue pendiente."""
+        por_tipo = self.cand.get(sitio, {})
+        if tipo == 'mixta':
+            fuentes = [por_tipo.get('industrial', [])[:3], por_tipo.get('organica', [])[:3]]
+            return [c for lote in fuentes for c in lote]
+        clave = TIPO_A_GIRO.get(tipo)
+        return list(por_tipo.get(clave, [])[:5]) if clave else []
 
 
 # ------------------------------------------------------------------- cargadores
+TIPO_A_GIRO = {'descarga_industrial': 'industrial',
+               'aguas_residuales_municipales': 'organica'}
+
+
+def cargar_candidatos(ruta=None):
+    """{c_sitio: {tipo de giro: [candidatos]}} del DENUE (scripts/95)."""
+    ruta = ruta or os.path.join(FIX, 'candidatos_denue.json')
+    if not os.path.exists(ruta):
+        return {}
+    with open(ruta, encoding='utf-8') as f:
+        return json.load(f)['sitios']
+
+
 def cargar_linea_base(ruta=None):
     ruta = ruta or os.path.join(FIX, 'linea_base.json')
     with open(ruta, encoding='utf-8') as f:

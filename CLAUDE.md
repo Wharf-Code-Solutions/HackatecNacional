@@ -5,15 +5,19 @@ Tlaxcala). Idioma del proyecto, de la documentación y de la conversación: **es
 
 ## Antes de tocar algo
 
-1. Lee `docs/contexto/00-LEEME-PRIMERO.md` y `01-invariantes.md`. Son las reglas que no se rompen.
-2. Ubica el archivo en `docs/contexto/02-mapa-del-repo.md`. Si es derivado (CSV procesados,
-   fixtures, `datos/procesados/mapa/`, `08-` y `09-` de documentación), **no lo edites: edita su generador**.
-3. Busca tu tipo de cambio en `05-protocolo-de-cambios.md`. Casi todo cambio arrastra documentación.
-4. Al terminar corre `python -I scripts/50_verificar_repo.py` (debe decir "Todas las comprobaciones
-   mecanicas pasan") y, si tocaste el simulador, `node dispositivo/simulador/prueba.js`. Si el cambio es
-   relevante, añade una entrada arriba en `docs/contexto/06-registro-de-cambios.md` (solo se añade).
-5. Si cambia el estado de un módulo, actualiza `docs/12-estado-y-traspaso.md`: es lo que lee el
-   compañero que retoma.
+Trabajo local = solo código y datos. **No releas ni actualices los `.md` de contexto en cada cambio.**
+
+1. Al empezar una sesión, lee solo lo que necesites: `docs/contexto/01-invariantes.md` si tocas datos o
+   contrato, y `02-mapa-del-repo.md` si dudas de si un archivo es derivado (CSV procesados, fixtures,
+   `datos/procesados/mapa/`, `08-` y `09-`: **no se editan, se edita su generador**). No leas el resto
+   por rutina.
+2. Mientras trabajas, verifica solo lo que tocaste (el script o `node dispositivo/simulador/prueba.js`
+   si fue el simulador).
+3. **Solo cuando el usuario pida commit/push** (o cierres un módulo): busca el tipo de cambio en
+   `docs/contexto/05-protocolo-de-cambios.md`, actualiza la documentación que arrastre, añade una
+   entrada arriba en `06-registro-de-cambios.md`, actualiza `docs/12-estado-y-traspaso.md` si cambió el
+   estado de un módulo y corre `python -I scripts/50_verificar_repo.py` (debe decir "Todas las
+   comprobaciones mecanicas pasan").
 
 ## La idea central
 
@@ -194,8 +198,7 @@ Ya hay datos (M0), sensor simulado (M4), mapa (M6), topología (M1), motor de re
   justificable y explicar por qué**, en lugar de devolverle la elección al usuario. Las
   preguntas se reservan para lo que de verdad es su decisión: alcance, prioridad y permiso.
 - Rama `main` del remoto del equipo. Sin líneas de coautor en los commits.
-- El estado para traspaso a compañeros vive en `docs/12-estado-y-traspaso.md`: actualízalo al
-  terminar un módulo.
+- El estado para traspaso vive en `docs/12-estado-y-traspaso.md`: se actualiza al hacer push, no en cada cambio.
 - Commit y push solo cuando el usuario lo pide. Remoto: `Wharf-Code-Solutions/HackatecNacional`.
 - Decisiones técnicas numeradas en `docs/05-decisiones-tecnicas.md` (hoy D1 a D21).
 - Cada cifra de la documentación sale de un archivo o de una corrida; si no puedes rastrearla, verifícala.
