@@ -101,7 +101,8 @@ El backend corre como función de Python en `/api` del mismo proyecto que el pan
 despliegue, mismo dominio y sin CORS. Lo configuran tres archivos en la raíz del repositorio:
 
 - `vercel.json`: compila el panel y la app ciudadana con `VITE_API_URL=/api`, junta en `panel/dist`
-  el panel (`/`), la app (`/ciudadano/`) y el simulador (`/dispositivo/simulador/`) con
+  el panel (`/`), la app (`/ciudadano/`), el mapa con las estaciones (`/mapa/`) y el simulador
+  (`/dispositivo/simulador/`) con
   `panel/scripts/ensamblar-sitio.mjs`, declara la función `api/index.py` con los archivos que lee
   (`backend/`, `motor/`, `contrato/*.py`, fixtures y `datos/procesados/`) y manda `/api/*` a ella.
 - `api/index.py`: monta el backend bajo `/api`.
@@ -120,6 +121,8 @@ Pasos en Vercel:
    `"persistencia": "temporal"`. Las tablas se crean solas en la primera petición, con RLS activo.
 3. En **Settings → Environment Variables**, agregar `GEMINI_API_KEY` para validar las fotos de la app
    ciudadana. `VITE_API_URL` ya no hace falta: `vercel.json` la fija en `/api` al compilar.
+   Opcional: `MAPBOX_ACCESS_TOKEN` (token público, `pk.`) para que `/mapa/` use la base de Mapbox; sin él
+   usa la de OpenFreeMap.
 4. **Redeploy**.
 5. Comprobar `https://<tu-proyecto>.vercel.app/api/salud`: debe decir `"persistencia": "postgres"`.
 6. Cargar un día de lecturas:

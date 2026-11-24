@@ -66,7 +66,7 @@ estaciones leyendo `GET /alertas` del backend. Se sirve desde la raíz del repo.
 | `panel/src/` | Aplicación React (Vite): `App.jsx`, `componentes/` (resumen, lista, expediente, avisos, `Reportes.jsx` y `MapaReportes.jsx`: gestión de reportes con mapa), `graficas/` (SVG a mano), `lib/` (datos, formato, etiquetas) | sí |
 | `panel/scripts/copiar-datos.mjs` | Copia las tablas que el panel lee a `panel/public/datos/` antes de `dev` y `build`, y recorta la red hidrográfica a `rios.json` para el mapa del panel | sí |
 | `panel/public/datos/` | Copia de `contrato/fixtures/` y `datos/procesados/red/` | **NO** (generado, no versionado) |
-| `panel/scripts/ensamblar-sitio.mjs` | Junta en `panel/dist` la app ciudadana (`/ciudadano/`) y el simulador (`/dispositivo/simulador/`) para el despliegue único | sí |
+| `panel/scripts/ensamblar-sitio.mjs` | Junta en `panel/dist` la app ciudadana (`/ciudadano/`), el mapa (`/mapa/`, con sus capas y su `config.js` escrito desde `MAPBOX_ACCESS_TOKEN`) y el simulador (`/dispositivo/simulador/`) para el despliegue único | sí |
 | `panel/scripts/capturar-demo.mjs` | Captura la foto del backend para el modo demostración | sí |
 | `panel/public/demo/foto.json` | Respuestas del mock con `--motor real` sobre `descarga_industrial` | **NO**: se regenera con `npm run capturar-demo` |
 | `panel/package.json` | Dependencias y scripts del panel | sí |

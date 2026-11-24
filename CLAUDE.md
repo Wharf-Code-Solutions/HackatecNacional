@@ -34,8 +34,8 @@ después el **análisis**. Las vistas actuales no anuncian el análisis en panta
 | Módulo | Estado |
 |---|---|
 | M0 datos y contrato | Construido: 219 sitios, 145 703 resultados 2012-2025, 7 esquemas v1.0, fixtures, servidor mock |
-| M4 dispositivo | Simulador web construido y probado (`dispositivo/`), figura 3D y línea de tiempo de recepción. **Sin hardware**: las especificaciones son supuestos de diseño |
-| M6 mapa | Prototipo (`mapa/`): cuenca RH18A delimitada, red del INEGI, 14 confluencias, 219 sitios, 5 estaciones con su simulador. No colorea por índice ni está probado a ancho de teléfono |
+| M4 dispositivo | Simulador web construido y probado (`dispositivo/`): figura 3D con vista de cerca de cada componente (sondas, gabinete, energía, comunicación) y línea de tiempo de recepción. **Sin hardware**: las especificaciones son supuestos de diseño |
+| M6 mapa | Prototipo (`mapa/`): abre en la zona de la red, ríos del INEGI con el flujo animado aguas abajo, 14 confluencias y las 5 estaciones con su simulador. Sin sitios oficiales ni capas opcionales. No colorea por índice ni está probado a ancho de teléfono |
 | M1 topología (orden aguas arriba → abajo) | **Construida** (`scripts/70_topologia_red.py` → `datos/procesados/red/`): 210 de 219 sitios con sucesor y distancia sobre el cauce; 14 marcados para revisión |
 | M2 motor de reglas | **Construido** (`motor/reglas.py`): 0 alertas en el día de control contra 31 del stub, 0 ambientales con el sensor roto, los tres eventos detectados antes de su intensidad plena y su fuente bien clasificada. `servidor_mock.py --motor real` lo usa |
 | M3 propagación | **Construida** (`scripts/80_propagacion.py`): transporte conservativo con k = 0, porque la razón medida abajo/arriba en 90 tramos tiene mediana 1.00. Ventana de llegada por velocidad declarada 0.3-1.0 m/s; valor como banda p10-p90; cobertura 78 % fuera de muestra |
@@ -57,22 +57,24 @@ No conviertas "pendiente" en "construido" sin verificarlo contra el repo.
   energía, enlace), `firmware.js` (máquina de estados pura), `montaje.js`, `prueba.js`, `escena.js`,
   `recepcion.js`, `ui.js`.
 - **Pantalla (D19, D20)**: solo tres cosas.
-  - Figura 3D (Three.js r149 desde unpkg; materiales físicos, texturas dibujadas en código sin descargas,
-    sombras y luz fija de día soleado aunque la hora simulada sea de noche, D19; se dibuja en cada cuadro): valle casi plano con el río en un cauce de taludes de tierra que
-    serpentea, agua verde grisácea que se vuelve café con la turbiedad, cielo con nubes, 12 ahuejotes al fondo, pasto, carrizo y macollos de zacatón en las orillas, corriente simulada (`Agua.velocidad`) que mueve el agua (sin volcán al
-    fondo); corte frontal con el perfil en tinta. Sondas en su tubo, cable, gabinete abierto con
-    controlador, SD (un cubo por paquete pendiente), módem y baterías, panel, antena y torre celular. Rótulos
-    HTML con nombre y dato vivo. La estación está a 1.6× respecto al río para que se lea. Se gira arrastrando.
-    Rótulos generales cortos (Sondas, Gabinete, Energía, Comunicación, Corriente: nombre y dato vivo), en tinta con
-    contorno blanco grueso, sin fondo. Cada uno abre su vista de cerca (clic en el rótulo o en la pieza, zonas
-    invisibles `G.zonas`): sondas, gabinete (ESP32, reloj, microSD, módem, baterías), energía (panel, baterías,
-    consumo) y comunicación (antena, SD, paquete, torre). En cada una, un rótulo por pieza con qué es y su estado
-    vivo; sondas y gabinete pasan a tiempo real las fases que muestran (`Escena.tiempoReal`), comunicación no (así el
-    envío se repite cada pocos segundos) y deja la trayectoria antena-torre siempre dibujada (roja sin cobertura). Estados en palabras llanas ("En reposo hasta las 10:30", "Enviando los
-    datos"). Un rótulo de detalle nunca queda atravesado por su línea: si no cabe afuera, va junto a su pieza.
-    "Vista general" o Esc regresa.
-    Cada envío (ACK del firmware) se dibuja en 2.3 s reales: antena encendida, paquete a la torre,
-    confirmación de vuelta y la SD se vacía; el reloj no se detiene.
+  - Figura 3D (Three.js r149 desde unpkg, `escena.js`, D19). Siempre de día soleado aunque la hora simulada sea de
+    noche; materiales físicos y texturas dibujadas en código (sin descargas); se dibuja en cada cuadro.
+    - Escena: valle con el río en un cauce de taludes, agua que se vuelve café con la turbiedad y corre aguas abajo
+      a la velocidad simulada (`Agua.velocidad`, dibujada 4× más rápido), cielo azul con nubes difusas, 12
+      ahuejotes al fondo, pasto, carrizo y zacatón; sin volcán. Corte frontal con el perfil en tinta. Estación a
+      1.6× respecto al río. Se gira arrastrando.
+    - Vista general: cinco rótulos cortos (Sondas, Gabinete, Energía, Comunicación, Corriente) con nombre y dato
+      vivo, en tinta con contorno blanco grueso, **sin fondo**.
+    - Vistas de cerca: clic en el rótulo o en la pieza (zonas invisibles `G.zonas`) abre sondas, gabinete (ESP32,
+      reloj, microSD, módem, baterías), energía (panel, baterías, consumo) o comunicación (antena, SD, paquete,
+      torre). Un rótulo por pieza con qué es (ficha técnica) y su estado vivo, con una línea a la pieza que nunca
+      lo atraviesa. Sondas y gabinete pasan a tiempo real las fases que muestran (`Escena.tiempoReal`, lo usa
+      `ui.js`); comunicación no, así el envío se repite cada pocos segundos, y deja la trayectoria antena-torre
+      siempre dibujada (roja sin cobertura). "Vista general" o Esc regresa.
+    - Estados en palabras llanas (`ESTADO` y `estado()` en `escena.js`): "En reposo hasta las 10:30", "Preparando
+      las sondas", "Enviando los datos", "Datos recibidos".
+    - Cada envío (ACK del firmware, `stats.posts`) se dibuja en 2.3 s reales: antena encendida, paquete a la torre,
+      confirmación de vuelta y la SD se vacía; el reloj de la simulación no se detiene.
   - Recepción: pestañas con el último valor de cada parámetro y línea de tiempo de 12 h; punto lleno =
     recibido por la plataforma, vacío = en la SD; franja de fondo = rango habitual del sitio.
   - Cuatro pruebas: descarga industrial, descarga orgánica, lluvia, corte de enlace. Si el backend abre una
@@ -99,8 +101,8 @@ No conviertas "pendiente" en "construido" sin verificarlo contra el repo.
   de toda la red en cada paso y los ríos desaparecen al desplazar). Se enciende y apaga con la casilla "Flujo del agua" (encendida; apagada con `prefers-reduced-motion`). El sentido
   está comprobado: en 195 de 245 tramos de `red_asignacion.json` la línea termina junto a su sitio aguas abajo.
   El simulador se carga cuando el mapa termina de desplazarse (armar la escena 3D detenía el desplazamiento).
-- Cuenca RH18A (10 subcuencas, 31 480 km²) delimitada: máscara fuera, contorno en tinta. Ríos con grosor por
-  orden y zoom. 14 confluencias; se rotulan solo las que el INEGI nombra como río en ambos brazos.
+- Cuenca RH18A (31 480 km²) delimitada: máscara fuera, contorno en tinta. 14 confluencias; se rotulan solo las
+  que el INEGI nombra como río en ambos brazos.
 - Barra lateral plegable (botón junto al título): título, estaciones y la casilla del flujo; plegada queda una
   columna con los números.
   Fuentes en el botón de atribución.
@@ -172,7 +174,16 @@ El usuario rechazó explícitamente el diseño con aspecto "hecho por IA" y lo h
 - **Hacer:** tema claro, trazo fino, un azul para el agua, tinta para las estaciones, rojo solo para una alarma
   real, filetes en lugar de tarjetas, jerarquía clara, tipografía Public Sans. Solo se mueve lo que cambia
   con el dato.
-- Le gusta ver los componentes del dispositivo descritos dentro de la figura, sin separarlos en otra sección.
+- Le gusta ver los componentes del dispositivo descritos dentro de la figura, sin separarlos en otra sección, y
+  poder abrir cada uno de cerca.
+- Lo que ya decidió en la figura 3D y el mapa (no volver a proponer lo contrario):
+  - Rótulos **sin fondo blanco**: tinta con contorno blanco. Estados en palabras llanas, no jerga del firmware.
+  - Realismo moderado, día soleado fijo, árboles en huso (ahuejotes), zacatón en vez de arbustos redondos,
+    nubes difusas (no cúmulos), cielo azul intenso.
+  - Mapa: ríos de un solo estilo (nada de unos más gruesos o más tenues que otros), flujo en **guiones blancos**
+    (no círculos ni trazo oscuro), sin satélite, relieve, sitios oficiales, subcuencas ni calles.
+  - Cambios de vista rápidos y sin pausas: nada que bloquee el hilo durante una animación.
+- La red de estaciones es chica a propósito (presupuesto): no proponer más estaciones sin justificar el costo.
 - **Excepción, el panel de autoridad (`panel/`)**: usa el Sistema Nacional de Diseño del gobierno (snd.gob.mx),
   tema guinda, Noto Sans; los niveles de alerta van en rojo, amarillo y azul semánticos del SND (D22). Enlaza la
   hoja `snd-guinda.css` del CDN del SND pero no su cargador ni su encabezado oficial: es un prototipo (D31).
@@ -200,20 +211,36 @@ El usuario rechazó explícitamente el diseño con aspecto "hecho por IA" y lo h
 - Los nombres de las confluencias salen de la toponimia dispersa del INEGI y pueden fallar en barrancas; por eso
   solo se rotulan las de río en ambos brazos.
 - Descargar archivos requiere permiso explícito del usuario: dilo con nombre, origen y tamaño antes.
+- **Verificar en el navegador de la app**: con el panel oculto, la base de Mapbox puede no terminar de cargar
+  nunca (el mapa no se puede revisar: pide al usuario que muestre el panel o que lo revise él). El simulador sí
+  carga. La captura recorta a 800 × 600: usa `resize_window` a 1280 × 800 y regresa a `desktop` al terminar.
+- Los servidores de vista previa están en `.claude/launch.json` de la carpeta **padre** (`nacional/`, fuera del
+  repo): `estatico` (8000) y `mock` (8080, `--motor real`). El mock guarda alertas entre corridas: reinícialo.
+- **Rebase con conflicto en `06-registro-de-cambios.md`**: pasa casi siempre (todos escriben arriba). Se conservan
+  las entradas de los dos lados, las nuestras primero, separadas por `---`; luego se vuelve a verificar.
+- Mapbox GL 3: no animar `line-dasharray` (rehace los teselados de toda la red); usar una imagen `line-pattern`
+  que se redibuja (`StyleImageInterface`). Las líneas del INEGI van en el sentido del flujo.
+- El simulador incrustado arma su escena en el mismo hilo que el mapa: se carga después del desplazamiento.
 
 ## Lo que sigue (en orden)
 
-Ya hay datos (M0), sensor simulado (M4), mapa (M6), topología (M1), motor de reglas (M2), propagación
-(M3), backend (M5) y panel de autoridad (M7), desplegados en Vercel. Falta:
+Ya hay datos (M0), sensor simulado (M4), mapa (M6), topología (M1), motor de reglas (M2), propagación (M3),
+backend (M5), panel de autoridad (M7), prototipo de app ciudadana (M8) y la red de estaciones decidida. Falta:
 
-1. Un solo proyecto de Vercel con panel (`/`), app (`/ciudadano/`), simulador (`/dispositivo/simulador/`) y
-   backend (`/api`); falta confirmar `DATABASE_URL` de Supabase y `GEMINI_API_KEY` (pasos en `backend/README.md`). Antes de un uso real, autenticación en `POST /lecturas` y `PATCH /alertas`.
-2. M6: pluma aguas abajo con la ventana de llegada de M3 (ya la sirve `GET /alertas/<c_alerta>/prediccion`)
-   y color por el índice de la plataforma; probar a ancho de teléfono. Sin añadir ruido a la vista.
-3. M8 app ciudadana. En M7, inicio de sesión antes de un uso real.
-4. M9 demo de punta a punta y M10 costos, manual y propuesta por fases.
-5. Hardware: validar especificaciones de sondas, medir consumo en banco y cobertura celular por sitio; cotizar
-   costos incluyendo calibración y reposición de sondas.
+1. **Pendientes de la red nueva de estaciones** (fixtures regenerados con las 5 de docs/18):
+   - correr `backend/prueba.py` (ya espera 0, 1, 5, 3 y 0 alertas; necesita el entorno del backend);
+   - recapturar `panel/public/demo/foto.json` con el backend real (`npm run capturar-demo`);
+   - `contrato/fixtures/prediccion_ejemplo.json` sigue sobre DLTLA2582; regenerarlo pide `muestreo_nucleo.csv`.
+2. Confirmar en pantalla, con el panel del navegador visible, que el flujo del mapa va aguas abajo y que el mapa
+   se desplaza fluido (se cambió a `line-pattern` y no se vio animado).
+3. Un solo proyecto de Vercel con panel (`/`), app (`/ciudadano/`), mapa con las estaciones (`/mapa/`), simulador
+   (`/dispositivo/simulador/`) y backend (`/api`); `MAPBOX_ACCESS_TOKEN` opcional para la base de Mapbox; falta confirmar `DATABASE_URL` de Supabase y `GEMINI_API_KEY` (pasos en `backend/README.md`).
+   Antes de un uso real, autenticación en `POST /lecturas` y `PATCH /alertas`, e inicio de sesión en M7.
+4. M6: pluma aguas abajo con la ventana de llegada de M3 (`GET /alertas/<c_alerta>/prediccion`) y color por el
+   índice de la plataforma; probar a ancho de teléfono. Sin añadir ruido a la vista.
+5. M8: probar la app en un teléfono real.
+6. M9 demo de punta a punta y M10: cotizar (empezar por la sonda de turbiedad con limpiador), medir señal LTE-M
+   en los 5 sitios, confirmar flujo todo el año en Zahuapan y Alseseca, manual y propuesta por fases.
 
 ## Convenciones
 

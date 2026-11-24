@@ -580,8 +580,8 @@ las tablas ("duplicate key ... pg_type_typname_nsp_index"); se corrigió con el 
 Desde Git Bash, `VITE_API_URL=/api` se convierte en `C:/Program Files/Git/api`: compilar en local
 desde PowerShell. En Vercel no pasa.
 
-**Ampliada (2026-11-24).** El mismo proyecto publica también la app ciudadana en `/ciudadano/` y el
-simulador en `/dispositivo/simulador/` (`panel/scripts/ensamblar-sitio.mjs`), todos contra `/api`, para
+**Ampliada (2026-11-24).** El mismo proyecto publica también la app ciudadana en `/ciudadano/`, el mapa
+con las estaciones en `/mapa/` (abre el simulador de la que se elija) y el simulador en `/dispositivo/simulador/` (`panel/scripts/ensamblar-sitio.mjs`), todos contra `/api`, para
 que alertas, reportes y estados se vean igual en las tres vistas. `VITE_API_URL=/api` va en el
 `buildCommand` y ya no en la configuración de Vercel. Desplegado, el simulador manda sus lecturas a
 `/api` del mismo dominio: quien lo abra escribe en la base real, y dos simuladores abiertos a la vez

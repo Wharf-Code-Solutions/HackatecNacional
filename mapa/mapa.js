@@ -15,12 +15,16 @@
  *
  * Frontera: el mapa NO importa código del simulador. Lo muestra por URL y se
  * entera de las alertas leyendo el backend por el contrato (GET /alertas).
- * ?mock=http://127.0.0.1:8080 es el backend por defecto; ?mock= lo desactiva.
+ * ?mock=http://127.0.0.1:8080 es el backend por defecto en tu computadora; desplegado, /api del mismo
+ * dominio; ?mock= lo desactiva.
  */
 (function () {
   'use strict';
   var Q = new URLSearchParams(location.search);
-  var MOCK = Q.has('mock') ? Q.get('mock') : 'http://127.0.0.1:8080';
+  // En tu computadora, el mock o el backend en el 8080. Desplegado (Vercel), el backend del mismo dominio
+  // en /api, igual que el simulador: así el mapa marca las alertas que ve el panel.
+  var LOCAL = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) || location.protocol === 'file:';
+  var MOCK = Q.has('mock') ? Q.get('mock') : (LOCAL ? 'http://127.0.0.1:8080' : location.origin + '/api');
   var $ = function (id) { return document.getElementById(id); };
   var AGUA = '#1d6fa5', TINTA = '#16222c';
   var VALSEQUILLO = 'DLPUE2068';     // presa Manuel Ávila Camacho: donde termina la red de estaciones

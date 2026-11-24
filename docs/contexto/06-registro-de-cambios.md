@@ -21,6 +21,20 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · M6: el mapa con las estaciones se publica en /mapa/
+
+**Qué cambió.** `panel/scripts/ensamblar-sitio.mjs` publica también el mapa: `mapa/` en `/mapa/`, sus capas
+en `/datos/procesados/mapa/` y `sitios.geojson` con los fixtures. Su `config.js` se escribe al armar el sitio
+desde la variable `MAPBOX_ACCESS_TOKEN` de Vercel (sin ella, MapLibre con OpenFreeMap). Desplegado, el mapa
+lee las alertas de `/api` del mismo dominio y se lo pasa al simulador que abre, como ya hacía el simulador.
+**Por qué.** El despliegue publicaba solo el simulador de una estación; faltaba el mapa desde el que se elige.
+Probado armando el sitio en local y sirviéndolo: todas las capas responden 200 y al elegir una estación se
+abre su simulador.
+**Qué arrastró.** `mapa/mapa.js?v=21`, `backend/README.md`, D25, `02-mapa-del-repo.md`, `CLAUDE.md`.
+**Impacto en otros módulos.** M7: ninguno en código; el sitio armado ahora incluye `/mapa/`.
+
+---
+
 ## 2026-11-24 · Integración: simulador, backend, app y panel sincronizados y en un solo despliegue
 
 **Qué cambió.** (1) El reloj del simulador arranca en la hora real cuando hay backend, o justo después de la
