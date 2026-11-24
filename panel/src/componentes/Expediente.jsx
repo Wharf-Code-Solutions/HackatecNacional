@@ -42,7 +42,7 @@ function Gestion({ alerta, guardar, demo }) {
         <input type="text" maxLength={120} placeholder="Nombre o área" value={responsable}
           onChange={(e) => setResponsable(e.target.value)} />
       </label>
-      <button className="boton__primario" type="submit" disabled={ocupado}>Guardar</button>
+      <button className="boton primario" type="submit" disabled={ocupado}>Guardar</button>
       <p className={'nota ' + msg.clase} role="status">{msg.texto}</p>
     </form>
   );

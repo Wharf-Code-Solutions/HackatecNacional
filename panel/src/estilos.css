@@ -1,27 +1,36 @@
-/* Panel de autoridad. Paleta y tipografía del Sistema Nacional de Diseño (snd.gob.mx),
-   tema guinda (proyecto federal). Una sola gama primaria: no se mezcla guinda con verde.
-   Los niveles de alerta usan los colores semánticos del SND: error, alerta, info. */
+/* Panel de autoridad. Mismo aspecto que la app ciudadana (ciudadano/src/index.css), que sigue a SIGRIV
+   con el kit gob.mx v3: guinda y dorado, barra verde oscuro, Montserrat en títulos y Noto Sans en el
+   texto. Los niveles de alerta conservan rojo, amarillo y azul: codifican el nivel, no adornan. */
 :root {
-  /* primitivos SND */
-  --pguinda100: #F3E4E9; --pguinda600: #9B2247; --pguinda800: #781838; --pguinda900: #611232;
-  --dorado100: #F6F2EA; --dorado600: #A57F2C;
-  --neutro100: #FFFFFF; --neutro200: #F9F9F9; --neutro300: #F3F3F3; --neutro400: #DDDDDD;
-  --neutro500: #AAAAAA; --neutro600: #767676; --neutro700: #434343; --neutro800: #161A1D;
+  /* paleta gob.mx v3, la de la app ciudadana */
+  --gob-guinda: #9D2449; --gob-guinda-oscuro: #7a1a32; --gob-guinda-claro: #fde8ec;
+  --gob-dorado: #BC955C; --gob-dorado-claro: #f6f0e6;
+  --gob-verde: #13322E; --gob-nav: #0B231E;
+  --gob-gris-oscuro: #545454; --gob-gris-claro: #F4F4F4;
+
+  /* nombres que usa el resto de la hoja (antes, primitivos del SND) */
+  --pguinda100: var(--gob-guinda-claro); --pguinda600: var(--gob-guinda); --pguinda800: var(--gob-guinda-oscuro); --pguinda900: var(--gob-guinda);
+  --dorado100: var(--gob-dorado-claro); --dorado600: var(--gob-dorado);
+  --neutro100: #FFFFFF; --neutro200: #F9F8F7; --neutro300: #F1EEEB; --neutro400: #DDD8D3;
+  --neutro500: #AAAAAA; --neutro600: #767676; --neutro700: var(--gob-gris-oscuro); --neutro800: #212529;
   --rojo100: #FAE5E5; --rojo500: #9B0F15;
-  --amarillo100: #FFEB99; --amarillo500: #684700;
+  --amarillo100: #FFF3CD; --amarillo500: #664d03;
   --azul100: #EDF2FE; --azul500: #224497;
   --verde100: #F0FAF5; --verde500: #086308;
 
   /* uso en el panel */
-  --principal: var(--pguinda900);
-  --fondo: var(--neutro300);
-  --superficie: var(--neutro100);
-  --texto: var(--neutro700);
-  --titulo: var(--neutro800);
+  --principal: var(--gob-guinda);
+  --fondo: #ebe7e4;
+  --superficie: #FFFFFF;
+  --texto: var(--gob-gris-oscuro);
+  --titulo: #212529;
   --tenue: var(--neutro600);
   --linea: var(--neutro400);
   --error: var(--rojo500);
-  --cuerpo: "Noto Sans", system-ui, "Segoe UI", sans-serif;
+  --cuerpo: "Noto Sans", "Montserrat", system-ui, "Segoe UI", sans-serif;
+  --titular: "Montserrat", "Noto Sans", system-ui, sans-serif;
+  --radio: 8px;
+  --sombra: 0 1px 3px rgba(0,0,0,.08), 0 2px 8px rgba(0,0,0,.05);
   color-scheme: light;
 }
 * { box-sizing: border-box; }
@@ -33,34 +42,30 @@ h1, h2, h3 { color: var(--titulo); }
 :focus-visible { outline: 3px solid var(--dorado600); outline-offset: 2px; }
 [hidden] { display: none !important; }
 #raiz { flex: 1; display: flex; flex-direction: column; }
-/* La hoja del SND fija html y body a height: 100% y body a overflow-x: hidden: body se vuelve su
-   propia caja de desplazamiento de 768 px, la ventana deja de desplazarse y la lista fija (sticky)
-   deja de funcionar. Se anulan con mas especificidad para no depender del orden de las hojas. */
-html:root, html:root body { height: auto; }
-html:root body { overflow-x: clip; overflow-y: visible; max-width: none; min-height: 100vh; }
-html:root main { height: auto; }
+body { overflow-x: clip; }
 .contenedor { width: 100%; max-width: 1360px; margin: 0 auto; padding: 0 24px; }
 .nota { color: var(--tenue); font-size: 13px; }
 .tenue { color: var(--tenue); }
 .vacio { color: var(--tenue); }
 .centro { text-align: center; }
 
-/* ---------------------------------------------------------------- cabecera (SND, tema guinda) */
-/* Barra como el encabezado del SND: 72 px en guinda 900 a todo lo ancho, contenido centrado. */
-.cabecera { background: var(--pguinda900); color: #fff; }
-.cabecera-fila { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 72px; padding-top: 10px; padding-bottom: 10px; }
-.marca { display: flex; flex-direction: column; line-height: 1.15; }
-.marca-nombre { font-family: Patria, "Noto Sans", serif; font-size: 22px; font-weight: 700; color: #fff; }
-.marca-sub { font-size: 13px; color: var(--pguinda100); margin-top: 3px; }
-.conexion { font-size: 13px; color: var(--pguinda100); text-align: right; display: flex; align-items: center; gap: 8px; }
-.conexion::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--neutro500); flex: none; }
-.conexion.ok::before { background: #7fd18b; }
-.conexion.mal::before { background: #ff9c9c; }
+/* ---------------------------------------------------------------- barra (la de la app ciudadana y SIGRIV) */
+.navbar-gob { background: var(--gob-nav); color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,.2); position: sticky; top: 0; z-index: 50; }
+.navbar-fila { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 60px; }
+.navbar-izq { display: flex; align-items: center; gap: 16px; flex: none; }
+.navbar-logo { height: 32px; display: block; }
+.navbar-divisor { border-left: 1px solid var(--gob-dorado); height: 32px; margin: 0 8px; }
+.navbar-titulo { font-family: var(--titular); font-size: 16px; font-weight: 600; letter-spacing: .5px; white-space: nowrap; }
 
-/* Título de página: Patria, como los títulos del SND, con el filete dorado. */
-.encabezado-pagina { background: var(--superficie); border-bottom: 1px solid var(--linea); padding-top: 28px; }
-.titulo-panel { font-family: Patria, "Noto Sans", serif; font-size: 36px; line-height: 1.15; margin: 0; color: var(--titulo); }
-.titulo-panel::after { content: ""; display: block; width: 48px; height: 5px; background: var(--dorado600); margin-top: 12px; }
+.conexion { font-size: 13px; color: var(--tenue); display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.conexion::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--neutro500); flex: none; }
+.conexion.ok::before { background: #2e9d5b; }
+.conexion.mal::before { background: var(--rojo500); }
+
+/* Título de página: Montserrat en guinda, como los títulos de la app, con el filete dorado. */
+.encabezado-pagina { background: var(--superficie); border-bottom: 1px solid var(--linea); padding-top: 22px; }
+.titulo-panel { font-family: var(--titular); font-size: 32px; font-weight: 700; line-height: 1.15; margin: 0; color: var(--gob-guinda); }
+.titulo-panel::after { content: ""; display: block; width: 48px; height: 4px; background: var(--gob-dorado); margin-top: 12px; }
 .bajada { margin-top: 14px; max-width: 760px; color: var(--texto); font-size: 16px; }
 
 .subnav { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin-top: 18px; }
@@ -75,14 +80,14 @@ html:root main { height: auto; }
 .aviso-contenedor { margin-top: 20px; }
 
 main { flex: 1; padding-top: 24px; padding-bottom: 48px; height: auto; }
-.titulo-seccion { font-size: 17px; font-weight: 600; }
-.titulo-pagina { font-size: 24px; font-weight: 600; margin-bottom: 4px; }
+.titulo-seccion { font-family: var(--titular); font-size: 17px; font-weight: 600; color: var(--gob-verde); }
+.titulo-pagina { font-family: var(--titular); font-size: 24px; font-weight: 700; color: var(--gob-guinda); margin-bottom: 4px; }
 .titulo-pagina::after, .exp-cabeza::after { content: ""; display: block; width: 40px; height: 4px; background: var(--dorado600); margin-top: 10px; }
 .intro { color: var(--tenue); margin: 6px 0 20px; }
 
 /* ---------------------------------------------------------------- resumen */
 .resumen { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); background: var(--superficie);
-  border: 1px solid var(--linea); border-radius: 4px; }
+  border: 1px solid var(--linea); border-radius: var(--radio); box-shadow: var(--sombra); }
 .cifra { padding: 16px 20px; border-left: 1px solid var(--linea); }
 .cifra:first-child { border-left: 0; }
 .cifra b { display: block; font-size: 32px; font-weight: 600; line-height: 1.1; color: var(--titulo); font-variant-numeric: tabular-nums; }
@@ -93,7 +98,7 @@ main { flex: 1; padding-top: 24px; padding-bottom: 48px; height: auto; }
 
 /* ---------------------------------------------------------------- gráficas */
 .panorama { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
-.tarjeta { background: var(--superficie); border: 1px solid var(--linea); border-radius: 4px; padding: 16px 18px; margin: 0; min-width: 0; }
+.tarjeta { background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio); box-shadow: var(--sombra); padding: 16px 18px; margin: 0; min-width: 0; }
 .tarjeta.ancha { grid-column: 1 / -1; }
 .tarjeta .titulo-seccion { margin-bottom: 10px; }
 .vista > .tarjeta { margin-bottom: 16px; }
@@ -135,7 +140,7 @@ main { flex: 1; padding-top: 24px; padding-bottom: 48px; height: auto; }
 /* ---------------------------------------------------------------- estaciones */
 .estaciones-bloque { margin-top: 24px; }
 .estaciones-bloque .titulo-seccion { margin-bottom: 8px; }
-.tabla-desliza { overflow-x: auto; background: var(--superficie); border: 1px solid var(--linea); border-radius: 4px; }
+.tabla-desliza { overflow-x: auto; background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio); box-shadow: var(--sombra); }
 table { width: 100%; border-collapse: collapse; font-size: 14px; }
 th { text-align: left; font-weight: 600; color: var(--titulo); font-size: 13px; padding: 10px 14px;
   background: var(--neutro200); border-bottom: 1px solid var(--linea); white-space: nowrap; }
@@ -157,8 +162,8 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 
 /* ---------------------------------------------------------------- lista + expediente */
 .trabajo { display: grid; grid-template-columns: minmax(320px, 400px) minmax(0, 1fr); gap: 24px; margin-top: 24px; align-items: start; }
-.lista-col { background: var(--superficie); border: 1px solid var(--linea); border-radius: 4px;
-  position: sticky; top: 16px; max-height: calc(100vh - 32px); display: flex; flex-direction: column; }
+.lista-col { background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio); box-shadow: var(--sombra);
+  position: sticky; top: 76px; max-height: calc(100vh - 92px); display: flex; flex-direction: column; }
 .lista-cabeza { padding: 16px 16px 0; border-bottom: 1px solid var(--linea); }
 .filtros { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 10px; }
 label { display: grid; gap: 4px; font-size: 13px; color: var(--titulo); font-weight: 500; }
@@ -178,10 +183,10 @@ select:focus, input[type=text]:focus { border-color: var(--principal); outline: 
 .alertas .estado { font-size: 13px; color: var(--tenue); text-align: right; white-space: nowrap; }
 .alertas .vacio { padding: 20px 16px; }
 
-.expediente { background: var(--superficie); border: 1px solid var(--linea); border-radius: 4px; padding: 24px 28px 28px; min-width: 0; }
+.expediente { background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio); box-shadow: var(--sombra); padding: 24px 28px 28px; min-width: 0; }
 .expediente > .vacio { padding: 60px 0; }
 .exp-meta { display: flex; gap: 14px; align-items: center; font-size: 13px; color: var(--tenue); }
-.exp-cabeza h2 { font-size: 24px; font-weight: 600; line-height: 1.3; margin-top: 6px; }
+.exp-cabeza h2 { font-family: var(--titular); font-size: 22px; font-weight: 700; line-height: 1.3; margin-top: 6px; }
 .exp-sub { color: var(--tenue); font-size: 14px; margin-top: 4px; }
 
 .cifras { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; margin-top: 20px; border: 1px solid var(--linea); border-radius: 4px; }
@@ -191,17 +196,17 @@ select:focus, input[type=text]:focus { border-color: var(--principal); outline: 
 .cifras span { font-size: 13px; color: var(--tenue); }
 
 .bloque { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--linea); }
-.bloque h3 { font-size: 16px; font-weight: 600; margin-bottom: 12px; }
+.bloque h3 { font-family: var(--titular); font-size: 16px; font-weight: 600; color: var(--gob-verde); margin-bottom: 12px; }
 .dos-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0 32px; }
 
 .gestion { display: grid; grid-template-columns: 200px minmax(0, 1fr) auto; gap: 12px; align-items: end; }
 .gestion .nota { grid-column: 1 / -1; min-height: 1.3em; }
 .gestion .nota.mal { color: var(--rojo500); }
 .gestion .nota.bien { color: var(--verde500); }
-.boton { font: inherit; font-size: 15px; font-weight: 600; border-radius: 4px; padding: 8px 22px; cursor: pointer;
+.boton { font: inherit; font-family: var(--titular); font-size: 15px; font-weight: 600; border-radius: 6px; padding: 8px 22px; cursor: pointer;
   border: 1px solid var(--principal); background: var(--superficie); color: var(--principal); }
 .boton.primario { background: var(--principal); color: #fff; }
-.boton.primario:hover { background: var(--pguinda800); }
+.boton.primario:hover { background: var(--gob-guinda-oscuro); border-color: var(--gob-guinda-oscuro); }
 .boton:disabled { opacity: .6; cursor: default; }
 
 .datos { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 6px 16px; font-size: 14px; margin-top: 14px; }
@@ -221,16 +226,18 @@ ul.lista { margin: 8px 0 0; padding-left: 20px; font-size: 14px; }
 .bloque table { border: 1px solid var(--linea); }
 .bloque .nota { margin-top: 8px; }
 
-/* Pie como el del SND: guinda oscuro a todo lo ancho, texto blanco, en columnas. */
-.pie { background: var(--pguinda900); color: var(--pguinda100); font-size: 13.5px; padding: 32px 0 36px; }
+/* Pie en el verde de la barra, como el de gob.mx. */
+.pie { background: var(--gob-verde); color: #e6ebe9; font-size: 13.5px; padding: 32px 0 36px; border-top: 4px solid var(--gob-dorado); }
 .pie-rejilla { display: grid; grid-template-columns: 2fr 1.4fr 1fr; gap: 24px 40px; }
-.pie-titulo { font-family: Patria, "Noto Sans", serif; color: #fff; font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+.pie-titulo { font-family: var(--titular); color: #fff; font-size: 16px; font-weight: 700; margin-bottom: 8px; }
 .pie ul { margin: 0; padding-left: 18px; }
 .pie li + li { margin-top: 4px; }
 
-/* SND: los mensajes informativos y el botón primario vienen de su hoja; aquí solo el espacio. */
-.mensajeInformativo { font-size: 14px; }
-.gestion .boton__primario { align-self: end; }
+/* Avisos como los de la app (alert-warning) y uno informativo en azul. */
+.aviso { padding: 10px 14px; border: 1px solid transparent; border-radius: 6px; font-size: 14px; }
+.aviso-advertencia { color: #664d03; background: #fff3cd; border-color: #ffe69c; }
+.aviso-info { color: #1f3b7a; background: var(--azul100); border-color: #c9d6f7; }
+.gestion .boton.primario { align-self: end; }
 
 /* ---------------------------------------------------------------- mapa y huella */
 .subtitulo-seccion { font-size: 13.5px; color: var(--tenue); margin: -4px 0 10px; }
@@ -244,6 +251,7 @@ ul.lista { margin: 8px 0 0; padding-left: 20px; font-size: 14px; }
 
 /* ---------------------------------------------------------------- teléfono y tableta */
 @media (max-width: 1000px) {
+  .navbar-titulo { display: none; }   /* el logotipo y las dos secciones caben; el título de la página dice qué es */
   .trabajo, .panorama { grid-template-columns: 1fr; }
   .minis { grid-template-columns: 1fr 1fr; }
   .lista-col { position: static; max-height: none; }
@@ -251,9 +259,14 @@ ul.lista { margin: 8px 0 0; padding-left: 20px; font-size: 14px; }
 }
 @media (max-width: 700px) {
   .contenedor { padding: 0 16px; }
-  .cabecera-fila { flex-direction: column; align-items: flex-start; gap: 6px; }
-  .conexion { text-align: left; }
-  .titulo-panel { font-size: 28px; }
+  .navbar-fila { gap: 8px; }
+  .navbar-logo { height: 24px; }
+  .navbar-izq { gap: 8px; }
+  .navbar-divisor { margin: 0 4px; height: 24px; }
+  .navbar-titulo { display: none; }
+  .secciones button { padding: 0 8px; font-size: 13px; }
+  .secciones .resto { display: none; }
+  .titulo-panel { font-size: 26px; }
   .pie-rejilla { grid-template-columns: 1fr; }
   .resumen { grid-template-columns: 1fr 1fr; }
   .cifra:nth-child(3) { border-left: 0; }
@@ -270,13 +283,14 @@ ul.lista { margin: 8px 0 0; padding-left: 20px; font-size: 14px; }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 
 /* ---------------------------------------------------------------- dos paneles en uno */
-.secciones { display: flex; gap: 4px; padding-top: 0; padding-bottom: 0; overflow-x: auto; scrollbar-width: none; }
+.secciones { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; align-self: stretch; }
 .secciones::-webkit-scrollbar { display: none; }
-.secciones button { font: inherit; font-size: 15px; color: var(--pguinda100); background: none; border: 0; border-bottom: 3px solid transparent;
-  padding: 10px 14px 9px; cursor: pointer; white-space: nowrap; }
-.secciones button:hover { color: #fff; }
-.secciones button.activa { color: #fff; font-weight: 600; border-bottom-color: var(--dorado600); }
+.secciones button { font: inherit; font-size: 14px; color: #fff; opacity: .85; background: none; border: 0; border-bottom: 3px solid transparent;
+  padding: 0 14px; cursor: pointer; white-space: nowrap; }
+.secciones button:hover { opacity: 1; }
+.secciones button.activa { opacity: 1; font-weight: 600; border-bottom-color: var(--gob-dorado); }
 .secciones span { font-weight: 400; opacity: .85; }
+.secciones span.resto { font-weight: inherit; opacity: 1; }
 
 .pestanas { display: flex; gap: 8px; border-bottom: 1px solid var(--linea); margin: 8px 0 16px; overflow-x: auto; }
 .pestanas button { font: inherit; font-size: 15px; color: var(--texto); background: none; border: 0; border-bottom: 3px solid transparent;
@@ -284,7 +298,7 @@ ul.lista { margin: 8px 0 0; padding-left: 20px; font-size: 14px; }
 .pestanas button.activa { color: var(--principal); font-weight: 600; border-bottom-color: var(--principal); }
 .pestanas span { color: var(--tenue); font-weight: 400; }
 
-.mapa-reportes { margin-bottom: 16px; border: 1px solid var(--linea); border-radius: 4px; overflow: hidden; background: var(--superficie); }
+.mapa-reportes { margin-bottom: 16px; border: 1px solid var(--linea); border-radius: var(--radio); box-shadow: var(--sombra); overflow: hidden; background: var(--superficie); }
 .mapa-reportes-lienzo { height: 420px; }
 .pin-foco { min-width: 26px; height: 26px; padding: 0 6px; border: 2px solid #fff; border-radius: 13px; color: #fff; font: inherit; font-size: 13px;
   font-weight: 700; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,.45); }
@@ -310,7 +324,7 @@ button.enlace { background: none; border: 0; padding: 0; color: var(--principal)
 .subnav-vacio { height: 20px; }
 
 /* ---------------------------------------------------------------- mapa de la red (el de mapa/, M6) */
-.mapa-estaciones { position: relative; border-radius: 4px; overflow: hidden; border: 1px solid var(--linea); }
+.mapa-estaciones { position: relative; border-radius: var(--radio); box-shadow: var(--sombra); overflow: hidden; border: 1px solid var(--linea); }
 .mapa-estaciones-lienzo { height: 420px; background: #e9edef; }
 /* Marcador de estacion igual que en mapa/estilos.css: circulo en tinta, rojo con alerta. */
 .est-marca { display: flex; align-items: center; gap: 6px; cursor: pointer; }

@@ -21,6 +21,23 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · M7: el panel toma el aspecto de la app ciudadana y deja de amontonar consultas
+
+**Qué cambió.** El panel deja la hoja del SND y usa el aspecto de la app ciudadana (kit gob.mx v3 como SIGRIV):
+barra verde oscuro con el logotipo y las dos secciones a la derecha (en teléfono, «Monitoreo» y «Reportes»),
+Montserrat en títulos y Noto Sans en el texto, guinda, dorado y fondo cálido, tarjetas redondeadas, pie verde.
+La consulta al backend sale 3 s después de que termina la anterior, no cada 3 s fijos, y se pausa con la pestaña
+oculta.
+**Por qué.** El usuario pidió que el panel se vea como la app ciudadana. Al probarlo contra producción, el panel
+se quedaba en «Comprobando conexión»: con `setInterval`, las 10 peticiones de cada vuelta se amontonaban y cada
+respuesta tardaba ~36 s. Ahora la mediana es 1.5 s y el máximo 2.2 s (30 peticiones en 20 s).
+**Qué arrastró.** D31 (revisada), `CLAUDE.md`, `panel/README.md`. Las clases del SND (`mensajeInformativo`,
+`boton__primario`, `h0b`, `b1`) pasan a clases propias.
+**Impacto en otros módulos.** Ninguno en datos. Quien lleva M7: el panel ya no carga `snd-guinda.css` y muestra
+el logotipo oficial, que D31 evitaba; el pie sigue diciendo que es un prototipo.
+
+---
+
 ## 2026-11-24 · M8: ríos del INEGI en el mapa de la app ciudadana, botón «Ríos» y carga sin esperas en cadena
 
 **Qué cambió.** La app dibuja encima de la base los ríos de orden ≥ 4 (los de `mapa/`, compactados al compilar en

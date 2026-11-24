@@ -4,15 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Panel de autoridad · Río Atoyac</title>
-<!-- Hoja de estilos del Sistema Nacional de Diseño, tema guinda (snd.gob.mx): colores, tipografía
-     (Noto Sans y Patria), iconos y clases de componentes. Se enlaza la hoja y NO el cargador
-     carga.js: el cargador inserta siempre el encabezado oficial del Gobierno de México, y esto es un
-     prototipo de HackaTec, no un sitio oficial (D31). La huella sale del manifiesto oficial
-     (snd/v1/manifiesto-v1.json, version 1.15.0); si el CDN cambia el archivo, el navegador lo ignora y
-     el panel sigue con src/estilos.css, que define las mismas variables. -->
-<link rel="stylesheet" href="https://framework-gb.cdn.gob.mx/snd/v1/snd-guinda.css"
-  integrity="sha384-lclXWxqKGfepuIErZdVgKAK2bM7o+tsHGhYfA4QtCRkL768x5Ffo1u7rP01oCUfd"
-  crossorigin="anonymous">
+<!-- Mismo aspecto que la app ciudadana, que sigue a SIGRIV con el kit gob.mx v3: Montserrat y Noto Sans,
+     guinda y dorado, barra verde oscuro con el logotipo del Gobierno de México. La paleta vive en
+     src/estilos.css; aquí solo las tipografías, que no bloquean el primer pintado. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://framework-gb.cdn.gob.mx" crossorigin>
+<link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Noto+Sans:wght@400;600;700&display=swap">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Noto+Sans:wght@400;600;700&display=swap"></noscript>
+<meta name="theme-color" content="#0b231e">
 </head>
 <body>
 <div id="raiz"></div>

@@ -728,3 +728,13 @@ impone `scroll-behavior: smooth`. Si el CDN cambia el archivo y la huella deja d
 navegador lo ignora y el panel sigue con `estilos.css`, que define las mismas variables. Si la
 autoridad adopta el panel, pasar al encabezado oficial es cambiar el enlace por el cargador.
 
+**Revisada (2026-11-24), a pedido del usuario.** El panel deja la hoja del SND y toma el aspecto de la app
+ciudadana (D28), que sigue a SIGRIV con el kit gob.mx v3: barra verde oscuro con el logotipo del Gobierno
+de México y filete dorado, Montserrat en títulos y Noto Sans en el texto, guinda `#9D2449`, dorado
+`#BC955C` y fondo `#ebe7e4`. Las fuentes se cargan de Google Fonts, como en la app; la paleta vive en
+`panel/src/estilos.css`, que conserva los nombres de variables de antes para no tocar las gráficas. Los
+avisos y el botón primario, que venían de la hoja del SND, son ahora clases propias (`aviso`, `boton
+primario`). Por qué: el usuario quiere que la autoridad y la ciudadanía vean el mismo sistema. Se
+acepta lo que esta decisión evitaba: el logotipo oficial aparece en un prototipo; el pie sigue diciendo
+que no es un sitio oficial. Los colores de nivel y de las gráficas no cambian (D22).
+

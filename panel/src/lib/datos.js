@@ -97,9 +97,21 @@ export function useBackend(codigos) {
       setEstado((s) => ({ ...s, conectado: true, motor: salud.motor, alertas: al.alertas || [],
         reportes: rep.reportes || [], prioridades: pri ? pri.prioridades : null, huella: hue, veredictos }));
     }).catch(() => { if (!cancelado) setEstado((s) => ({ ...s, conectado: false })); });
-    consulta();
-    const id = setInterval(consulta, CADA_MS);
-    return () => { cancelado = true; clearInterval(id); };
+    // La siguiente consulta sale CADA_MS después de que terminó la anterior, no cada CADA_MS fijo: con
+    // setInterval, si el backend tardaba más de 3 s (Vercel en frío, red lenta), las 10 peticiones de cada
+    // vuelta se amontonaban y la fila crecía hasta ~36 s por respuesta. Con la pestaña oculta no se consulta.
+    let espera = null, enCurso = false;
+    const ciclo = () => {
+      clearTimeout(espera);
+      if (cancelado || enCurso) return;
+      if (document.hidden) { espera = setTimeout(ciclo, CADA_MS); return; }
+      enCurso = true;
+      consulta().finally(() => { enCurso = false; if (!cancelado) espera = setTimeout(ciclo, CADA_MS); });
+    };
+    ciclo();
+    const alVolver = () => { if (!document.hidden) ciclo(); };
+    document.addEventListener('visibilitychange', alVolver);
+    return () => { cancelado = true; clearTimeout(espera); document.removeEventListener('visibilitychange', alVolver); };
   }, [clave, origen, version]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Cambia estado y responsable. En demostración solo se cambia en esta pestaña.

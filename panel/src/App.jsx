@@ -13,7 +13,8 @@ import TablaEstaciones from './componentes/TablaEstaciones.jsx';
 import Tooltip from './componentes/Tooltip.jsx';
 
 // Dos paneles en uno: lo que mide el prototipo (alertas de las estaciones) y la gestión de lo que reportan las personas.
-const SECCIONES = [['monitoreo', 'Monitoreo del prototipo'], ['reportes', 'Reportes ciudadanos']];
+// [id, nombre corto, resto]: en el teléfono la barra solo muestra el nombre corto.
+const SECCIONES = [['monitoreo', 'Monitoreo', ' del prototipo'], ['reportes', 'Reportes', ' ciudadanos']];
 const VISTAS = [['alertas', 'Alertas'], ['avisos', 'Avisos técnicos']];
 
 // Hora del dato más reciente recibido: es el corte de todo lo que se muestra (I12).
@@ -65,29 +66,30 @@ export default function App() {
 
   return (
     <>
-      {/* Barra institucional con la gama guinda del SND. No es el encabezado oficial del Gobierno de
-          Mexico (<snd-header>): esto es un prototipo, no un sitio oficial (D31). */}
-      <header className="cabecera">
-        <div className="contenedor cabecera-fila">
-          <p className="marca">
-            <span className="marca-nombre">Monitoreo del río Atoyac</span>
-            <span className="marca-sub">Alto Atoyac · Puebla y Tlaxcala</span>
-          </p>
-          <p className={claseConexion}>{conexion}</p>
+      {/* Misma barra que la app ciudadana y SIGRIV: logotipo del Gobierno de México, filete dorado y las
+          dos secciones del panel como enlaces. */}
+      <header className="navbar-gob">
+        <div className="contenedor navbar-fila">
+          <div className="navbar-izq">
+            <img src="https://framework-gb.cdn.gob.mx/landing/img/logoheader.svg" alt="Gobierno de México" className="navbar-logo" />
+            <div className="navbar-divisor" />
+            <span className="navbar-titulo">Río Atoyac · Autoridad</span>
+          </div>
+          <nav className="secciones" aria-label="Paneles">
+            {SECCIONES.map(([id, nombre, resto]) => (
+              <button key={id} className={seccion === id ? 'activa' : ''} onClick={() => setSeccion(id)} aria-current={seccion === id ? 'page' : undefined}>
+                {nombre}<span className="resto">{resto}</span> {conteoSeccion[id] > 0 && <span>({conteoSeccion[id]})</span>}
+              </button>
+            ))}
+          </nav>
         </div>
-        <nav className="secciones contenedor" aria-label="Paneles">
-          {SECCIONES.map(([id, nombre]) => (
-            <button key={id} className={seccion === id ? 'activa' : ''} onClick={() => setSeccion(id)} aria-current={seccion === id ? 'page' : undefined}>
-              {nombre} {conteoSeccion[id] > 0 && <span>({conteoSeccion[id]})</span>}
-            </button>
-          ))}
-        </nav>
       </header>
 
       <div className="encabezado-pagina">
         <div className="contenedor">
-          <h1 className="h0b titulo-panel">Panel de autoridad</h1>
-          <p className="b1 bajada">
+          <p className={claseConexion}>{conexion}</p>
+          <h1 className="titulo-panel">Panel de autoridad</h1>
+          <p className="bajada">
             {seccion === 'monitoreo'
               ? <>Alertas de las {codigos.length || 5} estaciones del Alto Atoyac: qué se midió, de dónde pudo venir, hasta dónde
                 llega y quién la atiende.{corte && <> Datos al {hora(corte)}</>}</>
@@ -108,7 +110,7 @@ export default function App() {
 
       {demo && be.capturado && (
         <div className="contenedor aviso-contenedor">
-          <div className="mensajeInformativo mensajeInformativo--advertencia" role="note">
+          <div className="aviso aviso-advertencia" role="note">
             Datos de demostración: lo que respondió el motor de reglas el {hora(be.capturado)} en el escenario de
             descarga industrial. Los cambios de estado y responsable no se guardan.
           </div>
@@ -116,7 +118,7 @@ export default function App() {
       )}
       {!demo && be.motor === 'stub' && (
         <div className="contenedor aviso-contenedor">
-          <div className="mensajeInformativo mensajeInformativo--advertencia" role="note">
+          <div className="aviso aviso-advertencia" role="note">
             Motor de reglas provisional: genera alertas sin distinguir eventos reales. Arranca el backend con el
             motor real para ver el análisis.
           </div>
@@ -169,7 +171,7 @@ export default function App() {
           </div>
           <div>
             <p className="pie-titulo">Diseño</p>
-            <p>Colores, tipografía y componentes del Sistema Nacional de Diseño, tema guinda.</p>
+            <p>Aspecto del kit gob.mx v3, el mismo de la app ciudadana y de SIGRIV: Montserrat y Noto Sans, guinda y dorado.</p>
           </div>
         </div>
       </footer>

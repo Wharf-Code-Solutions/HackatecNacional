@@ -106,12 +106,16 @@ scripts/capturar-demo.mjs  foto del backend a public/demo/foto.json
 
 ## Diseño
 
-Hoja de estilos del Sistema Nacional de Diseño del Gobierno de México (snd.gob.mx), tema guinda,
-enlazada desde su CDN en `index.html`: colores, Noto Sans y Patria, iconos y clases de componentes
-(`boton__primario`, `mensajeInformativo`, `h0b`, `b1`). No se usa el encabezado ni el pie oficiales: esto
-es un prototipo, no un sitio oficial (D31). `src/estilos.css` define las mismas variables, así que el
-panel se ve igual si la hoja del CDN no carga, y anula dos reglas globales del SND que rompían el
-desplazamiento. Paleta de las gráficas: D22.
+El mismo aspecto que la app ciudadana, que sigue a SIGRIV con el kit gob.mx v3 (D31, revisada): barra
+verde oscuro con el logotipo del Gobierno de México y filete dorado, Montserrat en títulos y Noto Sans en
+el texto (Google Fonts, en `index.html`), guinda y dorado, tarjetas redondeadas con sombra suave. Toda la
+paleta vive en `src/estilos.css`; los avisos son `aviso aviso-advertencia` y `aviso aviso-info`, y el
+botón primario `boton primario`. El pie dice que es un prototipo, no un sitio oficial. Paleta de las
+gráficas: D22.
+
+El panel consulta al backend cada 3 s **después** de que termina la consulta anterior, y no consulta con
+la pestaña oculta: con un intervalo fijo, si el backend tardaba más de 3 s las peticiones se amontonaban
+(hasta ~36 s por respuesta en Vercel).
 
 ## Fronteras
 

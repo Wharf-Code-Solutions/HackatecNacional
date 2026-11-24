@@ -184,9 +184,9 @@ El usuario rechazó explícitamente el diseño con aspecto "hecho por IA" y lo h
     (no círculos ni trazo oscuro), sin satélite, relieve, sitios oficiales, subcuencas ni calles.
   - Cambios de vista rápidos y sin pausas: nada que bloquee el hilo durante una animación.
 - La red de estaciones es chica a propósito (presupuesto): no proponer más estaciones sin justificar el costo.
-- **Excepción, el panel de autoridad (`panel/`)**: usa el Sistema Nacional de Diseño del gobierno (snd.gob.mx),
-  tema guinda, Noto Sans; los niveles de alerta van en rojo, amarillo y azul semánticos del SND (D22). Enlaza la
-  hoja `snd-guinda.css` del CDN del SND pero no su cargador ni su encabezado oficial: es un prototipo (D31).
+- **Excepción, el panel de autoridad (`panel/`)**: mismo aspecto que la app ciudadana (kit gob.mx v3 como
+  SIGRIV): barra verde oscuro con el logotipo, Montserrat y Noto Sans, guinda y dorado, tarjetas redondeadas.
+  Los niveles de alerta van en rojo, amarillo y azul (D22). Ya no carga la hoja del SND (D31, revisada).
 - **Excepción, la app ciudadana (`ciudadano/`)**: replica el aspecto de SIGRIV a pedido del usuario: kit gob.mx v3,
   Montserrat y Noto Sans, guinda y dorado, barra verde oscuro con el logotipo del Gobierno de México, mapa a
   pantalla completa y hoja inferior (D28). Ahí sí hay botones redondeados y sombras.
