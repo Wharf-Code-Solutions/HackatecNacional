@@ -140,7 +140,7 @@ export default function App() {
                 <div className="trabajo">
                   <ListaAlertas alertas={be.alertas} filtros={filtros} setFiltros={setFiltros} sel={sel}
                     onElegir={elegirAlerta} conectado={be.conectado} />
-                  <Expediente alerta={alerta} veredictos={alerta ? be.veredictos[alerta.c_estacion] : []}
+                  <Expediente alerta={alerta} alertas={be.alertas} veredictos={alerta ? be.veredictos[alerta.c_estacion] : []}
                     motor={be.motor} guardar={be.guardar} prediccion={be.prediccion} demo={demo} />
                 </div>
                 <Panorama parte="conteos" alertas={be.alertas} veredictos={be.veredictos} corte={corte} elegida={filtros.estacion} />

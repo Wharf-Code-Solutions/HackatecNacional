@@ -57,6 +57,18 @@ versionada): si cambia el criterio, se regenera con el script, no se edita.
 
 ---
 
+## 2026-11-24 · M7: la serie del expediente marca el evento completo
+
+**Qué cambió.** La serie de "Evidencia" sombrea el evento de la alerta: las alertas de la misma estación
+encadenadas con menos de 90 min entre sí, de la primera a la última, y avisa cuándo empezó si la alerta
+abierta es posterior. Las tarjetas de la lista ya no muestran el responsable (solo en el expediente).
+**Por qué.** En Vercel, AL-20261128-ATY01-31 (pH 7.59, 20:00) marcaba su hora bien, pero la descarga fue
+a las 14:50: el motor (M2) sigue abriendo alertas de "cambio brusco" mientras el valor regresa a la banda.
+**Qué arrastró.** `Serie.jsx`, `Expediente.jsx`, `ListaAlertas.jsx`, `App.jsx` (pasa `alertas`).
+**Impacto en otros módulos.** M2: revisar que `cambio_brusco` no abra alertas en la recuperación.
+
+---
+
 ## 2026-11-24 · M7: la huella se explica sola
 
 **Qué cambió.** La huella dice qué es cada cuadro y cuánto dura ("cada cuadro = 15 min", mediana del

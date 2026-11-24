@@ -70,7 +70,6 @@ export default function ListaAlertas({ alertas, filtros, setFiltros, sel, onEleg
               <span className="que">{PARAM[a.c_parametro] || a.c_parametro} {num(a.valor)}{unidad(a)}</span>
               <span className="estado">{txt(a.estado)}</span>
               <span className="donde">{a.c_estacion.replace('EST-', '')} · {nombreEstacion(a.c_estacion)}</span>
-              <span className="estado">{a.responsable || 'sin responsable'}</span>
             </button>
           </li>
         ))}
