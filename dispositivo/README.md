@@ -13,11 +13,15 @@ simulador/
   firmware.js             la máquina de estados del ESP32: dormir, medir, guardar, enviar
   montaje.js              arma una estación desde los fixtures del contrato
   prueba.js               siete pruebas en Node, sin dependencias
-  escena.js               la figura: sondas en el río → estación (controlador, comunicación, energía) → plataforma
-  index.html, ui.js, estilos.css    la interfaz: figura, tabla de lo que mide y análisis, y pruebas
+  escena.js               la figura en 3D (Three.js): corte del río con las sondas, el gabinete abierto
+                          (controlador, SD, módem, baterías), panel, antena y la torre celular
+  recepcion.js            lo que recibe la plataforma: línea de tiempo de 12 h, ● recibida, ○ en la SD
+  index.html, ui.js, estilos.css    la interfaz: figura 3D, recepción con el valor de cada parámetro
+                                    y cuatro pruebas (dos descargas, lluvia, corte de red)
 ```
 
-Cero dependencias: JavaScript plano, sin compilar. `modelo.js` y `firmware.js` no conocen la
+Cero dependencias en la lógica: JavaScript plano, sin compilar. La figura usa Three.js r149
+desde unpkg; sin WebGL, la página avisa y la recepción y la tabla siguen funcionando. `modelo.js` y `firmware.js` no conocen la
 pantalla; por eso las mismas funciones se animan en el navegador y se prueban en Node.
 
 ## Correrlo
@@ -37,7 +41,8 @@ Para ver cómo responde el backend a lo que envía la estación:
 python contrato/servidor_mock.py
 ```
 
-y marcar "Enviar cada lote con POST /lecturas". El panel muestra `HTTP 202` por cada lote.
+El simulador se conecta solo a `http://127.0.0.1:8080` (otra dirección con `?backend=`, ninguna
+con `?backend=`). Si la plataforma abre una alerta, aparece una línea en rojo sobre la recepción.
 
 ## Probarlo
 

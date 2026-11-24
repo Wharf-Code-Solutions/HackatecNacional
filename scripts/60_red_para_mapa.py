@@ -4,6 +4,8 @@ la cuenca del Alto Atoyac: rios con su orden, subcuencas y nombres.
 
 Lee    : datos/geo/F08_red_hidrografica/RH18/RH18A/RH18A?/*.shp  (capas _hl, _subc, _to)
 Escribe: datos/procesados/mapa/red_hidrografica.geojson
+         datos/procesados/mapa/cuenca.geojson        (contorno exterior de las 10 subcuencas)
+         datos/procesados/mapa/confluencias.geojson  (uniones principales de la red, con nombre)
          datos/procesados/mapa/subcuencas.geojson
          datos/procesados/mapa/toponimia_hidrografica.geojson
 
@@ -18,6 +20,7 @@ No modifica nada en datos/geo (invariante I1).
 Uso: python -I scripts/60_red_para_mapa.py
 """
 import json
+import math
 import os
 import struct
 import zipfile
@@ -160,6 +163,140 @@ def extrae_si_falta():
     print('Extraido en ' + destino)
 
 
+def contorno_cuenca(subcuencas):
+    """Contorno exterior de la cuenca: los lados que comparten dos subcuencas se cancelan
+    (en el INEGI coinciden vértice a vértice) y los que quedan se encadenan en anillos."""
+    lados = {}
+    for sc in subcuencas:
+        _, geo = leer_shp(os.path.join(BASE, sc, sc + '_subc.shp'))
+        for g in geo:
+            for anillo in g or []:
+                for a, b in zip(anillo, anillo[1:]):
+                    a, b = tuple(a), tuple(b)
+                    k = (a, b) if a < b else (b, a)
+                    if k in lados:
+                        del lados[k]
+                    else:
+                        lados[k] = (a, b)
+    siguiente = {}
+    for a, b in lados.values():
+        siguiente.setdefault(a, []).append(b)
+        siguiente.setdefault(b, []).append(a)
+    usados, anillos = set(), []
+    for inicio in list(siguiente):
+        if inicio in usados:
+            continue
+        anillo, previo, actual = [inicio], None, inicio
+        usados.add(inicio)
+        while True:
+            opciones = [p for p in siguiente[actual] if p != previo and (p not in usados or p == inicio)]
+            if not opciones:
+                break
+            previo, actual = actual, opciones[0]
+            anillo.append(actual)
+            if actual == inicio:
+                break
+            usados.add(actual)
+        if len(anillo) > 10 and anillo[0] == anillo[-1]:
+            anillos.append(anillo)
+    anillos.sort(key=len, reverse=True)
+    return [redondea(douglas_peucker(a, TOL_SUBC)) for a in anillos[:1]]
+
+
+def confluencias(subcuencas, cuantas=14, separacion_km=6.0):
+    """Confluencias principales sobre la red completa (todos los órdenes).
+
+    FLOWDIR = 1 en toda la red: cada línea va de aguas arriba a aguas abajo. Se acumula la
+    longitud de red aguas arriba de cada tramo; donde un cauce se divide, lo acumulado pasa
+    solo a la salida de mayor orden, para no contarlo dos veces. Una confluencia se ordena
+    por la red del afluente menor: así ganan las uniones de dos ríos grandes. El nombre de
+    cada brazo es la toponimia del INEGI más cercana a su cauce, río arriba.
+    """
+    lineas = []
+    for sc in subcuencas:
+        _, geo = leer_shp(os.path.join(BASE, sc, sc + '_hl.shp'))
+        attr = leer_dbf(os.path.join(BASE, sc, sc + '_hl.dbf'))
+        for g, a in zip(geo, attr):
+            if g:
+                p = g[0]
+                lineas.append((tuple(p[0]), tuple(p[-1]), numero(a.get('LENGTHM')), int(numero(a.get('ORDER_1'))), p))
+    llegan, salen = {}, {}
+    for i, l in enumerate(lineas):
+        llegan.setdefault(l[1], []).append(i)
+        salen.setdefault(l[0], []).append(i)
+    elegido = {pt: max(v, key=lambda k: (lineas[k][3], lineas[k][2])) for pt, v in salen.items()}
+    pendientes = [len(llegan.get(l[0], [])) for l in lineas]
+    acum = [0.0] * len(lineas)
+    cola = [i for i, n in enumerate(pendientes) if n == 0]
+    while cola:
+        i = cola.pop()
+        acum[i] = lineas[i][2] + sum(acum[j] for j in llegan.get(lineas[i][0], []) if elegido[lineas[j][1]] == i)
+        for k in salen.get(lineas[i][1], []):
+            pendientes[k] -= 1
+            if pendientes[k] == 0:
+                cola.append(k)
+
+    rios = []
+    for sc in subcuencas:
+        _, geo = leer_shp(os.path.join(BASE, sc, sc + '_to.shp'))
+        attr = leer_dbf(os.path.join(BASE, sc, sc + '_to.dbf'))
+        for g, a in zip(geo, attr):
+            nombre = (a.get('NOMBRE_COM') or a.get('NOMBRE') or '').strip()
+            if g and nombre.upper().startswith(('RIO', 'RÍO', 'ARROYO', 'BARRANCA')):
+                rios.append((g[0], g[1], nombre))
+
+    def km(a, b):
+        return math.hypot((a[0] - b[0]) * 105.5, (a[1] - b[1]) * 111.0)
+
+    def nombre_rio_arriba(i, tramo_km=60.0, radio_km=1.0):
+        """Recorre el brazo río arriba por el afluente mayor y devuelve el nombre que más se
+        repite pegado a su cauce. Un río se rotula muchas veces a lo largo de su curso; un
+        nombre suelto cerca de la unión suele ser de otro cauce."""
+        puntos, recorrido = [], 0.0
+        while i is not None and recorrido < tramo_km * 1000:
+            puntos.extend(lineas[i][4][::3] + [lineas[i][4][-1]])
+            recorrido += lineas[i][2]
+            previos = [j for j in llegan.get(lineas[i][0], []) if elegido[lineas[j][1]] == i]
+            i = max(previos, key=lambda j: acum[j]) if previos else None
+        xs, ys = [p[0] for p in puntos], [p[1] for p in puntos]
+        caja = (min(xs) - 0.01, max(xs) + 0.01, min(ys) - 0.01, max(ys) + 0.01)
+        votos = {}
+        for x, y, nombre in rios:
+            if caja[0] <= x <= caja[1] and caja[2] <= y <= caja[3] and min(km(p, (x, y)) for p in puntos) < radio_km:
+                clave = nombre.upper()
+                peso = 2 if clave.startswith(('RIO', 'RÍO')) else 1
+                votos[clave] = (votos.get(clave, (0, nombre))[0] + peso, nombre)
+        if not votos:
+            return None
+        return max(votos.values())[1]
+
+    candidatas = []
+    for pt, ins in llegan.items():
+        if len(ins) >= 2:
+            ins = sorted(ins, key=lambda j: acum[j], reverse=True)
+            candidatas.append((acum[ins[1]], pt, ins[0], ins[1]))
+    candidatas.sort(reverse=True)
+    elegidas = []
+    for menor, pt, i_mayor, i_menor in candidatas:
+        if len(elegidas) >= cuantas:
+            break
+        if any(km(pt, e['geometry']['coordinates']) < separacion_km for e in elegidas):
+            continue
+        a, b = nombre_rio_arriba(i_mayor), nombre_rio_arriba(i_menor)
+        if a and b and a.upper() == b.upper():
+            b = None
+        elegidas.append({
+            'type': 'Feature',
+            'geometry': {'type': 'Point', 'coordinates': [round(pt[0], DECIMALES), round(pt[1], DECIMALES)]},
+            'properties': {
+                'rango': len(elegidas) + 1,
+                'principal': a, 'afluente': b,
+                'km_red_principal': round(acum[i_mayor] / 1000),
+                'km_red_afluente': round(menor / 1000),
+            }})
+    return elegidas
+
+
 def main():
     extrae_si_falta()
     subcuencas = sorted(d for d in os.listdir(BASE) if d.startswith('RH18A'))
@@ -236,6 +373,11 @@ def main():
     escribe('red_hidrografica.geojson', lineas)
     escribe('subcuencas.geojson', polis)
     escribe('toponimia_hidrografica.geojson', nombres)
+    contorno = contorno_cuenca(subcuencas)
+    escribe('cuenca.geojson', [{'type': 'Feature', 'geometry': {'type': 'Polygon', 'coordinates': contorno},
+                                'properties': {'clave': 'RH18A', 'nombre': 'Cuenca R. Atoyac',
+                                               'area_km2': round(sum(p['properties']['area_km2'] for p in polis), 1)}}])
+    escribe('confluencias.geojson', confluencias(subcuencas))
 
 
 if __name__ == '__main__':

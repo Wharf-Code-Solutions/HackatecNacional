@@ -82,8 +82,8 @@ medición termine justo en la marca.
 | Saturación | turbiedad clavada en 4 000 NTU |
 | Corte de red | la cola crece en la SD y se vacía al volver el enlace |
 
-Este es el costo recurrente real del sistema: **calibrar y limpiar**. El botón "Pasar 30 días
-sin mantenimiento" del simulador lo vuelve visible.
+Este es el costo recurrente real del sistema: **calibrar y limpiar**. La deriva y el
+ensuciamiento están en el modelo (`modelo.js`); la vista ya no los dispara, para no cargarla (D20).
 
 ## Contrato
 

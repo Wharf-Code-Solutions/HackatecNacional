@@ -21,6 +21,50 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Mapbox opcional por token
+
+**Qué cambió.** Con `mapa/config.js` el mapa usa Mapbox GL JS (estilo claro y relieve); sin él,
+MapLibre con OpenFreeMap. La casilla "Satélite" usa Esri World Imagery en ambos casos, porque el
+satélite de Mapbox respondió 429 a todas las teselas con nuestra cuenta. `mapbox.txt` y `mapa/config.js` quedan en `.gitignore`.
+**Por qué.** Se pidió usar Mapbox; el token no debe subirse al repositorio del equipo (D21).
+**Qué arrastró.** `mapa/index.html`, `mapa/mapa.js`, `mapa/estilos.css`, `mapa/config.ejemplo.js`,
+`mapa/README.md`, `.gitignore`, `03-tecnologias.md`, `05-decisiones-tecnicas.md` (D21),
+`12-estado-y-traspaso.md`, `CLAUDE.md`.
+**Impacto en otros módulos.** Ninguno.
+
+## 2026-11-24 · MapLibre en el mapa y vistas sin información de más
+
+**Qué cambió.** El mapa pasa a MapLibre GL con la base vectorial de OpenFreeMap (ríos de la base
+apagados, nombres en español) y relieve opcional. Se quitaron la leyenda, las notas, las fuentes
+visibles y el estado del backend del mapa; y del simulador, la línea de fase, la tabla de
+parámetros, las notas de la recepción y el panel "Más pruebas". Los valores medidos van en las
+pestañas de la línea de tiempo; el simulador se conecta solo al backend.
+**Por qué.** El usuario pidió varias veces quitar lo que nadie va a leer, y un mapa más capaz con
+el relieve opcional (D20).
+**Qué arrastró.** `mapa/` (todo), `dispositivo/simulador/` (`index.html`, `ui.js`, `recepcion.js`,
+`estilos.css`), `dispositivo/README.md`, `dispositivo/ficha-tecnica.md`, `mapa/README.md`,
+`03-tecnologias.md`, `05-decisiones-tecnicas.md` (D20), `12-estado-y-traspaso.md`, `CLAUDE.md`.
+**Impacto en otros módulos.** Ninguno: el contrato y las URL de incrustación no cambian
+(`?backend=` ahora es opcional).
+
+## 2026-11-24 · Cuenca delimitada con confluencias y estación en 3D
+
+**Qué cambió.** `scripts/60_red_para_mapa.py` escribe dos capas nuevas: `cuenca.geojson` (contorno
+exterior de las 10 subcuencas, 31 480 km²) y `confluencias.geojson` (14 uniones principales, por
+longitud de red acumulada aguas arriba, con nombre de la toponimia). El mapa aclara lo de fuera de la
+cuenca, traza el contorno y marca las confluencias. El simulador cambia la figura 2D por una escena
+3D (Three.js) y el cuadro de la plataforma por una línea de tiempo de lo recibido (`recepcion.js`).
+**Por qué.** Se pidió que la cuenca y sus bifurcaciones se vean con claridad y que el mecanismo se
+vea más detallado y en 3D, sin ruido; y que el envío no sea un cuadro de "enviado o no" (D19).
+**Qué arrastró.** `mapa/` (js, css, html, README), `dispositivo/simulador/` (`escena.js`,
+`recepcion.js`, `ui.js`, `index.html`, `estilos.css`), `dispositivo/README.md`, `README.md`,
+`03-tecnologias.md`, `05-decisiones-tecnicas.md` (D19), `contexto/02-mapa-del-repo.md`,
+`12-estado-y-traspaso.md`, `CLAUDE.md`.
+**Impacto en otros módulos.** M1 puede reutilizar el recorrido de la red de `confluencias()`. El
+contrato no cambia.
+
+---
+
 ## 2026-11-24 · M2: motor de reglas, de 31 falsas alarmas a 0
 
 **Qué cambió.** Nuevo módulo `motor/` con `reglas.py` (`evaluar(paquete) → veredicto`),

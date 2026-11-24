@@ -90,7 +90,7 @@ repositorio (`python -m http.server 8000`).
 | `datos/procesados/umbral.csv` | Escalas CONAGUA y límites NOM-001 | `10_construir_tablas.py` | **NO** |
 | `datos/procesados/indicador_sitio_periodo.csv` | Indicadores CONAGUA por sitio | `10_construir_tablas.py` | **NO** |
 | `datos/procesados/diccionario_conagua.csv` | Diccionario oficial de campos | `10_construir_tablas.py` | **NO** |
-| `datos/procesados/mapa/*.geojson` | Cauces (orden ≥ 4), subcuencas y toponimia hidrográfica, simplificados para el mapa | `60_red_para_mapa.py` | **NO** |
+| `datos/procesados/mapa/*.geojson` | Cauces (orden ≥ 4), subcuencas, contorno de la cuenca, confluencias principales y toponimia hidrográfica, simplificados para el mapa | `60_red_para_mapa.py` | **NO** |
 | `datos/procesados/analisis/*.csv` | Línea base, ranking, temporada, tendencia, cobertura, correlaciones | `20_analisis_exploratorio.py` | **NO** |
 | `datos/procesados/red/tramo.csv` | 65 342 tramos con orden de Strahler, longitud y tramo de aguas abajo. **No se versiona** (8.2 MB) | `70_topologia_red.py` | **NO** |
 | `datos/procesados/red/sitio_red.csv` | Dónde quedó enganchado cada sitio y con qué calidad | `70_topologia_red.py` | **NO** |
@@ -119,7 +119,7 @@ El prefijo numérico indica el orden de ejecución. `_comun.py` no se ejecuta so
 | `scripts/20_analisis_exploratorio.py` | Línea base y análisis | `datos/procesados/` | `datos/procesados/analisis/`, `docs/09-...` |
 | `scripts/30_verificacion_datos.py` | Verifica integridad y emite veredictos | `datos/crudos/`, `datos/procesados/` | `docs/08-...` |
 | `scripts/40_generar_fixtures.py` | Genera los fixtures del contrato | `datos/procesados/` | `contrato/fixtures/` |
-| `scripts/60_red_para_mapa.py` | Lee las capas de la red hidrográfica y las simplifica para pintar el mapa. **Fuente de verdad de** qué orden de cauce se dibuja (`ORDEN_MINIMO`) y de las tolerancias de simplificación. No calcula topología | `datos/geo/F08_red_hidrografica/` | `datos/procesados/mapa/` |
+| `scripts/60_red_para_mapa.py` | Lee las capas de la red hidrográfica y las simplifica para pintar el mapa. **Fuente de verdad de** qué orden de cauce se dibuja (`ORDEN_MINIMO`) y de las tolerancias de simplificación. Calcula el contorno de la cuenca y las confluencias por longitud de red acumulada; **no** ordena los sitios (eso es M1, `70_topologia_red.py`) | `datos/geo/F08_red_hidrografica/` | `datos/procesados/mapa/` |
 | `scripts/70_topologia_red.py` | **M1.** Engancha los sitios a la red del INEGI, orienta los tramos y calcula el siguiente sitio aguas abajo. **Fuente de verdad de la topología** | `datos/geo/`, `sitio.csv` | `datos/procesados/red/`, `docs/13-...` |
 | `scripts/80_propagacion.py` | **M3.** Calibra la atenuación con los datos, calcula ventanas de llegada y produce la predicción. **Fuente de verdad de la velocidad supuesta y del alcance útil** | `red/`, `muestreo_nucleo.csv` | `red/atenuacion_observada.csv`, `red/tiempo_viaje.csv`, `contrato/fixtures/prediccion_ejemplo.json`, `docs/14-...` |
 | `motor/reglas.py` | **M2.** `evaluar(paquete) → veredicto`. **Fuente de verdad de los umbrales de deteccion y de la firma de fuente probable** | fixtures, `umbral.csv` | nada en disco |
@@ -180,7 +180,7 @@ scripts `01` y `02` son diagnóstico y no forman parte de la secuencia.
 | `docs/02-arquitectura.md` | Cómo encajan las piezas, recorrido de un dato | sí |
 | `docs/03-tecnologias.md` | Stack con justificación, lo descartado | sí |
 | `docs/04-fuentes-de-datos.md` | De dónde, cómo y por qué cada fuente | sí |
-| `docs/05-decisiones-tecnicas.md` | D1 a D18 con justificación y consecuencia | sí |
+| `docs/05-decisiones-tecnicas.md` | D1 a D21 con justificación y consecuencia | sí |
 | `docs/06-glosario.md` | Términos del dominio y del proyecto | sí |
 | `docs/07-plan-recoleccion-datos.md` | Plan original de la Etapa 1 | **histórico** |
 | `docs/08-verificacion-datos.md` | Estado del conjunto de datos | **NO** (script 30) |

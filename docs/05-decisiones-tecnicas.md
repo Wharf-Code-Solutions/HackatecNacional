@@ -343,3 +343,62 @@ diseño validado). El prototipo físico sigue siendo el paso siguiente natural.
 **Consecuencia.** Las especificaciones de las sondas y los consumos son **supuestos de
 diseño** y la ficha técnica los declara así. Una autoridad puede revisar la lógica del
 firmware, no el desempeño de un componente que nadie ha medido.
+
+## D19 · La estación se muestra en 3D y el envío como una línea de tiempo de recepción
+
+**Decisión.** La figura del simulador es una escena 3D con Three.js: un corte del río con las
+sondas en su tubo, el cable, el gabinete abierto (controlador, SD, módem, baterías), el panel,
+la antena y una torre celular. El envío ya no es un cuadro de "enviado o no": el paquete viaja
+de la antena a la torre y llega a una línea de tiempo de 12 h donde cada medición es un punto en
+su hora de medición, lleno si la plataforma lo recibió y vacío si sigue en la SD.
+
+**Por qué.** Sin prototipo físico, la figura tiene que justificar la solución como objeto y como
+mecanismo de medición. La línea de tiempo muestra a la vez que el dato llega, cuándo llega y que
+un corte de red no lo pierde: los huecos se llenan con la hora original. La franja del rango
+habitual del sitio queda de fondo sin decir nada más.
+
+**Alternativa descartada.** Mantener la figura en 2D (más ligera, sin WebGL) y un indicador de
+envío por paquete (dice si se envió, no qué llegó ni cuándo).
+
+**Consecuencia.** La página depende de WebGL y de bajar Three.js; sin WebGL lo avisa. Las
+proporciones de la estación están exageradas 1.6× respecto al río para que se lea; no es un
+plano de instalación.
+
+## D20 · El mapa usa MapLibre con base vectorial y las vistas solo muestran lo que se ve
+
+**Decisión.** El mapa pasa de Leaflet con teselas raster a MapLibre GL con la base vectorial de
+OpenFreeMap, con sus ríos apagados y el relieve como capa opcional. En las dos vistas se quita
+todo lo que no se lee de un vistazo: en el mapa, la leyenda, las notas, las fuentes (pasan al botón
+de atribución) y el estado del backend; en el simulador, la línea de fase, la tabla de parámetros,
+las notas y el panel de pruebas avanzadas (fallas, mantenimiento, clima, dirección del backend y
+paquete crudo). Los valores medidos pasan a las pestañas de la línea de tiempo y el simulador se
+conecta solo al backend si está encendido.
+
+**Por qué.** Las vistas existen para justificar la medición en una presentación; nadie se detiene a
+leer tablas ni notas. Leaflet con raster limitaba el control sobre la base y el relieve fijo no
+siempre ayudaba a leer la red.
+
+**Alternativa descartada.** Mantener los paneles plegados "para quien quiera verlos": en la
+práctica son ruido y desvían la atención de la figura.
+
+**Consecuencia.** Las fallas de sonda, la deriva y el clima siguen en el modelo y los prueba
+`prueba.js`, pero ya no se disparan desde la pantalla. El paquete crudo se valida con
+`contrato/validador.py`, no se lee en la vista.
+
+## D21 · Mapbox opcional por token, con MapLibre como respaldo
+
+**Decisión.** El mapa usa Mapbox GL JS cuando hay un token público en `mapa/config.js` y MapLibre
+con OpenFreeMap cuando no. El token no se versiona.
+
+**Por qué.** Mapbox da mejor cartografía, relieve y satélite, pero exige cuenta y token. Hacerlo
+opcional deja que cualquiera del equipo corra el mapa sin cuenta y evita publicar el token en el
+repositorio del equipo.
+
+**Alternativa descartada.** Solo Mapbox (rompe el mapa a quien no tenga token) o solo MapLibre
+(sin satélite ni la cartografía de Mapbox).
+
+**Consecuencia.** Hay dos bibliotecas posibles; el código usa solo la API común. El token debe
+restringirse a las URL de la demo en la cuenta de Mapbox. En la primera prueba, el satélite
+(`mapbox.satellite`) respondió 429 a todas las teselas mientras el estilo y el relieve cargaban.
+Por eso la casilla "Satélite" usa Esri World Imagery (sin llave) con cualquiera de las dos
+bibliotecas; es imagen para demostración, no para uso público sin acuerdo con Esri.

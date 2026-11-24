@@ -7,11 +7,13 @@ Tlaxcala). Idioma del proyecto, de la documentación y de la conversación: **es
 
 1. Lee `docs/contexto/00-LEEME-PRIMERO.md` y `01-invariantes.md`. Son las reglas que no se rompen.
 2. Ubica el archivo en `docs/contexto/02-mapa-del-repo.md`. Si es derivado (CSV procesados,
-   fixtures, `08-` y `09-` de documentación), **no lo edites: edita su generador**.
+   fixtures, `datos/procesados/mapa/`, `08-` y `09-` de documentación), **no lo edites: edita su generador**.
 3. Busca tu tipo de cambio en `05-protocolo-de-cambios.md`. Casi todo cambio arrastra documentación.
 4. Al terminar corre `python -I scripts/50_verificar_repo.py` (debe decir "Todas las comprobaciones
-   mecanicas pasan"). Si el cambio es relevante, añade una entrada al registro
-   (`docs/contexto/06-registro-de-cambios.md`, solo se añade, lo más reciente arriba).
+   mecanicas pasan") y, si tocaste el simulador, `node dispositivo/simulador/prueba.js`. Si el cambio es
+   relevante, añade una entrada arriba en `docs/contexto/06-registro-de-cambios.md` (solo se añade).
+5. Si cambia el estado de un módulo, actualiza `docs/12-estado-y-traspaso.md`: es lo que lee el
+   compañero que retoma.
 
 ## La idea central
 
@@ -20,13 +22,16 @@ nada. **Lo que detecta un evento nuevo es la desviación respecto de la historia
 semáforo de CONAGUA existe solo en la vista ciudadana: 176 de 198 sitios con dato están en rojo, así que el
 color no ordena nada y **no se usa para pintar el mapa** (decisión D9).
 
+La presentación va en dos tiempos: primero la **medición** (mapa y simulador justifican la estación),
+después el **análisis**. Las vistas actuales no anuncian el análisis en pantalla.
+
 ## Estado de los módulos
 
 | Módulo | Estado |
 |---|---|
 | M0 datos y contrato | Construido: 219 sitios, 145 703 resultados 2012-2025, 7 esquemas v1.0, fixtures, servidor mock |
-| M4 dispositivo | Simulador web construido y probado (`dispositivo/`). **Sin hardware**: las especificaciones son supuestos de diseño |
-| M6 mapa | Prototipo (`mapa/`): ríos, subcuencas, 219 sitios y 5 estaciones con zoom al simulador |
+| M4 dispositivo | Simulador web construido y probado (`dispositivo/`), figura 3D y línea de tiempo de recepción. **Sin hardware**: las especificaciones son supuestos de diseño |
+| M6 mapa | Prototipo (`mapa/`): cuenca RH18A delimitada, red del INEGI, 14 confluencias, 219 sitios, 5 estaciones con su simulador. No colorea por índice ni está probado a ancho de teléfono |
 | M1 topología (orden aguas arriba → abajo) | **Construida** (`scripts/70_topologia_red.py` → `datos/procesados/red/`): 210 de 219 sitios con sucesor y distancia sobre el cauce; 14 marcados para revisión |
 | M2 motor de reglas | **Construido** (`motor/reglas.py`): 0 alertas en el día de control contra 31 del stub, 0 ambientales con el sensor roto, los tres eventos detectados antes de su intensidad plena y su fuente bien clasificada. `servidor_mock.py --motor real` lo usa |
 | M3 propagación | **Construida** (`scripts/80_propagacion.py`): transporte conservativo con k = 0, porque la razón medida abajo/arriba en 90 tramos tiene mediana 1.00. Ventana de llegada por velocidad declarada 0.3-1.0 m/s; valor como banda p10-p90; cobertura 78 % fuera de muestra |
@@ -34,34 +39,51 @@ color no ordena nada y **no se usa para pintar el mapa** (decisión D9).
 
 No conviertas "pendiente" en "construido" sin verificarlo contra el repo.
 
-## Lo que se construyó en esta sesión
+## Lo construido
 
-**Dispositivo (`dispositivo/`)**: la estación centinela, simulada.
-- La figura del simulador muestra la estación como una caja con tres renglones (controlador, comunicación,
-  energía), cada uno con su dato vivo, más el panel solar y la antena. El usuario quiere ver los componentes
-  ahí, sin separarlos en otra sección ni añadir ruido: es información de paso.
+**Dispositivo (`dispositivo/`)**: la estación centinela, simulada (D18: simulador propio, no Wokwi ni hardware).
 - Cuatro bloques: sondas (OD, pH, conductividad K=1, temperatura, turbiedad), controlador (ESP32 + RTC + SD),
-  comunicación (módem LTE-M, `POST /lecturas`) y energía (panel 5 W + 2×18650).
-- `ficha-tecnica.md`: rangos, ciclo, consumos, lo medido y lo pendiente de validar.
-- `simulador/modelo.js` (agua con la banda histórica real, sondas con sesgo, deriva, ensuciamiento y fallas,
-  energía, enlace), `firmware.js` (máquina de estados pura), `montaje.js`, `prueba.js`, `escena.js`, `ui.js`.
-- Decisión D18: simulador propio, no Wokwi ni hardware.
-- Resultados medidos: 96 paquetes por día y estación, 0 pérdidas en un corte de 4 h, consumo ≈ 1.4 Wh/día,
-  autonomía sin sol ≈ 14 días. La estimación a mano de 1.1 Wh/día y 19 días quedó corregida.
+  comunicación (módem LTE-M, `POST /lecturas`) y energía (panel 5 W + 2×18650). Detalle en `ficha-tecnica.md`.
+- `simulador/`: `modelo.js` (agua con la banda histórica real, sondas con sesgo, deriva, ensuciamiento y fallas,
+  energía, enlace), `firmware.js` (máquina de estados pura), `montaje.js`, `prueba.js`, `escena.js`,
+  `recepcion.js`, `ui.js`.
+- **Pantalla (D19, D20)**: solo tres cosas.
+  - Figura 3D (Three.js r149 desde unpkg): corte del río, sondas en su tubo, cable, gabinete abierto con
+    controlador, SD (un cubo por paquete pendiente), módem y baterías, panel, antena y torre celular. Rótulos
+    HTML con nombre y dato vivo. La estación está a 1.6× respecto al río para que se lea. Se gira arrastrando.
+  - Recepción: pestañas con el último valor de cada parámetro y línea de tiempo de 12 h; punto lleno =
+    recibido por la plataforma, vacío = en la SD; franja de fondo = rango habitual del sitio.
+  - Cuatro pruebas: descarga industrial, descarga orgánica, lluvia, corte de enlace. Si el backend abre una
+    alerta, una línea en rojo.
+  - Las fallas de sonda, mantenimiento y clima siguen en el modelo y en `prueba.js`, no en pantalla.
+- Medido: 96 paquetes por día y estación, 0 pérdidas en un corte de 4 h, consumo ≈ 1.4 Wh/día, autonomía sin
+  sol ≈ 14 días.
 - Reglas del firmware: escribe en la SD antes de enviar y borra tras el ACK; reenvía con la hora original;
   no corrige valores (manda el crudo, `null` si la sonda no responde, `-999` si está rota); **nunca emite
   alertas** (eso es del backend, invariante I10); muestreo adaptativo; ahorro por batería.
 
-**Mapa (`mapa/`)**: Leaflet + relieve sombreado de Esri con nombres de lugares encima (sin llave; sin calles
-ni ríos propios, para que la red del INEGI sea lo único que se lee como agua). Barra lateral plana con
-la lista de las 5 estaciones como índice y leyenda. Al elegir una estación se acerca y muestra su simulador en
-un marco **por URL**, sin importar código (`?incrustado=1&estacion=...&vel=...&backend=...`). Lee `GET /alertas`.
+**Mapa (`mapa/`)** (D20, D21):
+- Con token en `mapa/config.js` usa **Mapbox GL JS 3.8** (`light-v11`, relieve de Mapbox). Sin token usa
+  **MapLibre GL** con la base vectorial de OpenFreeMap `positron` y relieve Terrarium de AWS. `index.html` elige
+  la biblioteca; `mapa.js` usa solo la API común (`gl.`).
+- La base se recorta al cargar: se apagan sus ríos y rótulos de calles y comercios; nombres en español.
+- Capas opcionales, apagadas por defecto: **Satélite** (Esri World Imagery, sin llave, en ambos modos; el
+  satélite de Mapbox respondió 429 con nuestra cuenta) y **Relieve**. **Sitios oficiales** encendida.
+- Cuenca RH18A (10 subcuencas, 31 480 km²) delimitada: máscara fuera, contorno en tinta. Ríos con grosor por
+  orden y zoom. 14 confluencias; se rotulan solo las que el INEGI nombra como río en ambos brazos.
+- Barra lateral: título, 5 estaciones y las casillas. Fuentes en el botón de atribución.
+- Al elegir una estación se acerca y abre su simulador en un marco **por URL**
+  (`?incrustado=1&estacion=...&vel=...&backend=...`). Lee `GET /alertas` solo para poner en rojo la estación.
 
-**Datos para el mapa**: `scripts/60_red_para_mapa.py` lee la red hidrográfica del INEGI (F08) y escribe
-`datos/procesados/mapa/` (8 184 tramos de orden ≥ 4, 10 subcuencas, toponimia). No calcula topología.
-CARTO ya exige llave y OpenStreetMap competía con los ríos; por eso se usa el relieve de Esri.
+**Datos para el mapa**: `scripts/60_red_para_mapa.py` lee la red del INEGI (F08) y escribe
+`datos/procesados/mapa/`: red (8 184 tramos de orden ≥ 4), subcuencas, toponimia, `cuenca.geojson` (contorno
+por cancelación de lados compartidos) y `confluencias.geojson` (longitud de red acumulada aguas arriba, sobre
+todos los órdenes; donde un cauce se divide, lo acumulado pasa solo a la salida de mayor orden). No ordena
+los sitios: eso es M1 (`70_topologia_red.py`).
 
 ## Cómo correrlo
+
+Desde la raíz del repo:
 
 ```powershell
 python -m http.server 8000
@@ -75,28 +97,31 @@ python contrato/servidor_mock.py
 - Simulador solo: `http://127.0.0.1:8000/dispositivo/simulador/`
 - Pruebas del firmware: `node dispositivo/simulador/prueba.js`
 - Validar paquetes del simulador: `python contrato/validador.py lectura $env:TEMP\paquetes_simulador.json`
+- Regenerar las capas del mapa: `python -I scripts/60_red_para_mapa.py`
 - Reiniciar el mock limpia sus alertas (el stub acumula estado entre corridas).
 
-Los frontends leen `contrato/fixtures/`, así que **hay que servir el repo desde su raíz**; con doble clic
-(`file://`) el navegador bloquea la lectura.
+Los frontends leen `contrato/fixtures/` y `datos/procesados/`, así que **hay que servir el repo desde su
+raíz**; con doble clic (`file://`) el navegador bloquea la lectura. Mapa y simulador necesitan internet
+(bibliotecas por CDN, base, satélite, relieve) y WebGL.
 
 ## Fronteras
 
 - Un módulo solo puede estar bloqueado por el contrato, nunca por el código de otro. **Ningún módulo importa
   código de otro**: se hablan por JSON, HTTP o CSV.
 - M4 es dueño de `dispositivo/` y no toca el contrato. `mapa/` muestra el simulador por URL.
-- **Un frontend no decide el análisis ni el color por su cuenta**: lo recibe en el veredicto de la plataforma.
-  El simulador muestra `veredictos[].parametros[].posicion_en_banda` y `veredictos[].alertas` de la respuesta
-  de `POST /lecturas`; si el backend no está conectado, dice "sin conexión" y no inventa un resultado.
+- **Un frontend no decide el análisis ni el color por su cuenta**: lo recibe de la plataforma. El simulador
+  manda cada lote a `POST /lecturas` (backend por defecto `http://127.0.0.1:8080`, `?backend=` vacío lo
+  apaga) y solo muestra las `alertas` que devuelva; si no responde, sigue igual y no inventa nada.
 - Los datos de entrada del simulador y del mapa se **leen** de `contrato/fixtures/` y `datos/procesados/`;
   no se duplican.
 
 ## Preferencias de diseño del usuario (importante)
 
-El usuario rechazó explícitamente el diseño con aspecto "hecho por IA" y pidió quitar ruido visual.
+El usuario rechazó explícitamente el diseño con aspecto "hecho por IA" y lo ha repetido varias veces:
 
-- **Mostrar solo información útil.** Las vistas de demo existen porque no hay prototipo físico: deben mostrar
-  qué mide el sensor, qué análisis hace la plataforma y si hay alarma. Lo demás va plegado o fuera.
+- **Nada que no se lea de un vistazo.** Sin tablas, notas bajo gráficas, paneles plegados de pruebas,
+  leyendas largas, textos de fuentes ni de estado del backend. Nadie se detiene en estas vistas: solo
+  justifican la medición. Lo que sobra va a la documentación, no a la pantalla.
 - **Evitar:** fondo azul marino con acento turquesa, brillos y resplandores, paneles translúcidos flotantes,
   todo en tarjetas idénticas, etiquetas en mayúsculas pequeñas con espaciado, píldoras y chips, numerales
   encerrados (①②③), partículas y movimiento decorativo, leyendas que repiten lo evidente, color sin
@@ -104,6 +129,7 @@ El usuario rechazó explícitamente el diseño con aspecto "hecho por IA" y pidi
 - **Hacer:** tema claro, trazo fino, un azul para el agua, tinta para las estaciones, rojo solo para una alarma
   real, filetes en lugar de tarjetas, jerarquía clara, tipografía Public Sans. Solo se mueve lo que cambia
   con el dato.
+- Le gusta ver los componentes del dispositivo descritos dentro de la figura, sin separarlos en otra sección.
 - Toda cifra mostrada lleva su `n` y su fecha (I12). "Sin dato" es un estado visible, no un hueco (I13).
 
 ## Trampas conocidas
@@ -112,28 +138,31 @@ El usuario rechazó explícitamente el diseño con aspecto "hecho por IA" y pidi
 - Scripts de datos con `python -I`; `_comun.py` se importa con `importlib` y ruta explícita.
 - Un script nuevo no debe duplicar lo que vive en `scripts/_comun.py`.
 - `datos/crudos/` y `datos/geo/` no se versionan y no se editan nunca (I1, I15).
-- En el panel del navegador de la app, las animaciones con `requestAnimationFrame` se pausan si el panel
-  está oculto; el zoom animado del mapa y el movimiento del simulador no avanzan ahí. Para verificar el estado
-  final usa `window.mapaAtoyac.setView(..., {animate: false})` o abre la página en el navegador normal.
-- Barras invertidas dentro de un heredoc de `python -` se estropean al pasar por la herramienta de shell:
-  escribe un archivo `.py` o usa `chr(92)`.
+- **Token de Mapbox**: vive en `mapbox.txt` (raíz) y `mapa/config.js`; ambos están en `.gitignore`. Nunca lo
+  escribas en un archivo versionado ni lo repitas en la conversación. `mapa/config.ejemplo.js` muestra el formato.
+- **Caché del navegador**: `index.html` del mapa y del simulador cargan sus `.js` y `.css` con `?v=N`. Sube el
+  número al cambiarlos o el navegador seguirá usando la versión vieja.
+- **Panel del navegador de la app**: si está oculto, `requestAnimationFrame` se pausa y MapLibre/Mapbox y
+  Three.js no dibujan (capturas en blanco). Muéstralo antes de verificar; para el estado sin animación usa
+  `window.mapaAtoyac.jumpTo({center, zoom})`. Con el panel angosto (< 900 px) la barra lateral del mapa se oculta.
+- Barras invertidas y comillas dentro de un heredoc de `python -` se estropean al pasar por la herramienta de
+  shell: escribe un archivo `.py` en el scratchpad y ejecútalo.
+- Los nombres de las confluencias salen de la toponimia dispersa del INEGI y pueden fallar en barrancas; por eso
+  solo se rotulan las de río en ambos brazos.
 - Descargar archivos requiere permiso explícito del usuario: dilo con nombre, origen y tamaño antes.
 
 ## Lo que sigue (en orden)
 
-En palabras llanas: ya hay **datos** (M0), un **sensor simulado** (M4) y un **mapa** (M6). Falta el cerebro.
-M1 dice qué sitio está río arriba de cuál; M2 decide si una lectura es alarma comparándola con la historia
-del punto; M3 usa ambos para estimar hasta dónde y cuándo llega la contaminación. M5 es el servidor real que
-reemplaza al mock; M7 y M8 son pantallas para la autoridad y la ciudadanía; M9 es la demo de punta a punta.
-**M1 y M2 no dependen de nada pendiente y pueden empezarse ya, en paralelo.**
+Ya hay datos (M0), sensor simulado (M4), mapa (M6), topología (M1), motor de reglas (M2) y propagación
+(M3). Falta juntarlo y mostrarlo:
 
-1. M1, topología: proyectar los 219 sitios sobre la red del INEGI y ordenarlos (la red ya está en `datos/geo/`;
-   `60_red_para_mapa.py` incluye un lector de shapefile y dbf sin dependencias). Los tramos traen `ORDER_1`,
-   `ARBSUM_1` y `FLOWDIR`.
-2. M2, motor de reglas real: criterio de terminado, a lo más 2 alertas en `normal` y evento detectado en menos
-   de 45 minutos simulados.
-3. M3, propagación sobre la topología; luego mostrar la pluma aguas abajo en el mapa.
-4. Hardware: validar especificaciones de sondas, medir consumo en banco y cobertura celular por sitio; cotizar
+1. M5, backend real: `POST /lecturas` con `motor/reglas.py`, persistencia, `GET /alertas` y la predicción
+   de M3. El mock con `--motor real` es la especificación.
+2. M6: pluma aguas abajo con la ventana de llegada de M3 y color por el índice de la plataforma; probar a
+   ancho de teléfono. Sin añadir ruido a la vista.
+3. M7 panel de autoridad y M8 app ciudadana, contra el mock mientras no exista M5.
+4. M9 demo de punta a punta y M10 costos, manual y propuesta por fases.
+5. Hardware: validar especificaciones de sondas, medir consumo en banco y cobertura celular por sitio; cotizar
    costos incluyendo calibración y reposición de sondas.
 
 ## Convenciones
@@ -146,4 +175,6 @@ reemplaza al mock; M7 y M8 son pantallas para la autoridad y la ciudadanía; M9 
 - Rama `main` del remoto del equipo. Sin líneas de coautor en los commits.
 - El estado para traspaso a compañeros vive en `docs/12-estado-y-traspaso.md`: actualízalo al
   terminar un módulo.
+- Commit y push solo cuando el usuario lo pide. Remoto: `Wharf-Code-Solutions/HackatecNacional`.
+- Decisiones técnicas numeradas en `docs/05-decisiones-tecnicas.md` (hoy D1 a D21).
 - Cada cifra de la documentación sale de un archivo o de una corrida; si no puedes rastrearla, verifícala.

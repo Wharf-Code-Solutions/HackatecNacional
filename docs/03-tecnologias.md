@@ -88,19 +88,37 @@ Es el formato en que el INEGI publica la Red Hidrográfica 1:50 000 edición 2.0
 elige: se recibe. Las capas que importan son `_hl` (líneas de flujo, que traen la
 dirección del escurrimiento), `_subc` (divisorias de subcuenca) y `_ha` (cuerpos de agua).
 
-### Leaflet y relieve sombreado de Esri para el mapa
+### Three.js para la figura 3D del simulador
 
-`mapa/`. Leaflet 1.9.4 se carga desde unpkg (con hash de integridad). El fondo son dos capas de
-teselas de Esri en `server.arcgisonline.com`: relieve sombreado (`World_Hillshade`) aclarado y,
-encima, solo los nombres de lugares (`World_Light_Gray_Reference`). **No piden llave ni cuenta.**
-El relieve no trae calles ni ríos propios, así que la red del INEGI es lo único que se lee como
-agua.
+`dispositivo/simulador/escena.js`. Three.js r149 desde unpkg, la última versión que se carga como
+script clásico (las siguientes son solo módulos ES), así que encaja con los demás archivos sin
+compilar. La rotación con el ratón está escrita a mano, sin los módulos de ejemplo.
 
-**Por qué:** es lo que lee GeoJSON sin conversión y permite el zoom animado a una estación.
-**Costo conocido:** el mapa base necesita internet. Sin red, los ríos, subcuencas y sitios se
-siguen viendo (son nuestros) y solo desaparece el fondo. El uso sin cuenta de las teselas de Esri
-es para desarrollo y demostración: para la defensa sobra; para uso público habría que contratar un
-proveedor.
+**Por qué:** la estación tiene que verse como objeto físico (sondas en el agua, gabinete, panel,
+antena) mientras no haya prototipo. **Costo conocido:** necesita WebGL e internet para bajar la
+biblioteca; sin WebGL la página lo dice y el resto funciona. La decisión está en D19.
+
+### MapLibre GL y base vectorial de OpenFreeMap para el mapa
+
+`mapa/`. MapLibre GL JS 4.7 desde unpkg dibuja con WebGL. La base es el estilo `positron` de
+OpenFreeMap (teselas vectoriales de OpenStreetMap, **sin llave ni cuenta**); al cargar se apagan
+sus ríos y los rótulos de calles y comercios, y los nombres de lugar se muestran en español. El
+relieve es una capa opcional, apagada por defecto: sombreado calculado en el navegador a partir de
+la elevación Terrarium de AWS (también sin llave).
+
+**Por qué:** cada capa del INEGI se estiliza por sus atributos (grosor por orden del cauce y por
+zoom), el texto es nítido a cualquier escala y la base se puede recortar a lo que aporta. Lee
+GeoJSON sin conversión. **Costo conocido:** necesita WebGL e internet para la base, las fuentes y el
+relieve; sin red siguen viéndose nuestras capas, sin fondo ni rótulos. OpenFreeMap y Terrarium son
+gratuitos sin cuenta: para la defensa sobra; para uso público conviene un proveedor con acuerdo.
+La decisión está en D20.
+
+**Con token, Mapbox GL JS 3.8.** Si existe `mapa/config.js` con un token público de Mapbox
+(`pk.`), la página carga Mapbox GL JS en lugar de MapLibre, con el estilo `light-v11` y el relieve
+de Mapbox. La casilla "Satélite" usa Esri World Imagery en ambos casos, sin llave (el satélite de
+Mapbox respondió 429 con nuestra cuenta). El código es el mismo porque la API coincide. `config.js` no
+se versiona (`.gitignore`); `config.ejemplo.js` muestra el formato. Sin él, todo sigue con
+OpenFreeMap. Mapbox exige su logo visible y no es software libre desde la versión 2 (D21).
 
 ### Git y GitHub
 
@@ -145,6 +163,7 @@ documentarlo como construido.
 | **Streeter-Phelps como modelo de propagación** | Requiere constantes calibradas contra un tramo donde el oxígeno caiga y se recupere, y aquí el río está en hipoxia permanente. Se sustituyó por transporte advectivo con decaimiento. |
 | **Teselas de CARTO (Dark Matter)** | Se probaron primero y ahora devuelven "API KEY REQUIRED". Se sustituyeron por OpenStreetMap, que no pide llave. |
 | **Teselas de OpenStreetMap** | Sus calles, manchas urbanas y ríos propios competían con la red del INEGI aun en gris. Se sustituyeron por el relieve sombreado de Esri. |
+| **Leaflet con teselas raster de Esri** | Las teselas raster no se pueden recortar ni estilizar, y el relieve fijo de fondo no siempre ayuda. Se sustituyeron por MapLibre con base vectorial y relieve opcional (D20). |
 | **Wokwi para simular el dispositivo** | No trae modelos de sondas de OD, pH ni conductividad, vive fuera de nuestra interfaz y no permite inyectar incidentes ni deriva. Se sustituyó por un simulador propio (D18). |
 | **Base de datos desde el inicio** | Habría hecho que nadie pudiera correr el proyecto sin instalar y poblar un servidor. Con CSV y JSON, se clona y funciona. |
 

@@ -7,9 +7,10 @@ están en [11-metodologia-modulos.md](11-metodologia-modulos.md); las reglas del
 
 ## En una frase
 
-Hay **datos** (M0), un **dispositivo simulado** (M4), un **mapa** (M6) y la **topología del río**
-(M1): ya se sabe qué sitio está aguas abajo de cuál y a qué distancia. Falta decidir si una lectura
-es alarma (M2) y estimar hasta dónde llega la contaminación (M3), que ya tiene su entrada lista.
+Hay **datos** (M0), un **dispositivo simulado** (M4), un **mapa** (M6), la **topología del río**
+(M1), el **motor de reglas** (M2) y la **propagación** (M3). Lo que falta es juntarlo: un backend
+real (M5), las pantallas que consumen sus resultados (M6 completo, M7, M8) y la demo de punta a
+punta (M9).
 
 ## Lo que se hizo, en el orden en que se hizo
 
@@ -19,9 +20,11 @@ es alarma (M2) y estimar hasta dónde llega la contaminación (M3), que ya tiene
 2. **Diseño del dispositivo a partir de esos datos** (M4): una estación centinela con cuatro bloques
    (sondas, controlador, comunicación, energía), con rangos elegidos contra lo que el río registra.
    No hay hardware: se presenta con un simulador web que corre la lógica del firmware.
-3. **Representación de la cuenca y del mecanismo** (M6): mapa con la red hidrográfica del INEGI, las
-   subcuencas, los 219 sitios oficiales y las 5 estaciones; al elegir una estación se abre su
-   simulador.
+3. **Representación de la cuenca y del mecanismo** (M6): mapa con la cuenca delimitada, la red del
+   INEGI, sus confluencias, los 219 sitios oficiales y las 5 estaciones; al elegir una estación se
+   abre su simulador en 3D.
+4. **El análisis** (M1, M2, M3): orden de los sitios sobre el cauce, motor de reglas contra la
+   historia de cada punto y ventana de llegada aguas abajo.
 
 ## Estado por módulo
 
@@ -31,9 +34,9 @@ es alarma (M2) y estimar hasta dónde llega la contaminación (M3), que ya tiene
 | M1 Topología | **Construida.** 210 de 219 sitios con sucesor; 14 marcados para revisión | `datos/procesados/red/`, `docs/13-topologia-red.md` |
 | M2 Motor de reglas | **Construido.** 0 alertas en el día de control contra 31 del provisional; los tres eventos detectados y clasificados | `motor/`, `docs/15-motor-reglas.md` |
 | M3 Propagación | **Construida.** Modelo calibrado con 90 tramos del propio río, cobertura 78 % fuera de muestra | `scripts/80_propagacion.py`, `docs/14-propagacion.md` |
-| M4 Dispositivo | **Simulador construido y probado; sin hardware** | `dispositivo/` |
+| M4 Dispositivo | **Simulador construido y probado; sin hardware.** Figura 3D y línea de tiempo de recepción | `dispositivo/` |
 | M5 Backend | Pendiente. Puede empezarse contra el contrato | — |
-| M6 Mapa | **Prototipo** (aún no colorea por índice ni está probado a ancho de teléfono) | `mapa/` |
+| M6 Mapa | **Prototipo**: cuenca delimitada y confluencias (aún no colorea por índice ni está probado a ancho de teléfono) | `mapa/` |
 | M7 Panel de autoridad | Pendiente | — |
 | M8 App ciudadana | Pendiente | — |
 | M9 Integración | Pendiente | — |
@@ -41,40 +44,28 @@ es alarma (M2) y estimar hasta dónde llega la contaminación (M3), que ya tiene
 
 ## Qué se puede tomar hoy sin esperar a nadie
 
-### M2, motor de reglas (recomendado para quien entra)
+### M5, backend (recomendado: es lo que une todo)
 
-- **Qué es.** Una función `evaluar(lectura) → veredicto` que decide si cada parámetro está dentro de
-  lo habitual **para ese punto** y si hay que abrir una alerta.
-- **Entradas listas.** `contrato/fixtures/linea_base.json` (banda histórica de cada estación),
-  `contrato/fixtures/escenarios/*.json` (cinco días simulados), `contrato/esquemas/veredicto.schema.json`
-  (lo que debe devolver), `datos/procesados/umbral.csv` (límites oficiales).
-- **La vara.** El evaluador provisional del mock da 31 alertas en un día normal
-  (`contrato/README.md`, "La vara a superar").
-- **Terminado.** A lo más 2 alertas en `normal`; evento detectado en menos de 45 minutos simulados en
-  los tres escenarios de incidente; en `falla_sensor`, cero alertas ambientales y al menos 4 avisos
-  técnicos.
-- **Cómo probar.** `python contrato/reproducir_escenario.py <escenario> --url <backend>` reproduce un
-  escenario contra un servidor; el mock (`python contrato/servidor_mock.py`) es la referencia.
-- **Frontera.** El simulador ya muestra lo que devuelva `POST /lecturas`
-  (`veredictos[].parametros[].posicion_en_banda` y `veredictos[].alertas`): cuando M2 exista, se verá
-  ahí sin tocar el simulador.
+- **Qué es.** El servidor real que reemplaza al mock: recibe `POST /lecturas`, llama a
+  `motor/reglas.py` (M2), guarda lecturas y alertas, y sirve `GET /alertas` y la predicción de M3.
+- **Entradas listas.** El mock (`contrato/servidor_mock.py --motor real`) es la especificación
+  ejecutable; `contrato/fixtures/prediccion_ejemplo.json` muestra la salida de M3.
+- **Terminado.** `reproducir_escenario.py normal --url <backend>` corre sin errores de contrato,
+  rechaza con 422 lo mismo que el mock y los datos persisten tras reiniciar.
+- **Frontera.** El simulador y el mapa ya hablan por el contrato: al apuntarlos al backend real
+  (`?backend=` y `?mock=`) funcionan sin tocar su código.
 
-### M1, topología
+### M6, mapa con el análisis
 
-- **Qué es.** Proyectar los 219 sitios sobre la red del INEGI y decir, para cada uno, cuál es el
-  siguiente aguas abajo y a qué distancia sobre el cauce.
-- **Entradas listas.** La red ya está descargada en `datos/geo/F08_red_hidrografica` (no se versiona:
-  `python -I scripts/00_descargar_fuentes.py` la baja). Los tramos traen `ORDER_1`, `ARBSUM_1` y
-  `FLOWDIR`. `scripts/60_red_para_mapa.py` ya tiene un lector de shapefile y dbf sin dependencias.
-- **Terminado.** Los 219 sitios con `c_sitio_aguas_abajo` o la razón de por qué no; distancias sobre
-  el cauce; validado contra al menos 10 sitios cuyo nombre declara su posición.
-- **Lo que desbloquea.** M3 y, con él, pintar en el mapa la contaminación avanzando río abajo.
+- Mostrar la pluma aguas abajo de una alerta con la ventana de llegada de M3
+  (`datos/procesados/red/tiempo_viaje.csv`, `prediccion_ejemplo.json`) y colorear por el índice que
+  devuelva la plataforma, no por el semáforo (D9). Probarlo a ancho de teléfono.
+- Las vistas siguen la regla del proyecto: solo lo que se lee de un vistazo (D20).
 
-### M5, backend
+### M7 y M8, panel y app
 
-- Puede empezarse ya contra el contrato: el mock es la especificación ejecutable. Terminado cuando
-  `reproducir_escenario.py normal --url <backend>` corre sin errores de contrato, rechaza con 422 lo
-  mismo que el mock y los datos persisten tras reiniciar.
+- Pueden empezarse contra el mock con `--motor real`: lista de alertas con su evidencia y
+  predicción (M7), reporte ciudadano con foto sin EXIF y folio (M8).
 
 ### M10, documentación del reto
 
@@ -88,7 +79,8 @@ es alarma (M2) y estimar hasta dónde llega la contaminación (M3), que ya tiene
   diseño; están separados de lo medido en la ficha técnica.
 - **Huecos de datos.** Precipitación del SMN y REPDA/DENUE filtrado siguen sin integrarse.
 - **Contrato v1.0.** Escrito; falta la sesión del equipo para congelarlo.
-- **Mapa base.** Relieve y nombres de Esri sin cuenta: sirve para la demostración, no para uso público.
+- **Mapa base.** Con token de Mapbox en `mapa/config.js` usa Mapbox; sin él, OpenFreeMap y Terrarium sin
+  cuenta. El token no está en el repositorio: pídelo o usa el tuyo (copia `mapa/config.ejemplo.js`).
 
 ## Cómo correr lo que existe
 
