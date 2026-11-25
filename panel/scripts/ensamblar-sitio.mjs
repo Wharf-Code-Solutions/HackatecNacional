@@ -54,7 +54,7 @@ writeFileSync(join(mapaDestino, 'config.js'), 'window.MAPBOX_TOKEN = ' + JSON.st
 
 const capasDestino = join(DIST, 'datos', 'procesados', 'mapa');
 mkdirSync(capasDestino, { recursive: true });
-for (const f of ['cuenca.geojson', 'red_hidrografica.geojson', 'confluencias.geojson', 'toponimia_hidrografica.geojson', 'red_vigilada.geojson', 'red_mecanismos.geojson']) {
+for (const f of ['cuenca.geojson', 'red_hidrografica.geojson', 'confluencias.geojson', 'toponimia_hidrografica.geojson', 'red_vigilada.geojson', 'red_mecanismos.geojson', 'mexico.geojson']) {
   exige(join(RAIZ, 'datos', 'procesados', 'mapa', f));
   cpSync(join(RAIZ, 'datos', 'procesados', 'mapa', f), join(capasDestino, f));
 }

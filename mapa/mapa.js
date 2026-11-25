@@ -48,7 +48,9 @@
   var opciones = {
     container: 'mapa',
     style: MB ? 'mapbox://styles/mapbox/light-v11' : 'https://tiles.openfreemap.org/styles/positron',
-    center: [-98.2, 18.6], zoom: 7.3, minZoom: 6, maxZoom: 17,
+    center: [-98.2, 18.6], zoom: 7.3, minZoom: 7, maxZoom: 17,
+    // el mapa no sale del estado de Puebla (con su margen): no se piden ni se pueden ver teselas de otras partes
+    maxBounds: [[-99.3, 17.6], [-96.5, 21.1]], renderWorldCopies: false,
     attributionControl: false, dragRotate: false, pitchWithRotate: false
   };
   if (MB) opciones.projection = 'mercator';
@@ -68,7 +70,8 @@
     get('../datos/procesados/mapa/toponimia_hidrografica.geojson'),
     get('../contrato/fixtures/sitios.geojson'),
     get('../contrato/fixtures/mecanismos.json'),
-    get('../datos/procesados/mapa/red_mecanismos.geojson')
+    get('../datos/procesados/mapa/red_mecanismos.geojson'),
+    get('../datos/procesados/mapa/mexico.geojson')
   ]);
   var estilo = new Promise(function (ok) { mapa.on('load', ok); });
 
@@ -76,6 +79,7 @@
     var d = r[0];
     apagaBase();
     agregaCuenca(d[0]);
+    agregaMexico(d[7]);
     agregaRios(d[1], d[3], d[6]);
     agregaConfluencias(d[2]);
     agregaEstaciones(d[5].estaciones);
@@ -126,6 +130,13 @@
     // las subcuencas ya no se dibujan: eran una línea discontinua más que se confundía con las de la base
     mapa.addSource('cuenca', { type: 'geojson', data: cuenca });
     mapa.addLayer({ id: 'cuenca', type: 'line', source: 'cuenca', paint: { 'line-color': TINTA, 'line-width': 1.8 } });
+  }
+
+  // ---------------------------------------------------------------- contorno de México (Natural Earth 1:50m)
+  function agregaMexico(mx) {
+    mapa.addSource('mexico', { type: 'geojson', data: mx });
+    mapa.addLayer({ id: 'mexico_relleno', type: 'fill', source: 'mexico', paint: { 'fill-color': '#e9ebec', 'fill-opacity': 0.55 } });
+    mapa.addLayer({ id: 'mexico_contorno', type: 'line', source: 'mexico', paint: { 'line-color': '#8d979e', 'line-width': 1.2 } });
   }
 
   // ---------------------------------------------------------------- ríos
@@ -234,7 +245,7 @@
     lista.forEach(function (e, i) {
       var li = document.createElement('li'); li.id = 'li_' + e.c_estacion;
       li.innerHTML = '<button type="button"><span class="num">' + (i + 1) + '</span><span><b>' + lugar(e) +
-        '</b><span class="det">' + e.c_estacion + ' · ' + inicial(e.municipio) + '</span></span></button>';
+        '</b><span class="det">' + inicial(e.municipio) + '</span></span></button>';
       li.querySelector('button').onclick = function () { abre(e); };
       ol.appendChild(li);
 
