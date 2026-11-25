@@ -21,6 +21,17 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-25 · Módulo B: «Qué hacer» como ruta de pasos
+
+**Qué cambió.** `Protocolo.jsx` deja las casillas: las acciones van por etapa (Inmediata en rojo, El mismo día en guinda,
+Seguimiento en gris) como pasos numerados sobre una línea vertical, con responsable y fuente, y una barra de avance
+(«1 de 7 pasos»). Un clic en el número marca el paso como hecho (verde con palomita); sigue sin guardarse.
+**Por qué.** Petición del usuario: algo más llamativo y profesional que una casilla.
+**Qué arrastró.** `Protocolo.jsx`, `estilos.css`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
 ## 2026-11-24 · Módulo B: tabla, matriz y huella con los mecanismos
 
 **Qué cambió.** La tabla de estaciones, la matriz y la huella de Alertas incluyen los 10 mecanismos además de las 5 del

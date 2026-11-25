@@ -584,17 +584,32 @@ main.tablero-main { padding: 0; flex: 1; display: flex; }
 /* MapLibre pone la opacidad del marcador en línea; por eso se oculta con visibility e !important. */
 .tablero-mapa-lienzo.sin-pines .maplibregl-marker { visibility: hidden !important; pointer-events: none; }
 
-/* «Qué hacer» (Protocolo.jsx): acciones con casilla, plazo, condición y quién las hace. */
-.protocolo-titulo { font-weight: 600; color: var(--titulo); margin-bottom: 8px; }
-.protocolo-acciones { list-style: none; padding: 0; margin: 0 0 8px; }
-.protocolo-acciones li { border-bottom: 1px solid var(--linea); }
-.protocolo-acciones li:last-child { border-bottom: 0; }
-.protocolo-acciones label { display: grid; grid-template-columns: auto 1fr; gap: 10px; padding: 10px 0; cursor: pointer; font-size: 14px; }
-.protocolo-acciones input { margin-top: 3px; accent-color: var(--principal); }
-.protocolo-texto small { display: block; color: var(--tenue); font-size: 12.5px; margin-top: 2px; }
-.protocolo-plazo { display: inline-block; font-size: 12px; font-weight: 600; color: var(--principal); margin-right: 8px; }
-.protocolo-si { font-style: italic; margin-right: 4px; }
-.protocolo-acciones li.hecha .protocolo-texto { color: var(--tenue); text-decoration: line-through; }
+/* «Qué hacer» (Protocolo.jsx): ruta de respuesta por etapas, pasos numerados sobre una línea vertical. La etapa
+   inmediata va en el rojo de alerta; las otras, en guinda y en gris. Un clic en el número marca el paso. */
+.protocolo-cabeza { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.protocolo-titulo { font-family: var(--titular); font-weight: 700; font-size: 16px; color: var(--titulo); margin: 0; }
+.protocolo-avance { font-size: 13px; color: var(--tenue); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.protocolo-barra { height: 4px; background: var(--neutro300); border-radius: 2px; margin: 8px 0 14px; overflow: hidden; }
+.protocolo-barra span { display: block; height: 100%; background: #086308; transition: width .25s; }
+.protocolo-etapa { --color-etapa: var(--principal); margin-bottom: 6px; }
+.protocolo-etapa.etapa-inmediata { --color-etapa: #9B0F15; }
+.protocolo-etapa.etapa-seguimiento { --color-etapa: #5b6770; }
+.protocolo-etapa h4 { font-family: var(--titular); font-size: 13px; font-weight: 700; color: var(--color-etapa); margin: 10px 0 6px;
+  padding-left: 40px; }
+.protocolo-etapa ol { list-style: none; padding: 0; margin: 0; }
+.protocolo-etapa li { position: relative; display: grid; grid-template-columns: 28px 1fr; gap: 12px; padding: 0 0 14px; }
+.protocolo-etapa li::before { content: ''; position: absolute; left: 13px; top: 28px; bottom: 0; width: 2px; background: var(--neutro300); }
+.protocolo-etapa li:last-child::before { display: none; }
+.protocolo-num { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--color-etapa); background: #fff; color: var(--color-etapa);
+  font: 700 13px/1 var(--cuerpo); display: grid; place-items: center; cursor: pointer; padding: 0; position: relative; z-index: 1; }
+.protocolo-num:hover { background: var(--neutro200); }
+.protocolo-etapa li.hecha .protocolo-num { background: #086308; border-color: #086308; color: #fff; }
+.protocolo-paso { padding-top: 3px; min-width: 0; }
+.protocolo-si { margin: 0 0 2px; font-size: 12.5px; font-style: italic; color: var(--tenue); }
+.protocolo-accion { margin: 0; font-size: 14.5px; line-height: 1.45; color: var(--titulo); }
+.protocolo-quien { margin: 3px 0 0; font-size: 12.5px; color: var(--tenue); }
+.protocolo-quien b { color: var(--texto); font-weight: 600; }
+.protocolo-etapa li.hecha .protocolo-accion { color: var(--tenue); text-decoration: line-through; text-decoration-color: var(--neutro500); }
 
 /* Mapa de Alertas con el marcador de mapa/: pulso de radar con una alerta abierta; las estaciones del Atoyac
    (A1 a A5) en un círculo algo menor, para que los mecanismos junto a escuelas manden. */

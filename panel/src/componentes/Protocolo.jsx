@@ -35,24 +35,46 @@ export default function Protocolo({ protocolo, escuelas = [], clave }) {
   const plazo = (p) => (protocolos.plazos || {})[p] || p;
   const k = (i) => clave + ':' + i;
 
+  // Ruta de respuesta: una etapa por plazo (inmediata, el mismo día, seguimiento) y en cada una sus pasos
+  // numerados sobre una línea. Un clic en el número marca el paso como hecho (solo en pantalla).
+  const etapas = ORDEN.map((p) => ({ p, pasos: acciones.map((a, i) => [a, i]).filter(([a]) => a.plazo === p) }))
+    .filter((e) => e.pasos.length);
+  const total = acciones.length, listos = acciones.filter((_, i) => hechas[k(i)]).length;
+  let n = 0;
   return (
     <div className="protocolo">
-      <p className="protocolo-titulo">{protocolo.titulo}</p>
-      <ol className="protocolo-acciones">
-        {ORDEN.flatMap((p) => acciones.map((a, i) => [a, i]).filter(([a]) => a.plazo === p)).map(([a, i]) => (
-          <li key={i} className={hechas[k(i)] ? 'hecha' : ''}>
-            <label>
-              <input type="checkbox" checked={!!hechas[k(i)]} onChange={(e) => setHechas({ ...hechas, [k(i)]: e.target.checked })} />
-              <span className="protocolo-texto">
-                <span className="protocolo-plazo">{plazo(a.plazo)}</span>
-                {a.si && sinFuente && <span className="protocolo-si">{(cond[a.si] || {}).etiqueta || a.si}:</span>}
-                {a.accion}
-                <small>{a.responsable}{a.fuente ? ' · ' + a.fuente : ''}</small>
-              </span>
-            </label>
-          </li>
-        ))}
-      </ol>
+      <div className="protocolo-cabeza">
+        <p className="protocolo-titulo">{protocolo.titulo}</p>
+        <span className="protocolo-avance" aria-live="polite">{listos} de {total} pasos</span>
+      </div>
+      <div className="protocolo-barra" aria-hidden="true"><span style={{ width: (total ? (100 * listos) / total : 0) + '%' }} /></div>
+      {etapas.map(({ p, pasos }) => (
+        <section key={p} className={'protocolo-etapa etapa-' + p}>
+          <h4>{plazo(p)}</h4>
+          <ol>
+            {pasos.map(([a, i]) => {
+              n += 1;
+              const hecho = !!hechas[k(i)];
+              return (
+                <li key={i} className={hecho ? 'hecha' : ''}>
+                  <button type="button" className="protocolo-num" aria-pressed={hecho}
+                    title={hecho ? 'Marcar como pendiente' : 'Marcar como hecho'}
+                    onClick={() => setHechas({ ...hechas, [k(i)]: !hecho })}>
+                    {hecho ? (
+                      <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7.5l3 3 6-7" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                    ) : n}
+                  </button>
+                  <div className="protocolo-paso">
+                    {a.si && sinFuente && <p className="protocolo-si">{(cond[a.si] || {}).etiqueta || a.si}</p>}
+                    <p className="protocolo-accion">{a.accion}</p>
+                    <p className="protocolo-quien"><b>{a.responsable}</b>{a.fuente ? <span> · {a.fuente}</span> : null}</p>
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
+        </section>
+      ))}
       <p className="nota">{protocolos.aviso}</p>
     </div>
   );
