@@ -42,7 +42,7 @@ def _config():
         'usuario': (os.environ.get('SMTP_USER') or '').strip(),
         # Google muestra la contraseña de aplicación en grupos de 4 con espacios
         'clave': (os.environ.get('SMTP_PASSWORD') or '').replace(' ', ''),
-        'nombre': os.environ.get('MAIL_FROM_NAME', 'Reportes ciudadanos'),
+        'nombre': os.environ.get('MAIL_FROM_NAME', 'CENTINELA'),
         'app_url': (os.environ.get('APP_URL') or '').rstrip('/'),
     }
 
@@ -109,7 +109,7 @@ TEXTOS = {
         'pie': 'Gracias por avisar. Este es el último correo sobre este reporte; tu dirección no se usa para nada más.',
     },
 }
-MARCA = 'Reportes ciudadanos · Prototipo HackaTec 2026. No es un sitio oficial del Gobierno de México.'
+MARCA = 'CENTINELA · Prototipo HackaTec 2026. No es un sitio oficial del Gobierno de México.'
 
 
 def construir(reporte, enlace, clase='cierre'):
@@ -125,7 +125,7 @@ def construir(reporte, enlace, clase='cierre'):
     cuerpo = """<!doctype html><html lang="es"><body style="margin:0;padding:0;background:#ebe7e4;font-family:'Noto Sans',Arial,sans-serif;color:{gris}">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#ebe7e4;padding:24px 0"><tr><td align="center">
 <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#fff;border-radius:8px;overflow:hidden">
-<tr><td style="background:{verde};padding:16px 24px;border-bottom:3px solid {dorado};color:#fff;font-family:Montserrat,Arial,sans-serif;font-size:16px;font-weight:600">Reportes ciudadanos</td></tr>
+<tr><td style="background:{verde};padding:16px 24px;border-bottom:3px solid {dorado};color:#fff;font-family:Montserrat,Arial,sans-serif;font-size:16px;font-weight:600">CENTINELA</td></tr>
 <tr><td style="padding:24px">
 <h1 style="margin:0 0 12px;font-family:Montserrat,Arial,sans-serif;font-size:20px;color:{guinda}">{titulo}</h1>
 <p style="margin:0 0 16px;font-size:15px;line-height:1.5">{parrafo}</p>

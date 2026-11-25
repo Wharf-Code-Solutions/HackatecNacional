@@ -21,6 +21,29 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-25 · Nombre del prototipo: CENTINELA
+
+**Qué cambió.** La app ciudadana se llama CENTINELA (título, barra, manifiesto y términos), igual que el remitente y el
+encabezado de los correos; el título de pestaña del panel, del mapa y del simulador también.
+**Por qué.** Nombre elegido por el equipo.
+**Qué arrastró.** `ciudadano/`, `backend/correo.py`, `panel/index.html`, `mapa/index.html`, `dispositivo/simulador/index.html`.
+**Impacto en otros módulos.** Solo el título de pestaña de panel, mapa y simulador; sus textos internos no se tocaron.
+
+---
+
+## 2026-11-25 · Módulo C: escuelas de interés y hospitales en el mapa; alarma en dos tiempos
+
+**Qué cambió.** (1) El mapa de la app dibuja las 503 escuelas de interés desde `escuelas.json` («E», desde zoom 11),
+porque OpenStreetMap solo tenía 8 de ellas (medido escuela por escuela, a menos de 200 m); de la base vuelven solo escuelas
+y hospitales («H»). (2) La alarma de deslave suena con la Preventiva de movimiento («La ladera empezó a moverse») y con lo
+Crítico («Deslave»), consulta cada 3 s y tiene un interruptor en Emergencia: cerca de mí (5 km) o toda la cuenca.
+(3) docs/20 §8: propuesta de ritmo del deslave en el simulador (3 600× hasta las 12 h y 180× hasta el derrumbe), para M4.
+**Por qué.** Las escuelas rurales son el centro del proyecto; y a 3 600× la alarma llegaba después del derrumbe.
+**Qué arrastró.** `ciudadano/` (alarma.js nuevo, copiar-datos.mjs genera `datos/escuelas.json`), `docs/20`.
+**Impacto en otros módulos.** M4: revisar docs/20 §8; sin ese cambio la alarma se sigue viendo tarde en la demostración.
+
+---
+
 ## 2026-11-25 · M6 y M4: mapa y simulador con el aspecto gob.mx del panel y la app
 
 **Qué cambió.** El mapa y el simulador usan la barra verde oscuro con el logotipo del Gobierno de México, guinda y dorado, Patria en títulos y Noto Sans en el texto, fondo cálido y esquinas redondeadas, como el panel y la app ciudadana. Los botones de prueba activos pasan de azul a guinda. Los rótulos de la figura 3D conservan Public Sans y su tinta.
@@ -77,6 +100,7 @@ nombres de un trámite, los registros viejos de ese trámite dejan de aplicarse.
 **Por qué.** Petición del usuario: la matriz creció con los mecanismos y quedaba un hueco en blanco bajo el mapa.
 **Qué arrastró.** `estilos.css`, `MapaEstaciones.jsx`.
 **Impacto en otros módulos.** Ninguno.
+
 
 ---
 
