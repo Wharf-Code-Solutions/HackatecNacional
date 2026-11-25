@@ -257,7 +257,7 @@
     PH:   { unidad: 'pH',    rango: [0, 14],       res: 0.01, ruidoAbs: 0.02, ruidoRel: 0,     sesgoAbs: 0.05, sesgoRel: 0,     derivaAbs: 0.010, derivaRel: 0,      ensuciaAbs: 0,   estabS: 10, mW: 150 },
     COND: { unidad: 'µS/cm', rango: [5, 200000],   res: 1,    ruidoAbs: 0,    ruidoRel: 0.005, sesgoAbs: 0,    sesgoRel: 0.015, derivaAbs: 0,     derivaRel: 0.0005, ensuciaAbs: 0,   estabS: 6,  mW: 120 },
     TEMP: { unidad: '°C',    rango: [-5, 50],      res: 0.01, ruidoAbs: 0.05, ruidoRel: 0,     sesgoAbs: 0.15, sesgoRel: 0,     derivaAbs: 0,     derivaRel: 0,      ensuciaAbs: 0,   estabS: 3,  mW: 60 },
-    TURB: { unidad: 'NTU',   rango: [0, 4000],     res: 0.1,  ruidoAbs: 1,    ruidoRel: 0.02,  sesgoAbs: 0,    sesgoRel: 0.03,  derivaAbs: 0,     derivaRel: 0,      ensuciaAbs: 1.5, estabS: 5,  mW: 7000 },   // Pyxis LT-633: 6 W a 24 V, más el elevador (≈ 85 %) (catalogo-componentes.md)
+    TURB: { unidad: 'NTU',   rango: [0, 4000],     res: 0.1,  ruidoAbs: 1,    ruidoRel: 0.02,  sesgoAbs: 40,   sesgoRel: 0,     derivaAbs: 0,     derivaRel: 0,      ensuciaAbs: 1.5, estabS: 5,  mW: 250 },    // Rika RK500-07, rango 0-4000: ±1 % del fondo de escala = ±40 NTU; < 0.2 W a 7-28 V, más el elevador (catalogo-componentes.md)
     // Módulo de ladera (docs/20 §2). Supuestos de diseño, como las sondas: humedad capacitiva enterrada a
     // ~50 cm; inclinómetro de dos ejes con ruido de ±0.05°; pluviómetro de balancín de 0.2 mm, sin consumo
     // entre mediciones (cuenta por interrupción).
@@ -267,12 +267,11 @@
   };
   var PARAMS = ['COND', 'OD', 'PH', 'TEMP', 'TURB'];
 
-  // Energía por tipo de estación (catalogo-componentes.md, sección 3). La de agua lleva la turbiedad real, que
-  // gasta ≈ 7 W mientras mide: 5 Wh al día en lugar de 1.4. Para conservar ≈ 14 días sin sol lleva 8 celdas 18650
-  // (dos portapilas de 4 en paralelo, 89 Wh) y un panel de 10 W con su cargador. La de ladera no tiene esa sonda
-  // y se queda con el diseño original: 2 celdas (22 Wh) y 5 W.
+  // Energía por tipo de estación (catalogo-componentes.md, sección 3). Con la turbiedad Rika RK500-07 (< 0.2 W)
+  // las dos llevan el diseño original: 2 celdas 18650 (22 Wh) y panel de 5 W. La Pyxis anterior (6 W a 24 V) pedía
+  // 8 celdas y 10 W.
   var ENERGIA = {
-    rio:    { capWh: 88.8, panelW: 10, celdas: 8 },
+    rio:    { capWh: 22.2, panelW: 5,  celdas: 2 },
     ladera: { capWh: 22.2, panelW: 5,  celdas: 2 }
   };
   var PARAMS_LADERA = ['LLUVIA', 'HUM_SUELO', 'INCL'];

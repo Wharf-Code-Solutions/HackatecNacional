@@ -18,10 +18,10 @@ diseño**. La diferencia importa: la estación se presenta simulada, no instalad
 
 | # | Bloque | Componente de diseño | Función |
 |---|---|---|---|
-| ① | **Sondas** | OD, pH, conductividad (K = 1.0), temperatura, turbiedad óptica con limpiador. Grado de campo. Circuitos de interfaz **aislados entre sí**. | Mide cinco señales cada 15 minutos. |
+| ① | **Sondas** | OD, pH, conductividad (K = 1.0), temperatura, turbiedad óptica (Rika RK500-07, sin limpiador automático). Grado de campo. Circuitos de interfaz **aislados entre sí**. | Mide cinco señales cada 15 minutos. |
 | ② | **Controlador** | ESP32, reloj en tiempo real (DS3231), tarjeta microSD, perro guardián. | Duerme, mide, empaqueta, guarda y envía. |
 | ③ | **Comunicación** | Módem celular LTE-M/4G con SIM de datos de un operador comercial: usa sus torres, no hay antenas propias (docs/18). `POST /lecturas` por HTTPS. LoRaWAN con un concentrador en un punto alto queda como alternativa para sitios sin cobertura. | Entrega el JSON del contrato sin traducción. |
-| ④ | **Energía** | Estación de agua: panel solar de 10 W, cargador solar externo y **ocho** baterías 18650 en dos portapilas de 4 en paralelo (≈ 89 Wh). Estación de ladera: panel de 5 W y dos 18650 (≈ 22 Wh). Modelos en [`catalogo-componentes.md`](catalogo-componentes.md). | Autonomía sin toma de corriente. |
+| ④ | **Energía** | Las dos estaciones: panel solar de 5 W y dos baterías 18650 (≈ 22 Wh). Modelos en [`catalogo-componentes.md`](catalogo-componentes.md). | Autonomía sin toma de corriente. |
 
 El aislamiento entre sondas no es un lujo: varias sondas en la misma agua conductiva se
 interfieren y dan lecturas erráticas.
@@ -34,7 +34,7 @@ interfieren y dan lecturas erráticas.
 | pH | 4.4 – 10.0 | 0 – 14 | Cubre lo histórico y la descarga industrial (hasta 9.5). |
 | Conductividad | 320 – 3 800 µS/cm | 5 – 200 000 µS/cm | El escenario industrial llega a 14 700. Una sonda de rango corto saturaría justo en el evento. |
 | Temperatura | 12 – 29 °C | −5 – 50 °C | Compensa las demás sondas. |
-| Turbiedad | 0.7 – 8 610 NTU | 0 – **4 000 NTU** | **Satura** en lluvia fuerte; el simulador lo marca. Es un límite declarado, no un defecto escondido. |
+| Turbiedad | 0.7 – 8 610 NTU | 0 – **4 000 NTU** (rango elegido de la Rika; precisión ±1 % del fondo de escala = ±40 NTU) | **Satura** en lluvia fuerte; el simulador lo marca. Es un límite declarado, no un defecto escondido. |
 
 SDT no se mide: se estima en el backend desde la conductividad, con un modelo validado
 en sitios que no se usaron para ajustarlo (`SDT = 0.788 x COND^0.972`, error mediano del
@@ -119,10 +119,14 @@ Con `node dispositivo/simulador/prueba.js` (todos los datos de entrada, de los f
 | Corte de red de 4 h | 0 paquetes perdidos, 0 duplicados, horas originales, orden cronológico |
 | Sonda rota y sonda muda | `-999` y `null` respectivamente, sin alertas del firmware |
 | Turbiedad en lluvia fuerte | satura en 4 000 NTU |
-| Consumo medio | **≈ 5.0 Wh/día** (con la turbiedad real; antes 1.4) |
-| Autonomía sin sol desde 90 % | **≈ 16 días** con 89 Wh (15.9) |
+| Consumo medio | **≈ 1.4 Wh/día** (con la turbiedad Rika; con la Pyxis eran 5.0) |
+| Autonomía sin sol desde 90 % | **≈ 14 días** con 22 Wh (14.2) |
 | Cuatro días nublados (un cuarto de sol) | termina al 98 % |
 
+> **Cambio de sonda de turbiedad.** Se sustituyó la Pyxis LT-633 (con limpiador, 6 W a 24 V) por la Rika RK500-07, por precio:
+> consume < 0.2 W, así que la estación de agua vuelve a 2 celdas y panel de 5 W; a cambio no tiene limpiador y mide con
+> ±40 NTU en el rango 0–4 000. Lo que sigue es la corrección anterior, ya superada.
+>
 > **Corrección.** En la conversación de diseño se estimó a mano 1.1 Wh/día y 19 días; el modelo
 > daba 1.4 Wh/día y 14 días con una sonda de turbiedad de 250 mW. El modelo comercial que cubre
 > 0–4 000 NTU con limpiador (Pyxis LT-633) pide 6 W a 24 V: con el elevador, ≈ 7 W mientras mide, y el

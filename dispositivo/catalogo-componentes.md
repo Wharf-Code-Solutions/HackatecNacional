@@ -86,7 +86,7 @@ por eso la entidad va primero.
 | `ODS` | Sonda de oxígeno disuelto | Atlas Scientific **ENV-50-DO** (industrial, galvánica) con circuito **EZO-DO** | Sonda galvánica: no necesita calentarse; trae PT-1000 propio | Verificado el número de parte; por confirmar la exactitud bajo 2 mg/L (el 59 % del histórico) |
 | `CES` | Sonda de conductividad | Atlas Scientific **ENV-40-EC-K1.0** con circuito **EZO-EC** | 5–200 000 µS/cm: es exactamente el rango de diseño; no satura en la descarga industrial (14 700) | Verificado |
 | `TES` | Sonda de temperatura | Atlas Scientific **PT-1000** (clase A) con circuito **EZO-RTD** | Compensa las demás sondas | Verificado el número de parte de la sonda |
-| `TUR` | Sonda de turbiedad con limpiador | Pyxis Lab **LT-633** (parte 10002) | 0–4 000 NTU, limpiador automático, RS-485 Modbus y 4–20 mA. Es el único rango que coincide con el de diseño | Verificado el rango y las salidas. **Pide 24 V y 6 W**: ver 3.1 |
+| `TUR` | Sonda de turbiedad | Rika **RK500-07** (versión de acero 316L para agua, no la `-07LC`, que es de sistemas de enfriamiento) | Se eligió por precio. Cuatro rangos a elegir (0–10, 0–100, 0–1 000 y 0–4 000 NTU): se usa **0–4 000**, el de diseño. Precisión ±1 % del fondo de escala del rango elegido: ±40 NTU en 0–4 000. Óptica infrarroja a 90° (ISO 7027), IP68, 7–28 V, < 0.2 W, 4–20 mA y RS-485 a la vez. **Sin limpiador automático**: se ensucia y pide limpieza manual | Datos de un distribuidor ([epower.co.th](https://www.epower.co.th/en/product/57704-77774/rika-rk500-07-ss-turbidity-sensor)), no de la hoja del fabricante: confirmar con Rika el rango, el protocolo Modbus y el precio. Ver 3.1 |
 | `AIS` | Aislador de voltaje (×3: pH, OD, conductividad) | Aislador en línea de Atlas Scientific para circuitos EZO | Varias sondas en la misma agua se interfieren si no están aisladas (ficha técnica) | Por confirmar el número de parte |
 | `TUB` | Tubo de protección | PVC hidráulico de 4" cédula 40, perforado | Protege las sondas de basura y golpes; fabricado | Sin modelo comercial |
 
@@ -124,24 +124,24 @@ por eso la entidad va primero.
 | `CT-RTC` | Reloj de tiempo real | **DS3231SN** con pila CR2032 | El de la ficha técnica: deriva de ±2 ppm | Por confirmar |
 | `CT-MSD` | Memoria | Tarjeta microSD industrial de 8 GB (SanDisk Industrial) | Aguanta calor y escrituras constantes | Por confirmar el número de parte |
 | `CT-WDT` | Perro guardián | Texas Instruments **TPL5010** | Reinicia el controlador si se cuelga; consume nanoamperes | Por confirmar |
-| `CT-485` | Transceptor RS-485 (solo `ESC`, para la turbiedad) | **MAX3485** (3.3 V) | La sonda Pyxis habla Modbus RTU por RS-485 | Por confirmar |
-| `CT-B24` | Elevador a 24 V (solo `ESC`, para la turbiedad) | Convertidor elevador **XL6009** | La sonda Pyxis pide 24 V | Por confirmar |
+| `CT-485` | Transceptor RS-485 (solo `ESC`, para la turbiedad) | **MAX3485** (3.3 V) | La Rika RK500-07 saca RS-485; falta confirmar que hable Modbus RTU | Por confirmar |
+| `CT-B24` | Elevador a 24 V (solo `ESC`, para la turbiedad) | Convertidor elevador **XL6009** | La Rika pide 7–28 V y la batería da 3.7 V: un elevador a 12 V la alimenta (consumo < 0.2 W) | Por confirmar |
 | `CM-MOD` | Módem | SIMCom **SIM7080G**, integrado en `CT-MCU` (lleva la clave de la placa) | LTE-M y NB-IoT de bajo consumo | Verificado. **No tiene 4G de respaldo** |
 | `CM-ANT` | Antena celular | Antena LTE de banda ancha (698–2 700 MHz), SMA, con 3 m de cable | Sale del gabinete al punto más alto del mástil | Sin marca fija |
 | `CM-SIM` | SIM de datos | SIM IoT de un operador con LTE-M en el sitio | Ver 3.2 | Por medir la cobertura en cada sitio |
-| `EN-PAN` | Panel solar | Monocristalino de 6 V: **10 W** en la estación de agua, 5 W en la de ladera | Recupera en un día de sol lo de varios nublados (sección 3.1) | Sin marca fija |
+| `EN-PAN` | Panel solar | Monocristalino de 6 V: **5 W** en las dos estaciones | Recupera en un día de sol lo de varios nublados (sección 3.1) | Sin marca fija |
 | `EN-CAR` | Cargador solar (solo `ESC`) | Cargador MPPT de una celda de litio, **CN3791** | La placa carga a lo más 500 mA: el panel de 10 W necesita su propio cargador | Por confirmar |
-| `EN-BAT` | Baterías | Samsung **INR18650-30Q** (3 000 mAh): **8** en la estación de agua (dos portapilas de 4 en paralelo, ≈ 89 Wh), 2 en la de ladera (≈ 22 Wh) | Ver 3.1 | Por confirmar |
+| `EN-BAT` | Baterías | Samsung **INR18650-30Q** (3 000 mAh): **2** en cada estación (≈ 22 Wh) | Ver 3.1 | Por confirmar |
 | `ES-GAB` | Gabinete | Policarbonato IP66 de ≈ 300 × 200 × 150 mm con puerta abisagrada | El de la figura | Sin marca fija |
 | `ES-MAS` | Mástil | Tubo galvanizado de 2" y 3 m, anclado en concreto | Lleva el panel y la antena | Sin modelo comercial |
 
 ## 3. Lo que los modelos reales cambian de la ficha técnica
 
-1. **La turbiedad cambió el presupuesto de energía (resuelto subiendo panel y baterías).** La Pyxis LT-633 pide 24 V y
-   6 W; con el elevador, ≈ 7 W durante los ≈ 20 s de cada medición. Medido en el simulador: el consumo de la estación de
-   agua sube de 1.4 a **5.0 Wh/día** y, con las dos baterías de antes, la autonomía sin sol cae a 4 días. Con **8 celdas
-   (89 Wh) y panel de 10 W** vuelve a **15.9 días** sin sol y termina 4 días nublados al 98 %. La de ladera no lleva
-   esa sonda: 0.9 Wh/día, 22 Wh y 5 W le dan 21 días. Los dos números salen de `prueba.js` (pruebas 6 y 18).
+1. **La turbiedad Rika RK500-07 devuelve la energía al diseño original.** Con la Pyxis LT-633 (6 W a 24 V) la estación
+   de agua gastaba 5.0 Wh/día y necesitó 8 celdas y panel de 10 W. La Rika consume < 0.2 W: en el simulador la estación
+   de agua vuelve a **1.4 Wh/día**, y **2 celdas (22 Wh) y panel de 5 W** dan **14.2 días** sin sol. La de ladera:
+   0.9 Wh/día, 22 Wh y 5 W le dan 21 días. Los números salen de `prueba.js` (pruebas 6 y 18). Dos costos del cambio: la
+   Rika **no trae limpiador** (hay que limpiarla a mano) y, en el rango 0–4 000, mide con ±40 NTU de error.
 2. **El módem no tiene 4G de respaldo.** El SIM7080G solo usa LTE-M y NB-IoT. Antes de instalar hay que medir en cada
    sitio que el operador tenga LTE-M; la ficha decía "LTE-M/4G".
 3. **La placa trae portapila para una sola 18650 y carga a 500 mA.** En la estación de agua las 8 celdas van en dos
@@ -174,7 +174,7 @@ Una vez instalada, si la sonda de turbiedad empieza a mandar `-999`, su etiqueta
 - Atlas Scientific ENV-40-EC-K1.0: [DigiKey](https://www.digikey.ca/en/products/detail/atlas-scientific/ENV-40-EC-K1-0/16002997); ENV-40-pH: [DigiKey](https://www.digikey.ca/en/products/detail/atlas-scientific/ENV-40-PH/16003032)
 - Atlas Scientific ENV-50-DO: [Atlas Scientific](https://atlas-scientific.com/probes/industrial-dissolved-oxygen-probe/); EZO-DO: [Atlas Scientific](https://atlas-scientific.com/circuits/ezo-dissolved-oxygen-circuit/)
 - Atlas Scientific PT-1000: [DigiKey](https://www.digikey.ca/en/products/detail/atlas-scientific/PT-1000/16003086)
-- Pyxis LT-63X (LT-633): [hoja de datos](https://pyxis-lab.com/wp-content/uploads/2024/07/LT-63X-Data-Sheet.pdf), [Instrumart](https://www.instrumart.com/products/135624/pyxis-lt-63x-series-self-wiping-submersible-turbidity-sensors)
+- Rika RK500-07 (SS): [epower.co.th](https://www.epower.co.th/en/product/57704-77774/rika-rk500-07-ss-turbidity-sensor) (distribuidor; la web del fabricante dio error de certificado). Referencia anterior, Pyxis LT-63X (LT-633): [hoja de datos](https://pyxis-lab.com/wp-content/uploads/2024/07/LT-63X-Data-Sheet.pdf), [Instrumart](https://www.instrumart.com/products/135624/pyxis-lt-63x-series-self-wiping-submersible-turbidity-sensors)
 - LILYGO T-SIM7080G-S3: [wiki de LILYGO](https://wiki.lilygo.cc/products/t-sim-series/t-sim7080-s3/), [repositorio](https://www.Github.com/Xinyuan-LilyGO/LilyGo-T-SIM7080G)
 - Davis 6466M: [Davis Instruments](https://davisinstruments.com/products/aerocone-rain-collector-with-vantage-pro2-mounting-base), [hoja de Weather Shop](https://www.weathershop.co.uk/productpdf/download/file/id/3841/name/Davis_Metric_AeroCone_Rain_Collector_with_Pro2_Pole_Mount_Base_6466M.pdf/)
 - METER TEROS 10: [especificaciones](https://metergroup.com/products/teros-10/teros-10-tech-specs/)

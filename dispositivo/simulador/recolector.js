@@ -85,6 +85,8 @@
     this.alEvento = o.alEvento || function () {};
     this.tasa = CFG.tasaBase;              // ajustable para pruebas
     this.atascoP = CFG.atascoP;
+    this.sinAtascos = false;               // demo: la banda nunca se atasca (ni siquiera con atascoP > 0)
+    this.vaciaCadaCiclo = false;           // demo: el contenedor se vacía tras cada pesaje y la basura no se acumula
     this.reversaOk = CFG.reversaOk;
     this.items = [];                       // objetos en el agua, en la barrera, en el embudo o en la banda
     this.embudo = [];                      // los que la cámara ve esperando frente a la banda
@@ -222,7 +224,7 @@
     var it = this.embudo.shift();
     it.estado = 'banda';
     this._ev('sube', null, it);
-    if (this.rng() < this.atascoP) this._atasco(it, n, 0); else this._sube(it, n);
+    if (!this.sinAtascos && this.rng() < this.atascoP) this._atasco(it, n, 0); else this._sube(it, n);
   };
   Colector.prototype._sube = function (it, n) {
     var self = this;
@@ -279,6 +281,7 @@
         senal: self.ultimoRSSI
       };
       self.objetosCiclo = vacio();
+      if (self.vaciaCadaCiclo) { self.kg = 0; self.kgAnt = 0; self.retiroEn = null; }
       self._empaca(paquete);
     });
   };

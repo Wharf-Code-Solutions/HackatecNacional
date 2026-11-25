@@ -121,7 +121,7 @@ ok(nosol.s.fw.apagada || nosol.s.energia.soc() < 0.1, 'sin panel se agota (consu
 var dia = corre(e1, 24, function (s) { s.energia.panelW = 0; });
 var whDia = dia.s.energia.consumidoWh;
 var diasSinSol = dia.s.energia.capWh * 0.9 / whDia;
-ok(diasSinSol >= 14, 'con la turbiedad real (≈ 7 W al medir), ' + whDia.toFixed(2) + ' Wh/día: ' + M.ENERGIA.rio.celdas + ' celdas (' +
+ok(diasSinSol >= 14, 'con la turbiedad Rika (< 0.2 W), ' + whDia.toFixed(2) + ' Wh/día: ' + M.ENERGIA.rio.celdas + ' celdas (' +
   dia.s.energia.capWh + ' Wh) dan ≈ ' + diasSinSol.toFixed(1) + ' días sin sol desde 90 % (meta: 14)');
 
 console.log('\n7. Las cinco estaciones del piloto');

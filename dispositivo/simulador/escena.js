@@ -1071,7 +1071,7 @@
     OD:   { nombre: 'Oxígeno disuelto', modelo: 'Atlas ENV-50-DO', como: 'membrana; la más lenta en estabilizar', dec: 2 },
     PH:   { nombre: 'pH', modelo: 'Atlas ENV-40-pH', como: 'electrodo de vidrio', dec: 2 },
     TEMP: { nombre: 'Temperatura', modelo: 'Atlas PT-1000', como: 'compensa a las demás sondas', dec: 1 },
-    TURB: { nombre: 'Turbiedad', modelo: 'Pyxis LT-633', como: 'óptica, con limpiador', dec: 1 }
+    TURB: { nombre: 'Turbiedad', modelo: 'Rika RK500-07', como: 'óptica infrarroja a 90°', dec: 1 }
   };
   var FILAS_SONDAS = { COND: [-1, -0.2], OD: [-1, 0.02], PH: [-1, 0.24], TEMP: [1, -0.1], TURB: [1, 0.14] };
   function v3(p) { return new T.Vector3(p[0], p[1], p[2]); }
@@ -1080,7 +1080,7 @@
   // Cada detalle: centro de las columnas (punto 3D) y sus piezas. valor(e) devuelve [texto, alarma],
   // con e = { s, nom, f, transcurrido, env, nSD }.
   // Consumo y autonomía medidos en el simulador con la energía de cada tipo (prueba.js, prueba 6 y 17).
-  var EN_MEDIDO = { rio: { wh: '5.0', dias: 16, nota: 'casi todo en la turbiedad' }, ladera: { wh: '0.9', dias: 21, nota: 'casi todo dormida' } };
+  var EN_MEDIDO = { rio: { wh: '1.4', dias: 14, nota: 'casi todo dormida' }, ladera: { wh: '0.9', dias: 21, nota: 'casi todo dormida' } };
   function detalles() {
     var d = {}, EN = M.ENERGIA[TIPO];
     if (TIPO === 'ladera') {
@@ -1129,8 +1129,8 @@
     ] };
     d.energia = { centro: v3(S([-4.15, 3.6, 0.3])), items: [
       { nombre: 'Panel solar', modelo: 'Monocristalino, 6 V', como: EN.panelW + ' W', ancla: v3(S([-4.75, 4.95, 0.2])), col: -1, fila: -0.2,
-        valor: function (e) { var w = e.s.energia.solarW; return [w > 0.05 ? 'Genera ' + w.toFixed(1) + ' W' : 'Sin sol']; } },
-      { nombre: 'Baterías', modelo: 'Samsung INR18650-30Q', como: Math.round(EN.capWh) + ' Wh, ≈ ' + EN_MEDIDO[TIPO].dias + ' días sin sol', ancla: v3(S([-4.2, 1.55, 0.42])), col: -1, fila: 0.18,
+        valor: function (e) { var w = e.s.energia.solarW; return ['Genera ' + (w > 0.05 ? w.toFixed(1) : '0') + ' W']; } },
+      { nombre: 'Baterías', modelo: 'Samsung INR18650-30Q', como: Math.round(EN.capWh) + ' Wh, ≈ ' + EN_MEDIDO[TIPO].dias + ' días de autonomía', ancla: v3(S([-4.2, 1.55, 0.42])), col: -1, fila: 0.18,
         valor: function (e) { var c = e.s.energia.soc(); return ['Carga ' + Math.round(c * 100) + ' %', c < 0.2]; } },
       { nombre: 'Consumo', como: '≈ ' + EN_MEDIDO[TIPO].wh + ' Wh al día', ancla: v3(S([-4.25, 2.22, 0.33])), col: 1, fila: 0.05,
         valor: function (e) { return ['Gasta ' + Math.round(e.f.mW || 0) + ' mW: ' + (ESTADO[e.nom] || e.nom).toLowerCase()]; } }
@@ -1173,7 +1173,7 @@
       { nombre: 'Báscula', modelo: '4 celdas de 50 kg + HX711', como: 'celda de carga bajo el contenedor', ancla: K.puntoBascula, col: -1, fila: 0.15,
         valor: function (e) { return ['Pesa ' + e.s.col.kgLeido.toFixed(1) + ' kg']; } },
       { nombre: 'Panel solar', modelo: 'Monocristalino, 100 W', como: 'Con batería LiFePO4 de 12 V', ancla: K.puntoPanel, col: 1, fila: -0.22,
-        valor: function (e) { var w = e.s.col.energia.solarW, c = e.s.col.energia.soc(); return [(w > 0.5 ? 'Genera ' + Math.round(w) + ' W' : 'Sin sol') + ' · ' + Math.round(c * 100) + ' %', c < 0.25]; } },
+        valor: function (e) { var w = e.s.col.energia.solarW, c = e.s.col.energia.soc(); return ['Genera ' + (w > 0.5 ? Math.round(w) : '0') + ' W · batería ' + Math.round(c * 100) + ' %', c < 0.25]; } },
       { nombre: 'Antena y módem', modelo: 'LILYGO T-SIM7080G-S3', como: 'LTE-M, como la estación', ancla: K.puntoAntena, col: 1, fila: 0.1,
         valor: function (e) { var f = e.s.col.fase.nombre; return e.s.enlace.caido ? ['Sin red: guarda y reintenta', true] : [f === 'ENVÍO' ? 'Enviando los datos' : 'Señal ' + Math.round(e.s.enlace.rssi) + ' dBm']; } }
     ] };
@@ -1476,10 +1476,9 @@
       } else if (p === 'TEMP') {                // aguja de acero
         cilindro(0.007, 0.15, inox, x, yT - 0.075, z, null, 10);
         ancla = yT - 0.14;
-      } else if (p === 'TURB') {                // ventana óptica y limpiador
+      } else if (p === 'TURB') {                // ventana óptica (sin limpiador)
         cilindro(0.03, 0.11, negro, x, yT - 0.055, z, null, 16);
         cilindro(0.02, 0.004, mate(0x1d3d55, { roughness: 0.05, metalness: 0.2, envMap: G.cielo }), x, yT - 0.112, z, null, 16);
-        caja(0.056, 0.005, 0.008, mate(0x2a3138), x, yT - 0.116, z, null, 0);
         ancla = yT - 0.115;
       }
       G.puntaSensor[p] = new T.Vector3(x, ancla, z);
@@ -1821,7 +1820,7 @@
     G.carga.scale.x = Math.max(soc, 0.02); G.carga.position.x = (-4.2 - BASE[0]) - 0.3 * (1 - G.carga.scale.x);   // coordenada local del grupo
     G.carga.material.color.setHex(soc < 0.2 ? ALARMA : AGUA);
     G.matPanel.emissive.setRGB(0.05 * M.acota(sol / 2.5, 0, 1), 0.18 * M.acota(sol / 2.5, 0, 1), 0.3 * M.acota(sol / 2.5, 0, 1));
-    rotulo('panel', (sol > 0.05 ? sol.toFixed(1) + ' W' : 'Sin sol') + ' · ' + Math.round(soc * 100) + ' %', soc < 0.2);
+    rotulo('panel', 'Genera ' + (sol > 0.05 ? sol.toFixed(1) : '0') + ' W · batería ' + Math.round(soc * 100) + ' %', soc < 0.2);
     var torre = caido ? 'Sin red' : env ? (env.k < ENV.llega ? 'Enviando los datos' : 'Datos recibidos') : (nom === 'ENVÍO' ? 'Enviando los datos' : 'Señal ' + Math.round(s.enlace.rssi) + ' dBm');
     rotulo('torre', torre, caido);
 

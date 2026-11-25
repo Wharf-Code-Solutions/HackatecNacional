@@ -94,6 +94,8 @@
       estado.pendientes[id] = [];
       estado.por[id] = Mont.crearEstacion(e, linea, { t0: t0 || undefined, suelos: suelos, alEvento: function (ev) { alEvento(id, ev); },
         alEventoCol: function (ev) { if (id === estado.sel) Escena.objeto(ev); } });
+      // en pantalla la basura no se acumula: el contenedor se vacía tras cada pesaje y la banda no se atasca
+      if (estado.por[id].col) { estado.por[id].col.vaciaCadaCiclo = true; estado.por[id].col.sinAtascos = true; estado.por[id].col.atascoP = 0; }
     });
     estado.ultimo = performance.now();
     pideAlarma(); setInterval(pideAlarma, 2000);
