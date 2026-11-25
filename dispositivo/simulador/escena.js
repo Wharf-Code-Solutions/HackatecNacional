@@ -1115,7 +1115,7 @@
     var z = -30, xe = ejeRio(z) - 6.45, tub = mate(0x6f7b84, { roughness: 0.5 });   // al inicio del tramo: lo vertido corre río abajo
     var t = cilindro(0.55, 6, tub, xe - 3, 1.05, z, null, 20); t.rotation.z = Math.PI / 2;
     var boca = cilindro(0.59, 0.25, mate(TINTA), xe, 1.05, z, null, 20); boca.rotation.z = Math.PI / 2;
-    G.matDescarga = new T.MeshStandardMaterial({ color: 0xd48a14, roughness: 0.3, transparent: true, opacity: 0.9, depthWrite: false });
+    G.matDescarga = new T.MeshStandardMaterial({ color: 0xa38660, roughness: 0.3, transparent: true, opacity: 0.9, depthWrite: false });
     // el chorro: gotas alargadas que salen de la boca, caen en arco y se reciclan; se ven tantas como el caudal (pintaDescarga)
     G.gotas = []; G.xBoca = xe + 0.14; G.zBoca = z;
     var geoGota = new T.SphereGeometry(1, 10, 8);
@@ -1140,10 +1140,10 @@
   var DESCARGAS = ['descarga_industrial', 'descarga_organica'];
   function pintaPluma(base, s, ind, org, vel, dtr) {
     var zp = G.zBoca, paso = EXAGERA_CORRIENTE * vel * 1.5 * dtr, activa = s > 0.02;
-    if (G.cabezaP === undefined) { G.cabezaP = G.colaP = zp; G.ampD = 0; G.colD = new T.Color(0xd48a14); G.cofD = 0.85; }
+    if (G.cabezaP === undefined) { G.cabezaP = G.colaP = zp; G.ampD = 0; G.colD = new T.Color(0xa38660); G.cofD = 0.85; }
     if (activa) {
       G.ampD = s; G.colaP = zp; G.cabezaP = Math.min(G.cabezaP + paso, Z_CORTE + 12);
-      G.colD.setHex(ind >= org ? 0xd48a14 : 0x4a5a30); G.cofD = ind >= org ? 1 : 0.85;
+      G.colD.setHex(ind >= org ? 0xa38660 : 0x4a5a30); G.cofD = ind >= org ? 0.8 : 0.85;
     } else if (G.colaP < G.cabezaP) {
       G.colaP += paso;
       if (G.colaP >= G.cabezaP) { G.cabezaP = G.colaP = zp; G.ampD = 0; }
