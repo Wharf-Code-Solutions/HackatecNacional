@@ -21,6 +21,20 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · M5: aviso por correo en cada paso del reporte
+
+**Qué cambió.** Además del recibo al crear, `PATCH /reportes/<c_reporte>` manda un correo cada vez que el reporte pasa
+a otro estado: Validado, En atención, Cerrado o Descartado (`correo.avisar_estado`, textos nuevos en `correo.py`). Si
+el estado no cambia, no se repite. La app ciudadana dice «te avisamos cada vez que avance» y sus términos ya no
+prometen «solo esos dos correos».
+**Por qué.** Petición del usuario: las personas no se enteraban de los pasos intermedios. `backend/prueba.py` (prueba 8,
+con SMTP falso) cubre cada paso: todo pasa.
+**Qué arrastró.** `backend/correo.py`, `backend/app.py`, `backend/prueba.py`, `backend/README.md`,
+`ciudadano/src/components/FormularioReporte.jsx`, `ciudadano/src/lib/terminos.js` (solo texto).
+**Impacto en otros módulos.** C: cambió el texto del formulario y de los términos de la app ciudadana.
+
+---
+
 ## 2026-11-24 · M5 y módulo B: distancia al cauce con la red del INEGI y agua visible en el mapa de reportes
 
 **Qué cambió.** `backend/asignacion.py` mide la distancia al cauce también contra `datos/procesados/mapa/red_hidrografica.geojson`

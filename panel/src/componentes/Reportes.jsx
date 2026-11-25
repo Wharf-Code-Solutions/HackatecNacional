@@ -35,7 +35,7 @@ function hace(iso) {
   if (min < 1440) return 'Hace ' + Math.round(min / 60) + ' h';
   return 'Hace ' + Math.round(min / 1440) + ' d';
 }
-// Qué pasó con el aviso de cierre por correo (cabecera X-Aviso-Correo del backend), en una frase
+// Qué pasó con el aviso por correo de cada cambio de estado (cabecera X-Aviso-Correo del backend), en una frase
 function textoCorreo(avisos) {
   const n = (k) => avisos.filter((a) => a === k).length;
   const partes = [];

@@ -334,14 +334,15 @@ def crear_app(url=None):
             if e:
                 return error(422, {'error': 'contrato no cumplido', 'detalles': e})
             almacen.actualizar_reporte(nuevo)
-        # Al cerrarse (y solo la primera vez) se avisa a quien dejó su correo. Fuera del candado y en un hilo:
+        # Cada vez que el reporte avanza a otro estado (validado, en atención, cerrado o descartado) se avisa a quien
+        # dejó su correo; si el estado no cambia, no se repite. Fuera del candado y en un hilo:
         # el SMTP tarda hasta 10 s. Se espera aquí y no en segundo plano porque en Vercel la función se congela
         # al responder. El resultado va en una cabecera: el cuerpo sigue siendo el mismo que el del mock.
         aviso = 'no_aplica'
-        if nuevo.get('estado') == 'Cerrado' and reporte.get('estado') != 'Cerrado':
+        if nuevo.get('estado') != reporte.get('estado'):
             from starlette.concurrency import run_in_threadpool
             base = '{}://{}'.format(request.headers.get('x-forwarded-proto', request.url.scheme), request.headers.get('host', ''))
-            aviso = await run_in_threadpool(correo.avisar_cierre, nuevo, base)
+            aviso = await run_in_threadpool(correo.avisar_estado, nuevo, base)
         return JSONResponse({k: v for k, v in nuevo.items() if k != 'correo'}, headers={'X-Aviso-Correo': aviso})
 
     @app.post('/reportes/analizar-foto')

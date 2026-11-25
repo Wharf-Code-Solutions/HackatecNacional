@@ -74,7 +74,31 @@ TEXTOS = {
         'parrafo': 'Tu reporte llegó y ya está en la lista de la autoridad. Guarda tu folio para ver cómo avanza.',
         'texto': 'Recibimos tu reporte {folio} ({tipo}{fecha}). Ya está en la lista de la autoridad.\n\n'
                  'Guarda tu folio. Puedes ver cómo avanza aquí: {enlace}',
-        'pie': 'Gracias por avisar. Te escribiremos una vez más, cuando se cierre; tu dirección no se usa para nada más.',
+        'pie': 'Gracias por avisar. Te escribiremos cada vez que tu reporte avance; tu dirección no se usa para nada más.',
+    },
+    'validado': {
+        'asunto': 'Tu reporte {folio} fue validado',
+        'titulo': 'Tu reporte fue validado',
+        'parrafo': 'La autoridad revisó tu reporte y lo marcó como <strong>validado</strong>: corresponde a un problema real y pasa a atención.',
+        'texto': 'La autoridad revisó tu reporte {folio} ({tipo}{fecha}) y lo marcó como validado.\n\n'
+                 'Puedes ver cómo avanza aquí: {enlace}',
+        'pie': 'Gracias por avisar. Te escribiremos de nuevo cuando avance; tu dirección no se usa para nada más.',
+    },
+    'atencion': {
+        'asunto': 'Tu reporte {folio} está en atención',
+        'titulo': 'Tu reporte está en atención',
+        'parrafo': 'La autoridad ya está <strong>atendiendo</strong> tu reporte.',
+        'texto': 'La autoridad ya está atendiendo tu reporte {folio} ({tipo}{fecha}).\n\n'
+                 'Puedes ver cómo avanza aquí: {enlace}',
+        'pie': 'Gracias por avisar. Te escribiremos de nuevo cuando se cierre; tu dirección no se usa para nada más.',
+    },
+    'descartado': {
+        'asunto': 'Tu reporte {folio} fue descartado',
+        'titulo': 'Tu reporte fue descartado',
+        'parrafo': 'La autoridad revisó tu reporte y lo marcó como <strong>descartado</strong>: no se pudo confirmar o ya estaba atendido por otro reporte.',
+        'texto': 'La autoridad revisó tu reporte {folio} ({tipo}{fecha}) y lo marcó como descartado.\n\n'
+                 'Puedes ver su seguimiento aquí: {enlace}',
+        'pie': 'Gracias por avisar. Este es el último correo sobre este reporte; tu dirección no se usa para nada más.',
     },
     'cierre': {
         'asunto': 'Tu reporte {folio} fue atendido',
@@ -161,3 +185,14 @@ def avisar_recibo(reporte, base_url=''):
 def avisar_cierre(reporte, base_url=''):
     """Aviso al pasar a «Cerrado»."""
     return _avisar(reporte, base_url, 'cierre')
+
+
+# Cada paso del reporte que se avisa: estado del contrato -> correo. «Recibido» es el recibo, al crear.
+POR_ESTADO = {'Validado': 'validado', 'En atencion': 'atencion', 'Cerrado': 'cierre', 'Descartado': 'descartado'}
+
+
+def avisar_estado(reporte, base_url=''):
+    """Aviso al pasar a un estado nuevo (validado, en atención, cerrado o descartado). 'no_aplica' si el estado
+    no tiene correo."""
+    clase = POR_ESTADO.get(reporte.get('estado'))
+    return _avisar(reporte, base_url, clase) if clase else 'no_aplica'

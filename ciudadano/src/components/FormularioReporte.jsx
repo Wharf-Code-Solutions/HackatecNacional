@@ -224,7 +224,7 @@ export default function FormularioReporte({ lat, lon, precision, origen, datos, 
         </div>
 
         <div className="mb-3">
-          <label className="form-label" htmlFor="rf-correo">Correo <small>(opcional: te mandamos tu folio y te avisamos cuando se cierre)</small></label>
+          <label className="form-label" htmlFor="rf-correo">Correo <small>(opcional: te mandamos tu folio y te avisamos cada vez que avance)</small></label>
           <input id="rf-correo" className="form-control" type="email" inputMode="email" autoComplete="email" value={correo} onChange={(e) => setCorreo(e.target.value)} aria-invalid={!!errores.correo} />
           {errores.correo && <div className="rf-error" role="alert">{errores.correo}</div>}
         </div>
