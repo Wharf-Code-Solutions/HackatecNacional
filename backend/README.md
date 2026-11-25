@@ -72,11 +72,13 @@ Sale con código 1 si algo falla. Comprueba:
 
 ## Rutas
 
-Las del contrato (`contrato/README.md`) más una:
+Las del contrato (`contrato/README.md`) más estas:
 
 | Método | Ruta | Qué hace |
 |---|---|---|
 | GET | `/alertas/<c_alerta>/prediccion` | Propagación aguas abajo de esa alerta (M3): sitios, ventana de llegada y banda de valor. Cumple `prediccion_propagacion.schema.json` |
+| GET | `/autorizaciones` | Trámites de CEASPUE y CAPCEE registrados desde el panel (tabla `autorizacion`); el panel los sobrepone a `mecanismos.json` y `escuelas.json` |
+| PATCH | `/autorizaciones/<mecanismo o CCT>` | Registra en qué va un trámite: `organismo`, `tramite`, `estado` (`pendiente`, `solicitada`, `otorgada`, `negada`), `encargado` (obligatorio; no hay inicio de sesión), `oficio` y `nota` opcionales. Guarda fecha e historial; 404 si el objeto no tiene ese trámite |
 
 ## Qué agrega al mock
 

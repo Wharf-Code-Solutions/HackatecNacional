@@ -1,5 +1,6 @@
 import { inicial } from '../lib/formato.js';
 import BarrasH from '../graficas/BarrasH.jsx';
+import RegistroTramite from './RegistroTramite.jsx';
 import { useDatos } from '../lib/contexto.js';
 
 // Tablero de autorizaciones (docs/19 §4.3 y §6, punto 5): qué falta autorizar a CEASPUE y CAPCEE.
@@ -17,7 +18,22 @@ function Estado({ estado }) {
 
 const deOrganismo = (auts, org) => (auts || []).find((a) => a.organismo === org);
 
-export default function Autorizaciones({ escuelas, mecanismos = {}, onElegirEscuela }) {
+// Celda de un trámite: su estado, cuándo y quién lo registró, y el botón para registrar el siguiente paso.
+function CeldaTramite({ objeto, t, registrar }) {
+  if (!t) return <span className="tenue">sin trámite</span>;
+  return (
+    <div className="celda-tramite">
+      <Estado estado={t.estado} />
+      <span className="tenue">{TRAMITE(t.tramite)}</span>
+      {(t.fecha || t.encargado) && (
+        <span className="tenue">{t.fecha || ''}{t.encargado ? ' · ' + t.encargado : ''}{t.oficio ? ' · oficio ' + t.oficio : ''}</span>
+      )}
+      <RegistroTramite objeto={objeto} tramite={t} registrar={registrar} />
+    </div>
+  );
+}
+
+export default function Autorizaciones({ escuelas, mecanismos = {}, onElegirEscuela, registrar, demo }) {
   const mecs = Object.values(mecanismos).sort((a, b) => a.c_estacion.localeCompare(b.c_estacion));
   const { mecanismoActivo: activo } = useDatos();
   const nActivos = mecs.filter(activo).length;
@@ -68,7 +84,8 @@ export default function Autorizaciones({ escuelas, mecanismos = {}, onElegirEscu
 
       <figure className="tarjeta ancha">
         <h2 className="titulo-seccion">Mecanismos</h2>
-        <p className="subtitulo-seccion">Uno de agua sigue como propuesto mientras CEASPUE no otorgue su instalación; uno de ladera, mientras CAPCEE no lo autorice.</p>
+        <p className="subtitulo-seccion">Uno de agua sigue como propuesto mientras CEASPUE no otorgue su instalación; uno de ladera, mientras CAPCEE no lo autorice.
+          Aquí se registra en qué va cada trámite: la autorización la da el organismo con su oficio.{demo ? ' En demostración los cambios no se guardan.' : ''}</p>
         {!mecs.length ? <p className="vacio">Sin mecanismos en los datos.</p> : (
           <div className="tabla-desliza">
             <table className="estaciones">
@@ -88,8 +105,8 @@ export default function Autorizaciones({ escuelas, mecanismos = {}, onElegirEscu
                         <br /><span className="tenue">protege {n} {n === 1 ? 'escuela' : 'escuelas'}</span>
                       </td>
                       <td>{activo(m) ? 'Activo' : 'Propuesto'}</td>
-                      <td>{ce ? <><Estado estado={ce.estado} /><br /><span className="tenue">{TRAMITE(ce.tramite)}</span></> : <span className="tenue">sin trámite</span>}</td>
-                      <td>{ca ? <><Estado estado={ca.estado} /><br /><span className="tenue">{TRAMITE(ca.tramite)}</span></> : <span className="tenue">sin trámite</span>}</td>
+                      <td><CeldaTramite objeto={m.c_estacion} t={ce} registrar={registrar} /></td>
+                      <td><CeldaTramite objeto={m.c_estacion} t={ca} registrar={registrar} /></td>
                     </tr>
                   );
                 })}
@@ -104,7 +121,7 @@ export default function Autorizaciones({ escuelas, mecanismos = {}, onElegirEscu
         {!filasEscuela.length ? <p className="vacio">Sin trámites registrados.</p> : (
           <div className="tabla-desliza">
             <table className="estaciones">
-              <thead><tr><th>Escuela</th><th>Organismo</th><th>Trámite</th><th>Estado</th><th>Fecha</th></tr></thead>
+              <thead><tr><th>Escuela</th><th>Organismo</th><th>Trámite</th><th>Estado</th></tr></thead>
               <tbody>
                 {filasEscuela.map(({ e, a, k }) => (
                   <tr key={k}>
@@ -114,8 +131,7 @@ export default function Autorizaciones({ escuelas, mecanismos = {}, onElegirEscu
                     </td>
                     <td>{a.organismo}</td>
                     <td>{TRAMITE(a.tramite)}</td>
-                    <td><Estado estado={a.estado} /></td>
-                    <td>{a.fecha || 'sin fecha'}</td>
+                    <td><CeldaTramite objeto={e.cct} t={{ ...a, tramite: a.tramite }} registrar={registrar} /></td>
                   </tr>
                 ))}
               </tbody>

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useRuta } from './lib/ruta.js';
-import { Datos, ayudantes } from './lib/contexto.js';
+import { Datos, ayudantes, conAutorizaciones } from './lib/contexto.js';
 import { useBackend, useDatosFijos } from './lib/datos.js';
 import { hora, porAtender } from './lib/formato.js';
 import { REPORTE_ABIERTO } from './lib/etiquetas.js';
@@ -49,7 +49,8 @@ export default function App() {
   // Lecturas de todas las estaciones: las del Atoyac y los mecanismos junto a escuelas (agua y ladera).
   const codigosBackend = useMemo(() => (fijos ? [...codigos, ...Object.keys(fijos.mecanismos || {}).sort()] : []), [fijos, codigos]);
   const be = useBackend(codigosBackend);
-  const ctx = useMemo(() => (fijos ? ayudantes(fijos) : null), [fijos]);
+  // Los trámites registrados desde el panel se sobreponen a los de los fixtures (activo/propuesto en todo el panel).
+  const ctx = useMemo(() => (fijos ? ayudantes(conAutorizaciones(fijos, be.autorizaciones)) : null), [fijos, be.autorizaciones]);
   // Sección, vista, escuela abierta y página de reportes viven en la URL (lib/ruta.js): Atrás regresa.
   const [ruta, ir] = useRuta();
   const { seccion, vista, escuela: escuelaSel, paginaReportes } = ruta;
@@ -172,6 +173,7 @@ export default function App() {
             {seccion === 'monitoreo' && vista === 'avisos' && <Avisos veredictos={be.veredictos} conectado={be.conectado} />}
             {seccion === 'escuelas' && <Escuelas escuelas={ctx.escuelas} alertas={be.alertas} zonas={ctx.zonas} sel={escuelaSel} onElegir={setEscuelaSel} />}
             {seccion === 'autorizaciones' && <Autorizaciones escuelas={ctx.escuelas} mecanismos={ctx.mecanismos}
+              registrar={be.registrarAutorizacion} demo={demo}
               onElegirEscuela={abrirEscuela} />}
             {seccion === 'reportes' && (
               <Reportes reportes={be.reportes} prioridades={be.prioridades} huella={be.huella} conectado={be.conectado}

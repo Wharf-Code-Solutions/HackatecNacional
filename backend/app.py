@@ -51,6 +51,10 @@ VERSION_CONTRATO = '1.0'
 CAMPOS_GESTION = ('estado', 'responsable')
 # De un reporte ciudadano la autoridad solo cambia su estado.
 CAMPOS_GESTION_REPORTE = ('estado',)
+# Trámites de CEASPUE y CAPCEE (docs/19 §4.3). El panel registra en qué va cada uno; no hay inicio de sesión: se pide el
+# nombre de quien lo registra («encargado») y se guarda con la fecha. El objeto es un mecanismo (EST-...) o una escuela (CCT).
+ESTADOS_TRAMITE = ('pendiente', 'solicitada', 'otorgada', 'negada')
+CAMPOS_AUTORIZACION = ('organismo', 'tramite', 'estado', 'encargado', 'oficio', 'nota')
 # Paquetes de la estacion con que se reconstruye el motor en cada lote. Sus
 # ventanas abarcan 24 paquetes (VENTANA_RECIENTE + BRECHA_GUARDA en reglas.py);
 # 200 sobran y cuestan unos milisegundos. Las de ladera suman la lluvia de 72 h (docs/20 §5): a 5 min por paquete,
@@ -343,6 +347,65 @@ def crear_app(url=None):
         with almacen.transaccion('alerta:' + c_alerta):
             almacen.actualizar_alerta(nueva)
         return nueva
+
+    def tramites_conocidos():
+        """{objeto: {(organismo, tramite): estado inicial}} de mecanismos.json y escuelas.json."""
+        conocidos = {}
+        for nombre, clave, lista in (('mecanismos.json', 'c_estacion', 'estaciones'), ('escuelas.json', 'cct', None)):
+            ruta = os.path.join(FIX, nombre)
+            if not os.path.exists(ruta):
+                continue
+            datos = leer_json(ruta)
+            for o in (datos.get(lista, []) if lista else datos):
+                for a in o.get('autorizaciones') or []:
+                    conocidos.setdefault(o[clave], {})[(a.get('organismo'), a.get('tramite'))] = a.get('estado')
+        return conocidos
+
+    @app.get('/autorizaciones')
+    def get_autorizaciones():
+        # Solo lo registrado desde el panel; el panel lo sobrepone a los fixtures.
+        return {'autorizaciones': ctx()['almacen'].autorizaciones()}
+
+    @app.patch('/autorizaciones/{objeto}')
+    async def registrar_autorizacion(objeto: str, request: Request):
+        cuerpo, problema = await leer_cuerpo(request)
+        if problema:
+            return error(400, {'error': problema})
+        if not isinstance(cuerpo, dict):
+            return error(422, {'error': 'se espera un objeto'})
+        ajenos = sorted(set(cuerpo) - set(CAMPOS_AUTORIZACION))
+        if ajenos:
+            return error(422, {'error': 'campos no permitidos', 'detalles': ajenos})
+        conocidos = tramites_conocidos()
+        par = (cuerpo.get('organismo'), cuerpo.get('tramite'))
+        if objeto not in conocidos or par not in conocidos[objeto]:
+            return error(404, {'error': 'trámite no encontrado', 'objeto': objeto, 'organismo': par[0], 'tramite': par[1]})
+        detalles = []
+        if cuerpo.get('estado') not in ESTADOS_TRAMITE:
+            detalles.append('estado: uno de ' + ', '.join(ESTADOS_TRAMITE))
+        encargado = (cuerpo.get('encargado') or '').strip() if isinstance(cuerpo.get('encargado'), str) else ''
+        if not encargado or len(encargado) > 80:
+            detalles.append('encargado: el nombre de quien registra (1 a 80 caracteres)')
+        for k, n in (('oficio', 60), ('nota', 200)):
+            v = cuerpo.get(k)
+            if v is not None and (not isinstance(v, str) or len(v) > n):
+                detalles.append('{}: texto de hasta {} caracteres'.format(k, n))
+        if detalles:
+            return error(422, {'error': 'datos no válidos', 'detalles': detalles})
+        almacen = ctx()['almacen']
+        ahora = datetime.now().astimezone()
+        with almacen.transaccion('autorizaciones'):
+            previo = almacen.autorizacion(objeto, par[0], par[1])
+            historial = (previo or {}).get('historial', [])
+            if previo:
+                historial = historial + [{k: previo.get(k) for k in ('estado', 'encargado', 'oficio', 'fecha', 'registrado')}]
+            registro = {'objeto': objeto, 'organismo': par[0], 'tramite': par[1], 'estado': cuerpo['estado'],
+                        'encargado': encargado, 'oficio': (cuerpo.get('oficio') or '').strip() or None,
+                        'nota': (cuerpo.get('nota') or '').strip() or None,
+                        'fecha': ahora.date().isoformat(), 'registrado': ahora.isoformat(timespec='seconds'),
+                        'historial': historial[-20:]}
+            almacen.guardar_autorizacion(registro)
+        return registro
 
     @app.patch('/reportes/{c_reporte}')
     async def gestionar_reporte(c_reporte: str, request: Request):

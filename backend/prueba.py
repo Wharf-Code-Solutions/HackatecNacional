@@ -494,5 +494,33 @@ with TestClient(crear_app(base_temporal())) as c:
     revisar(consultas[:20] == [200] * 20 and consultas[20] == 429, 'mas de 20 consultas de folio por minuto dan 429')
     revisar(c.get('/reportes/' + folio, headers={'X-Forwarded-For': '200.8.8.8'}).status_code == 200, 'otra persona sigue consultando')
 
+# ------------------------------------------------------------- 10. autorizaciones
+print('\n10) Trámites de CEASPUE y CAPCEE registrados desde el panel')
+_mec = json.load(open(os.path.join(RAIZ, 'contrato', 'fixtures', 'mecanismos.json'), encoding='utf-8'))['estaciones'][0]
+_tr = _mec['autorizaciones'][0]
+_db_aut = base_temporal()
+with TestClient(crear_app(_db_aut)) as c:
+    revisar(c.get('/autorizaciones').json() == {'autorizaciones': []}, 'sin registros, la lista está vacía')
+    url = '/autorizaciones/' + _mec['c_estacion']
+    base_t = {'organismo': _tr['organismo'], 'tramite': _tr['tramite']}
+    r = c.patch(url, json=dict(base_t, estado='solicitada', encargado='Ana López', oficio='CEASPUE/123/2026'))
+    j = r.json()
+    revisar(r.status_code == 200 and j['estado'] == 'solicitada' and j['encargado'] == 'Ana López' and j['fecha'] and j['historial'] == [],
+            'se registra un trámite con encargado y fecha', r.text[:120])
+    r = c.patch(url, json=dict(base_t, estado='otorgada', encargado='Ana López'))
+    revisar(r.status_code == 200 and r.json()['estado'] == 'otorgada' and len(r.json()['historial']) == 1
+            and r.json()['historial'][0]['estado'] == 'solicitada', 'el cambio guarda el estado anterior en el historial')
+    lista = c.get('/autorizaciones').json()['autorizaciones']
+    revisar(len(lista) == 1 and lista[0]['estado'] == 'otorgada', 'GET /autorizaciones devuelve el último estado')
+    revisar(c.patch(url, json=dict(base_t, estado='otorgada', encargado='')).status_code == 422, 'sin encargado se rechaza')
+    revisar(c.patch(url, json=dict(base_t, estado='aprobadísima', encargado='Ana')).status_code == 422, 'un estado desconocido se rechaza')
+    revisar(c.patch(url, json=dict(base_t, estado='otorgada', encargado='Ana', firma='x')).status_code == 422, 'un campo ajeno se rechaza')
+    revisar(c.patch('/autorizaciones/EST-NO-EXISTE', json=dict(base_t, estado='otorgada', encargado='Ana')).status_code == 404,
+            'un mecanismo que no existe da 404')
+    revisar(c.patch(url, json={'organismo': 'CEASPUE', 'tramite': 'inventado', 'estado': 'otorgada', 'encargado': 'Ana'}).status_code == 404,
+            'un trámite que el mecanismo no tiene da 404')
+with TestClient(crear_app(_db_aut)) as c:
+    revisar(c.get('/autorizaciones').json()['autorizaciones'][0]['estado'] == 'otorgada', 'el registro sobrevive a reiniciar el servidor')
+
 print('\n{}'.format('Todo pasa.' if not fallas else '{} falla(s): {}'.format(len(fallas), ', '.join(fallas))))
 sys.exit(1 if fallas else 0)

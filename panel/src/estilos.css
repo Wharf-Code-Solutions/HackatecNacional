@@ -642,3 +642,19 @@ main.contenedor { padding-top: 16px; }
 .panorama > .tarjeta > .mapa-estaciones { flex: 1; display: flex; flex-direction: column; min-height: 420px; }
 .panorama > .tarjeta > .mapa-estaciones > .mapa-estaciones-lienzo { flex: 1; height: auto; min-height: 420px; }
 @media (max-width: 700px) { .panorama > .tarjeta > .mapa-estaciones, .panorama > .tarjeta > .mapa-estaciones > .mapa-estaciones-lienzo { min-height: 340px; } }
+
+/* Autorizaciones: celda de trámite con su registro y el botón para el siguiente paso (RegistroTramite.jsx). */
+.celda-tramite { display: flex; flex-direction: column; gap: 3px; align-items: flex-start; min-width: 170px; }
+.celda-tramite .tenue { font-size: 12.5px; }
+.boton-tramite { font: inherit; font-size: 13px; font-weight: 600; color: var(--principal); background: #fff; border: 1px solid var(--principal);
+  border-radius: 6px; padding: 5px 12px; cursor: pointer; margin-top: 4px; }
+.boton-tramite:hover { background: var(--pguinda100); }
+.boton-tramite.primario { background: var(--principal); color: #fff; }
+.boton-tramite.primario:hover { background: var(--pguinda800); }
+.boton-tramite:disabled { opacity: .6; cursor: default; }
+.form-tramite { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; padding: 10px; border: 1px solid var(--linea); border-radius: 6px;
+  background: var(--neutro200); width: 100%; min-width: 200px; }
+.form-tramite label { display: flex; flex-direction: column; gap: 3px; font-size: 12.5px; color: var(--tenue); }
+.form-tramite input, .form-tramite select { font: inherit; font-size: 14px; padding: 6px 8px; border: 1px solid var(--neutro400); border-radius: 4px; background: #fff; color: var(--titulo); }
+.form-tramite-botones { display: flex; gap: 8px; }
+.form-tramite-error { margin: 0; font-size: 12.5px; color: var(--error); }

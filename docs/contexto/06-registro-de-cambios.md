@@ -21,6 +21,22 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-25 · M5 y módulo B: registrar autorizaciones desde el panel
+
+**Qué cambió.** Backend: tabla `autorizacion` (SQLite y Postgres, con RLS), `GET /autorizaciones` y `PATCH
+/autorizaciones/<mecanismo o CCT>` con estado, encargado (obligatorio, sin inicio de sesión), oficio y nota; guarda fecha
+e historial y rechaza trámites que el objeto no tiene. Panel: botón por trámite («Registrar solicitud», «Registrar
+respuesta», «Corregir») con formulario corto (`RegistroTramite.jsx`); lo registrado se sobrepone a los fixtures
+(`conAutorizaciones` en `contexto.js`), así un mecanismo pasa a «Activo» en todo el panel al otorgarse.
+**Por qué.** Petición del usuario: no había forma de registrar una autorización. `backend/prueba.py` (sección 10): todo
+pasa; probado en el navegador contra un backend aparte (otorgada → «1 de 10 activos», sobrevive a recargar).
+**Qué arrastró.** `backend/almacen.py`, `backend/app.py`, `backend/prueba.py`, `backend/README.md`, `App.jsx`,
+`Autorizaciones.jsx`, `RegistroTramite.jsx`, `contexto.js`, `datos.js`, `estilos.css`.
+**Impacto en otros módulos.** A: `mecanismos.json` y `escuelas.json` siguen siendo el estado inicial; si cambian los
+nombres de un trámite, los registros viejos de ese trámite dejan de aplicarse.
+
+---
+
 ## 2026-11-25 · M2, M5, M6 y M4: una sola definición de alarma (D33) y lluvia que siempre oscurece
 
 **Qué cambió.** El motor emite `reglas_normalizadas` cuando una condición vuelve a lo normal y el servidor (mock y backend) cierra solo esas alertas (`Cerrada`, responsable `Sistema`); `POST /estaciones/<id>/reiniciar` empieza limpia una simulación; `GET /alertas` filtra por estación y por `?estado=pendientes`; `GET /estaciones` trae `ultima_recepcion`. El mapa muestra rojo fijo con una alerta pendiente y el pulso de radar solo si la estación envía; la sirena y la línea de alarma del simulador salen de las alertas pendientes del servidor, no de una ventana de 1 h simulada. Con cualquier lluvia el día se oscurece (mínimo 40 % del efecto de una lluvia fuerte), en ladera y río. El mapa pide el simulador con `&r=` para esquivar la caché.

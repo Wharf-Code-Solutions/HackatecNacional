@@ -116,6 +116,7 @@ export function useBackend(codigos) {
   const origen = useMemo(origenBackend, []);
   const [estado, setEstado] = useState({
     conectado: null, motor: null, alertas: [], reportes: [], prioridades: null, huella: null, veredictos: {}, capturado: null,
+    autorizaciones: [],
   });
   const [version, setVersion] = useState(0);   // sube al cambiar un reporte: vuelve a pedir prioridades y huella
   const clave = codigos.join(',');
@@ -141,13 +142,15 @@ export function useBackend(codigos) {
       getJSON(origen.url + '/prioridades').catch(() => null),   // opcional: un backend sin la ruta no rompe el panel
       getJSON(origen.url + '/huella').catch(() => null),
       Promise.all(codigos.map((c) => getJSON(origen.url + '/veredictos?c_estacion=' + encodeURIComponent(c)))),
-    ]).then(([salud, al, rep, pri, hue, ver]) => {
+      getJSON(origen.url + '/autorizaciones').catch(() => null),   // opcional, como prioridades
+    ]).then(([salud, al, rep, pri, hue, ver, aut]) => {
       if (cancelado) return;
       const veredictos = {};
       // Si el backend no filtra por estación, se reparte aquí; solo es reparto, no análisis.
       codigos.forEach((c, i) => { veredictos[c] = (ver[i].veredictos || []).filter((v) => v.c_estacion === c); });
       setEstado((s) => ({ ...s, conectado: true, motor: salud.motor, alertas: al.alertas || [],
-        reportes: rep.reportes || [], prioridades: pri ? pri.prioridades : null, huella: hue, veredictos }));
+        reportes: rep.reportes || [], prioridades: pri ? pri.prioridades : null, huella: hue, veredictos,
+        autorizaciones: aut ? aut.autorizaciones || [] : s.autorizaciones }));
     }).catch(() => { if (!cancelado) setEstado((s) => ({ ...s, conectado: false })); });
     // La siguiente consulta sale CADA_MS después de que terminó la anterior, no cada CADA_MS fijo: con
     // setInterval, si el backend tardaba más de 3 s (Vercel en frío, red lenta), las 10 peticiones de cada
@@ -202,6 +205,26 @@ export function useBackend(codigos) {
   }, [origen]);
   const refrescar = useCallback(() => setVersion((n) => n + 1), []);
 
+  // Registra en qué va un trámite de CEASPUE o CAPCEE (PATCH /autorizaciones/<mecanismo o CCT>). Sin inicio de sesión:
+  // se manda el nombre de quien lo registra. En demostración solo cambia en esta pestaña.
+  const registrarAutorizacion = useCallback(async (objeto, cambios) => {
+    let registro;
+    if (origen.modo === 'demo') {
+      const hoy = new Date();
+      registro = { objeto, ...cambios, fecha: hoy.toISOString().slice(0, 10), registrado: hoy.toISOString(), historial: [] };
+    } else {
+      const r = await fetch(origen.url + '/autorizaciones/' + encodeURIComponent(objeto), {
+        method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(cambios),
+      });
+      const cuerpo = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error((cuerpo.error || 'error ' + r.status) + (cuerpo.detalles ? ': ' + cuerpo.detalles.join('; ') : ''));
+      registro = cuerpo;
+    }
+    setEstado((s) => ({ ...s, autorizaciones: s.autorizaciones
+      .filter((x) => !(x.objeto === objeto && x.organismo === registro.organismo && x.tramite === registro.tramite)).concat([registro]) }));
+    return registro;
+  }, [origen]);
+
   // Propagacion aguas abajo de una alerta (M3), calculada por el backend. Una alerta no
   // cambia, asi que su prediccion se pide una vez. Devuelve { prediccion } o { motivo }.
   const cache = useRef({});
@@ -230,7 +253,7 @@ export function useBackend(codigos) {
     return res;
   }, [origen, estado.predicciones]);
 
-  return { ...estado, origen, guardar, guardarReporte, refrescar, prediccion };
+  return { ...estado, origen, guardar, guardarReporte, refrescar, prediccion, registrarAutorizacion };
 }
 
 // Ancho real de un elemento, para dibujar las gráficas a su tamaño (el texto no se encoge).

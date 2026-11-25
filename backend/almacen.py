@@ -25,7 +25,7 @@ import threading
 import time
 from contextlib import contextmanager
 
-TABLAS = ('lectura', 'veredicto', 'alerta', 'reporte', 'envio', 'reinicio')
+TABLAS = ('lectura', 'veredicto', 'alerta', 'reporte', 'envio', 'reinicio', 'autorizacion')
 
 ESQUEMA_SQLITE = """
 CREATE TABLE IF NOT EXISTS lectura (
@@ -71,6 +71,13 @@ CREATE TABLE IF NOT EXISTS envio (
 );
 CREATE INDEX IF NOT EXISTS envio_origen ON envio (cubeta, origen, momento);
 CREATE INDEX IF NOT EXISTS envio_momento ON envio (momento);
+CREATE TABLE IF NOT EXISTS autorizacion (
+    objeto TEXT NOT NULL,
+    organismo TEXT NOT NULL,
+    tramite TEXT NOT NULL,
+    registro TEXT NOT NULL,
+    PRIMARY KEY (objeto, organismo, tramite)
+);
 """
 
 ESQUEMA_POSTGRES = [
@@ -113,6 +120,14 @@ ESQUEMA_POSTGRES = [
         c_reporte TEXT)""",
     'CREATE INDEX IF NOT EXISTS envio_origen ON envio (cubeta, origen, momento)',
     'CREATE INDEX IF NOT EXISTS envio_momento ON envio (momento)',
+    # Estado de los trámites de CEASPUE y CAPCEE que registra el panel (GET y PATCH /autorizaciones). Los fixtures
+    # (mecanismos.json, escuelas.json) son el punto de partida; aquí solo va lo que alguien cambió.
+    """CREATE TABLE IF NOT EXISTS autorizacion (
+        objeto TEXT NOT NULL,
+        organismo TEXT NOT NULL,
+        tramite TEXT NOT NULL,
+        registro TEXT NOT NULL,
+        PRIMARY KEY (objeto, organismo, tramite))""",
     # Supabase publica toda tabla del esquema public por su API REST, y la llave
     # "anon" que la abre no es secreta. Con RLS activo y sin politicas, esa API no
     # ve ni escribe nada; el backend entra como el dueno de las tablas y RLS no lo
@@ -123,6 +138,7 @@ ESQUEMA_POSTGRES = [
     'ALTER TABLE reporte ENABLE ROW LEVEL SECURITY',
     'ALTER TABLE envio ENABLE ROW LEVEL SECURITY',
     'ALTER TABLE reinicio ENABLE ROW LEVEL SECURITY',
+    'ALTER TABLE autorizacion ENABLE ROW LEVEL SECURITY',
 ]
 
 # Parametros que agregan las integraciones (Vercel + Supabase pone supa=base-pooler.x;
@@ -294,6 +310,17 @@ class Almacen:
         self._q('INSERT INTO reporte (c_reporte, reporte) VALUES (?, ?)',
                 (reporte['c_reporte'], json.dumps(reporte, ensure_ascii=False)))
 
+    def guardar_autorizacion(self, registro):
+        """Alta o cambio del registro de un trámite. Llamar dentro de transaccion('autorizaciones')."""
+        self._q('INSERT INTO autorizacion (objeto, organismo, tramite, registro) VALUES (?, ?, ?, ?) '
+                'ON CONFLICT (objeto, organismo, tramite) DO UPDATE SET registro = excluded.registro',
+                (registro['objeto'], registro['organismo'], registro['tramite'], json.dumps(registro, ensure_ascii=False)))
+
+    def autorizacion(self, objeto, organismo, tramite):
+        fila = self._q('SELECT registro FROM autorizacion WHERE objeto = ? AND organismo = ? AND tramite = ?',
+                       (objeto, organismo, tramite)).fetchone()
+        return json.loads(fila[0]) if fila else None
+
     def actualizar_reporte(self, reporte):
         """Llamar dentro de transaccion('reportes')."""
         self._q('UPDATE reporte SET reporte = ? WHERE c_reporte = ?',
@@ -379,6 +406,11 @@ class Almacen:
     def reportes(self):
         self._vigente()
         return [json.loads(f[0]) for f in self._q('SELECT reporte FROM reporte ORDER BY id').fetchall()]
+
+    @con_candado
+    def autorizaciones(self):
+        self._vigente()
+        return [json.loads(f[0]) for f in self._q('SELECT registro FROM autorizacion ORDER BY objeto, organismo, tramite').fetchall()]
 
     @con_candado
     def reporte(self, c_reporte):

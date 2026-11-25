@@ -6,6 +6,21 @@ import { LADERA, UNIDAD_LADERA } from './etiquetas.js';
 export const Datos = createContext(null);
 export const useDatos = () => useContext(Datos);
 
+// Lo registrado desde el panel (GET /autorizaciones) se sobrepone a los trámites de mecanismos.json y escuelas.json:
+// mismo objeto, organismo y trámite -> estado, fecha, encargado y oficio registrados.
+export function conAutorizaciones(fijos, registros) {
+  if (!fijos || !registros || !registros.length) return fijos;
+  const clave = (o, a) => o + '|' + a.organismo + '|' + a.tramite;
+  const reg = Object.fromEntries(registros.map((r) => [r.objeto + '|' + r.organismo + '|' + r.tramite, r]));
+  const sobre = (o, lista) => (lista || []).map((a) => {
+    const r = reg[clave(o, a)];
+    return r ? { ...a, estado: r.estado, fecha: r.fecha, encargado: r.encargado, oficio: r.oficio, nota: r.nota, historial: r.historial } : a;
+  });
+  const mecanismos = Object.fromEntries(Object.entries(fijos.mecanismos || {}).map(([c, m]) => [c, { ...m, autorizaciones: sobre(c, m.autorizaciones) }]));
+  const escuelas = (fijos.escuelas || []).map((e) => (e.autorizaciones && e.autorizaciones.length ? { ...e, autorizaciones: sobre(e.cct, e.autorizaciones) } : e));
+  return { ...fijos, mecanismos, escuelas };
+}
+
 export function ayudantes(fijos) {
   const { estaciones, lineaBase, mecanismos = {}, escuelas = [], umbralesLadera = null } = fijos;
   // Una estación del Atoyac (estaciones.json) o un mecanismo junto a escuela (mecanismos.json).
