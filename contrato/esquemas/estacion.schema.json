@@ -27,6 +27,11 @@
       "type": "string",
       "enum": ["Activo", "Sin senal", "Falla", "Mantenimiento"]
     },
+    "ultima_recepcion": {
+      "description": "Hora REAL (no la simulada) en que el servidor recibio la ultima lectura de esta estacion. Solo la pone el servidor al responder GET /estaciones; el mapa la usa para saber si la estacion esta enviando ahora. Opcional.",
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
     "ultima_calibracion": {
       "description": "Las sondas de OD y pH derivan en semanas. Sin esta fecha no se puede distinguir un rio que empeoro de un sensor que se descalibro.",
       "type": ["string", "null"], "format": "date"

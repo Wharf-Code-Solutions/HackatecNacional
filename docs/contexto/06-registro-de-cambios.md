@@ -21,6 +21,15 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-25 · M2, M5, M6 y M4: una sola definición de alarma (D33) y lluvia que siempre oscurece
+
+**Qué cambió.** El motor emite `reglas_normalizadas` cuando una condición vuelve a lo normal y el servidor (mock y backend) cierra solo esas alertas (`Cerrada`, responsable `Sistema`); `POST /estaciones/<id>/reiniciar` empieza limpia una simulación; `GET /alertas` filtra por estación y por `?estado=pendientes`; `GET /estaciones` trae `ultima_recepcion`. El mapa muestra rojo fijo con una alerta pendiente y el pulso de radar solo si la estación envía; la sirena y la línea de alarma del simulador salen de las alertas pendientes del servidor, no de una ventana de 1 h simulada. Con cualquier lluvia el día se oscurece (mínimo 40 % del efecto de una lluvia fuerte), en ladera y río. El mapa pide el simulador con `&r=` para esquivar la caché.
+**Por qué.** Pedido del usuario: los pulsos del mapa aparecían al reabrir sin enviar nada, el deslave no avisaba (a 3600× la ventana de 1 h eran 1 s) y la lluvia suave no oscurecía.
+**Qué arrastró.** `motor/reglas.py`, `contrato/esquemas/veredicto.schema.json` y `estacion.schema.json` (campos opcionales), `contrato/servidor_mock.py`, `backend/app.py` y `almacen.py` (tabla `reinicio`), `mapa/`, `dispositivo/simulador/`, `contrato/README.md`, D33. El backend se probó solo en `almacen.py` con SQLite en memoria: no hay `backend/.venv` en esta computadora (falta correr `backend/prueba.py` y revisar Postgres, que crea la tabla nueva solo). El panel no cambió: `porAtender` es la referencia; las alertas cerradas por el sistema salen de «activas».
+**Impacto en otros módulos.** Contrato y backend (Evaristo y Carlos): campos opcionales nuevos, un endpoint y filtros; ningún campo existente cambia. Pendiente su visto bueno.
+
+---
+
 ## 2026-11-25 · Módulo B: el mapa de Alertas llena el alto de su tarjeta
 
 **Qué cambió.** En la pestaña Alertas la tarjeta del mapa es una columna y el mapa ocupa el alto que le sobra (mínimo

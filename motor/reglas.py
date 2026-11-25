@@ -86,6 +86,8 @@ Z_FUERTE = 6.0               # con esto basta una persistencia mas corta
 Z_SENAL = 1.5                # minimo para que un parametro aporte a la firma
 PERSISTENCIA = 3             # lecturas consecutivas antes de emitir
 PERSISTENCIA_CORTA = 2       # cuando la senal es fuerte o la mueven 3+ parametros
+CALMA_LADERA = 4             # ladera: paquetes seguidos en cero (1 h) para dar por normalizada una regla
+CALMA_AGUA = 4               # paquetes seguidos sin coherencia (1 h) para dar por normalizada una alerta de agua
 N_MINIMO_BANDA = 12          # convencion del proyecto para usar una linea base
 DERIVA_LECTURAS = 24         # 6 h de tendencia monotona
 
@@ -130,6 +132,21 @@ class Motor:
         self.lluvia = defaultdict(deque)
         self.hum_ult = {}
         self.avisado = defaultdict(int)
+        # agua: hay una alerta sin normalizar y cuantos paquetes seguidos van sin coherencia desde entonces
+        self.alerto_agua = defaultdict(bool)
+        self.calma = defaultdict(int)
+        self.calma_l = defaultdict(int)       # ladera: paquetes seguidos en cero por regla
+
+    def reinicia(self, c_estacion):
+        """Borra lo que el motor recuerda de una estacion (arranque de una simulacion nueva). El folio se conserva:
+        los folios de alertas ya emitidas no se repiten."""
+        for d in (self.reciente, self.congelado, self.racha, self.lluvia, self.avisado, self.calma_l):
+            for k in [k for k in d if k == c_estacion or (isinstance(k, tuple) and k[0] == c_estacion)]:
+                del d[k]
+        self.hum_ult.pop(c_estacion, None)
+        self.ultimo = {k: v for k, v in self.ultimo.items() if not (k == c_estacion or (isinstance(k, tuple) and k[0] == c_estacion))}
+        self.alerto_agua.pop(c_estacion, None)
+        self.calma.pop(c_estacion, None)
 
     # ---------------------------------------------------------- clasificacion
     def clase_conagua(self, cp, valor):
@@ -163,6 +180,8 @@ class Motor:
             'fecha_hora': paquete['fecha_hora'], 'parametros': [],
             'indice_deterioro': None, 'semaforo_publico': None,
             'avisos_tecnicos': [], 'alertas': [],
+            # reglas cuya condicion volvio a lo normal en este paquete: el servidor cierra sus alertas abiertas
+            'reglas_normalizadas': [],
         }
         candidatos = {}          # los que pasan el umbral: disparan
         senales = {}             # todos los que tienen z: alimentan la firma
@@ -320,7 +339,15 @@ class Motor:
         # y la que mas falsas alarmas quita.
         if len(candidatos) < 2:
             self.racha[ce] = 0
+            # una alerta de agua se da por normalizada con CALMA_AGUA paquetes seguidos (1 h) sin coherencia
+            if self.alerto_agua[ce]:
+                self.calma[ce] += 1
+                if self.calma[ce] >= CALMA_AGUA:
+                    self.alerto_agua[ce] = False
+                    self.calma[ce] = 0
+                    salida['reglas_normalizadas'].extend(['desviacion_linea_base', 'cambio_brusco'])
             return
+        self.calma[ce] = 0
         maxz = max(abs(z) for z, _, _ in candidatos.values())
         # con senal fuerte o tres parametros movidos no se hace esperar tanto
         necesaria = (PERSISTENCIA_CORTA
@@ -342,6 +369,7 @@ class Motor:
         nivel = ('Critica' if az >= Z_FUERTE else
                  'Preventiva' if az >= 4.5 else 'Informativa')
 
+        self.alerto_agua[ce] = True
         self.folio[ce] += 1
         folio = 'AL-{}-{}-{:02d}'.format(
             paquete['fecha_hora'][:10].replace('-', ''),
@@ -428,9 +456,18 @@ class Motor:
         ce = paquete['c_estacion']
         clave = (ce, regla)
         if nivel <= self.avisado[clave]:
-            if nivel == 0:
-                self.avisado[clave] = 0
+            if nivel == 0 and self.avisado[clave] > 0:
+                # se da por normalizada (y se rearma) con CALMA_LADERA paquetes seguidos en cero, para que el ruido de un
+                # sensor justo en el umbral no cierre y reabra la alerta
+                self.calma_l[clave] += 1
+                if self.calma_l[clave] >= CALMA_LADERA:
+                    salida['reglas_normalizadas'].append(regla)
+                    self.avisado[clave] = 0
+                    self.calma_l[clave] = 0
+            elif nivel > 0:
+                self.calma_l[clave] = 0
             return
+        self.calma_l[clave] = 0
         self.avisado[clave] = nivel
         self.folio[ce] += 1
         folio = 'AL-{}-{}-{:02d}'.format(paquete['fecha_hora'][:10].replace('-', ''),

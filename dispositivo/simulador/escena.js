@@ -717,6 +717,9 @@
     G.lluvia = new T.LineSegments(gl, new T.LineBasicMaterial({ color: 0x8fa9bd, transparent: true, opacity: 0.6, depthWrite: false }));
     G.lluvia.userData.sinSombra = true; G.lluvia.frustumCulled = false; G.escena.add(G.lluvia);
   }
+  // Cuánto se nota la lluvia en la figura (0 a 1): nada sin lluvia y, apenas llueve, al menos 0.4 (día ya oscuro y trazos
+  // visibles); 10 mm/h o más es lluvia fuerte. Así cualquier lluvia oscurece, también la débil del inicio de un deslave.
+  function intensidadVisual(mmh) { return mmh < 0.2 ? 0 : M.acota(Math.max(0.4, mmh / 10), 0, 1); }
   function caeLluvia(k, dtr) {            // hasta 1 400 trazos; caen a ≈ 7 m/s en tiempo real
     var n = Math.round(M.acota(k, 0, 1) * 1400);
     if (n) {
@@ -747,11 +750,11 @@
     G.matSueloL.color.setRGB(1 - 0.12 * k, 1 - 0.12 * k, 1 - 0.1 * k);
     G.estaca.rotation.z = L.incl * EXAGERA_INCL * Math.PI / 180;                        // hacia abajo del cerro
     // lluvia: hasta 1 400 trazos con 40 mm/h
-    var mmh = L.intensidad(fw.t), lluvia = suaviza('lluviaL', M.acota(mmh / 15, 0, 1), dtr);   // 15 mm/h ya es lluvia fuerte para el dibujo
+    var mmh = L.intensidad(fw.t), lluvia = suaviza('lluviaL', intensidadVisual(mmh), dtr);
     caeLluvia(lluvia, dtr);
-    // el arroyo crece y corre más rápido con la lluvia del modelo (sin lluvia, ≈ 0.4 m/s dibujado)
-    G.creceL = (G.creceL || 0) + (lluvia - (G.creceL || 0)) * Math.min(1, dtr * 0.8);
-    clima(G.creceL);                                                                    // y el día se oscurece con la tormenta
+    // el arroyo crece y corre más rápido con la lluvia del modelo (sin lluvia, ≈ 0.4 m/s dibujado; 15 mm/h = crecida plena)
+    G.creceL = (G.creceL || 0) + (M.acota(mmh / 15, 0, 1) - (G.creceL || 0)) * Math.min(1, dtr * 0.8);
+    clima(lluvia);                                                                      // y el día se oscurece apenas llueve
     G.ondasL.offset.y = (G.ondasL.offset.y + (0.4 + 1.6 * G.creceL) * dtr / 3) % 1;
     // deslizamiento: pasado 1° de cambio (el salto del deslave) la ladera cede. `p` avanza en tiempo real (≈ 5 s)
     var kd = M.acota((L.incl - 1.0) / 2.8, 0, 1), p = suaviza('lodo', M.acota(kd * 3, 0, 1), dtr, 2.0);
@@ -1781,7 +1784,7 @@
     // Pruebas del agua. Lluvia: el día se oscurece, cae la lluvia, el agua se enturbia y corre más (del modelo).
     // Descarga industrial: el agua vira a ocre y su flujo se dibuja más fuerte, con el tubo de descarga vertiendo;
     // la orgánica la vira a verde oscuro. El modelo no mueve la velocidad con las descargas: el aumento es solo del dibujo.
-    var llu = suaviza('llu', M.acota(s.agua.lluvia(fw.t), 0, 1), dtr), ind = suaviza('ind', nivelEv(s.agua, 'descarga_industrial', fw.t), dtr),
+    var llu = suaviza('llu', s.agua.lluvia(fw.t) > 0.02 ? M.acota(Math.max(0.4, s.agua.lluvia(fw.t)), 0, 1) : 0, dtr), ind = suaviza('ind', nivelEv(s.agua, 'descarga_industrial', fw.t), dtr),
       org = suaviza('org', nivelEv(s.agua, 'descarga_organica', fw.t), dtr);
     clima(llu); caeLluvia(llu, dtr);
     var vel = s.agua.velocidad(fw.t);

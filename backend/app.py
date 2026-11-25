@@ -167,7 +167,10 @@ def crear_app(url=None):
 
     @app.get('/estaciones')
     def get_estaciones():
-        return {'version': VERSION_CONTRATO, 'estaciones': list(estaciones.values())}
+        # ultima_recepcion: hora real de la ultima lectura; el mapa pulsa solo si la estacion esta enviando ahora
+        rec = ctx()['almacen'].ultimas_recepciones()
+        return {'version': VERSION_CONTRATO,
+                'estaciones': [dict(e, ultima_recepcion=rec.get(ce)) for ce, e in estaciones.items()]}
 
     @app.get('/linea_base')
     def linea_base():
@@ -196,14 +199,19 @@ def crear_app(url=None):
 
     @app.get('/alertas')
     def alertas(request: Request):
-        # Filtros opcionales, los mismos que el mock: ?nivel=Critica&abiertas=1&modulo=ladera. La app ciudadana los usa
-        # para su alarma: consulta cada pocos segundos y no debe bajar todas las alertas del Atoyac.
+        # Filtros opcionales, los mismos que el mock: ?nivel=Critica&abiertas=1&modulo=ladera (la app ciudadana consulta
+        # su alarma cada pocos segundos y no debe bajar todas las alertas) y ?c_estacion=EST-LAD-01&estado=pendientes
+        # (el simulador y el mapa; pendientes = Abierta o En atencion, el criterio del panel).
         q = request.query_params
         lista = ctx()['almacen'].alertas()
         if q.get('nivel'):
             lista = [a for a in lista if a.get('nivel') == q['nivel']]
-        if q.get('abiertas') in ('1', 'true'):
+        if q.get('abiertas') in ('1', 'true') or q.get('estado') == 'pendientes':
             lista = [a for a in lista if a.get('estado') in ('Abierta', 'En atencion')]
+        elif q.get('estado'):
+            lista = [a for a in lista if a.get('estado') == q['estado']]
+        if q.get('c_estacion'):
+            lista = [a for a in lista if a.get('c_estacion') == q['c_estacion']]
         if q.get('modulo') == 'ladera':
             lista = [a for a in lista if a.get('regla') in REGLAS_LADERA]
         return {'alertas': lista}
@@ -294,11 +302,23 @@ def crear_app(url=None):
                     v = motor.evaluar(p)
                     v['motor'] = 'real'
                     almacen.guardar_evaluacion(p, h, v)
+                    if v.get('reglas_normalizadas'):
+                        almacen.cerrar_alertas(ce, v['reglas_normalizadas'])
                     resultados[i] = v
         aceptados = [resultados[i] for i in sorted(resultados)]
         if errores:
             return error(422, {'error': 'contrato no cumplido', 'detalles': errores, 'aceptados': len(aceptados)})
         return JSONResponse({'aceptados': len(aceptados), 'veredictos': aceptados}, status_code=202)
+
+    @app.post('/estaciones/{c_estacion}/reiniciar')
+    def reiniciar(c_estacion: str):
+        """Arranque de una simulacion: cierra las alertas pendientes de la estacion y el motor deja de recordar lo anterior."""
+        if c_estacion not in estaciones:
+            return error(404, {'error': 'estacion no encontrada'})
+        almacen = ctx()['almacen']
+        with almacen.transaccion(c_estacion):
+            cerradas = almacen.reiniciar(c_estacion)
+        return {'c_estacion': c_estacion, 'alertas_cerradas': cerradas}
 
     @app.patch('/alertas/{c_alerta}')
     async def gestionar(c_alerta: str, request: Request):

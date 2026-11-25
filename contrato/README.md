@@ -38,15 +38,16 @@ día entero de lecturas de cinco estaciones con una descarga industrial inyectad
 
 | Método | Ruta | Qué devuelve |
 |---|---|---|
-| GET | `/salud` | versión del contrato, estaciones cargadas, alertas abiertas |
-| GET | `/estaciones` | las 5 estaciones del piloto |
+| GET | `/salud` | versión del contrato, estaciones cargadas, alertas pendientes (Abierta o En atencion) |
+| GET | `/estaciones` | las estaciones, cada una con `ultima_recepcion` (hora **real** de su última lectura, o `null`): el mapa pulsa solo si la estación está enviando ahora |
+| POST | `/estaciones/<c_estacion>/reiniciar` | arranque de una simulación, sin cuerpo: cierra (Cerrada, responsable `Sistema`) las alertas pendientes de la estación y el motor olvida lo anterior; las lecturas y las alertas ya emitidas no se borran. Lo llama el simulador al abrirse |
 | GET | `/linea_base` | banda histórica de cada estación y parámetro |
 | GET | `/sitios.geojson` | los 219 sitios de monitoreo, listos para pintar en un mapa |
 | GET | `/escenarios` | nombres de los escenarios disponibles |
 | GET | `/escenarios/<nombre>` | los paquetes de lecturas de ese escenario |
 | POST | `/lecturas` | valida contra el esquema y evalúa; acepta un objeto o un arreglo |
 | GET | `/veredictos` | los últimos 50 veredictos emitidos; `?c_estacion=` los filtra por estación |
-| GET | `/alertas` | alertas generadas; filtros opcionales `?nivel=Critica&abiertas=1&modulo=ladera` (los usa la alarma de la app ciudadana) |
+| GET | `/alertas` | alertas generadas; filtros opcionales `?nivel=Critica&abiertas=1&modulo=ladera` (los usa la alarma de la app ciudadana) y `?c_estacion=` y `?estado=pendientes` (Abierta y En atencion; también `?estado=Cerrada` para un estado exacto), que usan el simulador y el mapa |
 | PATCH | `/alertas/<c_alerta>` | cambia `estado` y `responsable`; cualquier otro campo da 422 (lo usa el panel M7) |
 | PATCH | `/reportes/<c_reporte>` | cambia solo el `estado` de un reporte ciudadano (Recibido, Validado, En atencion, Cerrado, Descartado); otro campo o un estado fuera del enum da 422, un folio inexistente 404. No devuelve el `correo` (lo usa la gestión de reportes del panel) |
 | GET | `/alertas/<c_alerta>/prediccion` | **solo en el backend (M5)**: propagación aguas abajo de M3. El mock no la tiene |
@@ -57,6 +58,16 @@ día entero de lecturas de cinco estaciones con una descarga industrial inyectad
 | GET | `/prioridades` | focos de reportes (mismo tipo, 150 m, 24 h) con prioridad de 1 a 10, banda y desglose; para la autoridad |
 
 Tiene CORS abierto, así que un frontend en otro puerto lo consume sin configurar nada.
+
+## Ciclo de vida de una alerta
+
+Una sola definición para el motor, el servidor, el mapa, el simulador y el panel (D33):
+
+1. **Pendiente** = estado `Abierta` o `En atencion`. Es el criterio `porAtender` del panel; el mapa y el simulador usan el mismo.
+2. **Se cierra sola** cuando la regla que la originó vuelve a lo normal: el motor lo declara en `reglas_normalizadas` del veredicto (ladera: 4 paquetes seguidos en cero; agua: 4 paquetes seguidos sin coherencia) y el servidor pasa a `Cerrada`, con responsable `Sistema`, las alertas `Abierta` de esa estación y regla. Una `En atencion` la cierra la autoridad (`PATCH`). Lo que no se normaliza (la inclinación de un deslave) sigue pendiente hasta que la autoridad la cierre.
+3. **Abrir una simulación la empieza limpia**: `POST /estaciones/<c_estacion>/reiniciar`.
+4. **Mapa**: punto rojo fijo con una alerta pendiente; pulso de radar solo si además la estación recibió datos hace menos de 20 s reales.
+5. **Sirena del simulador de ladera**: sale de las alertas pendientes de la estación (Crítica: roja con ondas; Preventiva: ámbar), no de una ventana de tiempo.
 
 ## Entidades
 

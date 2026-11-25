@@ -738,3 +738,23 @@ primario`). Por qué: el usuario quiere que la autoridad y la ciudadanía vean e
 acepta lo que esta decisión evitaba: el logotipo oficial aparece en un prototipo; el pie sigue diciendo
 que no es un sitio oficial. Los colores de nivel y de las gráficas no cambian (D22).
 
+
+## D33 · Una alerta dura mientras dure su condición, y todos los módulos usan la misma definición
+
+**Decisión.** Alerta pendiente = `Abierta` o `En atencion`. El motor (`motor/reglas.py`) declara en `reglas_normalizadas`
+las reglas cuya condición volvió a lo normal (ladera: 4 paquetes seguidos en cero, `CALMA_LADERA`; agua: 4 seguidos sin
+coherencia, `CALMA_AGUA`) y el servidor (mock y backend) cierra solo las alertas `Abierta` de esa estación y regla, con
+responsable `Sistema`. `POST /estaciones/<id>/reiniciar` empieza limpia una simulación (cierra pendientes y el motor olvida;
+en el backend, la tabla `reinicio` hace que la rehidratación ignore lo anterior). `GET /alertas` filtra por `?c_estacion=` y
+`?estado=pendientes`; `GET /estaciones` trae `ultima_recepcion`. El mapa muestra rojo fijo con una alerta pendiente y pulso
+de radar solo si la estación envía; la sirena del simulador sale de las alertas pendientes del servidor.
+
+**Por qué.** Cada vista decidía sola cuánto duraba una alarma: el mapa pulsaba por cualquier alerta `Abierta` para siempre
+(al reabrir un simulador aparecían pulsos viejos), el simulador la mantenía 1 h simulada (a 3600× eran 1 s reales) y nadie
+cerraba una alerta salvo la autoridad.
+
+**Alternativa descartada.** Calcular la vigencia solo en el mapa y el simulador con una ventana de tiempo: se rompe con la
+velocidad de la simulación y deja al panel y a las demás vistas con otra definición.
+
+**Consecuencia.** Cambia el contrato (campos opcionales nuevos, un endpoint y filtros) y toca motor, mock, backend, mapa y
+simulador: pendiente de visto bueno de Evaristo y Carlos. Un cambio de umbral en `CALMA_*` cambia cuándo se cierran las alertas.

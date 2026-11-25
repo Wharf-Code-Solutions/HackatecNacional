@@ -68,6 +68,11 @@
         "mensaje": { "type": "string" }
       }
     },
+    "reglas_normalizadas": {
+      "description": "Reglas de esta estacion cuya condicion volvio a lo normal en este paquete (por ejemplo 'lluvia_acumulada' o 'cambio_brusco'). El servidor cierra solo, con responsable 'Sistema', las alertas Abiertas de esa estacion y regla; una alerta En atencion la cierra la autoridad. Opcional: si falta, no se normalizo nada.",
+      "type": "array",
+      "items": { "type": "string" }
+    },
     "avisos_tecnicos": {
       "description": "Problemas del dispositivo, no del rio. Nunca se mezclan con las alertas ambientales.",
       "type": "array",

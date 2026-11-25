@@ -282,7 +282,7 @@
     $('detTitulo').textContent = e.c_estacion + ' · ' + lugar(e) + ', ' + inicial(e.municipio);
     // El simulador arma su escena 3D en el mismo hilo que el mapa: si se carga a la vez, el
     // desplazamiento se detiene un momento. Se carga cuando el mapa termina de moverse.
-    var src = '../dispositivo/simulador/index.html?incrustado=1&vel=300&estacion=' + encodeURIComponent(e.c_estacion) +
+    var src = '../dispositivo/simulador/index.html?incrustado=1&vel=300&r=' + Date.now() + '&estacion=' + encodeURIComponent(e.c_estacion) +
       (MOCK ? '&backend=' + encodeURIComponent(MOCK) : '');
     $('marco').removeAttribute('src');
     var cargado = false, carga = function () { if (!cargado && abierta === e) { cargado = true; $('marco').src = src; } };
@@ -310,14 +310,23 @@
   document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape' && abierta) cierra(); });
 
   // ---------------------------------------------------------------- backend
-  // Solo marca en rojo la estación con una alerta abierta; sin backend, no muestra nada.
+  // Tres estados por estación, con la misma definición que el panel (docs/contexto, «alarma»): normal; alerta pendiente
+  // (Abierta o En atención): punto rojo fijo; y alerta pendiente con la estación enviando ahora (recibió datos hace menos de
+  // VIVA_S s reales): rojo con el pulso de un radar. Sin backend, no muestra nada.
+  var VIVA_S = 20;
   function consultaBackend() {
-    get(MOCK.replace(/\/$/, '') + '/alertas').then(function (d) {
-      var abiertas = {};
-      d.alertas.forEach(function (a) { if (a.estado === 'Abierta') abiertas[a.c_estacion] = true; });
+    var base = MOCK.replace(/\/$/, '');
+    Promise.all([get(base + '/alertas?estado=pendientes'), get(base + '/estaciones')]).then(function (d) {
+      var pendientes = {}, vivas = {};
+      d[0].alertas.forEach(function (a) { if (a.estado === 'Abierta' || a.estado === 'En atencion') pendientes[a.c_estacion] = true; });
+      d[1].estaciones.forEach(function (e) {
+        var t = Date.parse(e.ultima_recepcion);
+        if (t && Date.now() - t < VIVA_S * 1000) vivas[e.c_estacion] = true;
+      });
       Object.keys(marcadores).forEach(function (id) {
-        $('m_' + id).classList.toggle('alerta', !!abiertas[id]);
-        $('li_' + id).classList.toggle('alerta', !!abiertas[id]);
+        $('m_' + id).classList.toggle('alerta', !!pendientes[id]);
+        $('m_' + id).classList.toggle('vivo', !!pendientes[id] && !!vivas[id]);
+        $('li_' + id).classList.toggle('alerta', !!pendientes[id]);
       });
     }).catch(function () {});
   }

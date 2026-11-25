@@ -25,7 +25,7 @@ import threading
 import time
 from contextlib import contextmanager
 
-TABLAS = ('lectura', 'veredicto', 'alerta', 'reporte', 'envio')
+TABLAS = ('lectura', 'veredicto', 'alerta', 'reporte', 'envio', 'reinicio')
 
 ESQUEMA_SQLITE = """
 CREATE TABLE IF NOT EXISTS lectura (
@@ -54,6 +54,10 @@ CREATE TABLE IF NOT EXISTS reporte (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     c_reporte TEXT NOT NULL UNIQUE,
     reporte TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS reinicio (
+    c_estacion TEXT PRIMARY KEY,
+    desde_id INTEGER NOT NULL
 );
 CREATE TABLE IF NOT EXISTS envio (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -93,6 +97,10 @@ ESQUEMA_POSTGRES = [
         id BIGSERIAL PRIMARY KEY,
         c_reporte TEXT NOT NULL UNIQUE,
         reporte TEXT NOT NULL)""",
+    # Arranque de una simulacion: el motor solo rehidrata lecturas posteriores a `desde_id` (reiniciar()).
+    """CREATE TABLE IF NOT EXISTS reinicio (
+        c_estacion TEXT PRIMARY KEY,
+        desde_id BIGINT NOT NULL)""",
     # Freno antispam (backend/antispam.py): la huella de la IP, nunca la IP, y solo la última hora.
     """CREATE TABLE IF NOT EXISTS envio (
         id BIGSERIAL PRIMARY KEY,
@@ -114,6 +122,7 @@ ESQUEMA_POSTGRES = [
     'ALTER TABLE alerta ENABLE ROW LEVEL SECURITY',
     'ALTER TABLE reporte ENABLE ROW LEVEL SECURITY',
     'ALTER TABLE envio ENABLE ROW LEVEL SECURITY',
+    'ALTER TABLE reinicio ENABLE ROW LEVEL SECURITY',
 ]
 
 # Parametros que agregan las integraciones (Vercel + Supabase pone supa=base-pooler.x;
@@ -253,8 +262,10 @@ class Almacen:
         return json.loads(fila[0]) if fila else None
 
     def lecturas_recientes(self, c_estacion, n):
-        filas = self._q('SELECT paquete FROM lectura WHERE c_estacion = ? ORDER BY id DESC LIMIT ?',
-                        (c_estacion, n)).fetchall()
+        """Las ultimas n lecturas de la estacion, sin contar las anteriores a su ultimo reinicio."""
+        filas = self._q('SELECT paquete FROM lectura WHERE c_estacion = ? AND id > '
+                        '(SELECT COALESCE(MAX(desde_id), 0) FROM reinicio WHERE c_estacion = ?) ORDER BY id DESC LIMIT ?',
+                        (c_estacion, c_estacion, n)).fetchall()
         return [json.loads(f[0]) for f in reversed(filas)]
 
     def folio_maximo(self, c_estacion):
@@ -301,6 +312,27 @@ class Almacen:
                        'WHERE cubeta = ? AND origen = ? AND momento >= ? ORDER BY momento DESC',
                        (cubeta, origen, desde)).fetchall()
 
+    def cerrar_alertas(self, c_estacion, reglas=None):
+        """Cierra solas (Cerrada, responsable 'Sistema') las alertas Abiertas de la estacion: las de las reglas dadas, o todas.
+        Una alerta En atencion la sigue llevando la autoridad. Dentro de transaccion(). Devuelve cuantas cerro."""
+        n = 0
+        for (texto,) in self._q('SELECT alerta FROM alerta WHERE c_estacion = ?', (c_estacion,)).fetchall():
+            a = json.loads(texto)
+            if a.get('estado') == 'Abierta' and (reglas is None or a.get('regla') in reglas):
+                a['estado'], a['responsable'] = 'Cerrada', 'Sistema'
+                self.actualizar_alerta(a)
+                n += 1
+        return n
+
+    def reiniciar(self, c_estacion):
+        """Arranque de una simulacion: cierra las alertas pendientes de la estacion y hace que el motor no recuerde sus
+        lecturas anteriores (las lecturas no se borran). Dentro de transaccion(c_estacion)."""
+        cerradas = self.cerrar_alertas(c_estacion)
+        mayor = self._q('SELECT COALESCE(MAX(id), 0) FROM lectura WHERE c_estacion = ?', (c_estacion,)).fetchone()[0]
+        self._q('INSERT INTO reinicio (c_estacion, desde_id) VALUES (?, ?) '
+                'ON CONFLICT (c_estacion) DO UPDATE SET desde_id = excluded.desde_id', (c_estacion, mayor))
+        return cerradas
+
     def actualizar_alerta(self, alerta):
         """Llamar dentro de transaccion()."""
         self._q('UPDATE alerta SET alerta = ? WHERE c_alerta = ?',
@@ -327,6 +359,15 @@ class Almacen:
     def alertas(self):
         self._vigente()
         return [json.loads(f[0]) for f in self._q('SELECT alerta FROM alerta ORDER BY id').fetchall()]
+
+    @con_candado
+    def ultimas_recepciones(self):
+        """{c_estacion: hora REAL (ISO) en que llego su ultima lectura}."""
+        self._vigente()
+        salida = {}
+        for ce, t in self._q('SELECT c_estacion, MAX(recibido) FROM lectura GROUP BY c_estacion').fetchall():
+            salida[ce] = t.isoformat(timespec='seconds') if hasattr(t, 'isoformat') else str(t)
+        return salida
 
     @con_candado
     def alerta(self, c_alerta):

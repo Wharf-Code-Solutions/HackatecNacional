@@ -95,6 +95,19 @@ VEREDICTOS = deque(maxlen=500)
 ALERTAS = []
 REPORTES = []
 CONSECUTIVAS = defaultdict(int)
+RECEPCION = {}          # c_estacion -> hora REAL de la ultima lectura recibida (la usa el mapa: ¿esta enviando ahora?)
+PENDIENTES = ('Abierta', 'En atencion')    # alerta pendiente: el mismo criterio del panel (porAtender)
+
+
+def cerrar_alertas(c_estacion, reglas=None):
+    """Cierra solas las alertas Abiertas de una estacion (solo las de las reglas dadas, o todas). Una alerta En atencion
+    la sigue llevando la autoridad. Devuelve cuantas cerro."""
+    n = 0
+    for a in ALERTAS:
+        if a['c_estacion'] == c_estacion and a['estado'] == 'Abierta' and (reglas is None or a['regla'] in reglas):
+            a['estado'], a['responsable'] = 'Cerrada', 'Sistema'
+            n += 1
+    return n
 
 
 def evaluar_stub(paquete):
@@ -205,11 +218,15 @@ class Manejador(BaseHTTPRequestHandler):
                 'estado': 'ok', 'version_contrato': '1.0',
                 'motor': 'real' if MOTOR_REAL is not None else 'stub',
                 'hora': datetime.now().astimezone().isoformat(timespec='seconds'),
-                'estaciones': len(ESTACIONES), 'alertas_abiertas': len(ALERTAS),
+                'estaciones': len(ESTACIONES),
+                'alertas_abiertas': sum(1 for a in ALERTAS if a['estado'] in PENDIENTES),
                 'reportes': len(REPORTES)})
         if ruta == '/estaciones':
-            return self._responder(200, {'version': '1.0',
-                                         'estaciones': list(ESTACIONES.values())})
+            ahora = datetime.now().astimezone()
+            return self._responder(200, {'version': '1.0', 'estaciones': [
+                dict(e, ultima_recepcion=(RECEPCION[e['c_estacion']].isoformat(timespec='seconds')
+                                          if e['c_estacion'] in RECEPCION else None))
+                for e in ESTACIONES.values()]})
         if ruta == '/linea_base':
             return self._responder(200, leer_json(os.path.join(FIX, 'linea_base.json')))
         if ruta in ('/sitios.geojson', '/sitios'):
@@ -229,13 +246,18 @@ class Manejador(BaseHTTPRequestHandler):
             lista = [v for v in VEREDICTOS if not est or v['c_estacion'] == est]
             return self._responder(200, {'veredictos': lista[-50:]})
         if ruta == '/alertas':
-            # Filtros opcionales, los mismos que el backend: ?nivel=Critica&abiertas=1&modulo=ladera
+            # Filtros opcionales, los mismos que el backend: ?nivel=Critica&abiertas=1&modulo=ladera (app ciudadana) y
+            # ?c_estacion=EST-LAD-01&estado=pendientes (simulador y mapa; pendientes = Abierta o En atencion)
             q = {k: v[0] for k, v in parse_qs(urlparse(self.path).query).items()}
             lista = ALERTAS
             if q.get('nivel'):
                 lista = [a for a in lista if a.get('nivel') == q['nivel']]
-            if q.get('abiertas') in ('1', 'true'):
-                lista = [a for a in lista if a.get('estado') in ('Abierta', 'En atencion')]
+            if q.get('abiertas') in ('1', 'true') or q.get('estado') == 'pendientes':
+                lista = [a for a in lista if a.get('estado') in PENDIENTES]
+            elif q.get('estado'):
+                lista = [a for a in lista if a.get('estado') == q['estado']]
+            if q.get('c_estacion'):
+                lista = [a for a in lista if a.get('c_estacion') == q['c_estacion']]
             if q.get('modulo') == 'ladera':
                 lista = [a for a in lista if a.get('regla') in ('movimiento_ladera', 'lluvia_acumulada', 'suelo_saturado')]
             return self._responder(200, {'alertas': lista})
@@ -268,6 +290,20 @@ class Manejador(BaseHTTPRequestHandler):
 
     def do_POST(self):
         ruta = urlparse(self.path).path.rstrip('/') or '/'
+        # Arranque de una simulacion: la estacion empieza limpia (sin cuerpo). Cierra sus alertas pendientes y borra lo que el
+        # motor recuerda de ella; las alertas ya emitidas no se borran, solo se cierran.
+        r = re.match(r'^/estaciones/(EST-[A-Z]{3}-[0-9]{2})/reiniciar$', ruta)
+        if r:
+            ce = r.group(1)
+            if ce not in ESTACIONES:
+                return self._responder(404, {'error': 'estacion no encontrada'})
+            cerradas = cerrar_alertas(ce)
+            if MOTOR_REAL is not None:
+                MOTOR_REAL.reinicia(ce)
+            for k in [k for k in CONSECUTIVAS if k[0] == ce]:
+                del CONSECUTIVAS[k]
+            RECEPCION.pop(ce, None)
+            return self._responder(200, {'c_estacion': ce, 'alertas_cerradas': cerradas})
         cuerpo, problema = self._leer_cuerpo()
         if problema:
             return self._responder(400, {'error': problema})
@@ -284,11 +320,14 @@ class Manejador(BaseHTTPRequestHandler):
                     errores.append('$[{}].c_estacion: {} no esta registrada'.format(
                         i, p['c_estacion']))
                     continue
+                RECEPCION[p['c_estacion']] = datetime.now().astimezone()
                 if MOTOR_REAL is not None:
                     v = MOTOR_REAL.evaluar(p)
                     v['motor'] = 'real'
                     VEREDICTOS.append(v)
                     ALERTAS.extend(v['alertas'])
+                    if v.get('reglas_normalizadas'):
+                        cerrar_alertas(p['c_estacion'], v['reglas_normalizadas'])
                     resultados.append(v)
                 else:
                     resultados.append(evaluar_stub(p))

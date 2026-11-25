@@ -22,14 +22,13 @@
   var NOMBRE = { OD: 'Oxígeno disuelto', PH: 'pH', COND: 'Conductividad', TEMP: 'Temperatura', TURB: 'Turbiedad',
     LLUVIA: 'Lluvia', HUM_SUELO: 'Humedad del suelo', INCL: 'Inclinación' };
   var VELOCIDADES = [1, 15, 60, 300, 900, 3600];
-  var VENTANA_ALARMA = 3600;          // una alarma sigue vigente 1 h simulada
 
   var Q = new URLSearchParams(location.search);
   // En tu computadora, el mock o el backend en el 8080. Desplegado (Vercel), el backend del mismo
   // dominio en /api: así el simulador alimenta al mismo panel que la app ciudadana.
   var LOCAL = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) || location.protocol === 'file:';
   var BACKEND = Q.has('backend') ? Q.get('backend') : (LOCAL ? 'http://127.0.0.1:8080' : location.origin + '/api');
-  var estado = { est: [], por: {}, sel: null, vel: 300, pausa: false, alertas: {} };
+  var estado = { est: [], por: {}, sel: null, vel: 300, pausa: false, pendientes: {} };
   var $ = function (id) { return document.getElementById(id); };
 
   // ----------------------------------------------------------------------- reloj
@@ -58,15 +57,18 @@
       .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
       .catch(function () { return fetch('../../contrato/fixtures/estaciones.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }); }),
     fetch('../../contrato/fixtures/linea_base.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }),
-    relojInicial(),
     // umbrales de ladera (hipótesis, docs/20): la línea de referencia de humedad e inclinación en la recepción
     fetch('../../contrato/fixtures/umbrales_lluvia.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }).catch(function () { return null; }),
     // el suelo de cada ladera (scripts/103_suelo_laderas.py): humedad de base, saturación y umbral calibrado
     fetch('../../contrato/fixtures/suelo_laderas.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }).catch(function () { return null; })
   ]).then(function (d) {
     var suelos = {};
-    ((d[4] && d[4].laderas) || []).forEach(function (x) { suelos[x.c_estacion] = x; });
-    arranca(d[0].estaciones, d[1], d[2], d[3], suelos);
+    ((d[3] && d[3].laderas) || []).forEach(function (x) { suelos[x.c_estacion] = x; });
+    // Abrir la simulación la empieza limpia: la plataforma cierra las alertas pendientes de estas estaciones y su motor
+    // olvida lo anterior; después el reloj arranca donde corresponde.
+    var todas = d[0].estaciones, pedida = todas.filter(function (e) { return e.c_estacion === Q.get('estacion'); })[0] || todas[0];
+    var ids = todas.filter(function (e) { return tipoDe(e) === tipoDe(pedida); }).map(function (e) { return e.c_estacion; });
+    return reiniciar(ids).then(relojInicial).then(function (t0) { arranca(todas, d[1], t0, d[2], suelos); });
   }).catch(function (e) {
     var a = $('aviso'); a.hidden = false;
     a.innerHTML = 'No se pudieron leer los fixtures del contrato (' + e.message + '). Sirve el repositorio desde su raíz con ' +
@@ -76,6 +78,12 @@
   // La página simula a la vez las estaciones del mismo tipo que la elegida: las de agua (figura del río, con
   // su colector) o las de ladera (figura del cerro, docs/20). Elegir una del otro tipo recarga la página.
   function tipoDe(e) { return Mont.esLadera(e) ? 'ladera' : 'rio'; }
+  function reiniciar(ids) {
+    if (!BACKEND) return Promise.resolve();
+    return Promise.all(ids.map(function (id) {
+      return fetch(BACKEND.replace(/\/$/, '') + '/estaciones/' + id + '/reiniciar', { method: 'POST' }).catch(function () {});
+    }));
+  }
   function arranca(todas, linea, t0, umbrales, suelos) {
     var pedida = todas.filter(function (e) { return e.c_estacion === Q.get('estacion'); })[0] || todas[0];
     estado.tipo = tipoDe(pedida);
@@ -83,11 +91,12 @@
     estado.est = estaciones; estado.sel = pedida.c_estacion;
     estaciones.forEach(function (e) {
       var id = e.c_estacion;
-      estado.alertas[id] = [];
+      estado.pendientes[id] = [];
       estado.por[id] = Mont.crearEstacion(e, linea, { t0: t0 || undefined, suelos: suelos, alEvento: function (ev) { alEvento(id, ev); },
         alEventoCol: function (ev) { if (id === estado.sel) Escena.objeto(ev); } });
     });
     estado.ultimo = performance.now();
+    pideAlarma(); setInterval(pideAlarma, 2000);
 
     var se = $('selEstacion');
     todas.forEach(function (e) {
@@ -95,7 +104,7 @@
     });
     se.onchange = function () {
       if (!estado.por[se.value]) { Q.set('estacion', se.value); location.search = Q.toString(); return; }
-      estado.sel = se.value; refresca();
+      estado.sel = se.value; refresca(); pideAlarma();
     };
     var sv = $('selVel');
     VELOCIDADES.forEach(function (v) { var o = document.createElement('option'); o.value = v; o.textContent = v + '×'; sv.appendChild(o); });
@@ -152,33 +161,47 @@
   }
 
   // ------------------------------------------------------------------- backend
-  // Cada envío confirmado llega a la línea de tiempo. Si hay backend, además se manda
-  // por el contrato (POST /lecturas) y se guardan las alertas que devuelva.
+  // Cada envío confirmado llega a la línea de tiempo y, si hay backend, se manda por el contrato (POST /lecturas).
+  // La alarma NO sale de esa respuesta ni de un reloj: es lo que la plataforma tiene pendiente para la estación
+  // (alertas Abierta o En atención). Dura mientras dure la condición: la plataforma la cierra cuando se normaliza, o la
+  // autoridad desde el panel, y por eso mapa, panel y simulador coinciden a cualquier velocidad.
   function alEvento(id, ev) {
     if (ev.tipo !== 'envio') return;
     Recepcion.registra(id, ev.datos, ev.t);
     if (!BACKEND) return;
     fetch(BACKEND.replace(/\/$/, '') + '/lecturas', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(ev.datos) })
+      .then(function () { pideAlarma(); })
+      .catch(function () {});
+  }
+  function pideAlarma() {
+    var id = estado.sel;
+    if (!BACKEND || !id) return;
+    fetch(BACKEND.replace(/\/$/, '') + '/alertas?c_estacion=' + encodeURIComponent(id) + '&estado=pendientes', { cache: 'no-store' })
       .then(function (r) { return r.json(); })
       .then(function (d) {
-        (d.veredictos || []).forEach(function (v) { (v.alertas || []).forEach(function (a) { estado.alertas[id].push(a); }); });
+        // por si el servidor ignora el filtro: solo las de esta estación y pendientes
+        estado.pendientes[id] = (d.alertas || []).filter(function (a) {
+          return a.c_estacion === id && (a.estado === 'Abierta' || a.estado === 'En atencion');
+        });
       })
       .catch(function () {});
   }
-  function alarmaVigente(s) {
-    var ult = null;
-    estado.alertas[estado.sel].forEach(function (a) {
-      var t = Date.parse(a.fecha_hora) / 1000;
-      if (t <= s.fw.t + 1 && s.fw.t - t <= VENTANA_ALARMA) ult = a;
+  var NIVEL = { Informativa: 1, Preventiva: 2, Critica: 3 };
+  // La alerta pendiente de mayor nivel (la más reciente si empatan).
+  function alarmaPendiente() {
+    var mejor = null;
+    (estado.pendientes[estado.sel] || []).forEach(function (a) {
+      var n = NIVEL[a.nivel] || 0;
+      if (!mejor || n > (NIVEL[mejor.nivel] || 0) || (n === (NIVEL[mejor.nivel] || 0) && Date.parse(a.fecha_hora) >= Date.parse(mejor.fecha_hora))) mejor = a;
     });
-    return ult;
+    return mejor;
   }
 
   // --------------------------------------------------------------------- bucle
   function dibuja(s) {
     $('relojFecha').textContent = M.iso(s.fw.t).substr(0, 10);
     $('relojHora').textContent = M.iso(s.fw.t).substr(11, 8);
-    var al = estado.alarma = alarmaVigente(s);
+    var al = estado.alarma = alarmaPendiente();
     Recepcion.pinta(s); marcaPruebas(s);
     var linea = $('alarmaLinea');
     linea.hidden = !al;
