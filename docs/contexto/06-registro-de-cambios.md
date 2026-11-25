@@ -21,6 +21,15 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · M4 y mapa: deslave a lo largo del relieve, inundación, sirena y pulso de radar
+
+**Qué cambió.** Deslave: cicatriz y lámina de lodo (mallas que siguen el relieve) que avanzan por toda la ladera, de la escuela al fondo, con 150 bloques que ruedan al arroyo; con la tierra en el cauce el agua sube y se tiende sobre la explanada. Sirena con luz en el techo de la escuela que enciende la plataforma: ámbar con una alerta Preventiva, roja con ondas y el texto «Alerta: posible deslave» con una Crítica. En el mapa 2D, una alerta abierta emite ondas rojas desde el círculo de la estación, como el pulso de un radar (también con «reducir animaciones»).
+**Por qué.** Pedido del usuario: que se vea cómo baja la tierra y se inunda, que las alarmas se noten en el mapa y que se avise a la comunidad.
+**Qué arrastró.** `escena.js`, `index.html` del simulador y del mapa (versiones), `mapa/estilos.css`. Verificado en Chrome sin ventana contra `servidor_mock.py --motor real`. Sin el mock la sirena nunca se enciende (las alertas vienen de la plataforma).
+**Impacto en otros módulos.** Ninguno.
+
+---
+
 ## 2026-11-24 · Módulo B: calor de reportes alejado, pines de cerca
 
 **Qué cambió.** `MapaReportes.jsx` agrega una capa `heatmap` con un punto por foco, pesado por sus reportes. Por

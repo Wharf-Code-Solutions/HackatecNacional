@@ -92,4 +92,15 @@ h1 { font-size: 18px; font-weight: 700; line-height: 1.25; margin-bottom: 14px; 
   .app.abierto .detalle { flex-basis: calc(100% - 52px); }
   .app.abierto .mapa-col { display: none; }
 }
-@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+/* alerta abierta: dos ondas que salen del círculo de la estación, como el pulso de un radar */
+.est-marca .punto { position: relative; }
+.est-marca.alerta .punto::before, .est-marca.alerta .punto::after { content: ''; position: absolute; inset: -2px; border-radius: 50%;
+  border: 2px solid var(--alerta); opacity: 0; pointer-events: none; animation: radar 2.4s ease-out infinite; }
+.est-marca.alerta .punto::after { animation-delay: 1.2s; }
+@keyframes radar { 0% { transform: scale(1); opacity: 0.85; } 100% { transform: scale(3.6); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+  /* el pulso de una alerta es información, no adorno: se queda */
+  .est-marca.alerta .punto::before, .est-marca.alerta .punto::after { animation: radar 2.4s ease-out infinite !important; }
+  .est-marca.alerta .punto::after { animation-delay: 1.2s !important; }
+}

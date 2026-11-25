@@ -467,6 +467,7 @@
     construyeArroyo(Z0, perfil);
 
     construyeEscuela();
+    construyeSirena();
     construyeArboles([[11.5, -5.5], [13.8, -2.4], [12.6, -9.5], [15.6, -6.8], [9.6, -8.2], [17.6, -1.2], [-11.8, -11.5],
       [-6.4, -13.4], [-3.4, -10.5], [3.8, -12], [7.2, -15], [14.2, -17], [-17.4, -14.8], [-17.8, -2.6]], [0x6f8a5f, 0x627d55]);
     construyeVegetacionLadera();
@@ -592,39 +593,102 @@
     zona('ladera', [p[0], yp + 0.8 * E, p[1]], [0.7 * E, 1.7 * E, 0.7 * E]);
     zona('ladera', [xh, yh + 0.2 * E, Z_CORTE - 0.3], [0.8 * E, 1.0 * E, 1.0]);
     zona('ladera', [s[0], ye + 0.5 * E, s[1]], [0.7 * E, 1.4 * E, 0.7 * E]);
-    // el deslizamiento: una lengua de lodo que baja desde la estaca cuando el inclinómetro marca el salto (pintaLadera)
-    G.lodo = new T.Mesh(new T.SphereGeometry(1, 24, 14), mate(0x7a5a3c, { roughness: 1 }));
-    G.lodo.visible = false; G.lodo.userData.sinSombra = true; G.escena.add(G.lodo);
     construyeDeslave();
     return trazo;
   }
-  // El deslave a la vista: una cicatriz de tierra removida en la ladera, bloques de tierra y piedra que ruedan hasta el arroyo,
-  // la lengua de lodo y una nube de polvo. Todo avanza con `p` (0 a 1, en tiempo real, pintaLadera).
-  var CICATRIZ = { x: 8.6, z: 0.7 };
+  // El deslave a la vista, a todo lo largo de la ladera (de la escuela al fondo): una cicatriz de tierra removida arriba, una
+  // lámina de lodo que baja hasta el arroyo, bloques de tierra y piedra que ruedan y una nube de polvo. Cicatriz y lodo son
+  // mallas que siguen el relieve (no láminas planas), y avanzan por la ladera de adelante hacia atrás con `p` (0 a 1, en
+  // tiempo real, pintaLadera).
+  var ZT = 2.2, ZMIN = -27;                      // tramo del deslave: del corte frontal al fondo del cerro
+  function bandaConforme(color, dy) {
+    var NX = 8, NZ = 80, g = new T.PlaneGeometry(1, 1, NX, NZ);
+    var mat = mate(color, { roughness: 1 });
+    mat.polygonOffset = true; mat.polygonOffsetFactor = -2; mat.polygonOffsetUnits = -2;
+    var m = new T.Mesh(g, mat);
+    m.frustumCulled = false; m.visible = false; m.userData.sinSombra = true; G.escena.add(m);
+    // xa(z), xb(z): bordes de la banda en cada z (irregulares); de z0 (fondo) a z1 (frente); las caras miran hacia arriba
+    m.userData.actualiza = function (xa, xb, z0, z1) {
+      var pos = g.attributes.position;
+      for (var j = 0; j <= NZ; j++) for (var i = 0; i <= NX; i++) {
+        var z = z0 + (z1 - z0) * j / NZ, a = xa(z), x = a + (xb(z) - a) * i / NX;
+        pos.setXYZ(j * (NX + 1) + i, x, alturaLadera(x, z) + dy + 0.05 * Math.sin(x * 2.1 + z * 1.7), z);
+      }
+      pos.needsUpdate = true; g.computeVertexNormals(); g.computeBoundingSphere();
+    };
+    return m;
+  }
   function construyeDeslave() {
     var r = M.mulberry32(77), tierra = [mate(0x6b4d33, { roughness: 1 }), mate(0x8a6b4a, { roughness: 1 }), mate(0x77705f, { roughness: 0.9 })];
-    G.cicatriz = new T.Mesh(new T.CircleGeometry(1, 28).rotateX(-Math.PI / 2), mate(0x5a3f2a, { roughness: 1 }));
-    G.cicatriz.rotation.z = Math.atan(PENDIENTE);
-    G.cicatriz.position.set(CICATRIZ.x, alturaLadera(CICATRIZ.x, CICATRIZ.z) + 0.07, CICATRIZ.z);
-    G.cicatriz.visible = false; G.cicatriz.userData.sinSombra = true; G.escena.add(G.cicatriz);
+    G.cicatriz = bandaConforme(0x56392a, 0.06);
+    G.lodo = bandaConforme(0x6d4f33, 0.11);
     var geo = new T.DodecahedronGeometry(1, 0);
     G.bloques = [];
-    for (var i = 0; i < 64; i++) {
-      var m = new T.Mesh(geo, tierra[(r() * 3) | 0]), t = 0.2 + r() * 0.5;
+    for (var i = 0; i < 150; i++) {
+      var m = new T.Mesh(geo, tierra[(r() * 3) | 0]), z0 = ZMIN + r() * (ZT - 0.2 - ZMIN), t = (0.2 + r() * 0.5) * (1 + Math.max(0, -z0) * 0.035);   // más grandes al fondo: se ven igual
       m.scale.set(t * (0.8 + r() * 0.5), t * 0.8, t * (0.8 + r() * 0.5));
       m.visible = false; m.userData.sinSombra = true; G.escena.add(m);
-      G.bloques.push({ m: m, t: t, x0: 7.0 + r() * 3.8, z0: -0.8 + r() * 2.8, x1: 4.0 + r() * 2.6, z1: -1.0 + r() * 3.2,
-        espera: r() * 0.3, rebotes: 2 + ((r() * 4) | 0), giro: [r() * 9, r() * 9, r() * 9] });
+      G.bloques.push({ m: m, t: t, x0: 7.0 + r() * 3.8, z0: z0, x1: 1.8 + r() * 2.2, z1: Math.min(ZT - 0.2, z0 + (r() - 0.5) * 1.6),
+        espera: (ZT - z0) / (ZT - ZMIN) * 0.5 + r() * 0.12, rebotes: 2 + ((r() * 4) | 0), giro: [r() * 9, r() * 9, r() * 9] });
     }
     G.polvo = [];
-    for (var j = 0; j < 7; j++) {
+    for (var j = 0; j < 16; j++) {
       var d = new T.Mesh(new T.SphereGeometry(1, 12, 10), new T.MeshBasicMaterial({ color: 0xb59a78, transparent: true, opacity: 0, depthWrite: false, fog: false }));
-      d.visible = false; d.userData.sinSombra = true; G.escena.add(d); G.polvo.push({ m: d, x: 7.4 + r() * 3, z: -0.2 + r() * 2.2, v: 0.6 + r() * 0.8 });
+      d.visible = false; d.userData.sinSombra = true; G.escena.add(d);
+      G.polvo.push({ m: d, x: 7.4 + r() * 3, z: ZMIN + r() * (ZT - 0.7 - ZMIN), v: 0.6 + r() * 0.8 });
     }
+    // la inundación: el arroyo, represado por la tierra, se desborda sobre la explanada (una lámina elíptica que crece)
+    G.matInunda = new T.MeshStandardMaterial({ color: 0x6a4d33, roughness: 0.25, metalness: 0, normalMap: G.ondasL, normalScale: new T.Vector2(0.35, 0.35),
+      envMap: G.cielo, envMapIntensity: 0.3, transparent: true, opacity: 0.9, depthWrite: false });
+    G.inunda = new T.Mesh(new T.CircleGeometry(1, 48).rotateX(-Math.PI / 2), G.matInunda);
+    G.inunda.visible = false; G.inunda.userData.sinSombra = true; G.escena.add(G.inunda);
+  }
+  // La alarma a la comunidad: una sirena con luz sobre el techo de la escuela. La enciende la plataforma (una alerta de la
+  // estación): Preventiva, luz ámbar fija; Crítica, luz roja que pulsa y ondas de sonido que se abren (pintaSirena).
+  function construyeSirena() {
+    var e = LAD.escuela, k = KE, yT = PIE + 2.9 * k + 0.22 * k, x = e[0] + EW / 2 - 1.2, z = e[1] + 0.2;
+    var acero = metal(0xb9c2c8, 0.4), negro = mate(0x22292e, { roughness: 0.55 });
+    cilindro(0.06, 1.3, acero, x, yT + 0.65, z);
+    caja(0.8, 0.22, 0.22, negro, x, yT + 1.05, z);
+    G.matSirena = mate(0x6b757c, { emissive: new T.Color(0x000000) });
+    var luz = new T.Mesh(new T.SphereGeometry(0.3, 20, 14), G.matSirena);
+    luz.position.set(x, yT + 1.5, z); G.escena.add(luz);
+    G.anclaSirena = [x, yT + 1.95, z];
+    var c = document.createElement('canvas'); c.width = c.height = 128;
+    var cx = c.getContext('2d'); cx.strokeStyle = '#fff'; cx.lineWidth = 7; cx.beginPath(); cx.arc(64, 64, 56, 0, 6.29); cx.stroke();
+    var tex = new T.CanvasTexture(c); tex.encoding = T.sRGBEncoding;
+    G.ondasSirena = [0, 1, 2].map(function () {
+      var m = new T.Sprite(new T.SpriteMaterial({ map: tex, color: ALARMA, transparent: true, depthWrite: false, fog: false }));
+      m.position.set(x, yT + 1.5, z); m.visible = false; G.escena.add(m);
+      return m;
+    });
+  }
+  function pintaSirena(al, dtr) {
+    G.tSir = (G.tSir || 0) + dtr;
+    var niv = (al && al.nivel || '').toLowerCase().replace('í', 'i'), crit = niv === 'critica', prev = niv === 'preventiva';
+    var pulso = crit ? 0.5 + 0.5 * Math.sin(G.tSir * 9) : 0;
+    G.matSirena.color.setHex(crit ? ALARMA : prev ? 0xc98a1b : 0x6b757c);
+    G.matSirena.emissive.setHex(crit ? ALARMA : prev ? 0xc98a1b : 0x000000);
+    G.matSirena.emissiveIntensity = crit ? 0.4 + 1.2 * pulso : prev ? 0.8 : 0;
+    G.ondasSirena.forEach(function (m, i) {
+      m.visible = crit;
+      if (!crit) return;
+      var u = (G.tSir * 0.6 + i / 3) % 1;
+      m.scale.setScalar(1 + 9 * u); m.material.opacity = 0.75 * (1 - u);
+    });
+    rotulo('sirena', crit ? 'Alerta: posible deslave' : prev ? 'Precaución: lluvia fuerte' : 'En espera', crit || prev);
   }
   function pintaDeslave(p) {
-    G.cicatriz.visible = p > 0.01;
-    G.cicatriz.scale.set(4.8 * Math.min(1, p * 2.5), 1, 3.4 * Math.min(1, p * 2.5));
+    var activo = p > 0.01;
+    G.cicatriz.visible = G.lodo.visible = activo;
+    if (activo && Math.abs(p - (G.pDes === undefined ? -1 : G.pDes)) > 0.002) {
+      G.pDes = p;
+      var zb = ZT - (ZT - ZMIN) * Math.min(1, p * 1.5), ancho = 0.6 + 1.5 * Math.min(1, p * 2.5), xf = 8.4 - 5.8 * p;
+      G.cicatriz.userData.actualiza(function (z) { return 9.6 - ancho + 0.4 * Math.sin(z * 0.8); },
+        function (z) { return 9.6 + ancho + 0.5 * Math.sin(z * 0.5 + 1); }, zb, ZT);
+      G.lodo.userData.actualiza(function (z) { return xf + 0.35 * Math.sin(z * 1.3); },
+        function (z) { return 8.6 + 0.4 * Math.sin(z * 0.9); }, zb, ZT);
+    } else if (!activo) G.pDes = undefined;
     G.bloques.forEach(function (b) {
       var u = M.acota((p - b.espera * 0.5) / (1 - b.espera * 0.5), 0, 1), e = u * u * (3 - 2 * u);
       b.m.visible = u > 0 && u < 1.001;
@@ -634,12 +698,12 @@
       b.m.rotation.set(b.giro[0] * e, b.giro[1] * e, b.giro[2] * e);
     });
     G.polvo.forEach(function (d) {
-      var o = 0.45 * (1 - p) * Math.min(1, p * 6);
+      var o = 0.4 * (1 - p) * Math.min(1, p * 6);
       d.m.visible = p > 0.01 && p < 0.995;
       d.m.material.opacity = o;
       var x = d.x - 3.2 * p * d.v;
       d.m.position.set(x, alturaLadera(x, d.z) + 0.5 + 1.6 * p * d.v, d.z);
-      d.m.scale.setScalar(0.5 + 1.8 * p * d.v);
+      d.m.scale.setScalar((0.5 + 1.8 * p * d.v) * (1 + Math.max(0, -d.z) * 0.05));
     });
   }
   // La lluvia: trazos que caen; se ven tantos como la intensidad (0 a 1) del modelo (caeLluvia). Sirve a las dos figuras.
@@ -677,7 +741,7 @@
     G.matNube.color.setRGB(1 - 0.6 * k, 1 - 0.6 * k, 1 - 0.55 * k);
     G.escena.fog.color.setHex(HORIZONTE).multiply(G.boveda.material.color);
   }
-  function pintaLadera(s, nom, dtr) {
+  function pintaLadera(s, nom, dtr, ext) {
     var L = s.ladera, fw = s.fw, k = M.acota((L.hum - L.humBase) / (L.humSatura - L.humBase), 0, 1);
     G.matCorteL.color.setRGB(1 - 0.35 * k, 1 - 0.38 * k, 1 - 0.4 * k);                // el suelo mojado, más oscuro
     G.matSueloL.color.setRGB(1 - 0.12 * k, 1 - 0.12 * k, 1 - 0.1 * k);
@@ -688,20 +752,23 @@
     // el arroyo crece y corre más rápido con la lluvia del modelo (sin lluvia, ≈ 0.4 m/s dibujado)
     G.creceL = (G.creceL || 0) + (lluvia - (G.creceL || 0)) * Math.min(1, dtr * 0.8);
     clima(G.creceL);                                                                    // y el día se oscurece con la tormenta
-    nivelArroyo(G.fondoArroyo + NIVEL_ARROYO.base + NIVEL_ARROYO.crece * G.creceL);
     G.ondasL.offset.y = (G.ondasL.offset.y + (0.4 + 1.6 * G.creceL) * dtr / 3) % 1;
     // deslizamiento: pasado 1° de cambio (el salto del deslave) la ladera cede. `p` avanza en tiempo real (≈ 5 s)
     var kd = M.acota((L.incl - 1.0) / 2.8, 0, 1), p = suaviza('lodo', M.acota(kd * 3, 0, 1), dtr, 2.0);
     pintaDeslave(p);
-    G.lodo.visible = p > 0.01;
-    if (G.lodo.visible) {
-      var xl = 9.4 - 5.2 * p, zl = 0.9;
-      G.lodo.position.set(xl, alturaLadera(xl, zl) + 0.12, zl);
-      G.lodo.rotation.z = Math.atan(PENDIENTE);
-      G.lodo.scale.set(0.8 + 2.4 * p, 0.34, 1.0 + 1.1 * p);
+    // inundación: con la tierra en el cauce el agua sube hasta el borde y se tiende sobre la explanada, hacia la escuela
+    var fl = suaviza('inunda', M.acota((p - 0.4) / 0.6, 0, 1), dtr, 3.0), yInunda = PIE + 0.04 + 0.26 * fl;
+    nivelArroyo((G.fondoArroyo + NIVEL_ARROYO.base + NIVEL_ARROYO.crece * G.creceL) * (1 - fl) + yInunda * fl);
+    G.inunda.visible = fl > 0.01;
+    if (G.inunda.visible) {
+      var rx = 1.5 + 7.0 * fl, rz = 2 + 13 * fl;
+      G.inunda.position.set(1.6 - 1.1 * fl, yInunda, 2.3 - rz);
+      G.inunda.scale.set(rx, 1, rz);
     }
     G.matArroyo.color.setHex(G.creceL > 0.3 ? 0x7b6f58 : 0x5f7f86);                      // turbia con la crecida
     G.matArroyo.color.lerp(new T.Color(0x6a4d33), 0.85 * p); G.matCaraArroyo.color.copy(G.matArroyo.color);   // y marrón con el lodo
+    G.matInunda.color.copy(G.matArroyo.color);
+    pintaSirena(ext && ext.alarma, dtr);
     var midiendo = nom === 'CALENTAMIENTO' || nom === 'MEDICIÓN';
     Object.keys(G.puntasL).forEach(function (q) {
       var son = s.sondas[q], fa = son && son.falla !== 'ninguna';
@@ -981,6 +1048,7 @@
     var r = [
       { id: 'pluvio', nombre: 'Pluviómetro', ancla: G.anclaPluvio.clone().setY(G.anclaPluvio.y - 0.9 * ESC_LADERA).toArray(), lado: 'der', vista: 'ladera' },
       { id: 'suelo', nombre: 'Humedad del suelo', ancla: G.anclaHum.toArray(), lado: 'der', vista: 'ladera' },
+      { id: 'sirena', nombre: 'Alarma a la comunidad', ancla: G.anclaSirena, lado: 'der' },
       { id: 'ctrl', nombre: 'Gabinete', ancla: S([-4.62, 2.15, 0.45]), lado: 'izq', vista: 'gabinete' },
       { id: 'panel', nombre: 'Energía', ancla: S([-5.1, 4.95, 0.2]), lado: 'izq', vista: 'energia' },
       { id: 'torre', nombre: 'Comunicación', ancla: [G.torreTope.x + 0.4, G.torreTope.y + 0.6, G.torreTope.z], lado: 'izq', vista: 'enlace' },
@@ -1708,7 +1776,7 @@
 
     var ahora = performance.now(), dtr = Math.min(0.1, (ahora - (G.tAgua || ahora)) / 1000);
     G.tAgua = ahora;
-    if (TIPO === 'ladera') pintaLadera(s, nom, dtr);
+    if (TIPO === 'ladera') pintaLadera(s, nom, dtr, ext);
     else {
     // Pruebas del agua. Lluvia: el día se oscurece, cae la lluvia, el agua se enturbia y corre más (del modelo).
     // Descarga industrial: el agua vira a ocre y su flujo se dibuja más fuerte, con el tubo de descarga vertiendo;
