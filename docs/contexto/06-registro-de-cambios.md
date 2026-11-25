@@ -21,6 +21,19 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Módulo B: calor de reportes alejado, pines de cerca
+
+**Qué cambió.** `MapaReportes.jsx` agrega una capa `heatmap` con un punto por foco, pesado por sus reportes. Por
+debajo del zoom 11 se ve el calor y los pines se ocultan (clase `sin-pines`, con `visibility` porque MapLibre fija la
+opacidad del marcador en línea); al acercarse el calor se desvanece y aparecen los pines. El botón «Mapa de calor»
+sigue prendiendo la huella sobre el río.
+**Por qué.** Petición del usuario. Verificado por código con los reportes de Vercel (zoom 9: calor y sin pines; zoom
+13: pines y sin calor); no se vio dibujado porque el panel del navegador estaba oculto.
+**Qué arrastró.** `MapaReportes.jsx`, `estilos.css`.
+**Impacto en otros módulos.** C: cambió su mapa de reportes en el panel.
+
+---
+
 ## 2026-11-24 · Módulo B: la vista del panel vive en la URL
 
 **Qué cambió.** `panel/src/lib/ruta.js` (nuevo) guarda sección, vista, escuela abierta y página de reportes en el hash

@@ -579,3 +579,7 @@ main.tablero-main { padding: 0; flex: 1; display: flex; }
   .escuelas-arriba .lista-escuelas { height: auto; }
 }
 @media (max-width: 700px) { .resumen-3 { grid-template-columns: 1fr 1fr; } }
+
+/* Reportes: alejado solo se ve el calor; los pines aparecen al acercarse (MapaReportes.jsx, ZOOM_PINES). */
+/* MapLibre pone la opacidad del marcador en línea; por eso se oculta con visibility e !important. */
+.tablero-mapa-lienzo.sin-pines .maplibregl-marker { visibility: hidden !important; pointer-events: none; }
