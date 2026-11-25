@@ -21,6 +21,47 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Módulo A: módulo de ladera en el simulador y en los mecanismos
+
+**Qué cambió.** `99_reubicacion.py` agrega a `mecanismos.json` las 5 estaciones `EST-LAD-01..05` de `escuelas_ladera.json`
+(sin colector ni `c_sitio`; CAPCEE como única autorización). El simulador mide `LLUVIA`, `HUM_SUELO` e `INCL`: `Ladera` y
+`Pluviometro` en `modelo.js` (humedad con los mismos parámetros de `102_escenarios_ladera.py`); el firmware mide los parámetros
+de cada estación, lee el pluviómetro una vez por paquete y pasa a 5 min con lluvia de 7.6 mm/h o más, o un movimiento de 0.2°.
+Figura de ladera en `escena.js` (escuela, cerro de ≈ 32°, pluviómetro, sensor en el corte, estaca que se inclina 5 veces lo
+medido, lluvia que cae con la intensidad) y pruebas «Tormenta», «Lluvia prolongada» y «Deslave». Pruebas 17 a 19 en `prueba.js`.
+**Por qué.** docs/20 §4 y §3.2.
+**Qué arrastró.** `50_verificar_repo.py` (colector solo en `EST-ESC`), `02-mapa-del-repo.md`, `12-estado-y-traspaso.md`, `CLAUDE.md`.
+**Impacto en otros módulos.** Medido: tormenta 120 mm en 24 h; lluvia prolongada 95 mm en 24 h y 245 en 72 h, humedad de 30 a
+44.6 %; deslave con la estaca en 3.83°. Los paquetes validan contra el contrato (1 446 en `prueba.js`). Las reglas de derrumbe del
+motor siguen pendientes (docs/20 §5): las pruebas no encienden ninguna alarma.
+
+---
+
+## 2026-11-24 · M2: la lluvia ya no se lee como contaminación
+
+**Qué cambió.** `motor/reglas.py` deja fuera de las capas del agua los códigos `LLUVIA`, `HUM_SUELO` e `INCL`
+(`PARAMETROS_LADERA`): salen en el veredicto como `sin_linea_base` y no generan alertas ni avisos técnicos.
+**Por qué.** Con los escenarios de ladera el motor daba 16 alertas falsas de contaminación en `lluvia_prolongada` y 8 en
+`deslave`, y hasta 136 avisos técnicos (0 mm de lluvia seguidos se leían como sonda congelada). Ahora 0 en los tres.
+**Qué arrastró.** Nada más. Los escenarios del agua no cambian (5 alertas en `descarga_industrial`, 0 en `normal`).
+**Impacto en otros módulos.** Las reglas de derrumbe (docs/20 §5) van en ese mismo punto del motor.
+
+---
+
+## 2026-11-24 · M4: catálogo de componentes y energía de la estación de agua
+
+**Qué cambió.** Nuevo `dispositivo/catalogo-componentes.md`: modelo comercial de cada componente (verificado o por confirmar)
+y clave de cada pieza `EE-MMM-TTTNN-SS-CCC-n` (entidad y municipio del INEGI, mecanismo, subsistema, componente) con su estado
+operativo (`PR`, `OP`, `FN`, `FR`…). Con la turbiedad real (Pyxis LT-633, 6 W a 24 V) `ESPEC.TURB` pasa de 250 a 7 000 mW y la
+estación de agua lleva 8 celdas 18650 (89 Wh) y panel de 10 W con cargador propio (`ENERGIA` en `modelo.js`); la de ladera
+sigue con 2 celdas y 5 W. La figura dibuja las celdas y el panel de cada tipo.
+**Por qué.** Con la sonda real el consumo sube de 1.4 a 5.0 Wh/día y la autonomía sin sol caía a 4 días; ahora 15.9. La de
+ladera gasta 0.9 Wh/día: 21 días.
+**Qué arrastró.** `ficha-tecnica.md`, `prueba.js` (pruebas 6 y 18 exigen al menos 14 días sin sol), `CLAUDE.md`.
+**Impacto en otros módulos.** Ninguno en el contrato. El SIM7080G no tiene 4G de respaldo: medir LTE-M en cada sitio.
+
+---
+
 ## 2026-11-24 · Módulo B: cierre del panel reenfocado a escuelas
 
 **Qué cambió.** En teléfono las cuatro pestañas van en una segunda fila, "Autorizaciones" se llama "Trámites" y se ocultan

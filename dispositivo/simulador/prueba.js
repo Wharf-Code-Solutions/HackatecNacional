@@ -118,7 +118,9 @@ ok(nosol.s.fw.apagada || nosol.s.energia.soc() < 0.1, 'sin panel se agota (consu
   (nosol.s.energia.consumidoWh / (nosol.s.fw.t - M.T0_DEFECTO) * 86400).toFixed(2) + ' Wh/día)');
 var dia = corre(e1, 24, function (s) { s.energia.panelW = 0; });
 var whDia = dia.s.energia.consumidoWh;
-console.log('  INFO   consumo medido: ' + whDia.toFixed(2) + ' Wh/día → autonomía sin sol ≈ ' + (22.2 * 0.9 / whDia).toFixed(0) + ' días desde 90 %');
+var diasSinSol = dia.s.energia.capWh * 0.9 / whDia;
+ok(diasSinSol >= 14, 'con la turbiedad real (≈ 7 W al medir), ' + whDia.toFixed(2) + ' Wh/día: ' + M.ENERGIA.rio.celdas + ' celdas (' +
+  dia.s.energia.capWh + ' Wh) dan ≈ ' + diasSinSol.toFixed(1) + ' días sin sol desde 90 % (meta: 14)');
 
 console.log('\n7. Las cinco estaciones del piloto');
 estaciones.forEach(function (e) {
@@ -214,14 +216,68 @@ estaciones.forEach(function (e) {
 });
 
 console.log('\n16. Mecanismos reubicados junto a escuelas: estación y colector');
-ok(mecanismos.length === 5, mecanismos.length + ' mecanismos en mecanismos.json');
-mecanismos.forEach(function (e) {
+var deAgua = mecanismos.filter(function (e) { return !Mont.esLadera(e); });
+ok(deAgua.length === 5, deAgua.length + ' mecanismos de agua en mecanismos.json');
+deAgua.forEach(function (e) {
   var x = corre(e, 24), y = correCol(e, 24);
   var banda = Object.keys(Mont.lineaDeSitio(lineaBase, e.banda_simulacion || e.c_sitio)).length;
   ok(banda === 5 && x.enviados.length >= 96 && y.c.cola.length === 0,
     e.c_estacion + ' (' + e.localidad + '): agua con la banda de ' + (e.banda_simulacion || e.c_sitio) + ', ' +
     x.enviados.length + ' paquetes, colector ' + y.enviados.length + ' paquetes y ' + y.c.stats.elevados + ' objetos');
 });
+
+// ------------------------------------------------------------ módulo de ladera (docs/20 §4.5)
+var laderas = mecanismos.filter(function (e) { return Mont.esLadera(e); });
+var aguaMec = mecanismos.filter(function (e) { return !Mont.esLadera(e); });
+function correLadera(est, horas, evento) {
+  var envs = [], ad = [], alertas = 0;
+  var s = Mont.crearEstacion(est, lineaBase, { alEvento: function (e) {
+    if (e.tipo === 'envio') envs = envs.concat(e.datos);
+    if (e.tipo === 'adaptativo') ad.push(e.msg);
+    if (/alerta/i.test(e.tipo)) alertas++;
+  } });
+  if (evento) s.ladera.agregaEvento(evento, M.T0_DEFECTO + 2 * 3600);
+  var fin = M.T0_DEFECTO + horas * 3600;
+  while (s.fw.t < fin) s.fw.tick(5);
+  function serie(p) { return envs.map(function (q) { var l = q.lecturas.filter(function (x) { return x.c_parametro === p; })[0]; return l ? l.valor : undefined; }); }
+  function ventana(h) {                    // la mayor lluvia acumulada en h horas
+    var t = envs.map(function (q) { return Date.parse(q.fecha_hora) / 1000; }), mm = serie('LLUVIA'), mx = 0;
+    t.forEach(function (ti) { var a = 0; t.forEach(function (tj, j) { if (tj > ti - h * 3600 && tj <= ti) a += mm[j]; }); mx = Math.max(mx, a); });
+    return Math.round(mx * 10) / 10;
+  }
+  return { s: s, envs: envs, ad: ad, alertas: alertas, serie: serie, ventana: ventana };
+}
+
+console.log('\n17. Módulo de ladera: mecanismos y paquetes');
+ok(laderas.length === 5 && aguaMec.length === 5, laderas.length + ' de ladera y ' + aguaMec.length + ' de agua en mecanismos.json');
+laderas.forEach(function (e) {
+  var x = correLadera(e, 24);
+  var cods = x.envs.length ? x.envs[0].lecturas.map(function (l) { return l.c_parametro; }).join(',') : '';
+  ok(x.envs.length >= 96 && cods === e.parametros.join(',') && x.s.col === null && x.s.agua === null,
+    e.c_estacion + ' (' + e.localidad + '): ' + x.envs.length + ' paquetes con ' + cods + '; sin colector ni río');
+});
+
+console.log('\n18. Ladera: la lluvia de las pruebas es la de los escenarios del contrato');
+var e0 = laderas[0];
+var tor = correLadera(e0, 30, 'tormenta'), pro = correLadera(e0, 100, 'lluvia_prolongada'), des = correLadera(e0, 30, 'deslave');
+ok(tor.ventana(24) === 120 && tor.ventana(24) > 103, 'tormenta: ' + tor.ventana(24) + ' mm en 24 h (pasa los 103 mm de Caine)');
+ok(pro.ventana(24) < 103 && pro.ventana(72) > 201, 'lluvia prolongada: ' + pro.ventana(24) + ' mm en 24 h (no pasa 103) y ' + pro.ventana(72) + ' mm en 72 h (pasa 201)');
+var hp = Math.max.apply(null, pro.serie('HUM_SUELO')), h0 = pro.serie('HUM_SUELO')[0];
+ok(hp > h0 + 10 && hp <= 50.5, 'el suelo se moja con la lluvia y no pasa la saturación: ' + h0 + ' → ' + hp + ' %');
+var inc = des.serie('INCL').map(Math.abs), im = Math.max.apply(null, inc);
+ok(im > 2 && Math.max.apply(null, tor.serie('INCL').map(Math.abs)) < 0.5, 'deslave: la estaca salta a ' + im.toFixed(2) + '° (> 2°); con la tormenta sola no se mueve');
+
+var dl2 = Mont.crearEstacion(e0, lineaBase, {}); dl2.energia.panelW = 0;
+while (dl2.fw.t < M.T0_DEFECTO + 86400) dl2.fw.tick(5);
+var dLad = dl2.energia.capWh * 0.9 / dl2.energia.consumidoWh;
+ok(dLad >= 14, 'ladera: ' + dl2.energia.consumidoWh.toFixed(2) + ' Wh/día con ' + dl2.energia.capWh + ' Wh: ≈ ' + dLad.toFixed(1) + ' días sin sol');
+
+console.log('\n19. Ladera: el firmware mide más seguido con lluvia fuerte y nunca alerta');
+ok(tor.ad.some(function (m) { return /LLUVIA/.test(m); }) && tor.envs.length > 120, 'con la tormenta pasa a ciclo de 5 min: ' + tor.envs.length + ' paquetes en 28 h');
+ok(correLadera(e0, 24).ad.length === 0, 'sin lluvia sigue en 15 min');
+ok(tor.alertas + pro.alertas + des.alertas === 0, 'el firmware no emite alertas de ladera (I10): las decide la plataforma');
+var sinIncl = laderas.filter(function (e) { return e.parametros.indexOf('INCL') < 0; })[0];
+if (sinIncl) ok(correLadera(sinIncl, 2).envs[0].lecturas.length === 2, sinIncl.c_estacion + ' sin inclinómetro manda solo LLUVIA y HUM_SUELO');
 
 // salida para el validador del contrato
 var salida = path.join(os.tmpdir(), 'paquetes_simulador.json');

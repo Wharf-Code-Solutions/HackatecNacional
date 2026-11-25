@@ -34,7 +34,7 @@ después el **análisis**. Las vistas actuales no anuncian el análisis en panta
 | Módulo | Estado |
 |---|---|
 | M0 datos y contrato | Construido: 219 sitios, 145 703 resultados 2012-2025, 7 esquemas v1.0, fixtures, servidor mock |
-| M4 dispositivo | Simulador web construido y probado (`dispositivo/`): figura 3D con vista de cerca de cada componente (sondas, gabinete, energía, comunicación) y línea de tiempo de recepción. **Sin hardware**: las especificaciones son supuestos de diseño. **Colector de residuos flotantes** simulado en la misma figura (ver "Lo construido"); falta su ficha |
+| M4 dispositivo | Simulador web construido y probado (`dispositivo/`): figura 3D con vista de cerca de cada componente (sondas, gabinete, energía, comunicación) y línea de tiempo de recepción. **Sin hardware**: las especificaciones son supuestos de diseño. **Colector de residuos flotantes** simulado en la misma figura (ver "Lo construido"); falta su ficha. **Módulo de ladera** (docs/20): estaciones `EST-LAD-` con pluviómetro, humedad de suelo e inclinómetro, su propia figura y pruebas de tormenta, lluvia prolongada y deslave. Modelos comerciales y nomenclatura de piezas en `dispositivo/catalogo-componentes.md` |
 | M6 mapa | Prototipo (`mapa/`): abre en la zona de la red, ríos del INEGI con el flujo animado aguas abajo, 14 confluencias y las 5 estaciones con su simulador. Sin sitios oficiales ni capas opcionales. No colorea por índice ni está probado a ancho de teléfono |
 | M1 topología (orden aguas arriba → abajo) | **Construida** (`scripts/70_topologia_red.py` → `datos/procesados/red/`): 210 de 219 sitios con sucesor y distancia sobre el cauce; 14 marcados para revisión |
 | M2 motor de reglas | **Construido** (`motor/reglas.py`): 0 alertas en el día de control contra 31 del stub, 0 ambientales con el sensor roto, los tres eventos detectados antes de su intensidad plena y su fuente bien clasificada. `servidor_mock.py --motor real` lo usa |
@@ -52,7 +52,8 @@ No conviertas "pendiente" en "construido" sin verificarlo contra el repo.
 
 **Dispositivo (`dispositivo/`)**: la estación centinela, simulada (D18: simulador propio, no Wokwi ni hardware).
 - Cuatro bloques: sondas (OD, pH, conductividad K=1, temperatura, turbiedad), controlador (ESP32 + RTC + SD),
-  comunicación (módem LTE-M, `POST /lecturas`) y energía (panel 5 W + 2×18650). Detalle en `ficha-tecnica.md`.
+  comunicación (módem LTE-M, `POST /lecturas`) y energía (estación de agua: panel 10 W + 8×18650, 89 Wh, por la
+  turbiedad real de 6 W; ladera: 5 W + 2×18650). Detalle en `ficha-tecnica.md`; modelos en `catalogo-componentes.md`.
 - `simulador/`: `modelo.js` (agua con la banda histórica real, sondas con sesgo, deriva, ensuciamiento y fallas,
   energía, enlace), `firmware.js` (máquina de estados pura), `montaje.js`, `prueba.js`, `escena.js`,
   `recepcion.js`, `ui.js`.
@@ -80,8 +81,8 @@ No conviertas "pendiente" en "construido" sin verificarlo contra el repo.
   - Cuatro pruebas: descarga industrial, descarga orgánica, lluvia, corte de enlace. Si el backend abre una
     alerta, una línea en rojo.
   - Las fallas de sonda, mantenimiento y clima siguen en el modelo y en `prueba.js`, no en pantalla.
-- Medido: 96 paquetes por día y estación, 0 pérdidas en un corte de 4 h, consumo ≈ 1.4 Wh/día, autonomía sin
-  sol ≈ 14 días.
+- Medido: 96 paquetes por día y estación, 0 pérdidas en un corte de 4 h; estación de agua ≈ 5.0 Wh/día y ≈ 16 días
+  sin sol; de ladera ≈ 0.9 Wh/día y ≈ 21 días.
 - Reglas del firmware: escribe en la SD antes de enviar y borra tras el ACK; reenvía con la hora original;
   no corrige valores (manda el crudo, `null` si la sonda no responde, `-999` si está rota); **nunca emite
   alertas** (eso es del backend, invariante I10); muestreo adaptativo; ahorro por batería.
@@ -267,8 +268,11 @@ backend (M5), panel de autoridad (M7), prototipo de app ciudadana (M8) y la red 
    `contrato/fixtures/mecanismos.json` (`EST-ESC-01..05` con `COL-ESC-01..05`); simulador y mapa ya los leen, y el motor y el
    mock los registran junto a las 5 del Atoyac. Pendiente: línea base de sus sitios CONAGUA (hoy ninguno está en
    `linea_base.json`: el motor solo los compara contra su historia reciente y el simulador usa `banda_simulacion`;
-   regenerarla pide los crudos F05); la Sierra Norte queda fuera hasta bajar su red del INEGI; mecanismo para derrumbe;
-   ficha del colector (`dispositivo/ficha-colector.md`), D32 y propuesta de contrato para su paquete; costos (M10).
+   regenerarla pide los crudos F05); la Sierra Norte queda fuera hasta bajar su red del INEGI; ficha del colector
+   (`dispositivo/ficha-colector.md`), D32 y propuesta de contrato para su paquete; costos (M10).
+   **Módulo de ladera** construido en el simulador (`EST-LAD-01..05`); faltan las reglas de derrumbe del motor (docs/20 §5),
+   que el panel muestre esas escuelas (hoy filtra a la cuenca) y calibrar la humedad con el suelo de cada ladera (el umbral
+   de 45 % no tiene fuente).
 1. **Pendientes de la red nueva de estaciones** (fixtures regenerados con las 5 de docs/18):
    - correr `backend/prueba.py` (ya espera 0, 1, 5, 3 y 0 alertas; necesita el entorno del backend);
    - recapturar `panel/public/demo/foto.json` con el backend real (`npm run capturar-demo`);

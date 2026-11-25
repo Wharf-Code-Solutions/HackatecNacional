@@ -55,6 +55,8 @@ RANGO_FISICO = {
 # descarga puede provocarlo de verdad: la conductividad SI puede multiplicarse
 # en dos horas, asi que no se limita.
 SALTO_IMPOSIBLE = {'TEMP': 6.0, 'PH': 3.0, 'OD': 10.0}
+# Codigos del modulo de ladera (docs/20 §3.1): no son de calidad del agua y no pasan por sus capas.
+PARAMETROS_LADERA = frozenset(('LLUVIA', 'HUM_SUELO', 'INCL'))
 
 LECTURAS_CONGELADAS = 8      # 8 lecturas de 15 min = 2 h con el valor identico
 VENTANA_RECIENTE = 16        # 4 h de referencia para el detector de escalon
@@ -150,6 +152,14 @@ class Motor:
 
         for lec in paquete['lecturas']:
             cp, v = lec['c_parametro'], lec['valor']
+            if cp in PARAMETROS_LADERA:
+                # Modulo de ladera (docs/20): sus reglas (lluvia acumulada, suelo saturado, inclinacion) aun no
+                # estan en el motor. No pasan por las capas del agua: un aguacero no es un "cambio brusco" de
+                # contaminacion, y 0 mm de lluvia muchas veces seguidas no es una sonda congelada.
+                salida['parametros'].append({
+                    'c_parametro': cp, 'valor': v, 'clase_conagua': None, 'veces_el_limite': None,
+                    'posicion_en_banda': 'sin_linea_base', 'z_robusto': None, 'n_linea_base': None})
+                continue
             base = self.lb.get((sitio, cp), {})
             clave = (ce, cp)
             item = {

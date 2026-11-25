@@ -136,6 +136,94 @@
     return null;
   };
 
+  // ------------------------------------------------------------------ la ladera
+  // Verdad de campo del módulo de ladera (docs/20 §4): la lluvia sobre la ladera, la humedad del suelo a
+  // ~50 cm y el movimiento de la estaca del inclinómetro. TODO es supuesto de diseño, igual que en
+  // scripts/102_escenarios_ladera.py, del que se copian los parámetros de la humedad para que el simulador
+  // y los escenarios del contrato cuenten la misma física: base 31 %, satura en 50 %, se llena 0.009 del
+  // hueco por mm y drena 0.0025 del exceso cada 15 min (cubeta simple). No predice deslaves.
+  var LADERA = { humBase: 31, humSatura: 50, ganancia: 0.009, drenaje15: 0.0025,
+                 reptarDesde: 47, reptarLluvia: 5, reptarGradosH: 0.02 };   // reptar: con suelo saturado y lluvia sostenida
+  // Eventos de prueba, con las mismas lluvias que los escenarios del contrato. `lluvias`: [inicio h, duración h, mm];
+  // cada lluvia es un hietograma triangular. `salto`: [hora, grados] del inclinómetro, tras 2.5 h de reptar.
+  var EVENTOS_LADERA = {
+    tormenta:          { nombre: 'Tormenta', lluvias: [[0, 4, 120]] },
+    // cuatro días de 65, 85, 95 y 65 mm, cada uno en dos lluvias (65 % y 35 %), como en el escenario del contrato
+    lluvia_prolongada: { nombre: 'Lluvia prolongada', lluvias: [65, 85, 95, 65].reduce(function (a, mm, d) {
+      return a.concat([[d * 24, 7, 0.65 * mm], [d * 24 + 8.5, 5, 0.35 * mm]]); }, []) },
+    deslave:           { nombre: 'Deslave', lluvias: [[0, 8, 70], [10, 9, 80]], salto: [13, 3.8] }
+  };
+  function Ladera(semilla) {
+    this.eventos = [];
+    this.t = null;                         // hasta dónde va integrada la humedad
+    this.hum = LADERA.humBase;
+    this.incl = 0;                         // cambio de inclinación desde la instalación, grados
+    this.acum = 0;                         // lluvia caída desde el inicio, mm (el pluviómetro cuenta de aquí)
+    this.r = mulberry32(semilla || 3);
+  }
+  Ladera.prototype.agregaEvento = function (tipo, t0) {
+    var e = EVENTOS_LADERA[tipo], fin = 0;
+    e.lluvias.forEach(function (l) { fin = Math.max(fin, l[0] + l[1]); });
+    this.eventos.push({ tipo: tipo, t0: t0, def: e, fin: t0 + fin * 3600 });
+  };
+  // Intensidad de la lluvia en t, mm/h: hietogramas triangulares que suman sus mm.
+  Ladera.prototype.intensidad = function (t) {
+    var mmh = 0;
+    this.eventos.forEach(function (ev) {
+      ev.def.lluvias.forEach(function (l) {
+        var a = ev.t0 + l[0] * 3600, d = l[1] * 3600, x = (t - a) / d;
+        if (x > 0 && x < 1) mmh += 2 * l[2] / l[1] * (1 - Math.abs(2 * x - 1));   // área del triángulo = l[2] mm
+      });
+    });
+    return mmh;
+  };
+  Ladera.prototype.eventoActivo = function (t) {
+    for (var i = 0; i < this.eventos.length; i++) if (t >= this.eventos[i].t0 && t < this.eventos[i].fin) return this.eventos[i].tipo;
+    return null;
+  };
+  // Integra la ladera hasta t en pasos de 60 s: la humedad depende de toda la lluvia anterior.
+  Ladera.prototype.avanza = function (t) {
+    if (this.t === null) this.t = t;
+    while (this.t < t - 1e-9) {
+      var dt = Math.min(60, t - this.t), mmh = this.intensidad(this.t + dt / 2), mm = mmh * dt / 3600;
+      this.acum += mm;
+      this.hum += LADERA.ganancia * mm * (LADERA.humSatura - this.hum) - LADERA.drenaje15 * dt / 900 * (this.hum - LADERA.humBase);
+      this.hum = Math.min(this.hum, LADERA.humSatura);
+      if (this.hum >= LADERA.reptarDesde && mmh >= LADERA.reptarLluvia) this.incl += LADERA.reptarGradosH * dt / 3600;
+      this.t += dt;
+      var self = this;
+      this.eventos.forEach(function (ev) {        // el deslave: reptar 0.1° → 0.6° en 2.5 h y luego el salto
+        var s = ev.def.salto; if (!s) return;
+        var ts = ev.t0 + s[0] * 3600, k = (self.t - (ts - 9000)) / 9000;
+        if (k > 0 && k < 1) self.incl = Math.max(self.incl, 0.1 + 0.5 * k);
+        if (self.t >= ts && !ev.salto) { ev.salto = true; self.incl += s[1] - 0.6; }
+      });
+    }
+  };
+  Ladera.prototype.valor = function (p, t) {
+    if (t > (this.t === null ? -Infinity : this.t)) this.avanza(t);
+    if (p === 'HUM_SUELO') return this.hum;
+    if (p === 'INCL') return this.incl;
+    return null;
+  };
+  Ladera.prototype.lluviaAcumulada = function (t) { this.avanza(t); return this.acum; };
+
+  // Pluviómetro de balancín: cuenta basculadas de 0.2 mm por interrupción, aun dormido (sin gastar), y
+  // reporta lo caído desde el paquete anterior (docs/20 §2). Se lee una vez por paquete.
+  function Pluviometro(ladera, t0) {
+    this.ladera = ladera; this.cod = 'LLUVIA'; this.espec = ESPEC.LLUVIA;
+    this.falla = 'ninguna';
+    this.cuenta = Math.floor(ladera.lluviaAcumulada(t0) / 0.2);
+  }
+  Pluviometro.prototype.leer = function (t) {
+    if (this.falla === 'sin_respuesta') return null;
+    if (this.falla === 'menos999') return -999;
+    var n = Math.floor(this.ladera.lluviaAcumulada(t) / 0.2 + 1e-9), mm = (n - this.cuenta) * 0.2;
+    this.cuenta = n;
+    return Math.round(mm * 10) / 10;
+  };
+  Pluviometro.prototype.saturada = function () { return false; };
+
   // ------------------------------------------------------------------ las sondas
   // Especificación de diseño de la variante "de campo". Son supuestos de
   // diseño razonables, NO datos de un fabricante: la ficha técnica los declara
@@ -145,9 +233,25 @@
     PH:   { unidad: 'pH',    rango: [0, 14],       res: 0.01, ruidoAbs: 0.02, ruidoRel: 0,     sesgoAbs: 0.05, sesgoRel: 0,     derivaAbs: 0.010, derivaRel: 0,      ensuciaAbs: 0,   estabS: 10, mW: 150 },
     COND: { unidad: 'µS/cm', rango: [5, 200000],   res: 1,    ruidoAbs: 0,    ruidoRel: 0.005, sesgoAbs: 0,    sesgoRel: 0.015, derivaAbs: 0,     derivaRel: 0.0005, ensuciaAbs: 0,   estabS: 6,  mW: 120 },
     TEMP: { unidad: '°C',    rango: [-5, 50],      res: 0.01, ruidoAbs: 0.05, ruidoRel: 0,     sesgoAbs: 0.15, sesgoRel: 0,     derivaAbs: 0,     derivaRel: 0,      ensuciaAbs: 0,   estabS: 3,  mW: 60 },
-    TURB: { unidad: 'NTU',   rango: [0, 4000],     res: 0.1,  ruidoAbs: 1,    ruidoRel: 0.02,  sesgoAbs: 0,    sesgoRel: 0.03,  derivaAbs: 0,     derivaRel: 0,      ensuciaAbs: 1.5, estabS: 5,  mW: 250 }
+    TURB: { unidad: 'NTU',   rango: [0, 4000],     res: 0.1,  ruidoAbs: 1,    ruidoRel: 0.02,  sesgoAbs: 0,    sesgoRel: 0.03,  derivaAbs: 0,     derivaRel: 0,      ensuciaAbs: 1.5, estabS: 5,  mW: 7000 },   // Pyxis LT-633: 6 W a 24 V, más el elevador (≈ 85 %) (catalogo-componentes.md)
+    // Módulo de ladera (docs/20 §2). Supuestos de diseño, como las sondas: humedad capacitiva enterrada a
+    // ~50 cm; inclinómetro de dos ejes con ruido de ±0.05°; pluviómetro de balancín de 0.2 mm, sin consumo
+    // entre mediciones (cuenta por interrupción).
+    HUM_SUELO: { unidad: '%', rango: [0, 60],      res: 0.1,  ruidoAbs: 0.15, ruidoRel: 0,     sesgoAbs: 1.0,  sesgoRel: 0,     derivaAbs: 0.005, derivaRel: 0,      ensuciaAbs: 0,   estabS: 2,  mW: 40 },
+    INCL:      { unidad: '°', rango: [-15, 15],    res: 0.01, ruidoAbs: 0.03, ruidoRel: 0,     sesgoAbs: 0,    sesgoRel: 0,     derivaAbs: 0,     derivaRel: 0,      ensuciaAbs: 0,   estabS: 1,  mW: 15 },
+    LLUVIA:    { unidad: 'mm', rango: [0, 200],    res: 0.2,  estabS: 0, mW: 0 }
   };
   var PARAMS = ['COND', 'OD', 'PH', 'TEMP', 'TURB'];
+
+  // Energía por tipo de estación (catalogo-componentes.md, sección 3). La de agua lleva la turbiedad real, que
+  // gasta ≈ 7 W mientras mide: 5 Wh al día en lugar de 1.4. Para conservar ≈ 14 días sin sol lleva 8 celdas 18650
+  // (dos portapilas de 4 en paralelo, 89 Wh) y un panel de 10 W con su cargador. La de ladera no tiene esa sonda
+  // y se queda con el diseño original: 2 celdas (22 Wh) y 5 W.
+  var ENERGIA = {
+    rio:    { capWh: 88.8, panelW: 10, celdas: 8 },
+    ladera: { capWh: 22.2, panelW: 5,  celdas: 2 }
+  };
+  var PARAMS_LADERA = ['LLUVIA', 'HUM_SUELO', 'INCL'];
 
   function Sonda(codigo, rng, t0) {
     this.cod = codigo;
@@ -226,6 +330,7 @@
 
   raiz.Modelo = {
     ZONA_S: ZONA_S, T0_DEFECTO: T0_DEFECTO, PARAMS: PARAMS, ESPEC: ESPEC, EVENTOS: EVENTOS,
+    PARAMS_LADERA: PARAMS_LADERA, ENERGIA: ENERGIA, LADERA: LADERA, EVENTOS_LADERA: EVENTOS_LADERA, Ladera: Ladera, Pluviometro: Pluviometro,
     mulberry32: mulberry32, gauss: gauss, horaLocal: horaLocal, iso: iso, acota: acota,
     Agua: Agua, Sonda: Sonda, Energia: Energia, Enlace: Enlace
   };

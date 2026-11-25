@@ -202,12 +202,19 @@ else:
     cct = {e['cct'] for e in json.load(open(ruta_esc, encoding='utf-8'))} if os.path.exists(ruta_esc) else set()
     err += ['{}: su escuela {} no esta en escuelas.json'.format(o['c_estacion'], o.get('cct')) for o in objetos
             if o.get('cct') not in cct]
-    err += ['{}: sin colector'.format(o['c_estacion']) for o in objetos if not o.get('colector')]
+    # las de agua (EST-ESC) llevan su colector; las de ladera (EST-LAD, docs/20) no estan en un cauce
+    err += ['{}: sin colector'.format(o['c_estacion']) for o in objetos
+            if o['c_estacion'].startswith('EST-ESC') and not o.get('colector')]
+    err += ['{}: una estacion de ladera no lleva colector'.format(o['c_estacion']) for o in objetos
+            if o['c_estacion'].startswith('EST-LAD') and o.get('colector')]
+    err += ['{}: protege {} que no esta en escuelas.json'.format(o['c_estacion'], c) for o in objetos
+            for c in o.get('escuelas_protegidas', []) if cct and c not in cct]
     total_err += len(err)
     if err:
         falla('mecanismos.json', '{} errores, el primero: {}'.format(len(err), err[0]))
     else:
-        ok('mecanismos.json', '{} mecanismos (estacion + colector)'.format(len(objetos)))
+        ok('mecanismos.json', '{} de agua con colector y {} de ladera'.format(
+            sum(1 for o in objetos if o.get('colector')), sum(1 for o in objetos if not o.get('colector'))))
 
 carpeta = os.path.join(FIX, 'escenarios')
 if os.path.isdir(carpeta):

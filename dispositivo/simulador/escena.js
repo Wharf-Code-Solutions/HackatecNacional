@@ -134,7 +134,10 @@
   function ejeRio(z) { return 5.0 + 0.9 * Math.sin(z * 0.13 + 0.3); }
   function dRio(x, z) { return Math.abs(x - ejeRio(z)) - EXT; }
   function suave(t) { t = M.acota(t, 0, 1); return t * t * (3 - 2 * t); }
-  function altura(x, z) {
+  // El terreno depende de la estación: río (la del agua) o ladera (docs/20). TIPO lo fija construye().
+  var TIPO = 'rio';
+  function altura(x, z) { return TIPO === 'ladera' ? alturaLadera(x, z) : alturaRio(x, z); }
+  function alturaRio(x, z) {
     var d = dRio(x, z);
     var y = -1.7 + 2.3 * suave((d - 3.0) / 2.0);                       // lecho, talud y orilla
     var ondula = 0.07 * Math.sin(x * 1.3 + z * 0.7) + 0.05 * Math.sin(x * 0.4 - z * 1.1) + 0.04 * Math.sin(x * 2.3 + z * 1.9);
@@ -328,6 +331,17 @@
     G.escena.add(new T.Line(new T.BufferGeometry().setFromPoints([new T.Vector3(mojado[0].x, SUP_AGUA, Z_CORTE + 0.03), new T.Vector3(mojado[mojado.length - 1].x, SUP_AGUA, Z_CORTE + 0.03)]),
       new T.LineBasicMaterial({ color: AGUA })));
 
+    construyeArboles([[-9.5, -15], [-6.8, -11], [-11, -7.5], [-5.5, -24], [-8.6, -30], [-2.6, -28], [13.4, -26], [17.8, -18],
+     [18.2, 0.4], [14.4, -31], [17.4, -26], [9.4, -34]], [0x8b9a7a, 0x7d8d6e]);
+
+    construyeVegetacion();
+
+  }
+
+  // Árboles en huso (ahuejotes en el valle; en la ladera, el mismo trazo en verde más oscuro), en las
+  // posiciones dadas. Comparten geometría: una llamada de dibujo para copas y otra para troncos.
+  function construyeArboles(posiciones, colores) {
+    var k;
     // Follaje: textura de hojas para las copas.
     var rf = ruido(31);
     var hojas = textura(128, function (x, y) {
@@ -351,18 +365,204 @@
     }
     copaG.computeVertexNormals();
     var arboles = [], troncos = [], ra2 = M.mulberry32(17);
-    [[-9.5, -15], [-6.8, -11], [-11, -7.5], [-5.5, -24], [-8.6, -30], [-2.6, -28], [13.4, -26], [17.8, -18],
-     [18.2, 0.4], [14.4, -31], [17.4, -26], [9.4, -34]].forEach(function (a) {
+    posiciones.forEach(function (a) {
       var y = altura(a[0], a[1]), H = 3.2 + ra2() * 1.3, R = 0.5 + ra2() * 0.2;
       troncos.push({ x: a[0], y: y, z: a[1], giro: 0, s: [1, H * 0.32, 1], color: 0x6f6250 });
-      arboles.push({ x: a[0], y: y + H * 0.18, z: a[1], giro: ra2() * 6.28, s: [R, H * 0.82, R], color: ra2() < 0.5 ? 0x8b9a7a : 0x7d8d6e });
+      arboles.push({ x: a[0], y: y + H * 0.18, z: a[1], giro: ra2() * 6.28, s: [R, H * 0.82, R], color: ra2() < 0.5 ? colores[0] : colores[1] });
     });
     var troncoG = new T.CylinderGeometry(0.05, 0.09, 1, 7); troncoG.translate(0, 0.5, 0);
     instancias(troncoG, mate(0xffffff, { roughness: 1 }), troncos, true);
     instancias(copaG, mate(0xffffff, { map: hojas, roughness: 0.95 }), arboles, true);
+  }
 
-    construyeVegetacion();
+  // ------------------------------------------------------------ ladera (docs/20)
+  // La escuela en una explanada al pie de un cerro de la Sierra Norte, la estación junto a ella y el módulo
+  // de ladera: el pluviómetro en la explanada (cielo abierto), el sensor de humedad enterrado a 50 cm en la
+  // ladera (se ve en el corte del suelo) y la estaca del inclinómetro más arriba. El cerro sube a la
+  // derecha a ≈ 32°, la pendiente típica de las escuelas elegidas (36° en Tecuantla, escuelas_ladera.json).
+  // Lo que se mueve, se mueve con el dato: la lluvia cae con la intensidad del modelo, el corte se oscurece
+  // con la humedad del suelo y la estaca se inclina con lo que mide el inclinómetro.
+  var PIE = 0.6, PENDIENTE = 0.62;                 // la explanada en y = 0.6 (base del mástil); tan 32° ≈ 0.62
+  var EXAGERA_INCL = 5;                            // la estaca se dibuja inclinada 5 veces lo medido; el rótulo da el valor real
+  var LAD = { pluvio: [-1.4, 1.1], hum: 4.4, estaca: [7.8, 1.3], escuela: [-9.2, -4.6] };
+  function alturaLadera(x, z) {
+    var u = x - PIE, y = PIE + PENDIENTE * Math.max(0, u) * suave(u / 2.6);           // explanada y pie del cerro
+    y += 0.05 * Math.sin(x * 1.1 + z * 0.6) * suave(u / 2) + 0.03 * Math.sin(x * 2.3 - z * 1.7) * suave((u - 1) / 2);
+    if (z < -6) y += Math.pow(-6 - z, 1.2) * 0.05 * suave((x + 2) / 6);              // y también hacia el fondo
+    return y;
+  }
+  function libreLadera(x, z) {
+    var e = LAD.escuela;
+    return Math.hypot(x + 4.3, z - 0.1) > 1.9 && !(x > e[0] - 3.4 && x < e[0] + 3.4 && z > e[1] - 2.2 && z < e[1] + 2.4) &&
+      Math.hypot(x - LAD.pluvio[0], z - LAD.pluvio[1]) > 0.7 && Math.hypot(x - LAD.estaca[0], z - LAD.estaca[1]) > 0.9 &&
+      Math.hypot(x - 16.5, z + 12) > 1.1 && !(x > LAD.hum - 0.6 && x < LAD.hum + 0.6 && z > 1.2) && z < Z_CORTE - 0.15;
+  }
+  function construyeLadera() {
+    var X0 = -13, X1 = 19, Z0 = -36, NX = 192, NZ = 180;
+    var g = new T.PlaneGeometry(X1 - X0, Z_CORTE - Z0, NX, NZ);
+    g.rotateX(-Math.PI / 2);
+    g.translate((X0 + X1) / 2, 0, (Z0 + Z_CORTE) / 2);
+    var pos = g.attributes.position, col = [], c = new T.Color();
+    var PASTO = new T.Color(0x93a477), MONTE = new T.Color(0x7d9066), PATIO = new T.Color(0xc9bfa9);
+    for (var i = 0; i < pos.count; i++) {
+      var x = pos.getX(i), z = pos.getZ(i), y = alturaLadera(x, z);
+      pos.setY(i, y);
+      var e = LAD.escuela, patio = x > e[0] - 4 && x < e[0] + 4 && z > e[1] - 2.8 && z < Z_CORTE;   // patio de tierra de la escuela
+      c.copy(PASTO).lerp(MONTE, suave((x - 3) / 8));
+      if (patio) c.copy(PATIO);
+      c.offsetHSL(0, 0, 0.025 * Math.sin(x * 5.1 + z * 3.7));
+      col.push(c.r, c.g, c.b);
+    }
+    g.setAttribute('color', new T.Float32BufferAttribute(col, 3));
+    g.computeVertexNormals();
+    var rs = ruido(7), TS = 256;
+    var detalle = textura(TS, function (x, y) {
+      var u = x / TS * 8, v = y / TS * 8, k = 0.78 + 0.16 * rs(u, v, 5, 8) + 0.06 * rs(u * 4, v * 0.6, 2, 32);
+      k = Math.min(1, k * 1.04); return [k * 255, k * 255, k * 255];
+    }, [16, 19], true);
+    var relieve = normales(TS, function (x, y) { return rs(x / TS * 16, y / TS * 16, 3, 16); }, 2.2, [16, 19]);
+    // El suelo se oscurece un poco cuando se moja (pinta, con la humedad del modelo).
+    G.matSueloL = new T.MeshStandardMaterial({ vertexColors: true, map: detalle, normalMap: relieve,
+      normalScale: new T.Vector2(0.8, 0.8), roughness: 0.95, metalness: 0 });
+    var suelo = new T.Mesh(g, G.matSueloL);
+    suelo.receiveShadow = true; suelo.userData.sinSombra = true; G.escena.add(suelo);
 
+    // Corte frontal: el perfil del cerro con su suelo en capas; se oscurece al mojarse, de arriba abajo.
+    var perfil = [], forma = new T.Shape(), k;
+    for (k = 0; k <= 256; k++) { var xx = X0 + (X1 - X0) * k / 256; perfil.push(new T.Vector2(xx, alturaLadera(xx, Z_CORTE))); }
+    forma.moveTo(X0, -2.4);
+    perfil.forEach(function (q) { forma.lineTo(q.x, q.y); });
+    forma.lineTo(X1, -2.4); forma.lineTo(X0, -2.4);
+    var re = ruido(11);
+    var estratos = textura(256, function (x, y) {
+      var u = x / 256 * 8, v = y / 256 * 8, n = re(u, v, 4, 8);
+      var banda = 0.5 + 0.5 * Math.sin((y / 256) * Math.PI * 2 * 3 + n * 2.4);
+      var k = 0.86 + 0.08 * banda + 0.1 * (n - 0.5) + (re(u * 8, v * 8, 1, 64) > 0.84 ? -0.12 : 0);
+      return [196 * k, 170 * k, 136 * k];                                              // suelo volcánico, más rojizo que el del valle
+    }, [0.25, 0.25], true);
+    G.matCorteL = new T.MeshStandardMaterial({ map: estratos, roughness: 1, metalness: 0 });
+    var corte = new T.Mesh(new T.ShapeGeometry(forma), G.matCorteL);
+    corte.position.z = Z_CORTE; corte.userData.sinSombra = true; G.escena.add(corte);
+    G.escena.add(new T.Line(new T.BufferGeometry().setFromPoints(perfil.map(function (q) { return new T.Vector3(q.x, q.y, Z_CORTE + 0.01); })),
+      new T.LineBasicMaterial({ color: TINTA })));
+
+    construyeEscuela();
+    construyeArboles([[11.5, -5.5], [13.8, -2.4], [12.6, -9.5], [15.6, -6.8], [9.6, -8.2], [17.6, -1.2], [-11.8, -11.5],
+      [-8.2, -12.4], [-3.4, -10.5], [3.8, -12], [7.2, -15], [14.2, -17]], [0x6f8a5f, 0x627d55]);
+    construyeVegetacionLadera();
+  }
+  // Escuela rural de un piso: muros claros con guardapolvo de color, losa con alero, ventanas y puerta.
+  function construyeEscuela() {
+    var e = LAD.escuela, y0 = PIE, ANCHO = 6.4, FONDO = 3.2, ALTO = 2.9;
+    var muro = mate(0xefeae0, { roughness: 0.85 }), guarda = mate(0x8f3b33, { roughness: 0.8 }), losa = mate(0xd4cdbf, { roughness: 0.9 });
+    var vidrio = mate(0x3c5566, { roughness: 0.15, metalness: 0.1, envMap: G.cielo, envMapIntensity: 0.5 });
+    caja(ANCHO, ALTO, FONDO, muro, e[0], y0 + ALTO / 2, e[1]);
+    caja(ANCHO + 0.02, 0.9, FONDO + 0.02, guarda, e[0], y0 + 0.45, e[1], null, 0);
+    caja(ANCHO + 0.7, 0.22, FONDO + 0.8, losa, e[0], y0 + ALTO + 0.11, e[1] + 0.2);
+    for (var i = 0; i < 4; i++) {
+      var x = e[0] - ANCHO / 2 + 0.9 + i * 1.45;
+      if (i === 2) caja(0.95, 2.0, 0.06, mate(0x5b4636, { roughness: 0.7 }), x, y0 + 1.0, e[1] + FONDO / 2 + 0.02, null, 0.5);   // puerta
+      else caja(1.0, 1.0, 0.05, vidrio, x, y0 + 1.75, e[1] + FONDO / 2 + 0.02, null, 0.5);
+    }
+    G.anclaEscuela = [e[0], y0 + ALTO + 0.5, e[1] + FONDO / 2];
+  }
+  function construyeVegetacionLadera() {
+    var r = M.mulberry32(41), pasto = [], macollos = [], i, x, z;
+    var VERDES = [0x86986a, 0x97a675, 0x768a5c, 0x8c9c68];
+    for (i = 0; i < 9000 && pasto.length < 3000; i++) {
+      x = -13 + r() * 32; z = -30 + r() * (Z_CORTE + 30);
+      if (!libreLadera(x, z)) continue;
+      var e = LAD.escuela; if (x > e[0] - 4 && x < e[0] + 4 && z > e[1] - 2.8) continue;   // el patio, sin pasto
+      var h = 0.14 + r() * 0.24;
+      pasto.push({ x: x, y: alturaLadera(x, z) - 0.01, z: z, giro: r() * 6.28, s: [h * 1.1, h, h * 1.1], color: VERDES[(r() * 4) | 0] });
+    }
+    for (i = 0; i < 3000 && macollos.length < 50; i++) {
+      x = 1 + r() * 18; z = -30 + r() * (Z_CORTE + 30);
+      if (!libreLadera(x, z)) continue;
+      var t = 0.55 + r() * 0.4;
+      macollos.push({ x: x, y: alturaLadera(x, z) - 0.02, z: z, giro: r() * 6.28, s: [t * 1.1, t, t * 1.1], color: [0x9ea276, 0x8f9768, 0xa7a67c][(r() * 3) | 0] });
+    }
+    var hoja = new T.MeshStandardMaterial({ color: 0xffffff, side: T.DoubleSide, roughness: 0.9, metalness: 0 });
+    instancias(matas(7, 0.022), hoja, pasto, false);
+    instancias(macollo(26), hoja, macollos, true);
+  }
+  // Los tres sensores, a 1.6× como la estación, y sus cables al gabinete. Devuelve el trazo del cable que
+  // recorre el paquete al medir (de la estaca al gabinete).
+  function construyeSensoresLadera() {
+    var E = 1.6, pvc = mate(0xf4f6f7, { roughness: 0.5 }), acero = metal(0xb9c2c8, 0.4), negro = mate(0x22292e, { roughness: 0.55 });
+    G.matCable = mate(0x55626c);
+    G.puntasL = {};
+    G.zonas = [];
+    // Pluviómetro de balancín: poste, cuerpo cilíndrico y embudo arriba, a cielo abierto.
+    var p = LAD.pluvio, yp = alturaLadera(p[0], p[1]);
+    cilindro(0.035 * E, 1.1 * E, acero, p[0], yp + 0.55 * E, p[1], null, 10);
+    cilindro(0.11 * E, 0.32 * E, pvc, p[0], yp + 1.26 * E, p[1], null, 24);
+    var embudo = new T.Mesh(new T.CylinderGeometry(0.13 * E, 0.04 * E, 0.1 * E, 24, 1, true), mate(0xdfe4e7, { side: T.DoubleSide }));
+    embudo.position.set(p[0], yp + 1.46 * E, p[1]); G.escena.add(embudo);
+    G.puntasL.LLUVIA = cilindro(0.115 * E, 0.025 * E, mate(AGUA), p[0], yp + 1.12 * E, p[1], null, 24);
+    G.anclaPluvio = new T.Vector3(p[0], yp + 1.5 * E, p[1]);
+    // Sensor de humedad: una hoja capacitiva enterrada a 50 cm en la ladera, en el plano del corte.
+    var xh = LAD.hum, ys = alturaLadera(xh, Z_CORTE), yh = ys - 0.5 * E, zc = Z_CORTE + 0.03;
+    caja(0.05 * E, 0.22 * E, 0.02 * E, negro, xh, yh, zc, null, 0.6);
+    G.puntasL.HUM_SUELO = caja(0.05 * E, 0.04 * E, 0.025 * E, mate(AGUA), xh, yh + 0.13 * E, zc, null, 0);
+    tubo([[xh, yh + 0.15 * E, zc], [xh, ys - 0.05, zc], [xh - 0.15, ys + 0.03, Z_CORTE - 0.1]], 0.012 * E, G.matCable);
+    G.anclaHum = new T.Vector3(xh, yh, zc);
+    // Estaca anclada con el inclinómetro arriba; gira sobre su base (pinta) con lo medido.
+    var s = LAD.estaca, ye = alturaLadera(s[0], s[1]);
+    G.estaca = new T.Group(); G.estaca.position.set(s[0], ye, s[1]); G.escena.add(G.estaca);
+    caja(0.06 * E, 1.0 * E, 0.06 * E, mate(0x8a6f4e, { roughness: 0.8 }), 0, 0.5 * E - 0.2 * E, 0, G.estaca, 0.4);
+    caja(0.14 * E, 0.1 * E, 0.1 * E, negro, 0, 0.85 * E, 0, G.estaca, 0.5);
+    G.puntasL.INCL = caja(0.145 * E, 0.02 * E, 0.105 * E, mate(AGUA), 0, 0.91 * E, 0, G.estaca, 0);
+    G.anclaIncl = new T.Vector3(s[0], ye + 0.95 * E, s[1]);
+    // Cables, por el suelo, del gabinete a cada sensor.
+    function sobre(x, z) { return [x, alturaLadera(x, z) + 0.05, z]; }
+    var fin = [S([-4.0, 1.3, 0.45]), S([-4.0, 1.12, 0.45])];
+    tubo([fin[0], fin[1], sobre(-3.2, 0.9), sobre(-2.0, 1.1), sobre(p[0], p[1] - 0.15)], 0.03, G.matCable);
+    var trazo = [sobre(s[0] - 0.15, s[1]), sobre(6.2, 1.6), sobre(xh - 0.15, Z_CORTE - 0.1), sobre(2.0, 1.5), sobre(0.2, 1.3), sobre(-2.6, 1.0), fin[1], fin[0]];
+    tubo(trazo, 0.03, G.matCable);
+    // zonas de clic, más anchas que cada pieza
+    zona('ladera', [p[0], yp + 1.0 * E, p[1]], [1.0, 2.6, 1.0]);
+    zona('ladera', [xh, yh + 0.3, Z_CORTE - 0.3], [1.2, 1.6, 1.0]);
+    zona('ladera', [s[0], ye + 0.8, s[1]], [1.0, 2.2, 1.0]);
+    // la lluvia: trazos que caen; se ven tantos como la intensidad del modelo (pinta)
+    var N = 1400, pts = new Float32Array(N * 6), rr = M.mulberry32(9);
+    for (var i = 0; i < N; i++) {
+      var x = -12 + rr() * 30, z = -16 + rr() * (Z_CORTE + 16), y = rr() * 18;
+      pts.set([x, y, z, x - 0.03, y - 0.42, z], i * 6);
+    }
+    var gl = new T.BufferGeometry(); gl.setAttribute('position', new T.BufferAttribute(pts, 3)); gl.setDrawRange(0, 0);
+    G.lluvia = new T.LineSegments(gl, new T.LineBasicMaterial({ color: 0x8fa9bd, transparent: true, opacity: 0.6, depthWrite: false }));
+    G.lluvia.userData.sinSombra = true; G.lluvia.frustumCulled = false; G.escena.add(G.lluvia);
+    return trazo;
+  }
+  function pintaLadera(s, nom, dtr) {
+    var L = s.ladera, fw = s.fw, k = M.acota((L.hum - M.LADERA.humBase) / (M.LADERA.humSatura - M.LADERA.humBase), 0, 1);
+    G.matCorteL.color.setRGB(1 - 0.35 * k, 1 - 0.38 * k, 1 - 0.4 * k);                // el suelo mojado, más oscuro
+    G.matSueloL.color.setRGB(1 - 0.12 * k, 1 - 0.12 * k, 1 - 0.1 * k);
+    G.estaca.rotation.z = L.incl * EXAGERA_INCL * Math.PI / 180;                        // hacia abajo del cerro
+    // lluvia: hasta 1 400 trazos con 40 mm/h; caen a ≈ 7 m/s en tiempo real
+    var mmh = L.intensidad(fw.t), n = Math.round(M.acota(mmh / 40, 0, 1) * 1400);
+    if (n) {
+      var a = G.lluvia.geometry.attributes.position, d = 7 * dtr;
+      for (var i = 0; i < n; i++) {
+        var y = a.array[i * 6 + 1] - d;
+        if (y < 0) y += 18;
+        a.array[i * 6 + 1] = y; a.array[i * 6 + 4] = y - 0.42;
+      }
+      a.needsUpdate = true;
+    }
+    G.lluvia.geometry.setDrawRange(0, n * 2);
+    var midiendo = nom === 'CALENTAMIENTO' || nom === 'MEDICIÓN';
+    Object.keys(G.puntasL).forEach(function (q) {
+      var son = s.sondas[q], fa = son && son.falla !== 'ninguna';
+      G.puntasL[q].material.color.setHex(fa ? ALARMA : (midiendo ? TINTA : AGUA));
+      if (!son) G.puntasL[q].visible = false;                                        // la estación no tiene ese sensor
+    });
+    G.matCable.color.setHex(midiendo ? TINTA : 0x55626c);
+    function med(q) { var d = fw.detalleMed[q]; return d && d.valor !== null && d.valor !== undefined ? d.valor : null; }
+    rotulo('pluvio', mmh >= 0.5 ? 'Llueve ' + Math.round(mmh) + ' mm/h' : 'Sin lluvia');
+    rotulo('suelo', med('HUM_SUELO') === null ? (midiendo ? 'Midiendo' : 'Sin medición todavía') : 'Humedad ' + med('HUM_SUELO').toFixed(1) + ' %');
+    if (s.sondas.INCL) rotulo('incl', med('INCL') === null ? (midiendo ? 'Midiendo' : 'Sin medición todavía') : med('INCL').toFixed(2) + '° desde la instalación');
   }
 
   // ------------------------------------------------------------ colector de residuos
@@ -625,6 +825,20 @@
     { id: 'rio', nombre: 'Corriente', ancla: [3.4, SUP_AGUA, 0.2], lado: 'der' }
   ];
 
+  // Ladera: los tres sensores, la escuela y lo común de la estación (gabinete, energía, comunicación).
+  function rotulosLadera(est) {
+    var r = [
+      { id: 'pluvio', nombre: 'Pluviómetro', ancla: G.anclaPluvio.toArray(), lado: 'izq', vista: 'ladera' },
+      { id: 'suelo', nombre: 'Humedad del suelo', ancla: G.anclaHum.toArray(), lado: 'der', vista: 'ladera' },
+      { id: 'ctrl', nombre: 'Gabinete', ancla: S([-4.62, 2.15, 0.45]), lado: 'izq', vista: 'gabinete' },
+      { id: 'panel', nombre: 'Energía', ancla: S([-5.1, 4.95, 0.2]), lado: 'izq', vista: 'energia' },
+      { id: 'torre', nombre: 'Comunicación', ancla: [G.torreTope.x + 0.4, G.torreTope.y + 0.6, G.torreTope.z], lado: 'izq', vista: 'enlace' },
+      { id: 'escuela', nombre: 'Escuela', ancla: G.anclaEscuela, lado: 'der', fijo: (est && est.escuela) || '' }
+    ];
+    if (est && (est.parametros || []).indexOf('INCL') >= 0) r.splice(2, 0, { id: 'incl', nombre: 'Inclinómetro', ancla: G.anclaIncl.toArray(), lado: 'der', vista: 'ladera' });
+    return r;
+  }
+
   // Vistas de cerca: un rótulo por pieza, en dos columnas a los lados, con una línea a la pieza.
   // Qué es sale de la ficha técnica; el estado y el dato, de la estación simulada.
   var SENSOR = {
@@ -640,9 +854,33 @@
   function hora(t) { return M.iso(t).substr(11, 5); }
   // Cada detalle: centro de las columnas (punto 3D) y sus piezas. valor(e) devuelve [texto, alarma],
   // con e = { s, nom, f, transcurrido, env, nSD }.
+  // Consumo y autonomía medidos en el simulador con la energía de cada tipo (prueba.js, prueba 6 y 17).
+  var EN_MEDIDO = { rio: { wh: '5.0', dias: 16, nota: 'casi todo en la turbiedad' }, ladera: { wh: '0.9', dias: 21, nota: 'casi todo dormida' } };
   function detalles() {
-    var d = {};
-    d.sondas = { centro: G.centroSondas, items: M.PARAMS.map(function (q) {
+    var d = {}, EN = M.ENERGIA[TIPO];
+    if (TIPO === 'ladera') {
+      var lado = G.anclaPluvio.clone().add(G.anclaIncl || G.anclaHum).multiplyScalar(0.5);
+      var vl = function (q, dec, u) {
+        return function (e) {
+          var son = e.s.sondas[q], med = e.s.fw.detalleMed && e.s.fw.detalleMed[q];
+          if (son.falla === 'sin_respuesta') return ['No responde: se envía vacío', true];
+          if (son.falla === 'menos999') return ['Roto: se envía −999', true];
+          if (e.nom === 'MEDICIÓN' || e.nom === 'CALENTAMIENTO') return ['Midiendo'];
+          if (!med || med.valor === null || med.valor === undefined) return ['Sin medición todavía'];
+          return ['Enviado: ' + med.valor.toFixed(dec) + u];
+        };
+      };
+      d.ladera = { centro: lado, items: [
+        { nombre: 'Pluviómetro', como: 'balancín de 0.2 mm; cuenta aun dormido', ancla: G.anclaPluvio, col: -1, fila: -0.22,
+          valor: function (e) {
+            var med = e.s.fw.detalleMed.LLUVIA, mmh = e.s.ladera.intensidad(e.s.fw.t);
+            return [(mmh >= 0.5 ? 'Llueve ' + Math.round(mmh) + ' mm/h' : 'Sin lluvia') + (med && med.valor !== null ? ' · enviado ' + med.valor.toFixed(1) + ' mm' : '')];
+          } },
+        { nombre: 'Humedad del suelo', como: 'capacitivo, enterrado a 50 cm', ancla: G.anclaHum, col: -1, fila: 0.18, valor: vl('HUM_SUELO', 1, ' %') }
+      ] };
+      if (G.conIncl) d.ladera.items.push({ nombre: 'Inclinómetro', como: 'dos ejes, en una estaca anclada; dibujado 5 veces', ancla: G.anclaIncl, col: 1, fila: -0.12,
+        valor: vl('INCL', 2, '° desde la instalación') });
+    } else d.sondas = { centro: G.centroSondas, items: M.PARAMS.map(function (q) {
       return { nombre: SENSOR[q].nombre, como: SENSOR[q].como, ancla: G.puntaSensor[q], col: FILAS_SONDAS[q][0], fila: FILAS_SONDAS[q][1],
         valor: function (e) {
           var son = e.s.sondas[q], esp = son.espec, med = e.s.fw.detalleMed && e.s.fw.detalleMed[q];
@@ -660,7 +898,7 @@
         valor: function (e) { return [e.env ? 'Enviando los datos' : estado(e.s.fw)]; } },
       { nombre: 'Reloj', como: 'pone la hora a cada medición', ancla: v3(S([-4.32, 2.12, 0.37])), col: -1, fila: -0.02,
         valor: function (e) { return [hora(e.s.fw.t)]; } },
-      { nombre: 'Baterías', como: '2 × 18650, 22 Wh', ancla: v3(S([-4.2, 1.55, 0.42])), col: -1, fila: 0.2,
+      { nombre: 'Baterías', como: EN.celdas + ' × 18650, ' + Math.round(EN.capWh) + ' Wh', ancla: v3(S([-4.2, 1.55, 0.42])), col: -1, fila: 0.2,
         valor: function (e) { var c = e.s.energia.soc(); return ['Carga ' + Math.round(c * 100) + ' %', c < 0.2]; } },
       { nombre: 'Módem LTE-M', como: 'envía por la red celular', ancla: v3(S([-3.85, 2.42, 0.37])), col: 1, fila: -0.16,
         valor: function (e) { return e.s.enlace.caido ? ['Sin red', true] : ['Señal ' + Math.round(e.s.enlace.rssi) + ' dBm']; } },
@@ -668,11 +906,11 @@
         valor: function (e) { return [enSD(e.nSD), e.nSD > 1 && !e.env]; } }
     ] };
     d.energia = { centro: v3(S([-4.15, 3.6, 0.3])), items: [
-      { nombre: 'Panel solar', como: '5 W, inclinado al sur', ancla: v3(S([-4.75, 4.95, 0.2])), col: -1, fila: -0.2,
+      { nombre: 'Panel solar', como: EN.panelW + ' W, inclinado al sur', ancla: v3(S([-4.75, 4.95, 0.2])), col: -1, fila: -0.2,
         valor: function (e) { var w = e.s.energia.solarW; return [w > 0.05 ? 'Genera ' + w.toFixed(1) + ' W' : 'Sin sol']; } },
-      { nombre: 'Baterías', como: '22 Wh: ≈ 14 días sin sol', ancla: v3(S([-4.2, 1.55, 0.42])), col: -1, fila: 0.18,
+      { nombre: 'Baterías', como: Math.round(EN.capWh) + ' Wh: ≈ ' + EN_MEDIDO[TIPO].dias + ' días sin sol', ancla: v3(S([-4.2, 1.55, 0.42])), col: -1, fila: 0.18,
         valor: function (e) { var c = e.s.energia.soc(); return ['Carga ' + Math.round(c * 100) + ' %', c < 0.2]; } },
-      { nombre: 'Consumo', como: '≈ 1.4 Wh al día; casi todo dormida', ancla: v3(S([-4.25, 2.22, 0.33])), col: 1, fila: 0.05,
+      { nombre: 'Consumo', como: '≈ ' + EN_MEDIDO[TIPO].wh + ' Wh al día; ' + EN_MEDIDO[TIPO].nota, ancla: v3(S([-4.25, 2.22, 0.33])), col: 1, fila: 0.05,
         valor: function (e) { return ['Gasta ' + Math.round(e.f.mW || 0) + ' mW: ' + (ESTADO[e.nom] || e.nom).toLowerCase()]; } }
     ] };
     var antena = v3(S([-3.65, 3.98, 0.35]));
@@ -686,6 +924,7 @@
       { nombre: 'Torre celular', como: 'del operador; no es nuestra', ancla: G.torreTope, col: 1, fila: 0.04,
         valor: function (e) { return e.s.enlace.caido ? ['Sin cobertura en el sitio', true] : [e.env && e.env.k < ENV.ack ? 'Recibiendo los datos' : 'Con cobertura']; } }
     ] };
+    if (TIPO === 'ladera') return d;
     var K = G.col;
     d.barrera = { centro: cw(-1.2, 0.2, -1.0), items: [
       { nombre: 'Barrera flotante', como: 'flotadores de HDPE con faldón; guía lo que flota a la orilla', ancla: K.puntoBarrera, col: -1, fila: -0.2,
@@ -725,6 +964,7 @@
       var d = document.createElement('div');
       d.className = 'rot3d ' + r.lado + (r.vista ? ' clic' : '');
       d.innerHTML = '<b>' + r.nombre + '</b><span class="val" id="rv_' + r.id + '"></span>';
+      if (r.fijo) d.querySelector('.val').textContent = r.fijo;
       capa.appendChild(d);
       r.el = d; r.v = new T.Vector3(r.ancla[0], r.ancla[1], r.ancla[2]);
       if (r.vista) d.addEventListener('click', function () { irA(r.vista); });
@@ -800,7 +1040,9 @@
   }
 
   // ------------------------------------------------------------ la escena
-  function construye() {
+  // tipo: 'rio' (estación de agua, con su colector) o 'ladera' (módulo de ladera, docs/20). ficha: la de la estación.
+  function construye(tipo, ficha) {
+    TIPO = tipo === 'ladera' ? 'ladera' : 'rio';
     T = window.THREE;
     if (T && T.ColorManagement) T.ColorManagement.legacyMode = false;   // hex y setHex como sRGB
     var cont = $('escena3d');
@@ -856,6 +1098,19 @@
 
     var pvc = mate(0xf4f6f7, { roughness: 0.5 }), acero = metal(0xb9c2c8, 0.4), oscuro = mate(0x2a3640, { roughness: 0.6 });
 
+    var trazoCable;
+    if (TIPO === 'ladera') {
+      construyeLadera();
+      trazoCable = construyeSensoresLadera();
+      G.conIncl = !!ficha && (ficha.parametros || []).indexOf('INCL') >= 0;
+      G.estaca.visible = G.conIncl;
+      $('lienzo3d').setAttribute('aria-label', 'Ladera de un cerro con una escuela en la explanada de abajo y la estación junto a ella: ' +
+        'pluviómetro, sensor de humedad enterrado en la ladera (visible en el corte del suelo)' + (G.conIncl ? ' e inclinómetro en una estaca más arriba' : '') +
+        ', cables al gabinete con el controlador, la tarjeta SD, el módem y las baterías, panel solar y antena en el mástil, y la torre celular en el cerro.');
+      Object.assign(VISTAS, VISTAS_LADERA);
+      var vg = VISTAS.general;
+      G.objetivo.set(vg.obj[0], vg.obj[1], vg.obj[2]); G.orbita = { yaw: vg.yaw, pitch: vg.pitch, dist: vg.dist };
+    } else {
     construyeValle();
 
     // Tubo de protección con las cinco sondas, en el agua y anclado a la orilla con un brazo.
@@ -909,8 +1164,9 @@
     // Cable de las sondas al gabinete, por la orilla.
     G.matCable = mate(0x55626c);
     var finCable = [S([-4.0, 1.3, 0.45]), S([-4.0, 1.12, 0.45])];
-    var trazoCable = [[0.9, 0.6, 0.9], [0.7, 0.82, 0.9], [-1.5, 0.74, 0.85], [-3.3, 0.74, 0.9], finCable[1], finCable[0]];
+    trazoCable = [[0.9, 0.6, 0.9], [0.7, 0.82, 0.9], [-1.5, 0.74, 0.85], [-3.3, 0.74, 0.9], finCable[1], finCable[0]];
     tubo(trazoCable, 0.035, G.matCable);
+    }
 
     // Mástil, gabinete abierto, panel y antena: todo lo que se crea hasta "fin de la estación"
     // se mueve a un grupo escalado 1.6× desde la base del mástil.
@@ -940,10 +1196,15 @@
     G.sd = caja(0.12, 0.03, 0.09, mate(0x6d7b85), -4.08, 1.95, 0.36);
     caja(0.3, 0.22, 0.08, metal(0x8a959d, 0.35), -3.85, 2.42, 0.32);   // módem, carcasa de aluminio
     G.baterias = [];
-    [0, 1].forEach(function (k) {
-      var b = cilindro(0.08, 0.6, mate(0x3a4750, { roughness: 0.3 }), -4.2, 1.55 + k * 0.17 - 0.08, 0.36, null, 16);
+    // Las celdas 18650 de su tipo de estación (modelo.js, ENERGIA): 2 en la de ladera, 8 en la de agua, en
+    // filas de dos (dos portapilas de 4 en paralelo).
+    var celdas = M.ENERGIA[TIPO].celdas, largo = celdas > 2 ? 0.27 : 0.6;
+    for (var kb = 0; kb < celdas; kb++) {
+      var fila = celdas > 2 ? (kb >> 1) : kb, colB = celdas > 2 ? (kb & 1) : 0;
+      var b = cilindro(celdas > 2 ? 0.055 : 0.08, largo, mate(0x3a4750, { roughness: 0.3 }),
+        celdas > 2 ? -4.36 + colB * 0.31 : -4.2, (celdas > 2 ? 1.47 + fila * 0.115 : 1.55 + fila * 0.17 - 0.08), 0.36, null, 16);
       b.rotation.z = Math.PI / 2; G.baterias.push(b);
-    });
+    }
     G.carga = caja(0.6, 0.03, 0.02, mate(AGUA), -4.2, 1.38, 0.45, null, 0);
     // cola de la SD: un bloque por paquete pendiente (hasta 12)
     G.cola = [];
@@ -963,7 +1224,8 @@
     }
     var texCel = new T.CanvasTexture(cel); texCel.encoding = T.sRGBEncoding;
     G.matPanel = mate(0xffffff, { map: texCel, roughness: 0.18, metalness: 0.1, envMap: G.cielo, envMapIntensity: 0.6, emissive: new T.Color(0x000000) });
-    var panel = caja(1.6, 0.05, 1.0, G.matPanel, 0, 0, 0, new T.Group(), 1);
+    var kp = Math.sqrt(M.ENERGIA[TIPO].panelW / 5);                 // el área del panel crece con su potencia
+    var panel = caja(1.6 * kp, 0.05, 1.0 * kp, G.matPanel, 0, 0, 0, new T.Group(), 1);
     var soporte = new T.Group(); soporte.position.set(-4.3, 4.95, 0.2); soporte.rotation.x = 0.42; soporte.add(panel);
     G.escena.add(soporte);
     // antena del módem
@@ -1016,7 +1278,8 @@
     zona('enlace', S([-3.65, 3.5, 0.35]), [0.6, 2.0, 0.6]);
     zona('enlace', [G.torreTope.x, G.torreTope.y - 3.4, G.torreTope.z], [2.2, 7.2, 2.2]);
 
-    construyeColector();
+    if (TIPO === 'rio') construyeColector();
+    else ROTULOS = rotulosLadera(ficha);
 
     // Sombras: todo lo opaco las proyecta y las recibe, salvo el terreno, el corte y el fondo.
     G.escena.traverse(function (o) {
@@ -1099,8 +1362,15 @@
     energia:  { obj: S([-4.15, 3.6, 0.3]), yaw: -0.15, pitch: 0.22, dist: 10.5, lim: [-0.7, 0.6, 0.05, 0.6], agua: 0.72, tubo: 0.38 },
     enlace:   { obj: [5.8, 6.6, -5.5], yaw: 0.6, pitch: 0.1, dist: 26, lim: [0.1, 1.0, 0.02, 0.45], agua: 0.72, tubo: 0.38 }
   };
+  // Ladera: el cerro es más alto que el valle y la torre queda arriba; la vista de cerca va a los tres sensores.
+  var VISTAS_LADERA = {
+    general: { obj: [3.0, 6.4, -4.2], yaw: -0.12, pitch: 0.16, dist: 46, lim: [-1.0, 0.7, 0.04, 0.7], agua: 0, tubo: 0 },
+    ladera:  { obj: [3.2, 3.2, 1.0], yaw: -0.08, pitch: 0.16, dist: 15, lim: [-0.7, 0.6, 0, 0.5], agua: 0, tubo: 0 },
+    enlace:  { obj: [6.2, 11.5, -5.5], yaw: 0.55, pitch: 0.1, dist: 30, lim: [0.1, 1.0, 0.02, 0.45], agua: 0, tubo: 0 }
+  };
   // En la vista de cerca, las fases que se quieren ver van a tiempo real (ui.js lo consulta).
   var TIEMPO_REAL = {
+    ladera: ['CALENTAMIENTO', 'MEDICIÓN'],
     sondas: ['CALENTAMIENTO', 'MEDICIÓN'],
     gabinete: ['CALENTAMIENTO', 'MEDICIÓN', 'EMPAQUETADO']
     // comunicación no se frena: a la velocidad elegida cada envío se dibuja completo (2.3 s, ver ENV) y
@@ -1109,7 +1379,7 @@
   function irA(nombre) {
     if (G.vista === nombre && !G.trans) return;
     G.trans = { de: { obj: G.objetivo.toArray(), yaw: G.orbita.yaw, pitch: G.orbita.pitch, dist: G.orbita.dist,
-      agua: G.matCaraAgua.opacity, tubo: G.tuboSondas.material.opacity }, a: VISTAS[nombre], t0: performance.now() };
+      agua: G.matCaraAgua ? G.matCaraAgua.opacity : 0, tubo: G.tuboSondas ? G.tuboSondas.material.opacity : 0 }, a: VISTAS[nombre], t0: performance.now() };
     G.vista = nombre;
     G.volver.hidden = nombre === 'general';
     G.lienzo.classList.remove('apunta');
@@ -1121,8 +1391,8 @@
     G.objetivo.set(mezcla(de.obj[0], a.obj[0]), mezcla(de.obj[1], a.obj[1]), mezcla(de.obj[2], a.obj[2]));
     G.orbita.yaw = mezcla(de.yaw, a.yaw); G.orbita.pitch = mezcla(de.pitch, a.pitch);
     G.orbita.dist = Math.exp(mezcla(Math.log(de.dist), Math.log(a.dist)));   // acercamiento parejo
-    G.matCaraAgua.opacity = mezcla(de.agua, a.agua);
-    G.tuboSondas.material.opacity = mezcla(de.tubo, a.tubo);
+    if (G.matCaraAgua) G.matCaraAgua.opacity = mezcla(de.agua, a.agua);
+    if (G.tuboSondas) G.tuboSondas.material.opacity = mezcla(de.tubo, a.tubo);
     G.sucio = true;
     if (k >= 1) G.trans = null;
   }
@@ -1176,13 +1446,16 @@
     if (G.lienzo.clientWidth && Math.abs(G.lienzo.clientWidth / G.lienzo.clientHeight - G.camara.aspect) > 0.01) ajusta();
     var fw = s.fw, f = fw.fase, nom = f.nombre, p = f.dur > 0 ? 1 - f.resta / f.dur : 1;
 
+    var ahora = performance.now(), dtr = Math.min(0.1, (ahora - (G.tAgua || ahora)) / 1000);
+    G.tAgua = ahora;
+    if (TIPO === 'ladera') pintaLadera(s, nom, dtr);
+    else {
     G.matAgua.color.copy(colorAgua(s.agua.valor('TURB', fw.t))); G.matCaraAgua.color.copy(G.matAgua.color);
     // corriente: la textura avanza aguas abajo (una baldosa mide 3.84 m a lo largo del cauce); con la
     // simulación en pausa, el agua sigue corriendo. A escala real, 0.6 m/s casi no se percibe desde la
     // distancia de la cámara: se dibuja 4 veces más rápido. El rótulo da la velocidad del modelo, sin
     // exagerar, y la proporción entre corriente normal y crecida se conserva.
-    var ahora = performance.now(), dtr = Math.min(0.1, (ahora - (G.tAgua || ahora)) / 1000), vel = s.agua.velocidad(fw.t);
-    G.tAgua = ahora;
+    var vel = s.agua.velocidad(fw.t);
     G.ondas.forEach(function (t) { t.offset.y = (t.offset.y + EXAGERA_CORRIENTE * vel * dtr / 3.84) % 1; });
     rotulo('rio', vel.toFixed(2) + ' m/s, simulada');
     pintaColector(s, ahora, dtr);
@@ -1196,6 +1469,7 @@
     var fallas = M.PARAMS.filter(function (q) { return s.sondas[q].falla !== 'ninguna'; }).length;
     rotulo('sondas', midiendo ? (nom === 'MEDICIÓN' ? 'Midiendo' : 'Estabilizando') :
       (fallas ? fallas + (fallas === 1 ? ' con falla' : ' con falla') : 'Esperando la próxima medición'), fallas);
+    }
 
     var n = fw.cola.length, env = envio(s, nom), nSD = env && env.k < ENV.ack ? Math.max(n, env.nAntes) : n;
     G.cola.forEach(function (c, i) { c.visible = i < nSD; });

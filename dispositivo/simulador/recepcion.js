@@ -4,7 +4,10 @@
  *   lleno  recibida por la plataforma (la estación recibió la confirmación)
  *   vacío  guardada en la SD de la estación, todavía por enviar
  * Si se corta la red, los puntos quedan vacíos; al volver, se llenan con su hora
- * original. La franja de fondo es el rango habitual del sitio (p10 a p90).
+ * original. La franja de fondo es el rango habitual del sitio (p10 a p90). En
+ * una estación de ladera no hay historia del sitio: la línea punteada es el umbral
+ * de referencia de umbrales_lluvia.json (humedad cerca de saturación, aviso del
+ * inclinómetro), que es una hipótesis y así se dice en ese archivo.
  * Las pestañas eligen el parámetro y muestran su último valor medido.
  *
  * Solo dibuja. ui.js le avisa de cada envío confirmado con registra().
@@ -15,8 +18,10 @@
   var NS = 'http://www.w3.org/2000/svg';
   var VENTANA = 12 * 3600;
   var W = 800, H = 180, IZQ = 52, DER = 16, ARR = 26, ABA = 26;
-  var NOMBRE = { COND: 'Conductividad', OD: 'Oxígeno disuelto', PH: 'pH', TEMP: 'Temperatura', TURB: 'Turbiedad' };
-  var DEC = { OD: 2, PH: 2, COND: 0, TEMP: 1, TURB: 0 };
+  var NOMBRE = { COND: 'Conductividad', OD: 'Oxígeno disuelto', PH: 'pH', TEMP: 'Temperatura', TURB: 'Turbiedad',
+    LLUVIA: 'Lluvia', HUM_SUELO: 'Humedad del suelo', INCL: 'Inclinación' };
+  var DEC = { OD: 2, PH: 2, COND: 0, TEMP: 1, TURB: 0, LLUVIA: 1, HUM_SUELO: 1, INCL: 2 };
+  var params = M.PARAMS, referencia = {};
   var recibidos = {};             // c_estacion -> [{ t, valores, tRec }]
   var param = 'COND';
   var $ = function (id) { return document.getElementById(id); };
@@ -36,9 +41,15 @@
   function fmt(v, d) { return v === null || v === undefined ? '—' : v.toFixed(d).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
   function valido(v) { return v !== null && v !== undefined && v > -900; }
 
-  function construye() {
+  // params: lo que mide la estación elegida; umbrales: umbrales_lluvia.json, si se pudo leer.
+  function construye(ps, umbrales) {
     var sel = $('recParam');
-    M.PARAMS.forEach(function (p) {
+    params = ps || M.PARAMS; param = params[0];
+    if (umbrales) {
+      if (umbrales.humedad_suelo) referencia.HUM_SUELO = umbrales.humedad_suelo.cerca_de_saturacion_pct;
+      if (umbrales.inclinacion) referencia.INCL = umbrales.inclinacion.aviso_grados;
+    }
+    params.forEach(function (p) {
       var b = document.createElement('button');
       b.type = 'button'; b.dataset.p = p;
       b.innerHTML = NOMBRE[p] + ' <span class="v" id="pv_' + p + '">—</span>';
@@ -59,7 +70,7 @@
 
   function pinta(s) {
     // pestañas: último valor medido por la estación
-    M.PARAMS.forEach(function (p) {
+    params.forEach(function (p) {
       var d = s.fw.detalleMed[p], t = d ? (d.valor === null ? 'sin respuesta' : fmt(d.valor, DEC[p]) + ' ' + M.ESPEC[p].unidad) : '—';
       var e = $('pv_' + p); if (e.textContent !== t) e.textContent = t;
     });
@@ -67,10 +78,11 @@
     var svg = $('recepcion'), id = s.fw.id, ahora = s.fw.t, t0 = ahora - VENTANA;
     var rec = (recibidos[id] || []).filter(function (x) { return x.t >= t0; });
     var pend = s.fw.cola.map(function (p) { return { t: Date.parse(p.fecha_hora) / 1000, valores: valores(p) }; }).filter(function (x) { return x.t >= t0; });
-    var L = s.linea[param], dec = DEC[param];
+    var L = s.linea[param], dec = DEC[param], ref = referencia[param];
+    var marco = L ? [L.p10, L.p90] : ref !== undefined ? [ref] : [0];
 
     var vals = rec.concat(pend).map(function (x) { return x.valores[param]; }).filter(valido);
-    var lo = Math.min.apply(null, vals.concat([L.p10])), hi = Math.max.apply(null, vals.concat([L.p90]));
+    var lo = Math.min.apply(null, vals.concat(marco)), hi = Math.max.apply(null, vals.concat(marco));
     var m = (hi - lo) * 0.15 || 1; lo -= m; hi += m;
     function X(t) { return IZQ + (t - t0) / VENTANA * (W - IZQ - DER); }
     function Y(v) { return ARR + (1 - (v - lo) / (hi - lo)) * (H - ARR - ABA); }
@@ -82,10 +94,16 @@
     el('text', { x: W - 322, y: ly + 4, 'font-size': 11.5, fill: '#5b6974' }, svg, 'recibida por la plataforma');
     el('circle', { cx: W - 168, cy: ly, r: 3.5, fill: '#fff', stroke: '#16222c', 'stroke-width': 1.3 }, svg);
     el('text', { x: W - 160, y: ly + 4, 'font-size': 11.5, fill: '#5b6974' }, svg, 'en la estación, por enviar');
-    // franja del rango habitual
-    el('rect', { x: IZQ, y: Y(L.p90), width: W - IZQ - DER, height: Math.max(1, Y(L.p10) - Y(L.p90)), fill: '#1d6fa5', opacity: 0.08 }, svg);
-    el('text', { x: IZQ - 6, y: Y(L.p90) + 4, 'text-anchor': 'end', 'font-size': 11, fill: '#5b6974' }, svg, fmt(L.p90, dec));
-    el('text', { x: IZQ - 6, y: Y(L.p10) + 4, 'text-anchor': 'end', 'font-size': 11, fill: '#5b6974' }, svg, fmt(L.p10, dec));
+    if (L) {
+      // franja del rango habitual
+      el('rect', { x: IZQ, y: Y(L.p90), width: W - IZQ - DER, height: Math.max(1, Y(L.p10) - Y(L.p90)), fill: '#1d6fa5', opacity: 0.08 }, svg);
+      el('text', { x: IZQ - 6, y: Y(L.p90) + 4, 'text-anchor': 'end', 'font-size': 11, fill: '#5b6974' }, svg, fmt(L.p90, dec));
+      el('text', { x: IZQ - 6, y: Y(L.p10) + 4, 'text-anchor': 'end', 'font-size': 11, fill: '#5b6974' }, svg, fmt(L.p10, dec));
+    } else if (ref !== undefined) {
+      // umbral de referencia de ladera (hipótesis)
+      el('line', { x1: IZQ, y1: Y(ref), x2: W - DER, y2: Y(ref), stroke: '#1d6fa5', 'stroke-dasharray': '4 4', 'stroke-opacity': 0.6 }, svg);
+      el('text', { x: IZQ - 6, y: Y(ref) + 4, 'text-anchor': 'end', 'font-size': 11, fill: '#5b6974' }, svg, fmt(ref, dec));
+    }
     // eje de tiempo: una marca cada 2 h
     el('line', { x1: IZQ, y1: H - ABA, x2: W - DER, y2: H - ABA, stroke: '#16222c' }, svg);
     var paso = 7200;

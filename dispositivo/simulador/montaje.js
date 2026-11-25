@@ -24,33 +24,48 @@
     return o;
   }
 
+  // Qué mide una estación: lo que diga su ficha (v2.0); las del Atoyac, sin esa lista, las cinco sondas.
+  function parametros(est) { return est.parametros && est.parametros.length ? est.parametros : M.PARAMS; }
+  function esLadera(est) { return parametros(est).indexOf('COND') < 0; }
+
   function crearEstacion(est, lineaBase, opc) {
     opc = opc || {};
     var semilla = opc.semilla || 20261123;
     var t0 = opc.t0 || M.T0_DEFECTO;
-    var rng = M.mulberry32(semilla + est.c_estacion.charCodeAt(est.c_estacion.length - 1));
+    var sem = semilla + est.c_estacion.charCodeAt(est.c_estacion.length - 1);
+    var rng = M.mulberry32(sem);
+    var params = parametros(est);
     var linea = lineaDeSitio(lineaBase, est.banda_simulacion || est.c_sitio);
-    var agua = new M.Agua(linea, semilla + est.c_estacion.charCodeAt(est.c_estacion.length - 1));
+    // El agua solo existe donde hay cauce; la ladera, donde la estación tiene su módulo (docs/20).
+    var agua = esLadera(est) ? null : new M.Agua(linea, sem);
+    var ladera = params.some(function (p) { return M.PARAMS_LADERA.indexOf(p) >= 0; }) ? new M.Ladera(sem + 41) : null;
     var sondas = {};
-    M.PARAMS.forEach(function (p) { sondas[p] = new M.Sonda(p, rng, t0); });
-    var energia = new M.Energia({ soc0: opc.soc0 });
+    params.forEach(function (p) { sondas[p] = p === 'LLUVIA' ? new M.Pluviometro(ladera, t0) : new M.Sonda(p, rng, t0); });
+    var cfgE = M.ENERGIA[esLadera(est) ? 'ladera' : 'rio'];
+    var energia = new M.Energia({ capWh: cfgE.capWh, panelW: cfgE.panelW, soc0: opc.soc0 });
     var enlace = new M.Enlace(RSSI[est.c_estacion] || -80, rng);
     var firmware = new F.Estacion({
-      id: est.c_estacion, agua: agua, sondas: sondas, energia: energia,
+      id: est.c_estacion, agua: agua, ladera: ladera, params: params, sondas: sondas, energia: energia,
       enlace: enlace, rng: rng, t0: t0, alEvento: opc.alEvento
     });
     // El colector de residuos comparte puente, agua y red celular con la estación; tiene su propia
     // batería (12 V, 256 Wh) y su panel de 100 W. Si se corta el enlace de la estación, también el suyo.
-    var rngCol = M.mulberry32(semilla + 777 + est.c_estacion.charCodeAt(est.c_estacion.length - 1));
-    var enlaceCol = new M.Enlace(RSSI[est.c_estacion] || -80, rngCol);
-    Object.defineProperty(enlaceCol, 'caido', { get: function () { return enlace.caido; }, set: function () {} });
-    var col = new R.Colector({
-      id: est.c_estacion, agua: agua, rng: rngCol, t0: t0, enlace: enlaceCol,
-      energia: new M.Energia({ capWh: 256, panelW: 100, soc0: opc.soc0 }), alEvento: opc.alEventoCol
-    });
-    return { est: est, linea: linea, agua: agua, sondas: sondas, energia: energia, enlace: enlace, fw: firmware, col: col };
+    // Solo en un cauce: las reubicadas lo traen en su ficha (`colector`), las del Atoyac lo llevan todas,
+    // las de ladera no (null).
+    var col = null;
+    if (agua && est.colector !== null) {
+      var rngCol = M.mulberry32(semilla + 777 + est.c_estacion.charCodeAt(est.c_estacion.length - 1));
+      var enlaceCol = new M.Enlace(RSSI[est.c_estacion] || -80, rngCol);
+      Object.defineProperty(enlaceCol, 'caido', { get: function () { return enlace.caido; }, set: function () {} });
+      col = new R.Colector({
+        id: est.c_estacion, agua: agua, rng: rngCol, t0: t0, enlace: enlaceCol,
+        energia: new M.Energia({ capWh: 256, panelW: 100, soc0: opc.soc0 }), alEvento: opc.alEventoCol
+      });
+    }
+    return { est: est, linea: linea, agua: agua, ladera: ladera, params: params, sondas: sondas, energia: energia,
+      enlace: enlace, fw: firmware, col: col, tipo: esLadera(est) ? 'ladera' : 'rio' };
   }
 
-  raiz.Montaje = { crearEstacion: crearEstacion, lineaDeSitio: lineaDeSitio, RSSI: RSSI };
+  raiz.Montaje = { crearEstacion: crearEstacion, lineaDeSitio: lineaDeSitio, parametros: parametros, esLadera: esLadera, RSSI: RSSI };
   if (typeof module !== 'undefined' && module.exports) module.exports = raiz.Montaje;
 })(typeof window !== 'undefined' ? window : globalThis);

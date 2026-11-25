@@ -24,6 +24,9 @@ Autorizaciones (docs/19 §4.3): CEASPUE para instalar en el cauce y CAPCEE para 
 toma el estado que la escuela ya tenga en escuelas.json; si no tiene, 'pendiente'. Sin CEASPUE otorgada
 el mecanismo es 'propuesta'.
 
+Módulo de ladera (docs/20 §3.2): las 5 escuelas de escuelas_ladera.json (las elige 100_escuelas_ladera.py) se
+vuelven estaciones EST-LAD- con pluviómetro, humedad de suelo e inclinómetro, en la escuela, sin colector ni c_sitio.
+
 Salidas (DERIVADAS: se edita este script, no los archivos):
     contrato/fixtures/mecanismos.json               las estaciones reubicadas con su escuela y su colector
     datos/procesados/mapa/red_mecanismos.geojson    el tramo de cada estación, para dibujarlo en el mapa
@@ -175,12 +178,51 @@ def main():
         tramos.append({'type': 'Feature', 'properties': {'c_estacion': ce, 'conexion': True},
                        'geometry': {'type': 'LineString', 'coordinates': [[round(x, 6), round(y, 6)] for x, y in coords]}})
 
+    # ---- Módulo de ladera (docs/20 §3.2). Las escuelas y sus sensores los elige 100_escuelas_ladera.py; aquí solo
+    # se convierten en estaciones con la forma de las demás. Sin cauce: sin colector, sin c_sitio y sin banda.
+    # Si la escuela ya tiene estación de agua, sus sensores de ladera se suman a esa estación.
+    ruta_ladera = os.path.join(FIX, 'escuelas_ladera.json')
+    ladera = leer(ruta_ladera)['modulos'] if os.path.exists(ruta_ladera) else []
+    por_cct = {e['cct']: e for e in escuelas}
+    for m in ladera:
+        e = por_cct.get(m['cct'], {})
+        capcee, f_capcee = estado_de(e, 'CAPCEE')
+        existente = next((x for x in estaciones if x['c_estacion'] == m.get('estacion_de_agua_existente')), None)
+        if existente:
+            existente['parametros'] += [p for p in m['parametros'] if p not in existente['parametros']]
+            existente['escuelas_protegidas'] += [c for c in m['escuelas_protegidas'] if c not in existente['escuelas_protegidas']]
+            continue
+        estaciones.append({
+            'c_estacion': m['c_estacion'],
+            'c_sitio': None,
+            'nombre': 'Ladera de ' + m['localidad'],
+            'municipio': m['municipio'],
+            'estado': 'Puebla',
+            'latitud': m['latitud'],
+            'longitud': m['longitud'],
+            'parametros': m['parametros'],
+            'estado_dispositivo': 'Activo',
+            'cct': m['cct'],
+            'escuela': m['escuela'],
+            'localidad': m['localidad'],
+            'escuelas_protegidas': m['escuelas_protegidas'],
+            'distancia_escuela_m': 0,
+            'distancia_al_sitio_m': None,
+            'banda_simulacion': None,
+            # Sin fuente de agua no hace falta CEASPUE: basta el plantel (CAPCEE).
+            'instalacion': 'autorizada' if capcee == 'otorgada' else 'propuesta',
+            'autorizaciones': [
+                {'organismo': 'CAPCEE', 'tramite': 'vinculacion_con_plantel', 'estado': capcee, 'fecha': f_capcee},
+            ],
+            'colector': None,
+        })
+
     salida = {
         'version': '2.0-propuesta',
         '_provisional': True,
-        'criterio': ('Escuelas de escuelas.json con un cauce a menos de {} m, ordenadas por riesgo de contaminacion; '
-                     'las {} primeras a mas de {} m entre si. Generado por scripts/99_reubicacion.py.').format(
-                         RADIO_CAUCE_M, N_MECANISMOS, SEPARACION_M),
+        'criterio': ('EST-ESC: escuelas de escuelas.json con un cauce a menos de {} m, ordenadas por riesgo de contaminacion; '
+                     'las {} primeras a mas de {} m entre si. EST-LAD: modulo de ladera de las escuelas de escuelas_ladera.json '
+                     '(docs/20). Generado por scripts/99_reubicacion.py.').format(RADIO_CAUCE_M, N_MECANISMOS, SEPARACION_M),
         'estaciones': estaciones,
     }
     with open(os.path.join(FIX, 'mecanismos.json'), 'w', encoding='utf-8', newline='\n') as f:
@@ -189,13 +231,17 @@ def main():
     with open(os.path.join(MAPA, 'red_mecanismos.geojson'), 'w', encoding='utf-8', newline='\n') as f:
         json.dump({'type': 'FeatureCollection', 'features': tramos}, f, ensure_ascii=False, separators=(',', ':'))
 
-    print('{} escuelas, {} con cauce a menos de {} m, {} mecanismos'.format(
-        len(escuelas), len(elegibles), RADIO_CAUCE_M, len(estaciones)))
-    for e in estaciones:
+    print('{} escuelas, {} con cauce a menos de {} m; {} mecanismos de agua y {} de ladera'.format(
+        len(escuelas), len(elegibles), RADIO_CAUCE_M, sum(1 for x in estaciones if x.get('colector')),
+        sum(1 for x in estaciones if not x.get('colector'))))
+    for e in [x for x in estaciones if x.get('colector')]:
         print('  {} {:<24} {:<14} {:<26} cauce {:>5} m  {} escuelas  sitio {:<12} banda {:<10} {}'.format(
             e['c_estacion'], e['localidad'][:24], e['municipio'][:14], e['cuerpo_agua'][:26], e['distancia_escuela_m'],
             len(e['escuelas_protegidas']), e['c_sitio'] or '-', e['banda_simulacion'], e['instalacion']))
-    protegidas = sum(len(e['escuelas_protegidas']) for e in estaciones)
+    for e in [x for x in estaciones if not x.get('colector')]:
+        print('  {} {:<24} {:<14} ladera: {}  {}'.format(e['c_estacion'], e['localidad'][:24], e['municipio'][:14],
+                                                         ', '.join(e['parametros']), e['instalacion']))
+    protegidas = sum(len(e['escuelas_protegidas']) for e in estaciones if e.get('colector'))
     print('  {} escuelas protegidas; {} elegibles sin mecanismo; {} sin cauce en la red que tenemos (cuenca RH18A)'.format(
         protegidas, len(elegibles) - protegidas, len(escuelas) - len(elegibles)))
 

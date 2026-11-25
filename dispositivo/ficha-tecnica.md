@@ -21,7 +21,7 @@ diseño**. La diferencia importa: la estación se presenta simulada, no instalad
 | ① | **Sondas** | OD, pH, conductividad (K = 1.0), temperatura, turbiedad óptica con limpiador. Grado de campo. Circuitos de interfaz **aislados entre sí**. | Mide cinco señales cada 15 minutos. |
 | ② | **Controlador** | ESP32, reloj en tiempo real (DS3231), tarjeta microSD, perro guardián. | Duerme, mide, empaqueta, guarda y envía. |
 | ③ | **Comunicación** | Módem celular LTE-M/4G con SIM de datos de un operador comercial: usa sus torres, no hay antenas propias (docs/18). `POST /lecturas` por HTTPS. LoRaWAN con un concentrador en un punto alto queda como alternativa para sitios sin cobertura. | Entrega el JSON del contrato sin traducción. |
-| ④ | **Energía** | Panel solar de 5 W y dos baterías 18650 (≈22 Wh). | Autonomía sin toma de corriente. |
+| ④ | **Energía** | Estación de agua: panel solar de 10 W, cargador solar externo y **ocho** baterías 18650 en dos portapilas de 4 en paralelo (≈ 89 Wh). Estación de ladera: panel de 5 W y dos 18650 (≈ 22 Wh). Modelos en [`catalogo-componentes.md`](catalogo-componentes.md). | Autonomía sin toma de corriente. |
 
 El aislamiento entre sondas no es un lujo: varias sondas en la misma agua conductiva se
 interfieren y dan lecturas erráticas.
@@ -55,8 +55,8 @@ medición termine justo en la marca.
 | Fase | Duración simulada | Consumo (supuesto) |
 |---|---|---|
 | Sueño | resto del ciclo | 8 mW |
-| Calentamiento de sondas | 15 s (la más lenta, el OD) | 1 020 mW |
-| Medición (mediana de 5 lecturas por sonda) | 5 s | 1 020 mW |
+| Calentamiento de sondas | 15 s (la más lenta, el OD) | 7 770 mW (la turbiedad sola, ≈ 7 000) |
+| Medición (mediana de 5 lecturas por sonda) | 5 s | 7 770 mW |
 | Empaquetado y escritura en la SD | 1 s | 300 mW |
 | Enlace con la red | 8 s | 1 800 mW |
 | Envío | 4 s | 2 400 mW |
@@ -119,11 +119,16 @@ Con `node dispositivo/simulador/prueba.js` (todos los datos de entrada, de los f
 | Corte de red de 4 h | 0 paquetes perdidos, 0 duplicados, horas originales, orden cronológico |
 | Sonda rota y sonda muda | `-999` y `null` respectivamente, sin alertas del firmware |
 | Turbiedad en lluvia fuerte | satura en 4 000 NTU |
-| Consumo medio | **≈ 1.4 Wh/día** |
-| Autonomía sin sol desde 90 % | **≈ 14 días** |
+| Consumo medio | **≈ 5.0 Wh/día** (con la turbiedad real; antes 1.4) |
+| Autonomía sin sol desde 90 % | **≈ 16 días** con 89 Wh (15.9) |
+| Cuatro días nublados (un cuarto de sol) | termina al 98 % |
 
-> **Corrección.** En la conversación de diseño se estimó a mano 1.1 Wh/día y 19 días. El
-> modelo, con las duraciones y consumos de arriba, da 1.4 Wh/día y 14 días. Manda el modelo.
+> **Corrección.** En la conversación de diseño se estimó a mano 1.1 Wh/día y 19 días; el modelo
+> daba 1.4 Wh/día y 14 días con una sonda de turbiedad de 250 mW. El modelo comercial que cubre
+> 0–4 000 NTU con limpiador (Pyxis LT-633) pide 6 W a 24 V: con el elevador, ≈ 7 W mientras mide, y el
+> consumo sube a 5.0 Wh/día. Con las dos baterías de antes la autonomía caía a 4 días; por eso la
+> estación de agua pasó a 8 celdas (≈ 89 Wh) y panel de 10 W, y recupera ≈ 16 días. La placa
+> controladora carga a lo más 500 mA, así que el panel de 10 W va con su propio cargador solar.
 
 ## Pendiente de validar
 
@@ -132,7 +137,8 @@ Todo lo siguiente es **supuesto de diseño** hasta que alguien lo mida o lo coti
 - **Especificaciones de las sondas** (sesgo, ruido, deriva, tiempos de estabilización).
   Verificar contra la hoja de datos del modelo elegido, sobre todo la exactitud del OD por
   debajo de 2 mg/L.
-- **Consumo por fase.** Medir en banco; el módem celular tiene picos de hasta 2 A.
+- **Consumo por fase.** Medir en banco; el módem celular tiene picos de hasta 2 A, y la turbiedad
+  pide 6 W a 24 V (el tiempo que tarda en estabilizar y limpiar decide el consumo real).
 - **Cobertura celular por sitio.** Las intensidades de señal del simulador (−66 a −84 dBm)
   están en el rango que traen los fixtures, no medidas en campo.
 - **Costos.** No hay cotización. Órdenes de magnitud y lo que hay que cotizar primero, en

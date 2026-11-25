@@ -19,7 +19,8 @@
 (function () {
   'use strict';
   var M = window.Modelo, Mont = window.Montaje;
-  var NOMBRE = { OD: 'Oxígeno disuelto', PH: 'pH', COND: 'Conductividad', TEMP: 'Temperatura', TURB: 'Turbiedad' };
+  var NOMBRE = { OD: 'Oxígeno disuelto', PH: 'pH', COND: 'Conductividad', TEMP: 'Temperatura', TURB: 'Turbiedad',
+    LLUVIA: 'Lluvia', HUM_SUELO: 'Humedad del suelo', INCL: 'Inclinación' };
   var VELOCIDADES = [1, 15, 60, 300, 900, 3600];
   var VENTANA_ALARMA = 3600;          // una alarma sigue vigente 1 h simulada
 
@@ -57,15 +58,23 @@
       .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
       .catch(function () { return fetch('../../contrato/fixtures/estaciones.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }); }),
     fetch('../../contrato/fixtures/linea_base.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }),
-    relojInicial()
-  ]).then(function (d) { arranca(d[0].estaciones, d[1], d[2]); }).catch(function (e) {
+    relojInicial(),
+    // umbrales de ladera (hipótesis, docs/20): la línea de referencia de humedad e inclinación en la recepción
+    fetch('../../contrato/fixtures/umbrales_lluvia.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }).catch(function () { return null; })
+  ]).then(function (d) { arranca(d[0].estaciones, d[1], d[2], d[3]); }).catch(function (e) {
     var a = $('aviso'); a.hidden = false;
     a.innerHTML = 'No se pudieron leer los fixtures del contrato (' + e.message + '). Sirve el repositorio desde su raíz con ' +
       '<code>python -m http.server 8000</code>.';
   });
 
-  function arranca(estaciones, linea, t0) {
-    estado.est = estaciones; estado.sel = estaciones[0].c_estacion;
+  // La página simula a la vez las estaciones del mismo tipo que la elegida: las de agua (figura del río, con
+  // su colector) o las de ladera (figura del cerro, docs/20). Elegir una del otro tipo recarga la página.
+  function tipoDe(e) { return Mont.esLadera(e) ? 'ladera' : 'rio'; }
+  function arranca(todas, linea, t0, umbrales) {
+    var pedida = todas.filter(function (e) { return e.c_estacion === Q.get('estacion'); })[0] || todas[0];
+    estado.tipo = tipoDe(pedida);
+    var estaciones = todas.filter(function (e) { return tipoDe(e) === estado.tipo; });
+    estado.est = estaciones; estado.sel = pedida.c_estacion;
     estaciones.forEach(function (e) {
       var id = e.c_estacion;
       estado.alertas[id] = [];
@@ -75,26 +84,31 @@
     estado.ultimo = performance.now();
 
     var se = $('selEstacion');
-    estaciones.forEach(function (e) {
+    todas.forEach(function (e) {
       var o = document.createElement('option'); o.value = e.c_estacion; o.textContent = e.c_estacion + ' · ' + lugar(e); se.appendChild(o);
     });
-    se.onchange = function () { estado.sel = se.value; refresca(); };
+    se.onchange = function () {
+      if (!estado.por[se.value]) { Q.set('estacion', se.value); location.search = Q.toString(); return; }
+      estado.sel = se.value; refresca();
+    };
     var sv = $('selVel');
     VELOCIDADES.forEach(function (v) { var o = document.createElement('option'); o.value = v; o.textContent = v + '×'; sv.appendChild(o); });
     sv.onchange = function () { estado.vel = +sv.value; };
     $('btnPausa').onclick = function () { estado.pausa = !estado.pausa; this.textContent = estado.pausa ? 'Reanudar' : 'Pausar'; estado.ultimo = performance.now(); };
+    // Pruebas: las del agua mueven el río; las de ladera (tormenta, lluvia prolongada, deslave) la ladera.
     Array.prototype.forEach.call(document.querySelectorAll('.ev'), function (b) {
-      b.onclick = function () { actual().agua.agregaEvento(b.dataset.ev, actual().fw.t); };
+      var deLadera = !!M.EVENTOS_LADERA[b.dataset.ev];
+      b.hidden = deLadera !== (estado.tipo === 'ladera');
+      b.onclick = function () { (deLadera ? actual().ladera : actual().agua).agregaEvento(b.dataset.ev, actual().fw.t); };
     });
     $('btnCorte').onclick = function () { var s = actual(); s.enlace.caido = !s.enlace.caido; refresca(); };
 
-    if (Q.get('estacion') && estado.por[Q.get('estacion')]) estado.sel = Q.get('estacion');
     if (Q.get('incrustado')) document.body.classList.add('incrustado');
     if (VELOCIDADES.indexOf(+Q.get('vel')) >= 0) estado.vel = +Q.get('vel');
     se.value = estado.sel; sv.value = String(estado.vel);
 
-    Escena.construye();
-    Recepcion.construye();
+    Escena.construye(estado.tipo, actual().est);
+    Recepcion.construye(actual().params, umbrales);
     refresca();
     requestAnimationFrame(bucle);
   }
@@ -154,9 +168,9 @@
       // En una vista de cerca, las fases que muestra esa vista van a tiempo real (Escena.tiempoReal):
       // se ve cada sonda estabilizarse, la SD guardar y el módem enviar; el resto, a la velocidad elegida.
       var v = estado.vel, fase = actual().fw.fase.nombre;
-      if (Escena.tiempoReal(fase, actual().col.fase.nombre)) v = 1;
+      if (Escena.tiempoReal(fase, actual().col ? actual().col.fase.nombre : null)) v = 1;
       dt = Math.min(dt, 0.25) * v;
-      estado.est.forEach(function (e) { var s = estado.por[e.c_estacion]; s.fw.tick(dt); s.col.tick(dt); });
+      estado.est.forEach(function (e) { var s = estado.por[e.c_estacion]; s.fw.tick(dt); if (s.col) s.col.tick(dt); });
     }
     // Textos y gráficas 20 veces por segundo; la figura 3D en cada cuadro, para que girar y el
     // viaje del paquete se vean fluidos.

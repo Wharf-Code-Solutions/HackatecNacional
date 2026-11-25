@@ -14,7 +14,12 @@
  *    sonda que no responde se reporta como null; el -999 de una sonda rota se
  *    manda tal cual. Quien decide qué es una falla es el backend.
  *  - Muestreo adaptativo: si algo cambia bruscamente, mide cada 5 min en vez de
- *    cada 15 hasta que se calme.
+ *    cada 15 hasta que se calme. En una estación de ladera (docs/20) también
+ *    mientras llueve fuerte o la estaca del inclinómetro se mueve.
+ *  - Cada estación mide sus parámetros (`parametros` de su ficha): las de agua,
+ *    las cinco sondas; las de ladera, pluviómetro, humedad de suelo e
+ *    inclinómetro. El pluviómetro no se muestrea: se lee su cuenta una vez por
+ *    paquete (lo caído desde el anterior).
  */
 (function (raiz) {
   'use strict';
@@ -43,9 +48,15 @@
   }
   function redondea(x) { return Math.round(x * 1000) / 1000; }
 
-  // Umbrales de "cambio brusco" respecto de la lectura anterior.
-  function cambioBrusco(ant, act) {
+  // Ladera: lluvia fuerte desde 7.6 mm/h (el corte usual de "lluvia fuerte") y un movimiento de la estaca
+  // de 0.2° entre mediciones. Supuestos de diseño, como el resto de los umbrales del firmware.
+  var LLUVIA_FUERTE_MMH = 7.6, INCL_BRUSCO = 0.2;
+
+  // Umbrales de "cambio brusco" respecto de la lectura anterior. `horas`: tiempo desde esa lectura.
+  function cambioBrusco(ant, act, horas) {
+    if (act && act.LLUVIA > 0 && horas > 0 && act.LLUVIA / horas >= LLUVIA_FUERTE_MMH) return 'LLUVIA';
     if (!ant) return false;
+    if (ant.INCL != null && act.INCL != null && ant.INCL > -900 && act.INCL > -900 && Math.abs(act.INCL - ant.INCL) >= INCL_BRUSCO) return 'INCL';
     function rel(p) { return ant[p] && act[p] ? Math.abs(act[p] - ant[p]) / Math.abs(ant[p]) : 0; }
     function abs(p) { return ant[p] !== null && act[p] !== null ? Math.abs(act[p] - ant[p]) : 0; }
     if (act.COND > 0 && ant.COND > 0 && rel('COND') > 0.4) return 'COND';
@@ -59,7 +70,9 @@
   function Estacion(o) {
     this.id = o.id;                       // EST-ATY-01
     this.agua = o.agua;
-    this.sondas = o.sondas;               // { OD: Sonda, ... }
+    this.sondas = o.sondas;               // { OD: Sonda, ... }; en ladera también LLUVIA (pluviómetro), HUM_SUELO, INCL
+    this.ladera = o.ladera || null;       // verdad de campo de la ladera (modelo.js), si la estación tiene ese módulo
+    this.params = o.params || M.PARAMS;   // lo que mide esta estación, en el orden del paquete
     this.energia = o.energia;
     this.enlace = o.enlace;
     this.rng = o.rng;
@@ -76,8 +89,9 @@
     this.modoAdaptativo = false;
     this.alertaBateria = false;
     this.apagada = false;
-    this.estab = Math.max.apply(null, M.PARAMS.map(function (p) { return M.ESPEC[p].estabS; }));
-    this.cargaSondas = M.PARAMS.reduce(function (s, p) { return s + M.ESPEC[p].mW; }, 0);
+    this.estab = Math.max.apply(null, this.params.map(function (p) { return M.ESPEC[p].estabS; }));
+    this.cargaSondas = this.params.reduce(function (s, p) { return s + M.ESPEC[p].mW; }, 0);
+    this.tMedAnt = null;
     this.stats = { paquetes: 0, enviados: 0, posts: 0, reintentos: 0, guardadosSinEnlace: 0, huecos: 0 };
     this.lead = this.estab + CFG.muestras;   // despierta así de antes para medir "en punto"
     this.fase = null;
@@ -155,10 +169,18 @@
     var self = this;
     this._setFase('MEDICIÓN', CFG.muestras, CARGA.cpu + this.cargaSondas, function () {
       var lecturas = [], crudo = {};
-      M.PARAMS.forEach(function (p) {
-        var muestras = [], verdad = self.agua.valor(p, self.t);
+      self.params.forEach(function (p) {
+        if (p === 'LLUVIA') {                    // la cuenta del balancín, no una muestra
+          var mm = self.sondas.LLUVIA.leer(self.t);
+          crudo[p] = mm;
+          self.detalleMed[p] = { valor: mm, verdad: mm, saturada: false };
+          lecturas.push({ c_parametro: p, valor: mm });
+          return;
+        }
+        var medio = M.PARAMS_LADERA.indexOf(p) >= 0 ? self.ladera : self.agua;
+        var muestras = [], verdad = medio.valor(p, self.t);
         for (var k = 0; k < CFG.muestras; k++) {
-          var v = self.sondas[p].leer(self.agua.valor(p, self.t - CFG.muestras + k + 1), self.t);
+          var v = self.sondas[p].leer(medio.valor(p, self.t - CFG.muestras + k + 1), self.t);
           if (v !== null) muestras.push(v);
         }
         var valor = muestras.length >= Math.ceil(CFG.muestras / 2) ? redondea(mediana(muestras)) : null;
@@ -176,7 +198,9 @@
         senal: self.ultimoRSSI
       };
       self._ev('medicion', 'Mediana de ' + CFG.muestras + ' lecturas por sonda', crudo);
-      var motivo = cambioBrusco(self.ultimaMed, crudo);
+      var horas = self.tMedAnt === null ? 0 : (self.t - self.tMedAnt) / 3600;
+      self.tMedAnt = self.t;
+      var motivo = cambioBrusco(self.ultimaMed, crudo, horas);
       if (motivo) {
         if (!self.modoAdaptativo) self._ev('adaptativo', 'Cambio brusco en ' + motivo + ': pasa a ciclo de 5 min');
         self.modoAdaptativo = true; self.calmas = 0;

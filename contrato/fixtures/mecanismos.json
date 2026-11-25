@@ -1,7 +1,7 @@
 {
  "version": "2.0-propuesta",
  "_provisional": true,
- "criterio": "Escuelas de escuelas.json con un cauce a menos de 2500 m, ordenadas por riesgo de contaminacion; las 5 primeras a mas de 3000 m entre si. Generado por scripts/99_reubicacion.py.",
+ "criterio": "EST-ESC: escuelas de escuelas.json con un cauce a menos de 2500 m, ordenadas por riesgo de contaminacion; las 5 primeras a mas de 3000 m entre si. EST-LAD: modulo de ladera de las escuelas de escuelas_ladera.json (docs/20). Generado por scripts/99_reubicacion.py.",
  "estaciones": [
   {
    "c_estacion": "EST-ESC-01",
@@ -243,6 +243,184 @@
     "c_colector": "COL-ESC-05",
     "posicion": "misma orilla, ≈ 10 m aguas arriba de la estación"
    }
+  },
+  {
+   "c_estacion": "EST-LAD-01",
+   "c_sitio": null,
+   "nombre": "Ladera de Tecuantla (los Reyes)",
+   "municipio": "Jopala",
+   "estado": "Puebla",
+   "latitud": 20.164262,
+   "longitud": -97.69145,
+   "parametros": [
+    "LLUVIA",
+    "HUM_SUELO",
+    "INCL"
+   ],
+   "estado_dispositivo": "Activo",
+   "cct": "21KTV0122C",
+   "escuela": "Secundaria Comunitaria Rural Tecuantla, Los Reyes",
+   "localidad": "Tecuantla (los Reyes)",
+   "escuelas_protegidas": [
+    "21KTV0122C"
+   ],
+   "distancia_escuela_m": 0,
+   "distancia_al_sitio_m": null,
+   "banda_simulacion": null,
+   "instalacion": "propuesta",
+   "autorizaciones": [
+    {
+     "organismo": "CAPCEE",
+     "tramite": "vinculacion_con_plantel",
+     "estado": "pendiente",
+     "fecha": null
+    }
+   ],
+   "colector": null
+  },
+  {
+   "c_estacion": "EST-LAD-02",
+   "c_sitio": null,
+   "nombre": "Ladera de El Tabacal",
+   "municipio": "Xicotepec",
+   "estado": "Puebla",
+   "latitud": 20.287337,
+   "longitud": -97.948396,
+   "parametros": [
+    "LLUVIA",
+    "HUM_SUELO",
+    "INCL"
+   ],
+   "estado_dispositivo": "Activo",
+   "cct": "21DPR0901Z",
+   "escuela": "Club de Leones de Xicotepec",
+   "localidad": "El Tabacal",
+   "escuelas_protegidas": [
+    "21DPR0901Z",
+    "21DPR0971V",
+    "21DTV0192O"
+   ],
+   "distancia_escuela_m": 0,
+   "distancia_al_sitio_m": null,
+   "banda_simulacion": null,
+   "instalacion": "propuesta",
+   "autorizaciones": [
+    {
+     "organismo": "CAPCEE",
+     "tramite": "vinculacion_con_plantel",
+     "estado": "pendiente",
+     "fecha": null
+    }
+   ],
+   "colector": null
+  },
+  {
+   "c_estacion": "EST-LAD-03",
+   "c_sitio": null,
+   "nombre": "Ladera de Xinachapan de Allende",
+   "municipio": "Huitzilan de Serdán",
+   "estado": "Puebla",
+   "latitud": 19.968377,
+   "longitud": -97.679854,
+   "parametros": [
+    "LLUVIA",
+    "HUM_SUELO",
+    "INCL"
+   ],
+   "estado_dispositivo": "Activo",
+   "cct": "21DCC0912Z",
+   "escuela": "Yolot'si",
+   "localidad": "Xinachapan de Allende",
+   "escuelas_protegidas": [
+    "21DCC0912Z",
+    "21DPB0484C",
+    "21EJN1113B",
+    "21EPR1541K"
+   ],
+   "distancia_escuela_m": 0,
+   "distancia_al_sitio_m": null,
+   "banda_simulacion": null,
+   "instalacion": "propuesta",
+   "autorizaciones": [
+    {
+     "organismo": "CAPCEE",
+     "tramite": "vinculacion_con_plantel",
+     "estado": "pendiente",
+     "fecha": null
+    }
+   ],
+   "colector": null
+  },
+  {
+   "c_estacion": "EST-LAD-04",
+   "c_sitio": null,
+   "nombre": "Ladera de San Pablito",
+   "municipio": "Pahuatlán",
+   "estado": "Puebla",
+   "latitud": 20.297957,
+   "longitud": -98.15735,
+   "parametros": [
+    "LLUVIA",
+    "HUM_SUELO",
+    "INCL"
+   ],
+   "estado_dispositivo": "Activo",
+   "cct": "21KJN1742B",
+   "escuela": "Preescolar Comunitario Rural San Pablito",
+   "localidad": "San Pablito",
+   "escuelas_protegidas": [
+    "21DCC0439L",
+    "21DPB0745Y",
+    "21DPR1945D",
+    "21ETV0948S",
+    "21KJN1742B"
+   ],
+   "distancia_escuela_m": 0,
+   "distancia_al_sitio_m": null,
+   "banda_simulacion": null,
+   "instalacion": "propuesta",
+   "autorizaciones": [
+    {
+     "organismo": "CAPCEE",
+     "tramite": "vinculacion_con_plantel",
+     "estado": "pendiente",
+     "fecha": null
+    }
+   ],
+   "colector": null
+  },
+  {
+   "c_estacion": "EST-LAD-05",
+   "c_sitio": null,
+   "nombre": "Ladera de Bonillagco",
+   "municipio": "Xochitlán de Vicente Suárez",
+   "estado": "Puebla",
+   "latitud": 19.934205,
+   "longitud": -97.625876,
+   "parametros": [
+    "LLUVIA",
+    "HUM_SUELO"
+   ],
+   "estado_dispositivo": "Activo",
+   "cct": "21DCC1196M",
+   "escuela": "Tierra y Libertad",
+   "localidad": "Bonillagco",
+   "escuelas_protegidas": [
+    "21DCC1196M"
+   ],
+   "distancia_escuela_m": 0,
+   "distancia_al_sitio_m": null,
+   "banda_simulacion": null,
+   "instalacion": "propuesta",
+   "autorizaciones": [
+    {
+     "organismo": "CAPCEE",
+     "tramite": "vinculacion_con_plantel",
+     "estado": "pendiente",
+     "fecha": null
+    }
+   ],
+   "colector": null
   }
  ]
 }
