@@ -138,9 +138,8 @@ def crear_app(url=None):
         if not estado:
             with candado_inicio:
                 if not estado:
-                    estado['propagacion'] = Propagacion()
-                    estado['asignacion'] = Asignador()
-                    estado['almacen'] = Almacen(url)
+                    # Todo de una vez: otro hilo que vea 'estado' no vacío ya lo tiene completo.
+                    estado.update(propagacion=Propagacion(), asignacion=Asignador(), almacen=Almacen(url))
         return estado
 
     app = FastAPI(title='Monitoreo del río Atoyac', version=VERSION_CONTRATO,

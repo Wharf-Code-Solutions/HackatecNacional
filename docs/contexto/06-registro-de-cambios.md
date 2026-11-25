@@ -21,6 +21,16 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-25 · M5: arranque del backend sin carrera entre peticiones
+
+**Qué cambió.** `ctx()` de `backend/app.py` llena el estado (propagación, asignación y almacén) de una sola vez.
+**Por qué.** Con varias peticiones al arrancar, una veía el estado a medias y respondía 500 (`KeyError: 'almacen'`).
+Con el cambio, 20 peticiones simultáneas a un backend recién creado dan 200 y `backend/prueba.py` pasa.
+**Qué arrastró.** Nada más.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
 ## 2026-11-25 · M4 y M6: figura 3D sin puntos y lista del mapa por riesgo
 
 **Qué cambió.** Las figuras 3D del simulador (río y ladera) ya no dibujan un punto por pieza en la vista general: el rótulo
