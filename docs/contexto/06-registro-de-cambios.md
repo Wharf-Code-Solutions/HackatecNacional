@@ -21,6 +21,16 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-25 · Módulo B: cifras de todas las pestañas como tarjetas separadas
+
+**Qué cambió.** `.resumen` pasa a tarjetas separadas con 16 px entre cifras en Alertas y Autorizaciones, como ya estaba
+en Escuelas (antes, una franja con líneas entre cifras).
+**Por qué.** Petición del usuario.
+**Qué arrastró.** `estilos.css`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
 ## 2026-11-25 · Módulo B: 16 px entre todas las tarjetas
 
 **Qué cambió.** `.vista` separa sus bloques con `gap: 16px` y anula los márgenes propios de cada bloque; `.trabajo` también
