@@ -6,6 +6,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 // río (GET /huella, D30), que se prende y apaga con el botón «Mapa de calor». Base vectorial de OpenFreeMap,
 // sin llave. MapLibre se descarga al abrir esta sección.
 const ESTILO = 'https://tiles.openfreemap.org/styles/bright';
+const AGUA = '#1d6fa5';   // el azul del agua del resto del proyecto (mapa/, MapaEstaciones)
 
 export default function MapaReportes({ focos, huella, calor, elegido, vista, onElegir }) {
   const caja = useRef(null);
@@ -26,6 +27,20 @@ export default function MapaReportes({ focos, huella, calor, elegido, vista, onE
       mapa.current = m;
       m.addControl(new gl.current.NavigationControl({ showCompass: false }), 'bottom-right');
       m.on('load', () => {
+        // Agua más marcada: la base pinta ríos y cuerpos de agua muy tenues. Se oscurecen sus rellenos y líneas, y
+        // encima va la red del INEGI (orden >= 4, la del mapa del proyecto) en el azul del agua, más gruesa por orden.
+        m.getStyle().layers.forEach((l) => {
+          if (l.type === 'fill' && /water/.test(l.id) && !/shadow/.test(l.id)) m.setPaintProperty(l.id, 'fill-color', '#9cc6e6');
+          if (l.type === 'line' && /waterway/.test(l.id)) {
+            m.setPaintProperty(l.id, 'line-color', AGUA);
+            m.setPaintProperty(l.id, 'line-opacity', 0.7);
+          }
+        });
+        m.addSource('rios_inegi', { type: 'geojson', data: import.meta.env.BASE_URL + 'datos/red_hidrografica.geojson' });
+        const ancho = (k) => ['match', ['get', 'orden'], 7, 2.2 * k, 6, 1.6 * k, 5, 1.1 * k, 0.7 * k];
+        m.addLayer({ id: 'rios_inegi', type: 'line', source: 'rios_inegi', layout: { 'line-cap': 'round', 'line-join': 'round' },
+          paint: { 'line-color': AGUA, 'line-opacity': 0.9,
+            'line-width': ['interpolate', ['linear'], ['zoom'], 8, ancho(1), 12, ancho(2), 15, ancho(3)] } });
         m.addSource('huella', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
         m.addLayer({
           id: 'huella-linea', type: 'line', source: 'huella', layout: { 'line-cap': 'round', 'line-join': 'round' },

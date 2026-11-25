@@ -101,7 +101,7 @@ export default function DashboardReportes({ reportes, prioridades, onVolver }) {
     const c = r.c_sitio_asignado || 'sin';
     const f = porSitio[c] || (porSitio[c] = {
       clave: c, total: 0,
-      nombre: c === 'sin' ? 'Sin cauce a menos de 1.5 km' : nombresSitio[c] || c,
+      nombre: c === 'sin' ? 'Sin punto de monitoreo aguas abajo' : nombresSitio[c] || c,
       sub: c === 'sin' ? null : inicial(municipioDe(r) || '') || null,
     });
     f.total += 1;

@@ -6,7 +6,7 @@
   "outputDirectory": "panel/dist",
   "functions": {
     "api/index.py": {
-      "includeFiles": "{backend/*.py,motor/*.py,contrato/*.py,contrato/esquemas/**,contrato/fixtures/**,datos/procesados/*.csv,datos/procesados/red/*.csv,datos/procesados/red/red_asignacion.json}",
+      "includeFiles": "{backend/*.py,motor/*.py,contrato/*.py,contrato/esquemas/**,contrato/fixtures/**,datos/procesados/*.csv,datos/procesados/red/*.csv,datos/procesados/red/red_asignacion.json,datos/procesados/mapa/red_hidrografica.geojson}",
       "maxDuration": 60
     }
   },

@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
+import { distanciaAlCauce } from '../lib/cauce.js';
 import { REPORTE, txt } from '../lib/etiquetas.js';
 import { hora } from '../lib/formato.js';
 import { useDatos } from '../lib/contexto.js';
@@ -174,7 +175,8 @@ function Detalle({ it, nombreSitio, onCerrar, cambiar, ocupado }) {
           </div>
           <div className="info-linea"><strong>{nombreSitio(it.c_sitio)}</strong></div>
           <div className="info-linea">
-            {it.c_sitio ? 'Punto de monitoreo aguas abajo: ' + it.c_sitio : 'Sin cauce a menos de 1.5 km'}
+            {it.c_sitio ? 'Punto de monitoreo aguas abajo: ' + it.c_sitio
+              : it.distancia != null ? 'Sin punto de monitoreo aguas abajo' : 'Sin cauce a menos de 2 km'}
             {it.distancia != null && ' · a ' + Math.round(it.distancia) + ' m del cauce'}
           </div>
         </div>
@@ -262,7 +264,7 @@ function Detalle({ it, nombreSitio, onCerrar, cambiar, ocupado }) {
 
 export default function Reportes({ reportes, prioridades, huella, conectado, guardarReporte, refrescar, demo, pagina, setPagina }) {
   const { nombresSitio } = useDatos();
-  const nombreSitio = (c) => (c && nombresSitio[c] ? nombresSitio[c] : c ? c : 'Sin cauce cerca');
+  const nombreSitio = (c) => (c && nombresSitio[c] ? nombresSitio[c] : c ? c : 'Sin punto de monitoreo asignado');
   const [pestana, setPestana] = useState('activas');
   const [filtro, setFiltro] = useState('todos');        // todos | urgentes | tipo de reporte
   const [vista, setVista] = useState('lista');          // lista | mapa (solo en pantallas chicas)
@@ -272,7 +274,20 @@ export default function Reportes({ reportes, prioridades, huella, conectado, gua
   const [aviso, setAviso] = useState(null);
   // pagina (incidencias | dashboard, como /admin y /admin/dashboard de SIGRIV) la lleva App: se elige en el menú de la barra.
 
-  const items = useMemo(() => elementos(pestana, reportes, prioridades), [pestana, reportes, prioridades]);
+  const base = useMemo(() => elementos(pestana, reportes, prioridades), [pestana, reportes, prioridades]);
+  // Reportes que llegaron sin distancia al cauce: se mide aquí contra la red del INEGI (lib/cauce.js).
+  const [medidas, setMedidas] = useState({});
+  useEffect(() => {
+    let vivo = true;
+    const faltan = base.filter((i) => i.distancia == null && i.lat != null && medidas[i.id] === undefined);
+    if (!faltan.length) return undefined;
+    Promise.all(faltan.map((i) => distanciaAlCauce(i.lat, i.lon).then((d) => [i.id, d]))).then((pares) => {
+      if (vivo) setMedidas((m) => ({ ...m, ...Object.fromEntries(pares) }));
+    });
+    return () => { vivo = false; };
+  }, [base]); // eslint-disable-line react-hooks/exhaustive-deps
+  const items = useMemo(() => base.map((i) => (i.distancia == null && medidas[i.id] != null ? { ...i, distancia: medidas[i.id] } : i)),
+    [base, medidas]);
   const tipos = useMemo(() => {
     const c = {};
     items.forEach((i) => { c[i.tipo] = (c[i.tipo] || 0) + 1; });

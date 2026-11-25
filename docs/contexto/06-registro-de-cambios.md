@@ -21,6 +21,21 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · M5 y módulo B: distancia al cauce con la red del INEGI y agua visible en el mapa de reportes
+
+**Qué cambió.** `backend/asignacion.py` mide la distancia al cauce también contra `datos/procesados/mapa/red_hidrografica.geojson`
+(INEGI, orden >= 4); el sitio aguas abajo sigue saliendo solo de `red_asignacion.json`. `vercel.json` incluye ese archivo en
+la función. El panel (`lib/cauce.js`, nuevo) calcula la distancia de los reportes que llegaron sin ella y ya no dice "sin
+cauce" cuando solo falta el punto de monitoreo ("Sin punto de monitoreo aguas abajo · a 12 m del cauce"). El mapa de
+reportes dibuja la red del INEGI en el azul del agua y oscurece el agua de la base.
+**Por qué.** 5 de 8 reportes en Vercel decían "sin cauce" estando a 5–50 m de un río: la red de asignación solo trae
+tramos con un sitio CONAGUA a menos de 20 km. `backend/prueba.py`: todo pasa.
+**Qué arrastró.** `asignacion.py`, `vercel.json`, `cauce.js`, `Reportes.jsx`, `DashboardReportes.jsx`, `MapaReportes.jsx`.
+**Impacto en otros módulos.** C: `contrato/prioridad_huella.py` usa la misma red recortada y da `distancia_al_cauce_m`
+nula fuera de ella; el panel lo compensa al mostrar, conviene corregirlo en el cálculo.
+
+---
+
 ## 2026-11-24 · M4: la descarga entra al inicio del río y la pluma corre río abajo
 
 **Qué cambió.** El tubo de descarga pasa al inicio del tramo y el agua solo se tiñe río abajo de él: un frente avanza con la corriente dibujada y, al terminar, una cola lo persigue. El chorro es de gotas y lluvia, clima y descarga entran y salen suavizados en tiempo real. `Agua.valor` acepta una lista de eventos a ignorar para separar la turbiedad de la descarga.
