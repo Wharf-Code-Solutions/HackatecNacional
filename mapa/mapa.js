@@ -240,9 +240,26 @@
   // ---------------------------------------------------------------- estaciones
   // Un mecanismo reubicado se nombra por la localidad de su escuela; una estación del Atoyac, por su río.
   function lugar(e) { return e.localidad || inicial(e.cuerpo_agua); }
-  function agregaEstaciones(lista) {
-    var ol = $('listaEstaciones');
+  // La lista va en dos grupos, por el riesgo del que se protege a la escuela: contaminación (estación de agua y
+  // colector) o deslave (ladera). Los números siguen corridos de un grupo al otro y son los del marcador en el mapa.
+  var GRUPOS = [
+    { titulo: 'Riesgo de contaminación', es: function (e) { return !esLadera(e); } },
+    { titulo: 'Riesgo de deslave', es: esLadera }
+  ];
+  function esLadera(e) { return (e.parametros || []).indexOf('LLUVIA') >= 0; }
+  function agregaEstaciones(todas) {
+    var cont = $('listaEstaciones'), ol = null, lista = [];
+    GRUPOS.forEach(function (g) {
+      var del = todas.filter(g.es);
+      if (!del.length) return;
+      del.forEach(function (e) { e._grupo = g; lista.push(e); });
+    });
     lista.forEach(function (e, i) {
+      if (!i || e._grupo !== lista[i - 1]._grupo) {
+        var h = document.createElement('h2'); h.className = 'grupo'; h.textContent = e._grupo.titulo;
+        ol = document.createElement('ol'); ol.className = 'estaciones';
+        cont.appendChild(h); cont.appendChild(ol);
+      }
       var li = document.createElement('li'); li.id = 'li_' + e.c_estacion;
       li.innerHTML = '<button type="button"><span class="num">' + (i + 1) + '</span><span><b>' + lugar(e) +
         '</b><span class="det">' + inicial(e.municipio) + '</span></span></button>';

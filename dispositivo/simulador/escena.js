@@ -1261,12 +1261,7 @@
       capa.appendChild(d);
       r.el = d; r.v = new T.Vector3(r.ancla[0], r.ancla[1], r.ancla[2]);
       if (r.vista) d.addEventListener('click', function () { irA(r.vista); });
-      // Los demás rótulos aparecen al pasar el cursor sobre su pieza: en su lugar, un punto discreto.
-      if (!r.siempre) {
-        r.punto = document.createElement('div'); r.punto.className = 'punto3d' + (r.vista ? ' clic' : '');
-        capa.appendChild(r.punto);
-        if (r.vista) r.punto.addEventListener('click', function () { irA(r.vista); });
-      }
+      // Los demás rótulos aparecen solo al pasar el cursor sobre su pieza; sin marca en la figura.
     });
     var cont = $('escena3d');
     cont.addEventListener('mousemove', function (ev) {
@@ -1306,13 +1301,12 @@
     G.volver.addEventListener('click', function () { irA('general'); });
     $('escena3d').appendChild(G.volver);
   }
-  // Rótulo visible: los fijos, el que está bajo el cursor y el que está en alarma; los demás, solo su punto.
+  // Rótulo visible: los fijos, el que está bajo el cursor y el que está en alarma; los demás, nada.
   function visibilidad() {
     ROTULOS.forEach(function (r) {
       if (!r.el) return;
       var ver = r.enVista && (r.siempre || r === G.hover || r.mal);
       r.el.style.display = ver ? '' : 'none';
-      if (r.punto) r.punto.style.display = r.enVista && !ver ? '' : 'none';
     });
   }
   function colocaRotulos() {
@@ -1323,7 +1317,6 @@
       r.px = p.x; r.py = p.y; r.enVista = p.z < 1 && G.vista === 'general' && quieto;
       r.el.style.left = p.x.toFixed(1) + 'px';
       r.el.style.top = p.y.toFixed(1) + 'px';
-      if (r.punto) { r.punto.style.left = p.x.toFixed(1) + 'px'; r.punto.style.top = p.y.toFixed(1) + 'px'; }
     });
     visibilidad();
     var activo = G.vista !== 'general' && quieto ? G.detalle[G.vista] : null;

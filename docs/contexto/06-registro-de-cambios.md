@@ -21,6 +21,20 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-25 · M4 y M6: figura 3D sin puntos y lista del mapa por riesgo
+
+**Qué cambió.** Las figuras 3D del simulador (río y ladera) ya no dibujan un punto por pieza en la vista general: el rótulo
+sale solo al pasar el cursor y con un clic abre la vista de cerca. La lista lateral del mapa se separa en «Riesgo de
+contaminación» (5 estaciones de agua con colector) y «Riesgo de deslave» (5 de ladera, las que miden `LLUVIA`); los
+números siguen corridos y son los del marcador.
+**Por qué.** Pedido del usuario: los puntos ensuciaban la figura. Los grupos nombran el riesgo del que se protege a la
+escuela, no un resultado del agua: el mapa es la vista de medición y no anuncia el análisis.
+**Qué arrastró.** `escena.js`, `estilos.css` e `index.html` del simulador; `mapa.js`, `estilos.css` e `index.html` del mapa
+(versiones `?v=` subidas).
+**Impacto en otros módulos.** Ninguno.
+
+---
+
 ## 2026-11-25 · Módulo B: las miniaturas de las sondas dicen lo mismo que la gráfica grande
 
 **Qué cambió.** `Serie.jsx` exporta `serieDe` (tiempo real, lluvia acumulada, inclinación absoluta) y `contexto.js` da

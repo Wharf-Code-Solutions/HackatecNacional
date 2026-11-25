@@ -100,6 +100,3 @@ select { font: inherit; font-size: 14px; color: var(--tinta); background: var(--
 
 .boton.ev.activo { background: var(--principal); border-color: var(--principal); color: #fff; }
 
-.punto3d { position: absolute; width: 9px; height: 9px; border-radius: 50%; background: var(--tinta); border: 2px solid #fff;
-  box-sizing: content-box; transform: translate(-50%, -50%); }
-.punto3d.clic { pointer-events: auto; cursor: pointer; }
