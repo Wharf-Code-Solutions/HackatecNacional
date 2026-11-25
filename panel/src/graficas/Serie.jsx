@@ -19,24 +19,31 @@ function evento(alerta, alertas) {
   return { desde: ts[i], hasta: ts[j], n: j - i + 1 };
 }
 
-// Serie reciente de un parámetro contra la banda histórica del sitio, con el momento de la alerta.
-export default function Serie({ alerta, alertas, parametro, banda, veredictos }) {
-  const cp = parametro || alerta.c_parametro;
-  const [ref, W] = useAncho(280);
-  const { umbralesDe } = useDatos();
-  const ladera = LADERA.includes(cp);
+// La serie de una sonda tal como se grafica: en orden de tiempo, sin -999, la lluvia acumulada en la ventana del
+// motor y la inclinación en valor absoluto. La usan la gráfica grande y las miniaturas, para que digan lo mismo.
+export function serieDe(veredictos, cp, ventana = 24) {
   let serie = (veredictos || []).map((v) => {
     const p = (v.parametros || []).find((x) => x.c_parametro === cp);
     return p && p.valor != null && p.valor > -100 ? { t: new Date(v.fecha_hora).getTime(), v: p.valor } : null;
   }).filter(Boolean).sort((p, q) => p.t - q.t);   // llegan en orden de recepción
   // Ladera (docs/20): sin línea base; se grafica contra los umbrales del motor. La lluvia llega por paquete:
   // se acumula en la misma ventana que usó la alerta (24 o 72 h), que es lo que compara el motor.
-  const ventana = alerta.criterio_aplicado === 'UMBRAL_LLUVIA_72H' && cp === alerta.c_parametro ? 72 : 24;
   if (cp === 'LLUVIA') {
     const ms = ventana * 3600000;
     serie = serie.map((p, i) => ({ t: p.t, v: serie.slice(0, i + 1).filter((q) => q.t > p.t - ms).reduce((s, q) => s + q.v, 0) }));
   }
   if (cp === 'INCL') serie = serie.map((p) => ({ t: p.t, v: Math.abs(p.v) }));
+  return serie;
+}
+
+// Serie reciente de un parámetro contra la banda histórica del sitio, con el momento de la alerta.
+export default function Serie({ alerta, alertas, parametro, banda, veredictos }) {
+  const cp = parametro || alerta.c_parametro;
+  const [ref, W] = useAncho(280);
+  const { umbralesDe } = useDatos();
+  const ladera = LADERA.includes(cp);
+  const ventana = alerta.criterio_aplicado === 'UMBRAL_LLUVIA_72H' && cp === alerta.c_parametro ? 72 : 24;
+  const serie = serieDe(veredictos, cp, ventana);
   const umbrales = ladera ? umbralesDe(alerta.c_estacion, cp, ventana) : [];
   if (serie.length < 2) {
     return <div ref={ref}><Mensaje>Sin lecturas recientes de este parámetro en el backend para graficar.</Mensaje></div>;

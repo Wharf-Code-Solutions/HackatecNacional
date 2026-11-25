@@ -21,6 +21,18 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-25 · Módulo B: las miniaturas de las sondas dicen lo mismo que la gráfica grande
+
+**Qué cambió.** `Serie.jsx` exporta `serieDe` (tiempo real, lluvia acumulada, inclinación absoluta) y `contexto.js` da
+`bandaDe` (banda del sitio o, si no tiene, la de `banda_simulacion`, como el motor). `Miniaturas.jsx` y `Expediente.jsx` usan
+las dos.
+**Por qué.** La miniatura graficaba por índice, sin acumular la lluvia y sin banda en los mecanismos: al darle clic, la gráfica
+grande mostraba otra forma.
+**Qué arrastró.** `Serie.jsx`, `Miniaturas.jsx`, `Expediente.jsx`, `contexto.js`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
 ## 2026-11-25 · M2 y módulo B: datos de demostración de los mecanismos y huella legible
 
 **Qué cambió.** `motor/reglas.py`: una estación junto a escuela cuyo sitio no tiene línea base usa la de `banda_simulacion`

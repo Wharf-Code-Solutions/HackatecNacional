@@ -131,10 +131,11 @@ function Medidas({ ms }) {
 
 // La serie grande muestra la sonda que se elija en las miniaturas; empieza en la de la alerta.
 // Se monta de nuevo al cambiar de alerta (key), así vuelve a la sonda alterada.
-function Sondas({ alerta, alertas, estacion, banda, veredictos, lineaBase, evidencia }) {
+function Sondas({ alerta, alertas, estacion, banda, veredictos, evidencia }) {
+  const { bandaDe } = useDatos();
   const [param, setParam] = useState(alerta.c_parametro);
   const propia = param === alerta.c_parametro;
-  const bandaParam = propia ? banda : (lineaBase[alerta.c_sitio || estacion.c_sitio] || {})[param];
+  const bandaParam = propia ? banda : bandaDe(alerta.c_estacion, param, alerta.c_sitio);
   return (
     <>
       <section className="bloque">
@@ -150,7 +151,7 @@ function Sondas({ alerta, alertas, estacion, banda, veredictos, lineaBase, evide
       <section className="bloque">
         <h3>Todas las sondas de la estación</h3>
         <p className="nota" style={{ margin: '-6px 0 12px' }}>Un clic en una sonda la muestra arriba. Recuadro guinda: la que se ve; franja azul clara: lo habitual del sitio.</p>
-        <Miniaturas alerta={alerta} estacion={estacion} lineaBase={lineaBase} veredictos={veredictos}
+        <Miniaturas alerta={alerta} estacion={estacion} veredictos={veredictos}
           elegido={param} onElegir={setParam} />
       </section>
     </>

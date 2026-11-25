@@ -31,10 +31,13 @@ export function ayudantes(fijos) {
     const m = mecanismos[c];
     return m ? inicial(m.escuela || m.nombre || c) + ', ' + inicial(m.municipio || '') : c;
   };
-  const banda = (a) => {
-    const sitio = a.c_sitio || estacionDe(a.c_estacion).c_sitio;
-    return (lineaBase[sitio] || {})[a.c_parametro] || null;
+  // Banda habitual de una sonda. Un mecanismo cuyo sitio no tiene línea base usa la de banda_simulacion, igual que
+  // el motor (motor/reglas.py): así la banda dibujada es la misma contra la que se juzgó la lectura.
+  const bandaDe = (c_estacion, cp, sitio) => {
+    const e = estacionDe(c_estacion);
+    return (lineaBase[sitio || e.c_sitio] || {})[cp] || (lineaBase[e.banda_simulacion] || {})[cp] || null;
   };
+  const banda = (a) => bandaDe(a.c_estacion, a.c_parametro, a.c_sitio);
   const unidad = (a) => {
     const b = banda(a);
     if (b && b.unidad) return ' ' + b.unidad;
@@ -123,6 +126,6 @@ export function ayudantes(fijos) {
         ? ' Aunque está entre las primeras por riesgo, no cumple alguna otra condición (cauce cerca, laderas susceptibles) o queda demasiado cerca de otro mecanismo.'
         : '');
   };
-  return { ...fijos, nombreEstacion, banda, unidad, escuelasDe, estacionDe, umbralesDe, mecanismosDe, mecanismoActivo, todas, nivelLadera,
+  return { ...fijos, nombreEstacion, banda, bandaDe, unidad, escuelasDe, estacionDe, umbralesDe, mecanismosDe, mecanismoActivo, todas, nivelLadera,
     porQueMecanismo, porQueSinMecanismo };
 }
