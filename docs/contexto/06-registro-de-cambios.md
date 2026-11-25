@@ -21,6 +21,16 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-25 · Módulo B: 16 px entre el encabezado y las cifras
+
+**Qué cambió.** `main.contenedor` tiene 16 px de relleno superior y `.vista > .resumen` 16 px abajo: las cifras de Alertas,
+Escuelas y Autorizaciones quedan a 16 px del encabezado y de lo que sigue, como las tarjetas entre sí.
+**Por qué.** Petición del usuario: las cifras quedaban pegadas al encabezado (`.contenedor` ponía el relleno superior en 0).
+**Qué arrastró.** `estilos.css`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
 ## 2026-11-25 · Módulo B: «Qué hacer» como ruta de pasos
 
 **Qué cambió.** `Protocolo.jsx` deja las casillas: las acciones van por etapa (Inmediata en rojo, El mismo día en guinda,
