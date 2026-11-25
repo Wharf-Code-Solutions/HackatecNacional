@@ -361,7 +361,7 @@ if PRUEBA_POSTGRES:
 
 # ------------------------------------------------------------- 8. aviso por correo
 # El SMTP se reemplaza por uno falso que solo anota lo que se habría enviado: las pruebas nunca mandan correos.
-print('\n8) Aviso por correo al cerrar un reporte (SMTP falso)')
+print('\n8) Correos: recibo al crear y aviso al cerrar un reporte (SMTP falso)')
 import correo as modulo_correo        # noqa: E402
 
 class SMTPFalso:
@@ -401,9 +401,12 @@ try:
             if correo_persona:
                 cuerpo['correo'] = correo_persona
             # cada reporte de otra persona: el freno antispam (prueba 9) juntaria los del mismo punto
-            return c.post('/reportes', json=cuerpo, headers={'X-Forwarded-For': '10.0.8.{}'.format(next(personas))}).json()['c_reporte']
+            r = c.post('/reportes', json=cuerpo, headers={'X-Forwarded-For': '10.0.8.{}'.format(next(personas))})
+            nuevo_reporte.aviso = r.headers.get('x-aviso-correo')
+            return r.json()['c_reporte']
 
         f1 = nuevo_reporte('persona@ejemplo.mx')
+        revisar(nuevo_reporte.aviso == 'no_configurado' and not SMTPFalso.enviados, 'sin credenciales no sale el recibo y el reporte se guarda')
         r = c.patch('/reportes/' + f1, json={'estado': 'Cerrado'})
         revisar(r.status_code == 200 and r.headers.get('x-aviso-correo') == 'no_configurado' and not SMTPFalso.enviados,
                 'sin credenciales no se envía nada y el cierre se guarda igual', r.headers.get('x-aviso-correo'))
@@ -414,23 +417,31 @@ try:
         os.environ['APP_URL'] = 'https://atoyac.ejemplo.mx'
         revisar(c.get('/salud').json().get('aviso_por_correo') is True, '/salud dice que el correo está configurado')
         f2 = nuevo_reporte('persona@ejemplo.mx')
+        e = SMTPFalso.enviados[-1] if SMTPFalso.enviados else {}
+        revisar(nuevo_reporte.aviso == 'enviado' and len(SMTPFalso.enviados) == 1 and e.get('para') == 'persona@ejemplo.mx'
+                and 'Recibimos' in e.get('asunto', '') and f2 in e.get('asunto', ''), 'al crear se manda el recibo con el folio')
+        revisar('https://atoyac.ejemplo.mx/ciudadano/#/rastreo?folio=' + f2 in e.get('html', ''), 'el recibo lleva el enlace a su rastreo')
         r = c.patch('/reportes/' + f2, json={'estado': 'Validado'})
-        revisar(r.headers.get('x-aviso-correo') == 'no_aplica' and not SMTPFalso.enviados, 'validar no manda correo (solo el cierre)')
+        revisar(r.headers.get('x-aviso-correo') == 'no_aplica' and len(SMTPFalso.enviados) == 1, 'validar no manda correo')
         r = c.patch('/reportes/' + f2, json={'estado': 'Cerrado'})
         e = SMTPFalso.enviados[-1] if SMTPFalso.enviados else {}
-        revisar(r.headers.get('x-aviso-correo') == 'enviado' and len(SMTPFalso.enviados) == 1 and e.get('para') == 'persona@ejemplo.mx',
+        revisar(r.headers.get('x-aviso-correo') == 'enviado' and len(SMTPFalso.enviados) == 2 and e.get('para') == 'persona@ejemplo.mx'
+                and 'atendido' in e.get('asunto', ''),
                 'al cerrar se avisa a quien dejó su correo', r.headers.get('x-aviso-correo'))
         revisar(f2 in e.get('asunto', '') and 'https://atoyac.ejemplo.mx/ciudadano/#/rastreo?folio=' + f2 in e.get('html', ''),
                 'el correo lleva el folio y el enlace a su rastreo')
         revisar(e.get('clave') == 'abcdefghijklmnop', 'la contraseña de aplicación se usa sin los espacios con que la muestra Google')
         revisar('correo' not in r.json(), 'la respuesta del cierre no expone el correo')
         c.patch('/reportes/' + f2, json={'estado': 'Cerrado'})
-        revisar(len(SMTPFalso.enviados) == 1, 'cerrar de nuevo un reporte cerrado no repite el correo')
+        revisar(len(SMTPFalso.enviados) == 2, 'cerrar de nuevo un reporte cerrado no repite el correo')
         f3 = nuevo_reporte(None)
+        revisar(nuevo_reporte.aviso == 'sin_correo', 'sin correo no hay recibo')
         r = c.patch('/reportes/' + f3, json={'estado': 'Cerrado'})
-        revisar(r.headers.get('x-aviso-correo') == 'sin_correo' and len(SMTPFalso.enviados) == 1, 'sin correo no se intenta enviar')
+        revisar(r.headers.get('x-aviso-correo') == 'sin_correo' and len(SMTPFalso.enviados) == 2, 'sin correo no se intenta enviar')
         SMTPFalso.falla = True
         f4 = nuevo_reporte('otra@ejemplo.mx')
+        revisar(nuevo_reporte.aviso == 'fallido' and c.get('/reportes/' + f4).status_code == 200,
+                'si el SMTP falla al crear, el reporte se guarda igual')
         r = c.patch('/reportes/' + f4, json={'estado': 'Cerrado'})
         revisar(r.status_code == 200 and r.headers.get('x-aviso-correo') == 'fallido' and c.get('/reportes/' + f4).json()['estado'] == 'Cerrado',
                 'si el SMTP falla, el cierre se guarda y se informa el fallo')

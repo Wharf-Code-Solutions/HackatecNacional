@@ -21,6 +21,18 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · M5 y C: recibo por correo al crear un reporte
+
+**Qué cambió.** Si la persona deja su correo, `POST /reportes` manda un recibo con el folio y el enlace al rastreo
+(`correo.avisar_recibo`, mismo estilo que el aviso de cierre) y responde `X-Aviso-Correo`; la app dice «Te enviamos el folio
+a tu correo». Un reporte repetido no manda otro recibo. El campo del correo y los términos dicen ahora que son dos correos:
+el folio y el cierre. El remitente y el encabezado pasan de «Monitoreo del río Atoyac» a «Reportes ciudadanos».
+**Por qué.** Pedido del usuario: que quien reporta sepa que su reporte llegó y se sienta escuchado.
+**Qué arrastró.** `backend/app.py`, `backend/correo.py`, `backend/prueba.py` (casos del recibo), `ciudadano/src/`.
+**Impacto en otros módulos.** Con correo, el envío tarda unos segundos más (en Vercel se espera al SMTP). El mock no manda correos.
+
+---
+
 ## 2026-11-24 · Módulo B: menú de Reportes ciudadanos y tarjeta de reporte sin franja
 
 **Qué cambió.** La pestaña "Reportes ciudadanos" de la barra es un menú desplegable (`MenuSeccion.jsx`, nuevo) con
@@ -129,6 +141,7 @@ cuatro pestañas y la alerta de `EST-ESC-04` muestra su escuela afectada; `npm r
 **Qué arrastró.** `App.jsx`, `estilos.css`, `CLAUDE.md`, `docs/12-estado-y-traspaso.md`.
 **Impacto en otros módulos.** Pendientes de A y del motor: matrícula y fuente de agua, zonas del atlas, un factor de
 urbanización que distinga y `escuelas_afectadas` desde el motor.
+
 
 ---
 

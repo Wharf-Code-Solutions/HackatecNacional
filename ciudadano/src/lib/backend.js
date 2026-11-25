@@ -70,7 +70,8 @@ export async function enviarReporte(origen, payload) {
   }
   if (r.status === 201) {
     const j = await r.json();
-    return { ok: true, c_reporte: j.c_reporte, estado: j.estado };
+    // 'enviado' si el backend ya mandó el recibo al correo de la persona (cabecera expuesta por CORS)
+    return { ok: true, c_reporte: j.c_reporte, estado: j.estado, correo: r.headers.get('X-Aviso-Correo') };
   }
   // Misma persona, mismo problema, mismo punto, hace poco: el backend no crea otro y devuelve el folio que ya tenía
   if (r.status === 200) {

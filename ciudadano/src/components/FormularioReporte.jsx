@@ -93,7 +93,7 @@ export default function FormularioReporte({ lat, lon, precision, origen, datos, 
     const r = await enviarReporte(origen, payload);
     if (r.ok) {
       guardarFolio(r.c_reporte, tipo, payload.fecha_hora);
-      setFin({ c_reporte: r.c_reporte, repetido: r.repetido });
+      setFin({ c_reporte: r.c_reporte, repetido: r.repetido, correo: r.correo });
       onEnviado?.();
       // Con el folio emitido, pregunta al backend a qué punto quedó asociado (orientación; no bloquea)
       if (origen.modo === 'api') getJSON(origen.url + '/reportes/' + r.c_reporte).then(setDetalle).catch(() => {});
@@ -142,6 +142,7 @@ export default function FormularioReporte({ lat, lon, precision, origen, datos, 
                 </div>
                 <button type="button" className="rf-folio__copiar" onClick={copiar}>{copiado ? 'Copiado' : 'Copiar'}</button>
               </div>
+              {fin.correo === 'enviado' && <p className="rf-folio__nota">Te enviamos el folio a tu correo.</p>}
               {sitio && <p className="rf-folio__nota">Punto de monitoreo asociado: {sitio.nombre}{detalle.distancia_al_cauce_m != null ? ' · ' + km(detalle.distancia_al_cauce_m) + ' del cauce' : ''}.</p>}
               <p className="rf-folio__nota">Consúltalo cuando quieras en <a href="#/rastreo" onClick={(e) => { e.preventDefault(); ir('rastreo'); }}>Rastreo de Reportes</a>.</p>
             </>
@@ -223,7 +224,7 @@ export default function FormularioReporte({ lat, lon, precision, origen, datos, 
         </div>
 
         <div className="mb-3">
-          <label className="form-label" htmlFor="rf-correo">Correo <small>(opcional, solo para avisarte cuando se cierre)</small></label>
+          <label className="form-label" htmlFor="rf-correo">Correo <small>(opcional: te mandamos tu folio y te avisamos cuando se cierre)</small></label>
           <input id="rf-correo" className="form-control" type="email" inputMode="email" autoComplete="email" value={correo} onChange={(e) => setCorreo(e.target.value)} aria-invalid={!!errores.correo} />
           {errores.correo && <div className="rf-error" role="alert">{errores.correo}</div>}
         </div>

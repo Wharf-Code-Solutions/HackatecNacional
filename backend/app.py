@@ -159,7 +159,7 @@ def crear_app(url=None):
                 'estaciones': len(estaciones),
                 'alertas_abiertas': sum(1 for x in a.alertas() if x.get('estado') in ('Abierta', 'En atencion')),
                 'reportes': a.contar('reporte'), 'lecturas': a.contar('lectura'),
-                # Si el aviso de cierre por correo tiene credenciales SMTP (no dice cuáles)
+                # Si los avisos por correo (recibo y cierre) tienen credenciales SMTP (no dice cuáles)
                 'aviso_por_correo': correo.configurado()}
 
     @app.get('/estaciones')
@@ -212,7 +212,7 @@ def crear_app(url=None):
 
     @app.get('/reportes')
     def get_reportes():
-        # El correo es solo para avisar del cierre: nunca sale por la API publica.
+        # El correo es solo para el recibo y el aviso de cierre: nunca sale por la API publica.
         return {'reportes': [{k: v for k, v in r.items() if k != 'correo'} for r in ctx()['almacen'].reportes()]}
 
     @app.get('/huella')
@@ -400,6 +400,15 @@ def crear_app(url=None):
                                                 'este es su folio.'}, status_code=200)
             almacen.guardar_reporte(cuerpo)
             almacen.registrar_envio('reportes', quien, ahora, cuerpo['latitud'], cuerpo['longitud'], cuerpo['tipo'], cuerpo['c_reporte'])
-        return JSONResponse({'c_reporte': cuerpo['c_reporte'], 'estado': cuerpo['estado']}, status_code=201)
+        # Recibo por correo con el folio, para que la persona sepa que su reporte llegó. Fuera del candado y en un
+        # hilo, esperando aquí por lo mismo que el aviso de cierre (Vercel congela la función al responder). Un
+        # reporte repetido (arriba) devuelve su folio anterior y no manda otro recibo.
+        aviso = 'sin_correo'
+        if cuerpo.get('correo'):
+            from starlette.concurrency import run_in_threadpool
+            base = '{}://{}'.format(request.headers.get('x-forwarded-proto', request.url.scheme), request.headers.get('host', ''))
+            aviso = await run_in_threadpool(correo.avisar_recibo, cuerpo, base)
+        return JSONResponse({'c_reporte': cuerpo['c_reporte'], 'estado': cuerpo['estado']}, status_code=201,
+                            headers={'X-Aviso-Correo': aviso})
 
     return app
