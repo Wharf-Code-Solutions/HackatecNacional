@@ -21,6 +21,18 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Módulo B: zonas de riesgo en el mapa
+
+**Qué cambió.** `MapaEstaciones.jsx` dibuja las zonas de `zonas_riesgo.geojson` que contienen alguna escuela de la
+cuenca (16 de 107: 11 de contaminación, 5 de derrumbe), con relleno por tipo (tierra, azul del agua, verde oliva) más
+opaco cuanto mayor el nivel y ventana al cursor. Quedan debajo de las escuelas.
+**Por qué.** Paso 4 del módulo B (docs/19 §6, punto 6).
+**Qué arrastró.** `Panorama.jsx` pasa `zonas`.
+**Impacto en otros módulos.** A: las zonas actuales son círculos de unos 800 m alrededor de cada escuela; solo se ven de
+cerca. Con polígonos de CENAPRED o del atlas de Puebla dirían algo por sí mismas.
+
+---
+
 ## 2026-11-24 · Módulo B: ficha de escuela
 
 **Qué cambió.** `FichaEscuela.jsx` (nuevo): encabezado, índice y subíndices, desglose del riesgo en barras (suma el

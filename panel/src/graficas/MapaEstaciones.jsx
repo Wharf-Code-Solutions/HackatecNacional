@@ -20,7 +20,13 @@ const RIESGO_TXT = { muy_alto: 'muy alto', alto: 'alto', medio: 'medio', bajo: '
 const FUENTE_TXT = { red_publica: 'red pública', pozo: 'pozo', manantial: 'manantial', rio: 'río', pipa: 'pipa',
   captacion_lluvia: 'captación de lluvia', desconocida: 'sin dato' };
 
-export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir, escuelas = [], onElegirEscuela }) {
+// Zonas de riesgo (zonas_riesgo.geojson): relleno suave por tipo, mas opaco si el nivel es mayor.
+// Tierra para derrumbe, azul del agua para inundacion, gris oliva para contaminacion: no compiten
+// con el guinda de las escuelas ni con el rojo de las alertas.
+const COLOR_ZONA = { derrumbe: '#8a6a3c', inundacion: '#1d6fa5', contaminacion: '#5f6b3a' };
+const TIPO_ZONA = { derrumbe: 'Derrumbe', inundacion: 'Inundación', contaminacion: 'Contaminación' };
+
+export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir, escuelas = [], onElegirEscuela, zonas = null }) {
   const caja = useRef(null);
   const mapa = useRef(null);
   const marcas = useRef({});
@@ -110,6 +116,18 @@ export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir,
           layout: { 'text-field': ['get', 'rotulo'], 'text-font': ITALICA, 'text-size': 11.5, 'text-anchor': 'left', 'text-offset': [0.9, 0] },
           paint: { 'text-color': '#14527a', 'text-halo-color': '#fff', 'text-halo-width': 1.5 } });
 
+        // Zonas de riesgo: solo las que contienen alguna escuela que el panel muestra (las de la cuenca).
+        const cctVisibles = new Set(conCoord.map((e) => e.cct));
+        const zonasVis = ((zonas && zonas.features) || []).filter((f) => f.geometry && (f.properties.escuelas || []).some((c) => cctVisibles.has(c)))
+          .map((f) => ({ ...f, properties: { ...f.properties, n_esc: (f.properties.escuelas || []).length } }));
+        m.addSource('zonas', { type: 'geojson', data: { type: 'FeatureCollection', features: zonasVis } });
+        m.addLayer({ id: 'zonas', type: 'fill', source: 'zonas',
+          paint: { 'fill-color': ['match', ['get', 'tipo'], 'derrumbe', COLOR_ZONA.derrumbe, 'inundacion', COLOR_ZONA.inundacion, COLOR_ZONA.contaminacion],
+            'fill-opacity': ['match', ['get', 'nivel'], 'muy_alto', 0.32, 'alto', 0.22, 0.14] } });
+        m.addLayer({ id: 'zonas_borde', type: 'line', source: 'zonas',
+          paint: { 'line-color': ['match', ['get', 'tipo'], 'derrumbe', COLOR_ZONA.derrumbe, 'inundacion', COLOR_ZONA.inundacion, COLOR_ZONA.contaminacion],
+            'line-width': 1, 'line-opacity': 0.8 } });
+
         // Escuelas de escuelas.json, encima de la red y debajo de las estaciones. Varias comparten
         // coordenada (otro turno en el mismo plantel, o la coordenada de la localidad): se dibujan
         // como un punto con el numero de escuelas y el color del mayor riesgo del grupo.
@@ -156,6 +174,9 @@ export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir,
         emergente('escuelas', (p) => p.html + '<br><span style="color:#767676">Clic para abrir su ficha</span>');
         // Un clic abre la ficha de la escuela (la de mayor riesgo si el punto agrupa varias).
         m.on('click', 'escuelas', (e) => { const f = e.features[0]; if (f && alElegirEsc.current) alElegirEsc.current(f.properties.cct); });
+        emergente('zonas', (p) => '<b>Zona de riesgo por ' + (TIPO_ZONA[p.tipo] || p.tipo).toLowerCase() + '</b><br>Nivel ' +
+          (RIESGO_TXT[p.nivel] || 'sin dato') + ' · ' + p.n_esc + (p.n_esc === 1 ? ' escuela' : ' escuelas') + '<br>' +
+          '<span style="color:#767676">' + (p.fuente || '') + '</span>');
         emergente('confluencias', (p) => '<b>Confluencia</b><br>' + p.detalle + '<br>Red aguas arriba: ' +
           miles(p.km_red_principal) + ' y ' + miles(p.km_red_afluente) + ' km');
 
