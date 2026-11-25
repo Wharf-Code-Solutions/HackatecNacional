@@ -1,13 +1,13 @@
 // Captura una foto del backend para el modo demostración del panel.
 //
-// Si el despliegue no tiene VITE_API_URL, el panel muestra esta foto, marcada como
-// demostración. La foto NO se calcula aquí: se copia tal cual de lo que respondió el
-// backend con el motor real, incluida la predicción de propagación de cada alerta.
+// El panel siempre muestra esta foto como base (lib/datos.js): con backend, encima van las alertas pendientes y los
+// reportes que lleguen en vivo; sin backend, solo la foto. Sus horas se corren al abrir el panel para que lo último
+// de la foto sea «ahora». La foto NO se calcula aquí: se copia tal cual de lo que respondió el backend con el motor real.
 //
-// Uso, con el backend real (M5) corriendo y un escenario reproducido:
-//   backend\.venv\Scripts\python backend\servidor.py --limpiar
-//   python contrato/reproducir_escenario.py descarga_industrial
-//   npm run capturar-demo                    # o: node scripts/capturar-demo.mjs http://host:puerto
+// Uso, con un servidor limpio y los 10 mecanismos sembrados (24 h con episodios):
+//   python contrato/servidor_mock.py --motor real --puerto 8091
+//   python contrato/sembrar_demo.py --url http://127.0.0.1:8091
+//   node scripts/capturar-demo.mjs http://127.0.0.1:8091
 // El mock con --motor real también sirve, pero no calcula la predicción y la foto sale sin ella.
 import { writeFileSync, mkdirSync, readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
@@ -24,7 +24,8 @@ async function get(ruta) {
   return r.json();
 }
 
-const estaciones = JSON.parse(readFileSync(resolve(RAIZ, 'contrato/fixtures/estaciones.json'), 'utf8')).estaciones;
+// Las estaciones que muestra el panel: los mecanismos junto a escuelas (App.jsx).
+const estaciones = JSON.parse(readFileSync(resolve(RAIZ, 'contrato/fixtures/mecanismos.json'), 'utf8')).estaciones;
 const salud = await get('/salud');
 if (salud.motor !== 'real') {
   console.error('El backend usa el motor "' + salud.motor + '". Arráncalo con --motor real antes de capturar.');

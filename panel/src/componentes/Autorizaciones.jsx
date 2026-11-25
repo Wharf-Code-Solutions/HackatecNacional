@@ -85,7 +85,7 @@ export default function Autorizaciones({ escuelas, mecanismos = {}, onElegirEscu
       <figure className="tarjeta ancha">
         <h2 className="titulo-seccion">Mecanismos</h2>
         <p className="subtitulo-seccion">Uno de agua sigue como propuesto mientras CEASPUE no otorgue su instalación; uno de ladera, mientras CAPCEE no lo autorice.
-          Aquí se registra en qué va cada trámite: la autorización la da el organismo con su oficio.{demo ? ' En demostración los cambios no se guardan.' : ''}</p>
+          Aquí se registra en qué va cada trámite: la autorización la da el organismo con su oficio.</p>
         {!mecs.length ? <p className="vacio">Sin mecanismos en los datos.</p> : (
           <div className="tabla-desliza">
             <table className="estaciones">

@@ -26,7 +26,7 @@ function Gestion({ alerta, guardar, demo }) {
     try {
       const n = await guardar(alerta.c_alerta, { estado, responsable: responsable.trim() || null });
       setMsg({ clase: 'bien', texto: 'Guardado: ' + txt(n.estado) + (n.responsable ? ', a cargo de ' + n.responsable : ', sin responsable') +
-        (demo ? '. Demostración: el cambio solo vive en esta pestaña.' : '.') });
+        '.' });
     } catch (err) {
       setMsg({ clase: 'mal', texto: 'No se guardó: ' + err.message });
     }

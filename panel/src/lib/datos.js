@@ -112,6 +112,59 @@ export function useDatosFijos() {
   return { datos, error };
 }
 
+// ---------------------------------------------------------------- foto fija
+// La foto (public/demo/foto.json, scripts/capturar-demo.mjs) son 24 h de los 10 mecanismos tal como las respondió el
+// backend con el motor real. Es la base del panel: sin ella, cuando el motor cierra las alertas al normalizarse y pasa
+// el tiempo, el panel se queda vacío. Al cargarla se corren todas sus horas para que su última lectura caiga en el
+// cuarto de hora actual; el código de cada alerta lleva la fecha corrida (AL-AAAAMMDD-...).
+const ISO = /^(\d{4}-\d\d-\d\dT\d\d:\d\d(?::\d\d(?:\.\d+)?)?)(Z|[+-]\d\d:\d\d)$/;
+function corre(iso, delta) {
+  const m = ISO.exec(iso);
+  if (!m) return iso;
+  const t = Date.parse(iso) + delta;
+  if (m[2] === 'Z') return new Date(t).toISOString();
+  const off = (m[2][0] === '-' ? -1 : 1) * (parseInt(m[2].slice(1, 3), 10) * 60 + parseInt(m[2].slice(4), 10));
+  return new Date(t + off * 60000).toISOString().slice(0, 19) + m[2];
+}
+function corrida(foto) {
+  let ultima = 0;
+  Object.values(foto.veredictos || {}).forEach((l) => l.forEach((v) => { ultima = Math.max(ultima, Date.parse(v.fecha_hora)); }));
+  const cuarto = 15 * 60000, delta = ultima ? Math.floor(Date.now() / cuarto) * cuarto - ultima : 0;
+  const codigos = {};
+  (foto.alertas || []).forEach((a) => {
+    const f = corre(a.fecha_hora, delta);
+    codigos[a.c_alerta] = a.c_alerta.replace(/^AL-\d{8}/, 'AL-' + f.slice(0, 10).replace(/-/g, ''));
+  });
+  const anda = (x) => {
+    if (typeof x === 'string') return codigos[x] || corre(x, delta);
+    if (Array.isArray(x)) return x.map(anda);
+    if (x && typeof x === 'object') return Object.fromEntries(Object.entries(x).map(([k, v]) => [codigos[k] || k, anda(v)]));
+    return x;
+  };
+  return anda(foto);
+}
+let promesaFoto = null;
+function leeFoto() {
+  if (!promesaFoto) promesaFoto = getJSON(import.meta.env.BASE_URL + 'demo/foto.json').catch(() => null);
+  return promesaFoto.then((f) => (f ? corrida(f) : null));
+}
+// Lo vivo va encima de la foto. Una estación que envió en los últimos minutos (alguien corre su simulador; hora real de
+// recepción, ultima_recepcion, D33) se muestra completa desde el backend: sus alertas y sus lecturas. Las demás, desde la
+// foto: así lo que quedó abierto de días pasados en la base no la tapa.
+const RECIENTE_MS = 15 * 60000;
+function mezcla(foto, vivo) {
+  if (!foto) return vivo;
+  const enVivo = new Set(Object.entries(vivo.recepcion || {})
+    .filter(([, t]) => t && Date.now() - Date.parse(t) < RECIENTE_MS).map(([c]) => c));
+  const alertas = vivo.alertas.filter((a) => enVivo.has(a.c_estacion))
+    .concat(foto.alertas.filter((a) => !enVivo.has(a.c_estacion)));
+  const veredictos = { ...foto.veredictos };
+  enVivo.forEach((c) => { if (vivo.veredictos[c]) veredictos[c] = vivo.veredictos[c]; });
+  return { ...vivo, alertas, veredictos,
+    reportes: (vivo.reportes || []).concat((foto.reportes || []).filter((r) => !(vivo.reportes || []).some((x) => x.c_reporte === r.c_reporte))),
+    prioridades: vivo.prioridades || foto.prioridades || null, huella: vivo.huella || foto.huella || null };
+}
+
 export function useBackend(codigos) {
   const origen = useMemo(origenBackend, []);
   const [estado, setEstado] = useState({
@@ -121,21 +174,31 @@ export function useBackend(codigos) {
   const [version, setVersion] = useState(0);   // sube al cambiar un reporte: vuelve a pedir prioridades y huella
   const clave = codigos.join(',');
   const vivo = useRef(true);
+  const fijas = useRef(new Set());              // alertas de la foto: se gestionan solo en esta pestaña
+  const cambiosFijas = useRef({});              // lo que se les cambió, para que la siguiente consulta no lo pierda
   useEffect(() => () => { vivo.current = false; }, []);
 
   useEffect(() => {
     if (!codigos.length) return undefined;
+    let foto = null;
+    const conCambios = (s) => ({ ...s, alertas: s.alertas.map((a) => (cambiosFijas.current[a.c_alerta] ? { ...a, ...cambiosFijas.current[a.c_alerta] } : a)) });
+    const conFoto = leeFoto().then((f) => {
+      foto = f;
+      if (f) f.alertas.forEach((a) => fijas.current.add(a.c_alerta));
+      return f;
+    });
     if (origen.modo === 'demo') {
-      getJSON(import.meta.env.BASE_URL + 'demo/foto.json').then((f) => {
+      conFoto.then((f) => {
         if (!vivo.current) return;
-        setEstado({ conectado: true, motor: f.salud.motor, alertas: f.alertas, reportes: f.reportes,
+        if (!f) { setEstado((s) => ({ ...s, conectado: false })); return; }
+        setEstado(conCambios({ conectado: true, motor: f.salud.motor, alertas: f.alertas, reportes: f.reportes || [],
           veredictos: f.veredictos, capturado: f.capturado, predicciones: f.predicciones || {},
-          prioridades: f.prioridades || null, huella: f.huella || null });
-      }).catch(() => setEstado((s) => ({ ...s, conectado: false })));
+          prioridades: f.prioridades || null, huella: f.huella || null, autorizaciones: [] }));
+      });
       return undefined;
     }
     let cancelado = false;
-    const consulta = () => Promise.all([
+    const consulta = () => conFoto.then(() => Promise.all([
       getJSON(origen.url + '/salud'),
       getJSON(origen.url + '/alertas'),
       getJSON(origen.url + '/reportes'),
@@ -143,15 +206,23 @@ export function useBackend(codigos) {
       getJSON(origen.url + '/huella').catch(() => null),
       Promise.all(codigos.map((c) => getJSON(origen.url + '/veredictos?c_estacion=' + encodeURIComponent(c)))),
       getJSON(origen.url + '/autorizaciones').catch(() => null),   // opcional, como prioridades
-    ]).then(([salud, al, rep, pri, hue, ver, aut]) => {
+      getJSON(origen.url + '/estaciones').catch(() => null),       // ultima_recepcion: qué estación está enviando
+    ])).then(([salud, al, rep, pri, hue, ver, aut, est]) => {
       if (cancelado) return;
       const veredictos = {};
       // Si el backend no filtra por estación, se reparte aquí; solo es reparto, no análisis.
       codigos.forEach((c, i) => { veredictos[c] = (ver[i].veredictos || []).filter((v) => v.c_estacion === c); });
-      setEstado((s) => ({ ...s, conectado: true, motor: salud.motor, alertas: al.alertas || [],
-        reportes: rep.reportes || [], prioridades: pri ? pri.prioridades : null, huella: hue, veredictos,
+      const enVivo = { alertas: al.alertas || [], reportes: rep.reportes || [], prioridades: pri ? pri.prioridades : null,
+        huella: hue, veredictos,
+        recepcion: Object.fromEntries(((est && est.estaciones) || []).map((e) => [e.c_estacion, e.ultima_recepcion])) };
+      setEstado((s) => conCambios({ ...s, conectado: true, motor: salud.motor, ...mezcla(foto, enVivo),
         autorizaciones: aut ? aut.autorizaciones || [] : s.autorizaciones }));
-    }).catch(() => { if (!cancelado) setEstado((s) => ({ ...s, conectado: false })); });
+    }).catch(() => {
+      if (cancelado) return;
+      // Sin backend, la foto sigue a la vista.
+      if (foto) setEstado((s) => conCambios({ ...s, conectado: true, motor: foto.salud.motor, ...mezcla(foto, { alertas: [], reportes: [], veredictos: {} }) }));
+      else setEstado((s) => ({ ...s, conectado: false }));
+    });
     // La siguiente consulta sale CADA_MS después de que terminó la anterior, no cada CADA_MS fijo: con
     // setInterval, si el backend tardaba más de 3 s (Vercel en frío, red lenta), las 10 peticiones de cada
     // vuelta se amontonaban y la fila crecía hasta ~36 s por respuesta. Con la pestaña oculta no se consulta.
@@ -172,8 +243,9 @@ export function useBackend(codigos) {
   // Cambia estado y responsable. En demostración solo se cambia en esta pestaña.
   const guardar = useCallback(async (c_alerta, cambios) => {
     let nueva;
-    if (origen.modo === 'demo') {
+    if (origen.modo === 'demo' || fijas.current.has(c_alerta)) {
       nueva = cambios;
+      cambiosFijas.current[c_alerta] = { ...cambiosFijas.current[c_alerta], ...cambios };
     } else {
       const r = await fetch(origen.url + '/alertas/' + encodeURIComponent(c_alerta), {
         method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(cambios),
@@ -229,9 +301,9 @@ export function useBackend(codigos) {
   // cambia, asi que su prediccion se pide una vez. Devuelve { prediccion } o { motivo }.
   const cache = useRef({});
   const prediccion = useCallback(async (c_alerta) => {
-    if (origen.modo === 'demo') {
+    if (origen.modo === 'demo' || fijas.current.has(c_alerta)) {
       const p = (estado.predicciones || {})[c_alerta];
-      return p ? { prediccion: p } : { motivo: 'La foto de demostración no trae la predicción de esta alerta.' };
+      return p ? { prediccion: p } : { motivo: 'Sin predicción para esta alerta.' };
     }
     if (cache.current[c_alerta]) return cache.current[c_alerta];
     let r;

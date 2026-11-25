@@ -43,6 +43,24 @@ Con el cambio, 20 peticiones simultáneas a un backend recién creado dan 200 y 
 
 ---
 
+## 2026-11-25 · M7 y M8: el panel siempre tiene datos y la app se instala en Android
+
+**Qué cambió.** El panel usa siempre como base una foto fija (`panel/public/demo/foto.json`): 24 h de los 10 mecanismos
+sembradas con `sembrar_demo.py` y evaluadas por el motor real (72 alertas: 30 abiertas y 42 normalizadas; 50 veredictos
+por estación). Al abrir el panel, sus horas y la fecha de cada código de alerta se corren para que su última lectura caiga
+en el cuarto de hora actual. Una estación que envió en los últimos 15 min (`ultima_recepcion`) se muestra desde el backend;
+las demás, desde la foto. Sin backend, el panel muestra la foto. Se quitaron los avisos de «demostración». La app ciudadana
+tiene íconos PNG de 192 y 512 px (y uno mascarable) en su manifiesto.
+**Por qué.** Con el tiempo el motor cierra las alertas al normalizarse y el panel se quedaba vacío para la presentación.
+Chrome en Android no ofrece instalar una PWA cuyo manifiesto solo trae un ícono SVG (falta probarlo en el Moto G60).
+**Qué arrastró.** `panel/src/lib/datos.js`, `App.jsx`, `Expediente.jsx`, `Autorizaciones.jsx`, `Reportes.jsx`,
+`scripts/capturar-demo.mjs` (lee `mecanismos.json`); `servidor_mock.py` guarda 5 000 veredictos (con 500 se perdían los de
+cuatro estaciones); `ciudadano/public/manifest.webmanifest`, `index.html` e íconos.
+**Impacto en otros módulos.** Módulo B (Evaristo): el panel ya no queda vacío; lo vivo se mezcla con la foto por estación.
+Módulo C (Carlos): íconos nuevos en la app.
+
+---
+
 ## 2026-11-25 · M4 y M6: figura 3D sin puntos y lista del mapa por riesgo
 
 **Qué cambió.** Las figuras 3D del simulador (río y ladera) ya no dibujan un punto por pieza en la vista general: el rótulo

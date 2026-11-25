@@ -134,14 +134,6 @@ export default function App() {
       </div>
       )}
 
-      {seccion === 'monitoreo' && demo && be.capturado && (
-        <div className="contenedor aviso-contenedor">
-          <div className="aviso aviso-advertencia" role="note">
-            Datos de demostración: lo que respondió el motor de reglas el {hora(be.capturado)} en el escenario de
-            descarga industrial. Los cambios de estado y responsable no se guardan.
-          </div>
-        </div>
-      )}
       {/* Solo en monitoreo: habla del motor de alertas, no de los reportes, y en reportes empujaba el tablero */}
       {seccion === 'monitoreo' && !demo && be.motor === 'stub' && (
         <div className="contenedor aviso-contenedor">

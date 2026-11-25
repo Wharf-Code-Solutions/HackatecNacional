@@ -329,7 +329,7 @@ export default function Reportes({ reportes, prioridades, huella, conectado, gua
       const avisos = await Promise.all(it.reportes.map((r) => guardarReporte(r.c_reporte, nuevo)));
       const n = it.reportes.length;
       setAviso({ tipo: 'bien', texto: (n > 1 ? n + ' reportes' : 'Reporte ' + it.reportes[0].c_reporte) + ' en «' + txt(nuevo) + '».' +
-        textoCorreo(avisos) + (demo ? ' Demostración: el cambio solo vive en esta pestaña.' : '') });
+        textoCorreo(avisos) });
       if (!ABIERTOS.includes(nuevo) || nuevo === 'Recibido') setElegidoId(null);   // sale de esta lista
       if (!demo) refrescar();
     } catch (err) {
@@ -340,7 +340,7 @@ export default function Reportes({ reportes, prioridades, huella, conectado, gua
 
   let vacio = null;
   if (pestana === 'activas' && !prioridades) {
-    vacio = demo ? 'La demostración no trae la prioridad de los reportes.'
+    vacio = demo ? 'No hay reportes por atender.'
       : conectado === false ? 'Sin conexión con el backend.' : 'Cargando reportes…';
   } else if (!visibles.length) vacio = 'No hay reportes en esta lista.';
 

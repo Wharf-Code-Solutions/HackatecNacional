@@ -91,7 +91,9 @@ for r in leer_json(os.path.join(FIX, 'linea_base.json'))['linea_base']:
 # campo que la tienen. Es lo unico que el stub sabe de normatividad.
 LIMITES = {'TURB': 150.0, 'OD': 4.0}
 
-VEREDICTOS = deque(maxlen=500)
+# Alcanza para 24 h de los 10 mecanismos (sembrar_demo.py, 960 paquetes): con 500, las primeras estaciones se quedaban
+# sin veredictos y /veredictos?c_estacion= no daba sus 50, como sí los da el backend.
+VEREDICTOS = deque(maxlen=5000)
 ALERTAS = []
 REPORTES = []
 CONSECUTIVAS = defaultdict(int)
