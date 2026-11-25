@@ -16,8 +16,9 @@ import Tooltip from './componentes/Tooltip.jsx';
 
 // Cambio de rumbo (docs/19 §6): la unidad es la escuela. Escuelas en riesgo, alertas de los mecanismos,
 // autorizaciones de CEASPUE y CAPCEE, y la gestión de lo que reportan las personas.
-// [id, nombre corto, resto]: en el teléfono la barra solo muestra el nombre corto.
-const SECCIONES = [['monitoreo', 'Alertas', ''], ['escuelas', 'Escuelas', ''], ['autorizaciones', 'Autorizaciones', ''], ['reportes', 'Reportes', ' ciudadanos']];
+// [id, nombre corto, resto, nombre en teléfono]: en el teléfono la barra muestra el nombre corto sin el resto,
+// o el nombre en teléfono si lo hay.
+const SECCIONES = [['monitoreo', 'Alertas', ''], ['escuelas', 'Escuelas', ''], ['autorizaciones', 'Autorizaciones', '', 'Trámites'], ['reportes', 'Reportes', ' ciudadanos']];
 const BAJADA = {
   escuelas: 'Escuelas rurales en riesgo de contaminación o derrumbe: cuáles atender primero y por qué.',
   monitoreo: 'Alertas de los mecanismos de calidad del agua: qué se midió, de dónde pudo venir y quién la atiende.',
@@ -86,9 +87,9 @@ export default function App() {
             <span className="navbar-titulo">Escuelas en riesgo</span>
           </div>
           <nav className="secciones" aria-label="Paneles">
-            {SECCIONES.map(([id, nombre, resto]) => (
+            {SECCIONES.map(([id, nombre, resto, tel]) => (
               <button key={id} className={seccion === id ? 'activa' : ''} onClick={() => setSeccion(id)} aria-current={seccion === id ? 'page' : undefined}>
-                {nombre}<span className="resto">{resto}</span> {conteoSeccion[id] > 0 && <span>({conteoSeccion[id]})</span>}
+                {tel ? <><span className="largo">{nombre}</span><span className="tel">{tel}</span></> : nombre}<span className="resto">{resto}</span> {conteoSeccion[id] > 0 && <span className="cuenta">({conteoSeccion[id]})</span>}
               </button>
             ))}
           </nav>

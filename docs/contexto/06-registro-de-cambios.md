@@ -21,6 +21,19 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Módulo B: cierre del panel reenfocado a escuelas
+
+**Qué cambió.** En teléfono las cuatro pestañas van en una segunda fila, "Autorizaciones" se llama "Trámites" y se ocultan
+los contadores (antes se cortaban). Estado del panel actualizado en `docs/12-estado-y-traspaso.md` y `CLAUDE.md`.
+**Por qué.** Paso 8 del módulo B (docs/19 §6, terminado cuando). Verificado: a 375 px ninguna pestaña se desborda; con el
+`escuelas.json` provisional y con una escuela sin riesgo ni campos opcionales el panel no falla; en Vercel cargan las
+cuatro pestañas y la alerta de `EST-ESC-04` muestra su escuela afectada; `npm run build` pasa.
+**Qué arrastró.** `App.jsx`, `estilos.css`, `CLAUDE.md`, `docs/12-estado-y-traspaso.md`.
+**Impacto en otros módulos.** Pendientes de A y del motor: matrícula y fuente de agua, zonas del atlas, un factor de
+urbanización que distinga y `escuelas_afectadas` desde el motor.
+
+---
+
 ## 2026-11-24 · Módulo C: «Generar Reporte» se apaga fuera de Puebla
 
 **Qué cambió.** Nuevo `scripts/103_area_reportes.py` → `datos/procesados/mapa/area_reportes.json`: Puebla aproximada por las

@@ -265,7 +265,13 @@ ul.lista { margin: 8px 0 0; padding-left: 20px; font-size: 14px; }
   .navbar-divisor { margin: 0 4px; height: 24px; }
   .navbar-titulo { display: none; }
   .secciones button { padding: 0 8px; font-size: 13px; }
-  .secciones .resto { display: none; }
+  .secciones .resto, .secciones button span.largo { display: none; }
+  .secciones button span.tel { display: inline; }
+  /* Las cuatro secciones no caben junto al logotipo: van en una segunda fila, a todo el ancho. */
+  .navbar-fila { flex-wrap: wrap; row-gap: 0; padding-top: 8px; }
+  .secciones { order: 2; flex-basis: 100%; justify-content: space-between; min-height: 40px; }
+  .navbar-fila .secciones button { padding: 0 4px; font-size: 13px; }
+  .secciones button span.cuenta { display: none; }
   .titulo-panel { font-size: 26px; }
   .pie-rejilla { grid-template-columns: 1fr; }
   .resumen { grid-template-columns: 1fr 1fr; }
@@ -535,3 +541,6 @@ main.tablero-main { padding: 0; flex: 1; display: flex; }
 .urb-barra > span { display: block; height: 10px; background: var(--principal); border-radius: 2px; min-width: 1px; }
 .urb-barra > i { font-style: normal; font-size: 12.5px; color: var(--tenue); font-variant-numeric: tabular-nums; }
 .urb-tabla td { vertical-align: middle; }
+
+.secciones span.tel { display: none; }
+.secciones span.largo, .secciones span.tel { font-weight: inherit; opacity: 1; }
