@@ -21,6 +21,18 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Módulo B: la vista del panel vive en la URL
+
+**Qué cambió.** `panel/src/lib/ruta.js` (nuevo) guarda sección, vista, escuela abierta y página de reportes en el hash
+(`#/alertas`, `#/alertas/avisos`, `#/escuelas/<cct>`, `#/autorizaciones`, `#/reportes`, `#/reportes/estadisticas`).
+Atrás y Adelante del navegador funcionan, una recarga conserva la vista y un enlace abre una escuela. Elegir otra
+escuela dentro de la lista reemplaza la entrada del historial en lugar de sumar una.
+**Por qué.** Petición del usuario: al cambiar de pestaña no se podía regresar a la anterior.
+**Qué arrastró.** `App.jsx`.
+**Impacto en otros módulos.** Ninguno. Se usa el hash para no depender de reescrituras en Vercel.
+
+---
+
 ## 2026-11-24 · M4: deslave gráfico, lluvia que oscurece y rótulos al pasar el cursor
 
 **Qué cambió.** Deslave: cicatriz en la ladera, hasta 64 bloques que ruedan al arroyo, polvo y lodo, en tiempo real. La lluvia oscurece más el día (sol, cielo, nubes). Tubo de descarga al inicio del tramo, con la pluma corriendo río abajo. En las dos vistas generales los rótulos salen al pasar el cursor sobre un punto; fijos: Escuela y Cauce (ladera), Corriente (río) y los que estén en alarma.

@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useRuta } from './lib/ruta.js';
 import { Datos, ayudantes } from './lib/contexto.js';
 import { useBackend, useDatosFijos } from './lib/datos.js';
 import { hora, porAtender } from './lib/formato.js';
@@ -49,12 +50,17 @@ export default function App() {
   const codigosBackend = useMemo(() => (fijos ? [...codigos, ...Object.keys(fijos.mecanismos || {}).sort()] : []), [fijos, codigos]);
   const be = useBackend(codigosBackend);
   const ctx = useMemo(() => (fijos ? ayudantes(fijos) : null), [fijos]);
-  const [seccion, setSeccion] = useState('monitoreo');
-  const [vista, setVista] = useState('alertas');
+  // Sección, vista, escuela abierta y página de reportes viven en la URL (lib/ruta.js): Atrás regresa.
+  const [ruta, ir] = useRuta();
+  const { seccion, vista, escuela: escuelaSel, paginaReportes } = ruta;
+  const setSeccion = (s) => ir({ seccion: s });
+  const setVista = (v) => ir({ vista: v });
+  const setPaginaReportes = (p) => ir({ seccion: 'reportes', paginaReportes: p });
+  // Elegir otra escuela dentro de la lista no deja un paso en el historial; llegar desde otra sección, sí.
+  const setEscuelaSel = (cct) => ir({ escuela: cct }, { reemplazar: seccion === 'escuelas' });
+  const abrirEscuela = (cct) => { ir({ seccion: 'escuelas', escuela: cct }); window.scrollTo(0, 0); };
+  useEffect(() => { window.scrollTo(0, 0); }, [seccion, vista, paginaReportes]);
   const [sel, setSel] = useState(null);
-  const [escuelaSel, setEscuelaSel] = useState(null);
-  // Reportes ciudadanos tiene dos páginas, que se eligen en el menú de la barra (antes, un botón en la lista).
-  const [paginaReportes, setPaginaReportes] = useState('incidencias');
   const [filtros, setFiltros] = useState({ estado: 'activas', nivel: 'todos', estacion: 'todas' });
 
   const demo = be.origen.modo === 'demo';
@@ -92,7 +98,7 @@ export default function App() {
               <MenuSeccion key={id} activa={seccion === id} cuenta={conteoSeccion[id]} actual={paginaReportes}
                 etiqueta={<><span className="largo">{nombre}{resto}</span><span className="tel">{nombre}</span></>}
                 opciones={[['incidencias', 'Reportes'], ['dashboard', 'Estadísticas']]}
-                onElegir={(p) => { setPaginaReportes(p); setSeccion('reportes'); window.scrollTo(0, 0); }} />
+                onElegir={(p) => setPaginaReportes(p)} />
             ) : (
               <button key={id} className={seccion === id ? 'activa' : ''} onClick={() => setSeccion(id)} aria-current={seccion === id ? 'page' : undefined}>
                 {tel ? <><span className="largo">{nombre}</span><span className="tel">{tel}</span></> : nombre}<span className="resto">{resto}</span> {conteoSeccion[id] > 0 && <span className="cuenta">({conteoSeccion[id]})</span>}
@@ -158,7 +164,7 @@ export default function App() {
                     onElegir={elegirAlerta} conectado={be.conectado} />
                   <Expediente alerta={alerta} alertas={be.alertas} veredictos={alerta ? be.veredictos[alerta.c_estacion] : []}
                     motor={be.motor} guardar={be.guardar} prediccion={be.prediccion} demo={demo}
-                    onElegirEscuela={(cct) => { setEscuelaSel(cct); setSeccion('escuelas'); window.scrollTo(0, 0); }} />
+                    onElegirEscuela={abrirEscuela} />
                 </div>
                 <Panorama parte="conteos" alertas={be.alertas} veredictos={be.veredictos} corte={corte} elegida={filtros.estacion} />
               </section>
@@ -166,7 +172,7 @@ export default function App() {
             {seccion === 'monitoreo' && vista === 'avisos' && <Avisos veredictos={be.veredictos} conectado={be.conectado} />}
             {seccion === 'escuelas' && <Escuelas escuelas={ctx.escuelas} alertas={be.alertas} zonas={ctx.zonas} sel={escuelaSel} onElegir={setEscuelaSel} />}
             {seccion === 'autorizaciones' && <Autorizaciones escuelas={ctx.escuelas} mecanismos={ctx.mecanismos}
-              onElegirEscuela={(cct) => { setEscuelaSel(cct); setSeccion('escuelas'); window.scrollTo(0, 0); }} />}
+              onElegirEscuela={abrirEscuela} />}
             {seccion === 'reportes' && (
               <Reportes reportes={be.reportes} prioridades={be.prioridades} huella={be.huella} conectado={be.conectado}
                 guardarReporte={be.guardarReporte} refrescar={be.refrescar} demo={demo}
