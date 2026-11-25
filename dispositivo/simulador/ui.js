@@ -109,7 +109,11 @@
       // El mismo botón inicia la prueba y la detiene; mientras corre queda en azul.
       b.onclick = function () {
         var s = actual(), sim = deLadera ? s.ladera : s.agua, t = s.fw.t;
-        if (sim.enCurso(b.dataset.ev, t)) sim.detiene(b.dataset.ev, t); else sim.agregaEvento(b.dataset.ev, t);
+        if (sim.enCurso(b.dataset.ev, t)) sim.detiene(b.dataset.ev, t); else {
+          sim.agregaEvento(b.dataset.ev, t);
+          // el deslave cede a las 13 h: a 300× son más de 2 minutos de espera; a 3600× son ≈ 13 s
+          if (b.dataset.ev === 'deslave' && estado.vel < 3600) { estado.vel = 3600; $('selVel').value = '3600'; }
+        }
         marcaPruebas(s);
       };
     });

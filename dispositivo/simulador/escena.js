@@ -639,7 +639,7 @@
     }
     // la inundación: el arroyo, represado por la tierra, se desborda sobre la explanada (una lámina elíptica que crece)
     G.matInunda = new T.MeshStandardMaterial({ color: 0x6a4d33, roughness: 0.25, metalness: 0, normalMap: G.ondasL, normalScale: new T.Vector2(0.35, 0.35),
-      envMap: G.cielo, envMapIntensity: 0.3, transparent: true, opacity: 0.9, depthWrite: false });
+      envMap: G.cielo, envMapIntensity: 0.3, transparent: true, opacity: 0.94, depthWrite: false });
     G.inunda = new T.Mesh(new T.CircleGeometry(1, 48).rotateX(-Math.PI / 2), G.matInunda);
     G.inunda.visible = false; G.inunda.userData.sinSombra = true; G.escena.add(G.inunda);
   }
@@ -757,7 +757,7 @@
     var kd = M.acota((L.incl - 1.0) / 2.8, 0, 1), p = suaviza('lodo', M.acota(kd * 3, 0, 1), dtr, 2.0);
     pintaDeslave(p);
     // inundación: con la tierra en el cauce el agua sube hasta el borde y se tiende sobre la explanada, hacia la escuela
-    var fl = suaviza('inunda', M.acota((p - 0.4) / 0.6, 0, 1), dtr, 3.0), yInunda = PIE + 0.04 + 0.26 * fl;
+    var fl = suaviza('inunda', M.acota((p - 0.4) / 0.6, 0, 1), dtr, 3.0), yInunda = PIE + 0.05 + 0.4 * fl;
     nivelArroyo((G.fondoArroyo + NIVEL_ARROYO.base + NIVEL_ARROYO.crece * G.creceL) * (1 - fl) + yInunda * fl);
     G.inunda.visible = fl > 0.01;
     if (G.inunda.visible) {
