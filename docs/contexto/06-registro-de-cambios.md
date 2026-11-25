@@ -21,6 +21,15 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · M4: la descarga entra al inicio del río y la pluma corre río abajo
+
+**Qué cambió.** El tubo de descarga pasa al inicio del tramo y el agua solo se tiñe río abajo de él: un frente avanza con la corriente dibujada y, al terminar, una cola lo persigue. El chorro es de gotas y lluvia, clima y descarga entran y salen suavizados en tiempo real. `Agua.valor` acepta una lista de eventos a ignorar para separar la turbiedad de la descarga.
+**Por qué.** Pedido del usuario: el color cambiaba en todo el río desde el inicio aunque lo vertido entra después, y el chorro no se veía fluido.
+**Qué arrastró.** `escena.js`, `modelo.js`, `index.html` (versiones). Las lecturas de las sondas no cambian.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
 ## 2026-11-24 · M4: los botones de prueba inician y detienen la simulación
 
 **Qué cambió.** Cada botón de prueba del simulador inicia la simulación y se pone azul; al pulsarlo de nuevo la detiene y recupera su color. En el agua la prueba sale con la rampa de 30 min; en la ladera la lluvia se corta y lo acumulado (humedad, inclinación) se queda (`detiene` y `enCurso` en `modelo.js`).

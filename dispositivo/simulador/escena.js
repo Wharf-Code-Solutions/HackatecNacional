@@ -316,10 +316,16 @@
       var k = 0.9 + 0.1 * M.acota((n - 0.55) * 5, 0, 1); return [k * 255, k * 255, k * 255];
     }, [6, 10], true);
     G.ondas = [ondas, vetas];
-    G.matAgua = new T.MeshStandardMaterial({ color: 0x587a80, roughness: 0.24, metalness: 0, normalMap: ondas, map: vetas,
+    G.matAgua = new T.MeshStandardMaterial({ color: 0xffffff, vertexColors: true, roughness: 0.24, metalness: 0, normalMap: ondas, map: vetas,
       normalScale: new T.Vector2(0.35, 0.35), envMap: G.cielo, envMapIntensity: 0.35, transparent: true, opacity: 0.86, depthWrite: false, side: T.DoubleSide });
     G.matCaraAgua = new T.MeshStandardMaterial({ color: 0x587a80, roughness: 0.6, metalness: 0, transparent: true, opacity: 0.72, depthWrite: false, side: T.DoubleSide });
-    var sup = new T.Mesh(new T.PlaneGeometry(18, Z_CORTE - Z0), G.matAgua);
+    // La superficie lleva el color por vértice a lo largo del cauce: la descarga tiñe el agua río abajo de su tubo (pintaPluma).
+    var gSup = new T.PlaneGeometry(18, Z_CORTE - Z0, 1, 120), zc = (Z0 + Z_CORTE) / 2;
+    G.supZ = []; G.supCol = new Float32Array(gSup.attributes.position.count * 3);
+    for (var iz = 0; iz < gSup.attributes.position.count; iz++) G.supZ.push(zc - gSup.attributes.position.getY(iz));
+    gSup.setAttribute('color', new T.BufferAttribute(G.supCol, 3));
+    G.supGeo = gSup;
+    var sup = new T.Mesh(gSup, G.matAgua);
     sup.rotation.x = -Math.PI / 2; sup.position.set(4.5, SUP_AGUA, (Z0 + Z_CORTE) / 2); sup.receiveShadow = true; G.escena.add(sup);
     var mojado = perfil.filter(function (q) { return q.y < SUP_AGUA; });
     var fa = new T.Shape();
@@ -632,10 +638,10 @@
     G.matSueloL.color.setRGB(1 - 0.12 * k, 1 - 0.12 * k, 1 - 0.1 * k);
     G.estaca.rotation.z = L.incl * EXAGERA_INCL * Math.PI / 180;                        // hacia abajo del cerro
     // lluvia: hasta 1 400 trazos con 40 mm/h
-    var mmh = L.intensidad(fw.t);
-    caeLluvia(mmh / 40, dtr);
+    var mmh = L.intensidad(fw.t), lluvia = suaviza('lluviaL', M.acota(mmh / 40, 0, 1), dtr);
+    caeLluvia(lluvia, dtr);
     // el arroyo crece y corre más rápido con la lluvia del modelo (sin lluvia, ≈ 0.4 m/s dibujado)
-    G.creceL = (G.creceL || 0) + (M.acota(mmh / 40, 0, 1) - (G.creceL || 0)) * Math.min(1, dtr * 0.8);
+    G.creceL = (G.creceL || 0) + (lluvia - (G.creceL || 0)) * Math.min(1, dtr * 0.8);
     clima(G.creceL);                                                                    // y el día se oscurece con la tormenta
     nivelArroyo(G.fondoArroyo + NIVEL_ARROYO.base + NIVEL_ARROYO.crece * G.creceL);
     G.ondasL.offset.y = (G.ondasL.offset.y + (0.4 + 1.6 * G.creceL) * dtr / 3) % 1;
@@ -1060,15 +1066,66 @@
   // Tubo de descarga en la orilla de la estación, río arriba: por él entra la descarga industrial y la orgánica (pinta).
   // Su canal baja por el talud hasta el agua; se ve solo con el caudal de la descarga.
   function construyeDescarga() {
-    var z = -17, xe = ejeRio(z) - 6.45, tub = mate(0x6f7b84, { roughness: 0.5 });
-    var t = cilindro(0.4, 5, tub, xe - 2.5, 0.95, z, null, 20); t.rotation.z = Math.PI / 2;
-    var boca = cilindro(0.43, 0.2, mate(TINTA), xe, 0.95, z, null, 20); boca.rotation.z = Math.PI / 2;
+    var z = -30, xe = ejeRio(z) - 6.45, tub = mate(0x6f7b84, { roughness: 0.5 });   // al inicio del tramo: lo vertido corre río abajo
+    var t = cilindro(0.55, 6, tub, xe - 3, 1.05, z, null, 20); t.rotation.z = Math.PI / 2;
+    var boca = cilindro(0.59, 0.25, mate(TINTA), xe, 1.05, z, null, 20); boca.rotation.z = Math.PI / 2;
     G.matDescarga = new T.MeshStandardMaterial({ color: 0xbf8a2e, roughness: 0.3, transparent: true, opacity: 0.9, depthWrite: false });
-    G.chorro = new T.Mesh(new T.BoxGeometry(0.8, 0.8, 0.8), G.matDescarga);       // el chorro cae de la boca al talud
-    G.chorro.position.set(xe + 0.1, 0.55, z); G.chorro.userData.sinSombra = true; G.chorro.visible = false; G.escena.add(G.chorro);
+    // el chorro: gotas alargadas que salen de la boca, caen en arco y se reciclan; se ven tantas como el caudal (pintaDescarga)
+    G.gotas = []; G.xBoca = xe + 0.14; G.zBoca = z;
+    var geoGota = new T.SphereGeometry(1, 10, 8);
+    for (var gi = 0; gi < 36; gi++) {
+      var gm = new T.Mesh(geoGota, G.matDescarga); gm.visible = false; gm.userData.sinSombra = true; G.escena.add(gm); G.gotas.push(gm);
+    }
     G.canal = new T.Mesh(new T.BoxGeometry(1, 0.05, 0.8), G.matDescarga);          // y el canal que baja por el talud
-    G.canal.position.set(xe + 0.55, 0.28, z); G.canal.rotation.z = -0.72; G.canal.scale.x = 1.2;
+    G.canal.position.set(xe + 0.55, 0.34, z); G.canal.rotation.z = -0.72; G.canal.scale.x = 1.2;
     G.canal.userData.sinSombra = true; G.canal.visible = false; G.escena.add(G.canal);
+  }
+  // Acerca poco a poco `clave` a su objetivo, en tiempo real (≈ 1.2 s): las pruebas empiezan y terminan sin saltos
+  // a cualquier velocidad de simulación, y el chorro y la lluvia no aparecen ni se cortan de golpe.
+  function suaviza(clave, objetivo, dtr, tau) {
+    G.sm = G.sm || {};
+    var v = G.sm[clave] || 0;
+    v += (objetivo - v) * (1 - Math.exp(-dtr / (tau || 1.2)));
+    if (Math.abs(objetivo - v) < 0.002) v = objetivo;
+    return (G.sm[clave] = v);
+  }
+  // La descarga tiñe el agua solo río abajo del tubo: un frente avanza con la corriente dibujada desde la boca y, al
+  // terminar la descarga, la cola lo persigue; delante del frente y detrás de la cola el agua sigue con su color.
+  var DESCARGAS = ['descarga_industrial', 'descarga_organica'];
+  function pintaPluma(base, s, ind, org, vel, dtr) {
+    var zp = G.zBoca, paso = EXAGERA_CORRIENTE * vel * 1.5 * dtr, activa = s > 0.02;
+    if (G.cabeza === undefined) { G.cabeza = G.cola = zp; G.ampD = 0; G.colD = new T.Color(0xbf8a2e); G.cofD = 0.85; }
+    if (activa) {
+      G.ampD = s; G.cola = zp; G.cabeza = Math.min(G.cabeza + paso, Z_CORTE + 12);
+      G.colD.setHex(ind >= org ? 0xbf8a2e : 0x4a5a30); G.cofD = ind >= org ? 0.85 : 0.7;
+    } else if (G.cola < G.cabeza) {
+      G.cola += paso;
+      if (G.cola >= G.cabeza) { G.cabeza = G.cola = zp; G.ampD = 0; }
+    }
+    G.tmpC = G.tmpC || new T.Color();
+    function en(z) { return suave((G.cabeza - z) / 3) * suave((z - G.cola) / 3) * G.ampD * G.cofD; }
+    for (var i = 0; i < G.supZ.length; i++) {
+      G.tmpC.copy(base).lerp(G.colD, en(G.supZ[i]));
+      G.supCol[i * 3] = G.tmpC.r; G.supCol[i * 3 + 1] = G.tmpC.g; G.supCol[i * 3 + 2] = G.tmpC.b;
+    }
+    G.supGeo.attributes.color.needsUpdate = true;
+    G.matAgua.color.setRGB(1, 1, 1);
+    G.matCaraAgua.color.copy(base).lerp(G.colD, en(Z_CORTE));      // el corte, al final del tramo, se tiñe cuando llega la pluma
+    G.matDescarga.color.copy(G.colD);
+  }
+  function pintaDescarga(v, dtr) {
+    G.tFlujo = ((G.tFlujo || 0) + dtr * 1.5) % 1000;
+    var n = G.gotas.length, vis = Math.ceil(v * n), x0 = G.xBoca, z0 = G.zBoca;
+    G.gotas.forEach(function (g, i) {
+      g.visible = i < vis;
+      if (!g.visible) return;
+      var u = (i / n + G.tFlujo) % 1;                            // 0 en la boca, 1 en el agua
+      g.position.set(x0 + 0.5 * u, 1.08 - 1.15 * u * u, z0 + 0.15 * Math.sin(i * 2.4));
+      g.scale.set(0.14, 0.14 + 0.16 * u, 0.14);
+    });
+    G.canal.visible = v > 0.02;
+    G.canal.scale.set(1.2, 1, 0.3 + 0.5 * v);
+    G.matDescarga.opacity = 0.9 * Math.min(1, v * 3);
   }
   // Intensidad (0 a 1) de un tipo de evento del agua en t, sumando los que se traslapen.
   function nivelEv(agua, tipo, t) {
@@ -1575,21 +1632,16 @@
     // Pruebas del agua. Lluvia: el día se oscurece, cae la lluvia, el agua se enturbia y corre más (del modelo).
     // Descarga industrial: el agua vira a ocre y su flujo se dibuja más fuerte, con el tubo de descarga vertiendo;
     // la orgánica la vira a verde oscuro. El modelo no mueve la velocidad con las descargas: el aumento es solo del dibujo.
-    var llu = s.agua.lluvia(fw.t), ind = nivelEv(s.agua, 'descarga_industrial', fw.t), org = nivelEv(s.agua, 'descarga_organica', fw.t);
-    clima(M.acota(llu, 0, 1)); caeLluvia(llu, dtr);
-    var cAgua = colorAgua(s.agua.valor('TURB', fw.t));
-    cAgua.lerp(new T.Color(0xbf8a2e), 0.78 * ind).lerp(new T.Color(0x4a5a30), 0.65 * org);
-    G.matAgua.color.copy(cAgua); G.matCaraAgua.color.copy(cAgua);
-    var vierte = Math.max(ind, org);
-    G.chorro.visible = G.canal.visible = vierte > 0.02;
-    G.matDescarga.color.setHex(ind >= org ? 0xbf8a2e : 0x4a5a30);
-    G.chorro.scale.set(0.5, 0.6 * vierte + 0.01, 0.6 + 0.4 * vierte); G.chorro.position.y = 0.95 - 0.4 * (0.6 * vierte + 0.01) * 1.0;
-    G.canal.scale.set(1.2, 1, 0.6 + 0.4 * vierte);
+    var llu = suaviza('llu', M.acota(s.agua.lluvia(fw.t), 0, 1), dtr), ind = suaviza('ind', nivelEv(s.agua, 'descarga_industrial', fw.t), dtr),
+      org = suaviza('org', nivelEv(s.agua, 'descarga_organica', fw.t), dtr);
+    clima(llu); caeLluvia(llu, dtr);
+    var vel = s.agua.velocidad(fw.t);
+    pintaPluma(colorAgua(s.agua.valor('TURB', fw.t, DESCARGAS)), Math.max(ind, org), ind, org, vel, dtr);
+    pintaDescarga(Math.max(ind, org), dtr);
     // corriente: la textura avanza aguas abajo (una baldosa mide 3.84 m a lo largo del cauce); con la
     // simulación en pausa, el agua sigue corriendo. A escala real, 0.6 m/s casi no se percibe desde la
     // distancia de la cámara: se dibuja 4 veces más rápido. El rótulo da la velocidad del modelo, sin
     // exagerar, y la proporción entre corriente normal y crecida se conserva.
-    var vel = s.agua.velocidad(fw.t);
     G.ondas.forEach(function (t) { t.offset.y = (t.offset.y + EXAGERA_CORRIENTE * vel * (1 + 1.1 * ind + 0.3 * org) * dtr / 3.84) % 1; });
     rotulo('rio', vel.toFixed(2) + ' m/s, simulada');
     pintaColector(s, ahora, dtr);

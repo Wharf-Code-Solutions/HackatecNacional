@@ -88,10 +88,12 @@
     if (p === 'TEMP') v = L.media + 2.2 * Math.sin(2 * Math.PI * (horaLocal(t) - 9) / 24) + ruido * 0.3;
     return v;
   };
-  Agua.prototype.valor = function (p, t) {
+  // `sin`: tipos de evento que se ignoran (el dibujo del río separa lo que viene de la descarga, que va río abajo).
+  Agua.prototype.valor = function (p, t, sin) {
     var v = this.base(p, t), i, e, ev;
     for (i = 0; i < this.eventos.length; i++) {
       ev = this.eventos[i];
+      if (sin && sin.indexOf(ev.tipo) >= 0) continue;
       e = this._env(ev, t);
       if (!e) continue;
       var wob = 1 + 0.04 * Math.sin(t / 97);
