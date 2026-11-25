@@ -21,6 +21,19 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-25 · Módulo B: el panel deja las estaciones del Atoyac
+
+**Qué cambió.** El panel ya no muestra ni pide las 5 estaciones del Atoyac (`EST-ATY-01..05`, A1 a A5 en el mapa): mapa,
+tabla, matriz, huella, filtro de la lista, alertas, cifras y avisos técnicos trabajan solo con los 10 mecanismos de
+`mecanismos.json`. Las alertas de las ATY se filtran en `App.jsx`; `todas` en `contexto.js` ya son solo los mecanismos.
+**Por qué.** Petición del usuario: las ATY no entran en el presupuesto. Verificado con datos de Vercel: marcadores 1 a 10,
+10 filas, ninguna mención de ATY.
+**Qué arrastró.** `App.jsx`, `contexto.js`, `Panorama.jsx`, `ListaAlertas.jsx`, `Avisos.jsx`.
+**Impacto en otros módulos.** Backend, motor, simulador, escenarios y `mapa/` siguen conociéndolas; quitarlas de ahí es
+otro cambio, por acordar.
+
+---
+
 ## 2026-11-25 · M4: sonda de turbiedad Rika RK500-07 en lugar de la Pyxis LT-633
 
 **Qué cambió.** La turbiedad de la estación de agua es la Rika RK500-07 (versión de acero para agua, rango 0-4 000 NTU), elegida por precio. Consume < 0.2 W a 7-28 V: la estación de agua vuelve a 2 celdas 18650 (22 Wh) y panel de 5 W (14.2 días sin sol, 1.4 Wh/día) en lugar de 8 celdas y 10 W. En el simulador la sonda tiene sesgo de ±40 NTU (±1 % del fondo de escala) y se quita el limpiador de la figura. En la página, además, el contenedor del colector se vacía tras cada pesaje y la banda nunca se atasca.

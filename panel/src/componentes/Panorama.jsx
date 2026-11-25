@@ -8,6 +8,9 @@ import Huella from '../graficas/Huella.jsx';
 import MapaEstaciones from '../graficas/MapaEstaciones.jsx';
 import MatrizEstaciones from '../graficas/MatrizEstaciones.jsx';
 
+// El mapa ya no dibuja las estaciones del Atoyac (A1 a A5): solo los mecanismos.
+const SIN_ATOYAC = {};
+
 function Tarjeta({ titulo, subtitulo, ancha, children }) {
   return (
     <figure className={'tarjeta' + (ancha ? ' ancha' : '')}>
@@ -20,13 +23,13 @@ function Tarjeta({ titulo, subtitulo, ancha, children }) {
 
 export default function Panorama({ parte, alertas, veredictos, corte, elegida, onElegir, escuelas, onElegirEscuela }) {
   const { estaciones, lineaBase, zonas, mecanismos, todas } = useDatos();
-  const porEstacion = Object.keys(estaciones).sort().map((c) => {
+  const porEstacion = Object.keys(todas).sort().map((c) => {
     const partes = {};
     let total = 0;
     alertas.forEach((a) => {
       if (a.c_estacion === c && porAtender(a)) { partes[a.nivel] = (partes[a.nivel] || 0) + 1; total++; }
     });
-    return { nombre: c.replace('EST-', '') + ' ' + inicial(estaciones[c].cuerpo_agua), partes, total };
+    return { nombre: c.replace('EST-', '') + ' ' + inicial(todas[c].localidad || todas[c].cuerpo_agua || ''), partes, total };
   });
   const cuenta = {};
   alertas.forEach((a) => { cuenta[a.c_parametro] = (cuenta[a.c_parametro] || 0) + 1; });
@@ -37,8 +40,8 @@ export default function Panorama({ parte, alertas, veredictos, corte, elegida, o
   // tabla de estaciones y de las alertas, las graficas.
   if (parte === 'mapa') return (
     <div className="panorama">
-      <Tarjeta titulo="La red de estaciones" subtitulo="Los mecanismos junto a escuelas (1 a 10: agua y ladera) y las estaciones del Atoyac (A1 a A5). En rojo y con pulso, los que tienen una alerta por atender; un clic filtra la lista.">
-        <MapaEstaciones estaciones={estaciones} mecanismos={mecanismos} alertas={alertas} elegida={elegida} onElegir={onElegir} />
+      <Tarjeta titulo="La red de estaciones" subtitulo="Los mecanismos junto a escuelas: 1 a 5 de agua y 6 a 10 de ladera. En rojo y con pulso, los que tienen una alerta por atender; un clic filtra la lista.">
+        <MapaEstaciones estaciones={SIN_ATOYAC} mecanismos={mecanismos} alertas={alertas} elegida={elegida} onElegir={onElegir} />
       </Tarjeta>
       <Tarjeta titulo="Cómo están las estaciones ahora" subtitulo="Última lectura de cada sonda frente a la historia de su sitio.">
         <MatrizEstaciones estaciones={todas} lineaBase={lineaBase} veredictos={veredictos} corte={corte} />

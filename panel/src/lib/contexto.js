@@ -80,7 +80,8 @@ export function ayudantes(fijos) {
     return a.length > 0 && a.every((x) => x.estado === 'otorgada');
   };
   // Todas las estaciones que miden: las del Atoyac y los mecanismos (agua y ladera).
-  const todas = { ...estaciones, ...mecanismos };
+  // Las estaciones que muestra el panel: solo los mecanismos (las del Atoyac salieron del presupuesto).
+  const todas = { ...mecanismos };
   // Cuántos umbrales de ladera alcanza un valor (0 = ninguno). LLUVIA se compara ya acumulada en 24 h.
   const nivelLadera = (c, cp, valor) => {
     if (valor == null) return null;

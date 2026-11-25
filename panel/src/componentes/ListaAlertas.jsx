@@ -49,9 +49,6 @@ export default function ListaAlertas({ alertas, filtros, setFiltros, sel, onEleg
               {Object.keys(mecanismos).sort().map((c) => (
                 <option key={c} value={c}>{c.replace('EST-', '')} · {nombreEstacion(c)}</option>
               ))}
-              {Object.keys(estaciones).sort().map((c) => (
-                <option key={c} value={c}>{c.replace('EST-', '')} · {nombreEstacion(c)}</option>
-              ))}
             </select>
           </label>
         </div>

@@ -45,10 +45,11 @@ function contarAvisos(veredictos) {
 
 export default function App() {
   const { datos: fijos, error } = useDatosFijos();
-  const codigos = useMemo(() => (fijos ? Object.keys(fijos.estaciones).sort() : []), [fijos]);
-  // Lecturas de todas las estaciones: las del Atoyac y los mecanismos junto a escuelas (agua y ladera).
-  const codigosBackend = useMemo(() => (fijos ? [...codigos, ...Object.keys(fijos.mecanismos || {}).sort()] : []), [fijos, codigos]);
-  const be = useBackend(codigosBackend);
+  // Solo los mecanismos junto a escuelas (agua y ladera): las 5 estaciones del Atoyac (ATY) salieron del presupuesto y
+  // del panel. El backend las sigue conociendo; el panel ni pide sus lecturas ni muestra sus alertas.
+  const codigos = useMemo(() => (fijos ? Object.keys(fijos.mecanismos || {}).sort() : []), [fijos]);
+  const beTodo = useBackend(codigos);
+  const be = useMemo(() => ({ ...beTodo, alertas: beTodo.alertas.filter((a) => codigos.includes(a.c_estacion)) }), [beTodo, codigos]);
   // Los trámites registrados desde el panel se sobreponen a los de los fixtures (activo/propuesto en todo el panel).
   const ctx = useMemo(() => (fijos ? ayudantes(conAutorizaciones(fijos, be.autorizaciones)) : null), [fijos, be.autorizaciones]);
   // Sección, vista, escuela abierta y página de reportes viven en la URL (lib/ruta.js): Atrás regresa.

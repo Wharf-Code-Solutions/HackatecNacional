@@ -6,7 +6,7 @@ import { Mensaje } from '../graficas/marcas.jsx';
 
 // Problemas del dispositivo, no del río. Nunca se mezclan con las alertas (I8).
 export default function Avisos({ veredictos, conectado }) {
-  const { estaciones, nombreEstacion } = useDatos();
+  const { todas: estaciones, nombreEstacion } = useDatos();
   const grupos = {};
   Object.keys(veredictos).forEach((c) => {
     veredictos[c].forEach((v) => {
@@ -24,7 +24,7 @@ export default function Avisos({ veredictos, conectado }) {
     const partes = {};
     let total = 0;
     lista.forEach((g) => { if (g.c === c) { partes[g.tipo] = (partes[g.tipo] || 0) + g.n; total += g.n; } });
-    return { nombre: c.replace('EST-', '') + ' ' + inicial(estaciones[c].cuerpo_agua), partes, total };
+    return { nombre: c.replace('EST-', '') + ' ' + inicial(estaciones[c].localidad || estaciones[c].cuerpo_agua || ''), partes, total };
   });
   return (
     <section className="vista">
