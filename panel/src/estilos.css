@@ -394,7 +394,7 @@ main.tablero-main { padding: 0; flex: 1; display: flex; }
 .btn-ver:hover { background: var(--gob-guinda-oscuro); }
 
 .tablero-mapa { flex: 1; position: relative; min-width: 0; }
-.tablero-mapa-lienzo { position: absolute; inset: 0; }
+.tablero-mapa .tablero-mapa-lienzo { position: absolute; inset: 0; }   /* le gana al position: relative de la hoja de Mapbox */
 .mapa-falla { position: absolute; top: 60px; left: 12px; right: 12px; z-index: 6; }
 .marcador { width: 22px; height: 22px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 2px solid #fff;
   box-shadow: 0 2px 5px rgba(0,0,0,.4); cursor: pointer; padding: 0; }
@@ -582,7 +582,7 @@ main.tablero-main { padding: 0; flex: 1; display: flex; }
 
 /* Reportes: alejado solo se ve el calor; los pines aparecen al acercarse (MapaReportes.jsx, ZOOM_PINES). */
 /* MapLibre pone la opacidad del marcador en línea; por eso se oculta con visibility e !important. */
-.tablero-mapa-lienzo.sin-pines .maplibregl-marker { visibility: hidden !important; pointer-events: none; }
+.tablero-mapa-lienzo.sin-pines :is(.maplibregl-marker, .mapboxgl-marker) { visibility: hidden !important; pointer-events: none; }
 
 /* «Qué hacer» (Protocolo.jsx): ruta de respuesta por etapas, pasos numerados sobre una línea vertical. La etapa
    inmediata va en el rojo de alerta; las otras, en guinda y en gris. Un clic en el número marca el paso. */

@@ -21,6 +21,18 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-25 · M7: el mapa de reportes usa Mapbox si hay token
+
+**Qué cambió.** `MapaReportes.jsx` carga Mapbox GL 3.8 (`streets-v12`) cuando existe `VITE_MAPBOX_TOKEN`, como la app
+ciudadana; sin token sigue con MapLibre y OpenFreeMap. El contenedor del mapa sube de especificidad en `estilos.css`
+(la hoja de Mapbox le ponía `position: relative` y lo dejaba con alto 0) y el ocultado de pines cubre `.mapboxgl-marker`.
+**Por qué.** Los escudos de Brave bloquean OpenFreeMap: en Vercel los mapas de reportes y de la app salían en gris.
+**Qué arrastró.** `panel/package.json` (`mapbox-gl` 3.8.0, la versión de `ciudadano/`). En Vercel hay que definir
+`VITE_MAPBOX_TOKEN` para que el panel y la app usen Mapbox.
+**Impacto en otros módulos.** Ninguno. El mapa de estaciones de Alertas (`MapaEstaciones.jsx`) sigue con MapLibre.
+
+---
+
 ## 2026-11-25 · M5: arranque del backend sin carrera entre peticiones
 
 **Qué cambió.** `ctx()` de `backend/app.py` llena el estado (propagación, asignación y almacén) de una sola vez.

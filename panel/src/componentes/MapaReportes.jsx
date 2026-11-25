@@ -3,9 +3,11 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 
 // Mapa del tablero de reportes, como el de SIGRIV: un pin en gota por elemento de la lista (guinda si la
 // prioridad es alta, dorado si es media, gris si es baja) y el calor encima. El calor es la huella sobre el
-// río (GET /huella, D30), que se prende y apaga con el botón «Mapa de calor». Base vectorial de OpenFreeMap,
-// sin llave. MapLibre se descarga al abrir esta sección.
-const ESTILO = 'https://tiles.openfreemap.org/styles/bright';
+// río (GET /huella, D30), que se prende y apaga con el botón «Mapa de calor». Con VITE_MAPBOX_TOKEN usa
+// Mapbox GL, como la app ciudadana (los escudos de Brave bloquean OpenFreeMap); sin token, MapLibre con la base
+// de OpenFreeMap. La biblioteca se descarga al abrir esta sección.
+const TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
+const ESTILO = TOKEN ? 'mapbox://styles/mapbox/streets-v12' : 'https://tiles.openfreemap.org/styles/bright';
 const AGUA = '#1d6fa5';   // el azul del agua del resto del proyecto (mapa/, MapaEstaciones)
 // Alejado se ve dónde se acumulan los reportes (calor); de cerca, cada pin. El cambio es en este zoom, con un
 // tramo de transición en el que el calor se desvanece mientras aparecen los pines.
@@ -23,9 +25,13 @@ export default function MapaReportes({ focos, huella, calor, elegido, vista, onE
 
   useEffect(() => {
     let vivo = true;
-    import('maplibre-gl').then((mod) => {
+    const biblioteca = TOKEN
+      ? Promise.all([import('mapbox-gl'), import('mapbox-gl/dist/mapbox-gl.css')]).then(([mod]) => mod)
+      : import('maplibre-gl');
+    biblioteca.then((mod) => {
       if (!vivo) return;
       gl.current = mod.default || mod;
+      if (TOKEN) gl.current.accessToken = TOKEN;
       const m = new gl.current.Map({ container: caja.current, style: ESTILO, center: [-98.2, 19.1], zoom: 8.5, attributionControl: true });
       mapa.current = m;
       window.mapaReportes = m;   // para depurar desde la consola, como window.mapaPanel
@@ -72,7 +78,7 @@ export default function MapaReportes({ focos, huella, calor, elegido, vista, onE
         });
         setLista(true);
       });
-      m.on('error', (e) => { if (e && e.error && /style|401|403/i.test(String(e.error.message))) setFalla(true); });
+      m.on('error', (e) => { if (e && e.error && /style|token|401|403/i.test(String(e.error.message))) setFalla(true); });
     }).catch(() => setFalla(true));
     return () => { vivo = false; mapa.current?.remove(); mapa.current = null; };
   }, []);
