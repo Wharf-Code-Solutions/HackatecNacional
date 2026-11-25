@@ -60,7 +60,8 @@ export function useDatosFijos() {
       getJSON(base + 'escuelas.json').catch(() => []),
       getJSON(base + 'zonas_riesgo.geojson').catch(() => ({ type: 'FeatureCollection', features: [] })),
       getJSON(base + 'cuenca.geojson').catch(() => null),
-    ]).then(([est, lb, abajo, pares, geo, rios, esc, zonas, cuenca]) => {
+      getJSON(base + 'mecanismos.json').catch(() => ({ estaciones: [] })),
+    ]).then(([est, lb, abajo, pares, geo, rios, esc, zonas, cuenca, mec]) => {
       const estaciones = Object.fromEntries(est.estaciones.map((e) => [e.c_estacion, e]));
       const lineaBase = {};
       lb.linea_base.forEach((r) => {
@@ -78,7 +79,9 @@ export function useDatosFijos() {
       const escuelas = (Array.isArray(esc) ? esc : esc.escuelas || []).filter((e) => e && e.cct
         && String(e.cct).startsWith('21') && e.longitud != null && e.latitud != null
         && (!anillos.length || anillos.some((a) => dentroDe(a, e.longitud, e.latitud))));
-      setDatos({ estaciones, lineaBase, nombresSitio, pares: listaPares, sitios, rios: rios.lineas, escuelas, zonas });
+      // Mecanismos junto a escuelas (EST-ESC-xx, del modulo A): para nombrar su estacion y saber que escuelas protege.
+      const mecanismos = Object.fromEntries((mec.estaciones || []).map((m) => [m.c_estacion, m]));
+      setDatos({ estaciones, lineaBase, nombresSitio, pares: listaPares, sitios, rios: rios.lineas, escuelas, zonas, mecanismos });
     }).catch((e) => setError(e.message));
   }, []);
   return { datos, error };

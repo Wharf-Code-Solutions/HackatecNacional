@@ -151,7 +151,8 @@ export default function App() {
                   <ListaAlertas alertas={be.alertas} filtros={filtros} setFiltros={setFiltros} sel={sel}
                     onElegir={elegirAlerta} conectado={be.conectado} />
                   <Expediente alerta={alerta} alertas={be.alertas} veredictos={alerta ? be.veredictos[alerta.c_estacion] : []}
-                    motor={be.motor} guardar={be.guardar} prediccion={be.prediccion} demo={demo} />
+                    motor={be.motor} guardar={be.guardar} prediccion={be.prediccion} demo={demo}
+                    onElegirEscuela={(cct) => { setEscuelaSel(cct); setSeccion('escuelas'); window.scrollTo(0, 0); }} />
                 </div>
                 <Panorama parte="conteos" alertas={be.alertas} veredictos={be.veredictos} corte={corte} elegida={filtros.estacion} />
               </section>

@@ -17,7 +17,7 @@ export function filtrar(alertas, { estado, nivel, estacion }) {
 export const Nivel = ({ nivel }) => <span className={'nivel ' + nivel}>{txt(nivel)}</span>;
 
 export default function ListaAlertas({ alertas, filtros, setFiltros, sel, onElegir, conectado }) {
-  const { estaciones, nombreEstacion, unidad } = useDatos();
+  const { estaciones, nombreEstacion, unidad, escuelasDe } = useDatos();
   const lista = filtrar(alertas, filtros);
   const cambia = (k) => (e) => setFiltros({ ...filtros, [k]: e.target.value });
   return (
@@ -69,7 +69,8 @@ export default function ListaAlertas({ alertas, filtros, setFiltros, sel, onEleg
               <span className="cuando">{hora(a.fecha_hora)}</span>
               <span className="que">{PARAM[a.c_parametro] || a.c_parametro} {num(a.valor)}{unidad(a)}</span>
               <span className="estado">{txt(a.estado)}</span>
-              <span className="donde">{a.c_estacion.replace('EST-', '')} · {nombreEstacion(a.c_estacion)}</span>
+              <span className="donde">{a.c_estacion.replace('EST-', '')} · {nombreEstacion(a.c_estacion)}
+                {escuelasDe(a).length > 0 && <> · <b className="afecta">{escuelasDe(a).length} {escuelasDe(a).length === 1 ? 'escuela' : 'escuelas'}</b></>}</span>
             </button>
           </li>
         ))}

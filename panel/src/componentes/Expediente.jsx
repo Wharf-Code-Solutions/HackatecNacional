@@ -7,6 +7,7 @@ import Serie from '../graficas/Serie.jsx';
 import { Mensaje } from '../graficas/marcas.jsx';
 import { Nivel } from './ListaAlertas.jsx';
 import Prediccion from './Prediccion.jsx';
+import { COLOR_RIESGO, NIVEL_RIESGO } from './FichaEscuela.jsx';
 
 // Estado y responsable. Se monta de nuevo al cambiar de alerta (key), así el sondeo no pisa
 // lo que se está escribiendo.
@@ -151,8 +152,8 @@ function Sondas({ alerta, alertas, estacion, banda, veredictos, lineaBase, evide
   );
 }
 
-export default function Expediente({ alerta, alertas, veredictos, motor, guardar, prediccion, demo }) {
-  const { estaciones, lineaBase, nombreEstacion, banda, unidad } = useDatos();
+export default function Expediente({ alerta, alertas, veredictos, motor, guardar, prediccion, demo, onElegirEscuela }) {
+  const { estaciones, lineaBase, nombreEstacion, banda, unidad, escuelasDe } = useDatos();
   if (!alerta) {
     return (
       <article className="expediente" aria-label="Expediente de la alerta">
@@ -190,6 +191,28 @@ export default function Expediente({ alerta, alertas, veredictos, motor, guardar
       <div className="cifras">
         {cifras.map(([v, t]) => <div key={t}><b>{v}</b><span>{t}</span></div>)}
       </div>
+
+      {/* A quién afecta (docs/19 §6, punto 4): las escuelas que protege el mecanismo de la alerta. */}
+      <section className="bloque">
+        <h3>Escuelas afectadas</h3>
+        {!escuelasDe(a).length ? <p className="vacio">Ninguna escuela registrada junto a este mecanismo.</p> : (
+          <ul className="escuelas-afectadas">
+            {escuelasDe(a).map((x) => {
+              const r = x.riesgo || {};
+              return (
+                <li key={x.cct}>
+                  <span className="riesgo-marca" style={{ background: COLOR_RIESGO[r.nivel] || '#ddd' }} />
+                  <span><b>{x.nombre}</b><br /><span className="tenue">
+                    {x.cct}{x.localidad ? ' · ' + inicial(x.localidad) : ''}{r.nivel ? ' · riesgo ' + (NIVEL_RIESGO[r.nivel] || r.nivel).toLowerCase() : ''}
+                    {x.matricula != null ? ' · ' + num(x.matricula) + ' alumnos' : ''}
+                  </span></span>
+                  {onElegirEscuela && x.riesgo && <button className="enlace" onClick={() => onElegirEscuela(x.cct)}>Ver ficha</button>}
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </section>
 
       <section className="bloque">
         <h3>Atención</h3>

@@ -21,6 +21,19 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Módulo B: alertas con escuelas afectadas
+
+**Qué cambió.** `alerta.schema.json` admite `escuelas_afectadas` (lista de CCT, opcional y compatible; docs/19 §4.4).
+El panel lee `mecanismos.json` y, para cada alerta, toma las escuelas que manda el motor o, si no las manda, las que
+protege su mecanismo o las que tienen ese `c_estacion`. La lista de alertas dice cuántas escuelas afecta y el expediente
+tiene "Escuelas afectadas" con enlace a la ficha. Las estaciones `EST-ESC-xx` se nombran por su escuela.
+**Por qué.** Paso 5 del módulo B (docs/19 §6, punto 4).
+**Qué arrastró.** `contexto.js` (`escuelasDe`), `datos.js`, `copiar-datos.mjs`, `ListaAlertas.jsx`, `Expediente.jsx`,
+`App.jsx`, `estilos.css`. Validador: alerta con CCT válidas pasa, con un valor mal formado falla.
+**Impacto en otros módulos.** Motor y backend: pueden mandar `escuelas_afectadas` en cada alerta.
+
+---
+
 ## 2026-11-24 · Módulo B: un mapa para dispositivos y otro para escuelas
 
 **Qué cambió.** El mapa de Alertas vuelve a mostrar solo las estaciones (sin escuelas ni zonas). El de la pestaña

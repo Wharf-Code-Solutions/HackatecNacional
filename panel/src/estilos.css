@@ -520,3 +520,10 @@ main.tablero-main { padding: 0; flex: 1; display: flex; }
 .ficha-alertas li { display: grid; grid-template-columns: auto 1fr auto auto; gap: 12px; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--linea); }
 .ficha-alertas li:last-child { border-bottom: 0; }
 .nivel-esc { display: inline-flex; align-items: center; font-weight: 600; font-size: 13px; color: var(--titulo); }
+
+.afecta { font-weight: 600; color: var(--principal); }
+.escuelas-afectadas { list-style: none; padding: 0; margin: 0; }
+.escuelas-afectadas li { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: start; padding: 8px 0; border-bottom: 1px solid var(--linea); font-size: 14px; }
+.escuelas-afectadas li:last-child { border-bottom: 0; }
+.escuelas-afectadas .riesgo-marca { margin-top: 5px; }
+.enlace { font: inherit; font-size: 13px; color: var(--principal); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; white-space: nowrap; }
