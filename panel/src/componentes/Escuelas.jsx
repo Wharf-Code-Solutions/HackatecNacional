@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { inicial, num } from '../lib/formato.js';
 import BarrasH from '../graficas/BarrasH.jsx';
 import MapaEstaciones from '../graficas/MapaEstaciones.jsx';
+import Urbanizacion from './Urbanizacion.jsx';
 import FichaEscuela, { COLOR_RIESGO, FUENTE_AGUA, NIVEL_RIESGO } from './FichaEscuela.jsx';
 
 // Vista de escuelas (docs/19 §6, punto 1): cuántas hay por nivel de riesgo, por tipo y por municipio,
@@ -158,6 +159,7 @@ export default function Escuelas({ escuelas, alertas, zonas, sel, onElegir }) {
           <BarrasH filas={filasMun} claves={presentes} colores={COLOR_RIESGO} nombreClave={nombreNivel} />
         </Tarjeta>
       </div>
+      <Urbanizacion escuelas={escuelas} onElegir={(cct) => { elegir(cct); document.querySelector('.mapa-escuelas')?.scrollIntoView(); }} />
     </section>
   );
 }

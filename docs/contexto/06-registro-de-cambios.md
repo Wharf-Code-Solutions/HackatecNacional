@@ -21,6 +21,18 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Módulo B: análisis de urbanización
+
+**Qué cambió.** `Urbanizacion.jsx` (nuevo), al final de la pestaña Escuelas: cuántas escuelas tienen urbanización reciente,
+falta de drenaje y pendiente; índice medio con y sin urbanización reciente; y las 15 escuelas con más de esos tres
+factores, cada uno de 0 a 1 (desglose entre su peso; pesos copiados de `97_escuelas_riesgo.py`).
+**Por qué.** Paso 7 del módulo B (docs/19 §6, punto 3).
+**Qué arrastró.** `Escuelas.jsx`, `estilos.css`.
+**Impacto en otros módulos.** A: el factor de urbanización vale casi lo mismo en 36 de 43 escuelas de la cuenca, así que
+no distingue; el índice medio sale 0.40 con urbanización y 0.48 sin ella. Si cambian los pesos, cambiarlos en el panel.
+
+---
+
 ## 2026-11-24 · Módulo B: tablero de autorizaciones
 
 **Qué cambió.** La pestaña Autorizaciones tiene cifras (mecanismos activos, trámites pendientes, solicitados y

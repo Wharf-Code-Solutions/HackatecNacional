@@ -529,3 +529,9 @@ main.tablero-main { padding: 0; flex: 1; display: flex; }
 .enlace { font: inherit; font-size: 13px; color: var(--principal); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; white-space: nowrap; }
 .estado-tramite { display: inline-flex; align-items: center; white-space: nowrap; }
 .competencias { grid-template-columns: 90px minmax(0, 1fr); }
+.urb-cifras { margin: 4px 0 12px; }
+.urb-comparacion { font-size: 14px; margin: 0 0 12px; }
+.urb-barra { display: inline-flex; align-items: center; gap: 8px; min-width: 130px; background: linear-gradient(var(--neutro300), var(--neutro300)) 0 50% / 90px 10px no-repeat; }
+.urb-barra > span { display: block; height: 10px; background: var(--principal); border-radius: 2px; min-width: 1px; }
+.urb-barra > i { font-style: normal; font-size: 12.5px; color: var(--tenue); font-variant-numeric: tabular-nums; }
+.urb-tabla td { vertical-align: middle; }
