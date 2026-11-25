@@ -5,7 +5,8 @@ import FormularioReporte from './FormularioReporte.jsx';
 import FichaReporte from './FichaReporte.jsx';
 import Emergencia, { Telefono } from './Emergencia.jsx';
 import Alarma from './Alarma.jsx';
-import { modoAlarma, RADIO_M, suena } from '../lib/alarma.js';
+import { modoAlarma, RADIO_M, suena, yaEligio } from '../lib/alarma.js';
+import PreguntaAlarma from './PreguntaAlarma.jsx';
 import { TerminosGate } from './Terminos.jsx';
 import { avisoAceptado } from '../lib/almacen.js';
 import { fotoDemo, getJSON } from '../lib/backend.js';
@@ -35,6 +36,7 @@ export default function MapaPage({ origen, datos, conectado, pendientes, setPend
   const [hoja, setHoja] = useState(null);         
   const [aviso, setAviso] = useState(null);
   const [terminos, setTerminos] = useState(avisoAceptado);
+  const [preguntar, setPreguntar] = useState(() => !yaEligio());
   const [tick, setTick] = useState(0);
   const [rios, setRios] = useState(leerRios);
   const [punto, setPunto] = useState(null);       // centro del mapa, para saber si ahí se puede reportar
@@ -76,11 +78,13 @@ export default function MapaPage({ origen, datos, conectado, pendientes, setPend
     let vigente = true;
     const revisar = () => getJSON(origen.url + '/alertas?abiertas=1&modulo=ladera').then((j) => {
       if (!vigente) return;
-      const todas = modoAlarma() === 'todas';     // se lee cada vez: el interruptor de Emergencia la cambia
+      const modo = modoAlarma();                  // se lee cada vez: el interruptor de Emergencia la cambia
+      const todas = modo === 'todas';
       const lista = (j.alertas || []).filter(suena);
       if (vistas.current === null) { vistas.current = new Set(lista.map((a) => a.c_alerta)); return; }
       const nuevas = lista.filter((a) => !vistas.current.has(a.c_alerta));
       nuevas.forEach((a) => vistas.current.add(a.c_alerta));
+      if (modo === 'no') return;                  // apagada: se marcan como vistas y no suenan
       const yo = gps.current || centro.current;
       const cerca = nuevas.filter((a) => {
         const e = datos.estaciones && datos.estaciones[a.c_estacion];
@@ -133,6 +137,7 @@ export default function MapaPage({ origen, datos, conectado, pendientes, setPend
   return (
     <div className="map-container">
       {!terminos && <TerminosGate onAceptar={() => setTerminos(true)} />}
+      {terminos && preguntar && origen.modo === 'api' && <PreguntaAlarma onListo={() => setPreguntar(false)} />}
       {banda && <div className="banda" role="status">{banda}</div>}
 
       <Mapa

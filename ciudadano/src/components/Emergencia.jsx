@@ -45,6 +45,7 @@ export default function Emergencia({ punto, onClose, alarmaActiva = false }) {
             <legend>Avisos de deslave con la app abierta</legend>
             <label><input type="radio" name="modo-alarma" checked={modo === 'cerca'} onChange={() => elegir('cerca')} /> Cerca de mí (5 km)</label>
             <label><input type="radio" name="modo-alarma" checked={modo === 'todas'} onChange={() => elegir('todas')} /> En toda la cuenca</label>
+            <label><input type="radio" name="modo-alarma" checked={modo === 'no'} onChange={() => elegir('no')} /> No avisarme</label>
           </fieldset>
         )}
       </div>

@@ -2,19 +2,27 @@
 
 // 'cerca': solo estaciones a menos de RADIO_M de la persona (su GPS o, sin él, el centro del mapa).
 // 'todas': cualquier estación de ladera, para la demostración o para quien quiere seguir toda la cuenca.
-// Se guarda en este teléfono. ?alarma=todas o ?alarma=cerca en la URL también la fija.
+// 'no': sin avisos; la persona los apagó.
+// Se guarda en este teléfono. ?alarma=todas, cerca o no en la URL también la fija.
 const CLAVE = 'atoyac.alarma';
 export const RADIO_M = 5000;
 
 // La URL se lee una sola vez, al abrir: después manda el interruptor (si se leyera en cada consulta, la pisaría).
+const MODOS = ['cerca', 'todas', 'no'];
 let enMemoria = null;
 try {
   const q = new URLSearchParams(window.location.search).get('alarma');
-  if (q === 'todas' || q === 'cerca') { enMemoria = q; localStorage.setItem(CLAVE, q); }
+  if (MODOS.includes(q)) { enMemoria = q; localStorage.setItem(CLAVE, q); }
 } catch { /* sin URL o sin almacenamiento */ }
 
+const valido = (v) => (MODOS.includes(v) ? v : 'cerca');
 export function modoAlarma() {
-  try { return (localStorage.getItem(CLAVE) || enMemoria) === 'todas' ? 'todas' : 'cerca'; } catch { return enMemoria === 'todas' ? 'todas' : 'cerca'; }
+  try { return valido(localStorage.getItem(CLAVE) || enMemoria); } catch { return valido(enMemoria); }
+}
+
+// ¿Ya eligió alguna vez? Si no, la app le pregunta (PreguntaAlarma) después de los términos.
+export function yaEligio() {
+  try { return MODOS.includes(localStorage.getItem(CLAVE)) || enMemoria !== null; } catch { return enMemoria !== null; }
 }
 
 export function guardarModoAlarma(v) {
