@@ -234,7 +234,7 @@
     lista.forEach(function (e, i) {
       var li = document.createElement('li'); li.id = 'li_' + e.c_estacion;
       li.innerHTML = '<button type="button"><span class="num">' + (i + 1) + '</span><span><b>' + lugar(e) +
-        '</b><span class="det">' + inicial(e.municipio) + '</span></span></button>';
+        '</b><span class="det">' + e.c_estacion + ' · ' + inicial(e.municipio) + '</span></span></button>';
       li.querySelector('button').onclick = function () { abre(e); };
       ol.appendChild(li);
 
@@ -279,7 +279,7 @@
 
   function abre(e) {
     abierta = e;
-    $('detTitulo').textContent = lugar(e);
+    $('detTitulo').textContent = e.c_estacion + ' · ' + lugar(e);
     // El simulador arma su escena 3D en el mismo hilo que el mapa: si se carga a la vez, el
     // desplazamiento se detiene un momento. Se carga cuando el mapa termina de moverse.
     var src = '../dispositivo/simulador/index.html?incrustado=1&vel=300&r=' + Date.now() + '&estacion=' + encodeURIComponent(e.c_estacion) +
