@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { inicial, num } from '../lib/formato.js';
-import { useDatos } from '../lib/contexto.js';
 import BarrasH from '../graficas/BarrasH.jsx';
 import MapaEstaciones from '../graficas/MapaEstaciones.jsx';
 import FichaEscuela, { COLOR_RIESGO, FUENTE_AGUA, NIVEL_RIESGO } from './FichaEscuela.jsx';
@@ -9,6 +8,8 @@ import FichaEscuela, { COLOR_RIESGO, FUENTE_AGUA, NIVEL_RIESGO } from './FichaEs
 // y la lista ordenada por índice. Todo sale de escuelas.json ya filtrado a la cuenca (lib/datos.js).
 // Los colores son los mismos del mapa: guinda más oscuro cuanto mayor el riesgo.
 export const NIVELES_RIESGO = ['muy_alto', 'alto', 'medio', 'bajo'];
+// El mapa de escuelas no dibuja las estaciones del Atoyac: se centra en escuelas y zonas.
+const SIN_ESTACIONES = {};
 const TIPO = { derrumbe: 'Derrumbe', contaminacion: 'Contaminación' };
 
 const r = (e) => e.riesgo || {};
@@ -44,7 +45,6 @@ function Tarjeta({ titulo, subtitulo, ancha, children }) {
 
 export default function Escuelas({ escuelas, alertas, zonas, sel, onElegir }) {
   const [filtro, setFiltro] = useState({ nivel: 'todos', tipo: 'todos', municipio: 'todos' });
-  const { estaciones } = useDatos();
   const total = escuelas.length;
   const altas = escuelas.filter((e) => ['alto', 'muy_alto'].includes(r(e).nivel)).length;
   const conMec = escuelas.filter((e) => e.c_estacion).length;
@@ -98,8 +98,8 @@ export default function Escuelas({ escuelas, alertas, zonas, sel, onElegir }) {
           escuela abre su ficha; la elegida se resalta y el mapa se acerca. */}
       <figure className="tarjeta ancha mapa-escuelas">
         <h2 className="titulo-seccion">Dónde están</h2>
-        <p className="subtitulo-seccion">Escuelas por nivel de riesgo y sus zonas (tierra: derrumbe; verde oliva: contaminación). Un clic en una escuela abre su ficha.</p>
-        <MapaEstaciones estaciones={estaciones} alertas={alertas} elegida={null} onElegir={() => {}}
+        <p className="subtitulo-seccion">Escuelas por nivel de riesgo y las zonas que las contienen (tierra: derrumbe; verde oliva: contaminación). Un clic abre su ficha.</p>
+        <MapaEstaciones estaciones={SIN_ESTACIONES} alertas={alertas} elegida={null} onElegir={() => {}}
           escuelas={escuelas} zonas={zonas} onElegirEscuela={elegir} escuelaElegida={sel} />
       </figure>
 

@@ -21,6 +21,17 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Módulo B: un mapa para dispositivos y otro para escuelas
+
+**Qué cambió.** El mapa de Alertas vuelve a mostrar solo las estaciones (sin escuelas ni zonas). El de la pestaña
+Escuelas muestra solo escuelas y zonas, sin las estaciones del Atoyac. `MapaEstaciones.jsx` abre en la cuenca si no
+tiene puntos que encuadrar.
+**Por qué.** Petición del usuario: no mezclar los dispositivos con las escuelas.
+**Qué arrastró.** `App.jsx`, `Panorama.jsx`, `Escuelas.jsx`, `MapaEstaciones.jsx`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
 ## 2026-11-24 · Módulo B: mapa en la pestaña Escuelas y zonas visibles de lejos
 
 **Qué cambió.** La pestaña Escuelas tiene el mismo mapa ("Dónde están") arriba de la lista: un clic en una escuela abre su

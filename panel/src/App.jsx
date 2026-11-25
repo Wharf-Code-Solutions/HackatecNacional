@@ -142,10 +142,8 @@ export default function App() {
             {seccion === 'monitoreo' && vista === 'alertas' && (
               <section className="vista">
                 <Resumen alertas={be.alertas} veredictos={be.veredictos} totalEstaciones={codigos.length} corte={corte} />
-                {/* El mapa de la red marca también las escuelas de escuelas.json (docs/19 §6, punto 6). */}
+                {/* Solo los dispositivos: las escuelas tienen su propio mapa en la pestaña Escuelas. */}
                 <Panorama parte="mapa" alertas={be.alertas} veredictos={be.veredictos} corte={corte} elegida={filtros.estacion}
-                  escuelas={ctx.escuelas}
-                  onElegirEscuela={(cct) => { setEscuelaSel(cct); setSeccion('escuelas'); window.scrollTo(0, 0); }}
                   onElegir={(c) => setFiltros({ ...filtros, estacion: filtros.estacion === c ? 'todas' : c })} />
                 <TablaEstaciones alertas={be.alertas} veredictos={be.veredictos} elegida={filtros.estacion}
                   onElegir={(c) => setFiltros({ ...filtros, estacion: c })} />

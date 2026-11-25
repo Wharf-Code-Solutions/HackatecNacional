@@ -55,7 +55,8 @@ export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir,
       const lats = cods.map((c) => estaciones[c].latitud).concat(conCoord.map((e) => e.latitud));
       const m = new gl.Map({
         container: caja.current, style: ESTILO, attributionControl: false, dragRotate: false, pitchWithRotate: false,
-        bounds: [[Math.min(...lons), Math.min(...lats)], [Math.max(...lons), Math.max(...lats)]],
+        // Sin puntos (por ejemplo, sin escuelas en los datos): la cuenca del Alto Atoyac.
+        bounds: lons.length ? [[Math.min(...lons), Math.min(...lats)], [Math.max(...lons), Math.max(...lats)]] : [[-98.9, 18.0], [-97.6, 19.7]],
         fitBoundsOptions: { padding: { top: 40, bottom: 60, left: 50, right: 80 } }, minZoom: 6, maxZoom: 17, cooperativeGestures: true,
       });
       mapa.current = m;
