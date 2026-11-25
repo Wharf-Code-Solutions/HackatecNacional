@@ -6,7 +6,7 @@ import FichaReporte from './FichaReporte.jsx';
 import { TerminosGate } from './Terminos.jsx';
 import { avisoAceptado } from '../lib/almacen.js';
 import { fotoDemo, getJSON } from '../lib/backend.js';
-import { dentroDeVentana, haversine, posicion, textoErrorUbicacion } from '../lib/ubicacion.js';
+import { dentroDeArea, haversine, posicion, TEXTO_FUERA, textoErrorUbicacion } from '../lib/ubicacion.js';
 
 const REFRESCO_MS = 60000;
 
@@ -27,6 +27,9 @@ export default function MapaPage({ origen, datos, conectado, pendientes, setPend
   const [terminos, setTerminos] = useState(avisoAceptado);
   const [tick, setTick] = useState(0);
   const [rios, setRios] = useState(leerRios);
+  const [punto, setPunto] = useState(null);       // centro del mapa, para saber si ahí se puede reportar
+  const area = datos && datos.area;
+  const fuera = punto ? !dentroDeArea(area, punto.lat, punto.lon) : false;
   const alternarRios = () => setRios((v) => { guardarRios(!v); return !v; });
   const cerrarAviso = useCallback(() => setAviso(null), []);
 
@@ -55,8 +58,8 @@ export default function MapaPage({ origen, datos, conectado, pendientes, setPend
   const ubicarme = () => {
     setAviso({ tipo: 'info', texto: 'Buscando tu ubicación… puedes seguir usando el mapa.' });
     posicion().then((p) => {
-      if (!dentroDeVentana(p.lat, p.lon)) {
-        setAviso({ tipo: 'danger', texto: 'Tu ubicación está fuera de la cuenca del Alto Atoyac (Puebla y Tlaxcala). Mueve el mapa hasta el río que quieres reportar.' });
+      if (!dentroDeArea(area, p.lat, p.lon)) {
+        setAviso({ tipo: 'danger', texto: 'Tu ubicación está fuera de Puebla. ' + TEXTO_FUERA.split('. ')[1] });
         return;
       }
       gps.current = p;
@@ -66,7 +69,7 @@ export default function MapaPage({ origen, datos, conectado, pendientes, setPend
   };
 
   const generar = () => {
-    if (!centro.current) return;
+    if (!centro.current || fuera) return;
     setHoja({ tipo: 'form', ...centro.current });
   };
 
@@ -87,7 +90,7 @@ export default function MapaPage({ origen, datos, conectado, pendientes, setPend
         huella={huella}
         reportes={reportes}
         rios={rios}
-        onCentro={(c) => { centro.current = c; }}
+        onCentro={(c) => { centro.current = c; setPunto(c); }}
         onUsuarioMovio={() => {}}
         onReporte={(reporte) => setHoja({ tipo: 'reporte', reporte })}
         onError={() => setAviso({ tipo: 'danger', texto: 'No se pudo cargar el mapa. Revisa tu conexión.' })}
@@ -115,7 +118,8 @@ export default function MapaPage({ origen, datos, conectado, pendientes, setPend
       </button>
       <Toast aviso={aviso} onClose={cerrarAviso} />
 
-      <button className="btn-generar-reporte" onClick={generar}>
+      {fuera && <div className="aviso-fuera" role="status">Fuera de Puebla: aquí no se puede reportar</div>}
+      <button className="btn-generar-reporte" onClick={generar} disabled={fuera} aria-disabled={fuera}>
         <svg width="18" height="18" viewBox="0 0 512 512" fill="currentColor" aria-hidden="true">
           <path d="M498.1 5.6c10.1 7 15.4 19.1 13.5 31.2l-64 416c-1.5 9.7-7.4 18.2-16 23s-18.9 5.4-28 1.6L284 427.7l-68.5 74.1c-8.9 9.7-22.9 12.9-35.2 8.1S160 493.2 160 480V396.4c0-4 1.5-7.8 4.2-10.7L331.8 202.8c5.8-6.3 5.6-16-.4-22s-15.7-6.4-22-.7L106 360.8 17.7 316.6C7.1 311.3 .3 300.7 0 288.9s5.9-22.8 16.1-28.7l448-256c10.7-6.1 23.9-5.5 34 1.4z" />
         </svg>

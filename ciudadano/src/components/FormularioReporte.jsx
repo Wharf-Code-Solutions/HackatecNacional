@@ -4,7 +4,7 @@ import CategoriaIcono from './CategoriaIcono.jsx';
 import { encolar, guardarFolio } from '../lib/almacen.js';
 import { analizarFoto, enviarReporte, getJSON } from '../lib/backend.js';
 import { prepararFoto } from '../lib/foto.js';
-import { dentroDeVentana, redondeada } from '../lib/ubicacion.js';
+import { dentroDeArea, redondeada, TEXTO_FUERA } from '../lib/ubicacion.js';
 import { TIPOS, km, nombreTipo } from '../lib/etiquetas.js';
 
 const CORREO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -28,7 +28,7 @@ export default function FormularioReporte({ lat, lon, precision, origen, datos, 
   const camara = useRef(null);      // abre la cámara (capture)
   const galeria = useRef(null);     // abre la galería del teléfono
 
-  const fuera = !dentroDeVentana(lat, lon);
+  const fuera = !dentroDeArea(datos && datos.area, lat, lon);
 
   const alElegirFoto = async (e) => {
     const archivo = e.target.files && e.target.files[0];
@@ -67,7 +67,7 @@ export default function FormularioReporte({ lat, lon, precision, origen, datos, 
     const er = {};
     if (!tipo) er.tipo = 'Elige qué viste.';
     if (revisando || fotoInvalida) er.foto = 'Esa foto no se puede enviar. Toma otra o quítala.';
-    if (fuera) er.ubicacion = 'El punto del mapa queda fuera de la cuenca del Alto Atoyac. Mueve el mapa hasta el río.';
+    if (fuera) er.ubicacion = TEXTO_FUERA;
     if (correo.trim() && !CORREO.test(correo.trim())) er.correo = 'Revisa el correo.';
     setErrores(er);
     if (Object.keys(er).length) return;

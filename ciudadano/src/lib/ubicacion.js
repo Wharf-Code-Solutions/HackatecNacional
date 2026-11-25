@@ -7,6 +7,16 @@ export const VENTANA = { latMin: 17.5, latMax: 20.5, lonMin: -99.5, lonMax: -97.
 export const dentroDeVentana = (lat, lon) =>
   lat >= VENTANA.latMin && lat <= VENTANA.latMax && lon >= VENTANA.lonMin && lon <= VENTANA.lonMax;
 
+// ¿Se puede reportar en este punto? Dentro de Puebla, aproximada por la malla de area_reportes.json
+// (scripts/103_area_reportes.py). Si el área no cargó, basta la ventana del esquema.
+export const dentroDeArea = (area, lat, lon) => {
+  if (!dentroDeVentana(lat, lon)) return false;
+  if (!area) return true;
+  return area.celdas.has(Math.floor(lat / area.celda) + ',' + Math.floor(lon / area.celda));
+};
+
+export const TEXTO_FUERA = 'Solo se puede reportar dentro del estado de Puebla. Mueve el mapa hasta el lugar del problema.';
+
 export function posicion() {
   return new Promise((resolver, rechazar) => {
     if (!window.isSecureContext) return rechazar({ codigo: 'inseguro' });

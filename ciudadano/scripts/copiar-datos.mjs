@@ -14,6 +14,8 @@ const ARCHIVOS = [
   'datos/procesados/mapa/cuenca.geojson',
   // Cauces de orden 3 (scripts/61_rios_menores_para_app.py): la app los pide solo al acercar el mapa.
   'datos/procesados/mapa/rios_orden3.json',
+  // Área donde se puede reportar: Puebla aproximada por sus localidades (scripts/103_area_reportes.py).
+  'datos/procesados/mapa/area_reportes.json',
 ];
 
 // Los ríos de orden >= 4, los mismos que dibuja mapa/ (M6). El GeoJSON pesa 2 MB porque repite

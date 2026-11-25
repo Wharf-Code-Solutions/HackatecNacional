@@ -21,6 +21,18 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Módulo C: «Generar Reporte» se apaga fuera de Puebla
+
+**Qué cambió.** Nuevo `scripts/103_area_reportes.py` → `datos/procesados/mapa/area_reportes.json`: Puebla aproximada por las
+6 568 localidades del ITER 2020 (celdas de 0.05° con localidad, más una de margen; 1 573 celdas, 19 KB). La app la copia a
+`public/datos/` y, con el centro del mapa fuera, apaga el botón y dice «Fuera de Puebla: aquí no se puede reportar».
+**Por qué.** Antes solo había un rectángulo que dejaba Oaxaca, la Ciudad de México o Tlaxcala, y el rechazo llegaba al enviar.
+**Qué arrastró.** `ciudadano/` (MapaPage, FormularioReporte, ubicacion.js, backend.js, copiar-datos.mjs, CSS), `02-mapa-del-repo.md`.
+**Impacto en otros módulos.** El backend y el esquema siguen aceptando el rectángulo: un cliente que se salte la app aún puede
+enviar fuera de Puebla. Tlaxcala queda fuera de la app.
+
+---
+
 ## 2026-11-24 · Módulo B: análisis de urbanización
 
 **Qué cambió.** `Urbanizacion.jsx` (nuevo), al final de la pestaña Escuelas: cuántas escuelas tienen urbanización reciente,
@@ -42,6 +54,7 @@ ficha. Hoy: 0 de 5 activos y 24 trámites pendientes.
 **Por qué.** Paso 6 del módulo B (docs/19 §4.3 y §6, punto 5).
 **Qué arrastró.** `Autorizaciones.jsx`, `App.jsx`, `estilos.css`.
 **Impacto en otros módulos.** Ninguno.
+
 
 ---
 

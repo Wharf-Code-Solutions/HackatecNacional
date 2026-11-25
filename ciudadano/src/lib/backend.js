@@ -31,9 +31,11 @@ export async function getJSON(url, opciones) {
 export const datosFijos = () => Promise.all([
   getJSON(BASE + 'datos/sitios.geojson'),
   getJSON(BASE + 'datos/cuenca.geojson').catch(() => null),
-]).then(([g, cuenca]) => {
+  // Sin el área, la app usa la ventana del esquema (ubicacion.js): no se bloquea a nadie por un archivo que no cargó.
+  getJSON(BASE + 'datos/area_reportes.json').catch(() => null),
+]).then(([g, cuenca, area]) => {
   const sitios = g.features.map((f) => ({ ...f.properties, lon: f.geometry.coordinates[0], lat: f.geometry.coordinates[1] }));
-  return { sitios, cuenca };
+  return { sitios, cuenca, area: area && { celda: area.celda, celdas: new Set(area.celdas) } };
 });
 
 export const fotoDemo = () => getJSON(BASE + 'demo/foto.json');
