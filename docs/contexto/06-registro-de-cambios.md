@@ -21,6 +21,17 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Módulo B: tipografía del Sistema Nacional de Diseño en el panel
+
+**Qué cambió.** Títulos en Patria y texto en Noto Sans (snd.gob.mx) en lugar de Montserrat. Patria se carga con
+`@font-face` desde los archivos del CDN del SND (`framework-gb.cdn.gob.mx/snd/v1/fuentes/`, permite origen cruzado), los
+mismos que declara `snd-guinda.css`; Noto Sans sigue de Google Fonts. No se enlaza la hoja ni el cargador del SND (D31).
+**Por qué.** Petición del usuario: las fuentes conforme a la plantilla del gobierno.
+**Qué arrastró.** `estilos.css`, `index.html`.
+**Impacto en otros módulos.** La app ciudadana sigue con Montserrat.
+
+---
+
 ## 2026-11-24 · Módulo B: sin aviso de conexión, cifra crítica sin franja y pie sobrio
 
 **Qué cambió.** La pestaña Alertas ya no muestra "Conectado a …"; la cifra destacada (crítica) conserva el número en
