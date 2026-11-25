@@ -60,8 +60,14 @@
     fetch('../../contrato/fixtures/linea_base.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }),
     relojInicial(),
     // umbrales de ladera (hipótesis, docs/20): la línea de referencia de humedad e inclinación en la recepción
-    fetch('../../contrato/fixtures/umbrales_lluvia.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }).catch(function () { return null; })
-  ]).then(function (d) { arranca(d[0].estaciones, d[1], d[2], d[3]); }).catch(function (e) {
+    fetch('../../contrato/fixtures/umbrales_lluvia.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }).catch(function () { return null; }),
+    // el suelo de cada ladera (scripts/103_suelo_laderas.py): humedad de base, saturación y umbral calibrado
+    fetch('../../contrato/fixtures/suelo_laderas.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }).catch(function () { return null; })
+  ]).then(function (d) {
+    var suelos = {};
+    ((d[4] && d[4].laderas) || []).forEach(function (x) { suelos[x.c_estacion] = x; });
+    arranca(d[0].estaciones, d[1], d[2], d[3], suelos);
+  }).catch(function (e) {
     var a = $('aviso'); a.hidden = false;
     a.innerHTML = 'No se pudieron leer los fixtures del contrato (' + e.message + '). Sirve el repositorio desde su raíz con ' +
       '<code>python -m http.server 8000</code>.';
@@ -70,7 +76,7 @@
   // La página simula a la vez las estaciones del mismo tipo que la elegida: las de agua (figura del río, con
   // su colector) o las de ladera (figura del cerro, docs/20). Elegir una del otro tipo recarga la página.
   function tipoDe(e) { return Mont.esLadera(e) ? 'ladera' : 'rio'; }
-  function arranca(todas, linea, t0, umbrales) {
+  function arranca(todas, linea, t0, umbrales, suelos) {
     var pedida = todas.filter(function (e) { return e.c_estacion === Q.get('estacion'); })[0] || todas[0];
     estado.tipo = tipoDe(pedida);
     var estaciones = todas.filter(function (e) { return tipoDe(e) === estado.tipo; });
@@ -78,7 +84,7 @@
     estaciones.forEach(function (e) {
       var id = e.c_estacion;
       estado.alertas[id] = [];
-      estado.por[id] = Mont.crearEstacion(e, linea, { t0: t0 || undefined, alEvento: function (ev) { alEvento(id, ev); },
+      estado.por[id] = Mont.crearEstacion(e, linea, { t0: t0 || undefined, suelos: suelos, alEvento: function (ev) { alEvento(id, ev); },
         alEventoCol: function (ev) { if (id === estado.sel) Escena.objeto(ev); } });
     });
     estado.ultimo = performance.now();
@@ -108,7 +114,7 @@
     se.value = estado.sel; sv.value = String(estado.vel);
 
     Escena.construye(estado.tipo, actual().est);
-    Recepcion.construye(actual().params, umbrales);
+    Recepcion.construye(actual().params, umbrales, actual().ladera && actual().ladera.umbral);
     refresca();
     requestAnimationFrame(bucle);
   }

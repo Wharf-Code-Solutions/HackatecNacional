@@ -384,7 +384,7 @@
   // con la humedad del suelo y la estaca se inclina con lo que mide el inclinómetro.
   var PIE = 0.6, PENDIENTE = 0.62;                 // la explanada en y = 0.6 (base del mástil); tan 32° ≈ 0.62
   var EXAGERA_INCL = 5;                            // la estaca se dibuja inclinada 5 veces lo medido; el rótulo da el valor real
-  var LAD = { pluvio: [-1.4, 1.1], hum: 4.4, estaca: [7.8, 1.3], escuela: [-9.2, -4.6] };
+  var LAD = { pluvio: [-0.3, 1.4], hum: 4.4, estaca: [7.8, 1.3], escuela: [-9.2, -4.6] };
   function alturaLadera(x, z) {
     var u = x - PIE, y = PIE + PENDIENTE * Math.max(0, u) * suave(u / 2.6);           // explanada y pie del cerro
     y += 0.05 * Math.sin(x * 1.1 + z * 0.6) * suave(u / 2) + 0.03 * Math.sin(x * 2.3 - z * 1.7) * suave((u - 1) / 2);
@@ -464,7 +464,7 @@
       if (i === 2) caja(0.95, 2.0, 0.06, mate(0x5b4636, { roughness: 0.7 }), x, y0 + 1.0, e[1] + FONDO / 2 + 0.02, null, 0.5);   // puerta
       else caja(1.0, 1.0, 0.05, vidrio, x, y0 + 1.75, e[1] + FONDO / 2 + 0.02, null, 0.5);
     }
-    G.anclaEscuela = [e[0], y0 + ALTO + 0.5, e[1] + FONDO / 2];
+    G.anclaEscuela = [e[0], y0 + ALTO + 1.7, e[1] + FONDO / 2];   // arriba del techo, sobre el rótulo del pluviómetro
   }
   function construyeVegetacionLadera() {
     var r = M.mulberry32(41), pasto = [], macollos = [], i, x, z;
@@ -486,10 +486,12 @@
     instancias(matas(7, 0.022), hoja, pasto, false);
     instancias(macollo(26), hoja, macollos, true);
   }
-  // Los tres sensores, a 1.6× como la estación, y sus cables al gabinete. Devuelve el trazo del cable que
-  // recorre el paquete al medir (de la estaca al gabinete).
+  // Los tres sensores y sus cables al gabinete. Se dibujan a 3× (la estación va a 1.6× y el colector a 1.5×): a su
+  // tamaño real, un pluviómetro de 30 cm y una estaca de 1 m no se distinguen desde donde se ve el cerro completo.
+  // Devuelve el trazo del cable que recorre el paquete al medir (de la estaca al gabinete).
+  var ESC_LADERA = 3;
   function construyeSensoresLadera() {
-    var E = 1.6, pvc = mate(0xf4f6f7, { roughness: 0.5 }), acero = metal(0xb9c2c8, 0.4), negro = mate(0x22292e, { roughness: 0.55 });
+    var E = ESC_LADERA, pvc = mate(0xf4f6f7, { roughness: 0.5 }), acero = metal(0xb9c2c8, 0.4), negro = mate(0x22292e, { roughness: 0.55 });
     G.matCable = mate(0x55626c);
     G.puntasL = {};
     G.zonas = [];
@@ -503,6 +505,8 @@
     G.anclaPluvio = new T.Vector3(p[0], yp + 1.5 * E, p[1]);
     // Sensor de humedad: una hoja capacitiva enterrada a 50 cm en la ladera, en el plano del corte.
     var xh = LAD.hum, ys = alturaLadera(xh, Z_CORTE), yh = ys - 0.5 * E, zc = Z_CORTE + 0.03;
+    // el hoyo que se excavó para enterrarlo, rellenado con la misma tierra suelta: más claro que el suelo intacto
+    caja(0.34 * E, 0.62 * E, 0.004, mate(0xd9c7a6, { roughness: 1 }), xh, yh + 0.12 * E, Z_CORTE + 0.012, null, 0.5);
     caja(0.05 * E, 0.22 * E, 0.02 * E, negro, xh, yh, zc, null, 0.6);
     G.puntasL.HUM_SUELO = caja(0.05 * E, 0.04 * E, 0.025 * E, mate(AGUA), xh, yh + 0.13 * E, zc, null, 0);
     tubo([[xh, yh + 0.15 * E, zc], [xh, ys - 0.05, zc], [xh - 0.15, ys + 0.03, Z_CORTE - 0.1]], 0.012 * E, G.matCable);
@@ -521,9 +525,9 @@
     var trazo = [sobre(s[0] - 0.15, s[1]), sobre(6.2, 1.6), sobre(xh - 0.15, Z_CORTE - 0.1), sobre(2.0, 1.5), sobre(0.2, 1.3), sobre(-2.6, 1.0), fin[1], fin[0]];
     tubo(trazo, 0.03, G.matCable);
     // zonas de clic, más anchas que cada pieza
-    zona('ladera', [p[0], yp + 1.0 * E, p[1]], [1.0, 2.6, 1.0]);
-    zona('ladera', [xh, yh + 0.3, Z_CORTE - 0.3], [1.2, 1.6, 1.0]);
-    zona('ladera', [s[0], ye + 0.8, s[1]], [1.0, 2.2, 1.0]);
+    zona('ladera', [p[0], yp + 0.8 * E, p[1]], [0.7 * E, 1.7 * E, 0.7 * E]);
+    zona('ladera', [xh, yh + 0.2 * E, Z_CORTE - 0.3], [0.8 * E, 1.0 * E, 1.0]);
+    zona('ladera', [s[0], ye + 0.5 * E, s[1]], [0.7 * E, 1.4 * E, 0.7 * E]);
     // la lluvia: trazos que caen; se ven tantos como la intensidad del modelo (pinta)
     var N = 1400, pts = new Float32Array(N * 6), rr = M.mulberry32(9);
     for (var i = 0; i < N; i++) {
@@ -536,7 +540,7 @@
     return trazo;
   }
   function pintaLadera(s, nom, dtr) {
-    var L = s.ladera, fw = s.fw, k = M.acota((L.hum - M.LADERA.humBase) / (M.LADERA.humSatura - M.LADERA.humBase), 0, 1);
+    var L = s.ladera, fw = s.fw, k = M.acota((L.hum - L.humBase) / (L.humSatura - L.humBase), 0, 1);
     G.matCorteL.color.setRGB(1 - 0.35 * k, 1 - 0.38 * k, 1 - 0.4 * k);                // el suelo mojado, más oscuro
     G.matSueloL.color.setRGB(1 - 0.12 * k, 1 - 0.12 * k, 1 - 0.1 * k);
     G.estaca.rotation.z = L.incl * EXAGERA_INCL * Math.PI / 180;                        // hacia abajo del cerro
@@ -828,7 +832,7 @@
   // Ladera: los tres sensores, la escuela y lo común de la estación (gabinete, energía, comunicación).
   function rotulosLadera(est) {
     var r = [
-      { id: 'pluvio', nombre: 'Pluviómetro', ancla: G.anclaPluvio.toArray(), lado: 'izq', vista: 'ladera' },
+      { id: 'pluvio', nombre: 'Pluviómetro', ancla: G.anclaPluvio.clone().setY(G.anclaPluvio.y - 0.9 * ESC_LADERA).toArray(), lado: 'der', vista: 'ladera' },
       { id: 'suelo', nombre: 'Humedad del suelo', ancla: G.anclaHum.toArray(), lado: 'der', vista: 'ladera' },
       { id: 'ctrl', nombre: 'Gabinete', ancla: S([-4.62, 2.15, 0.45]), lado: 'izq', vista: 'gabinete' },
       { id: 'panel', nombre: 'Energía', ancla: S([-5.1, 4.95, 0.2]), lado: 'izq', vista: 'energia' },
@@ -878,7 +882,7 @@
           } },
         { nombre: 'Humedad del suelo', como: 'capacitivo, enterrado a 50 cm', ancla: G.anclaHum, col: -1, fila: 0.18, valor: vl('HUM_SUELO', 1, ' %') }
       ] };
-      if (G.conIncl) d.ladera.items.push({ nombre: 'Inclinómetro', como: 'dos ejes, en una estaca anclada; dibujado 5 veces', ancla: G.anclaIncl, col: 1, fila: -0.12,
+      if (G.conIncl) d.ladera.items.push({ nombre: 'Inclinómetro', como: 'dos ejes, en una estaca anclada; giro dibujado 5 veces', ancla: G.anclaIncl, col: 1, fila: -0.12,
         valor: vl('INCL', 2, '° desde la instalación') });
     } else d.sondas = { centro: G.centroSondas, items: M.PARAMS.map(function (q) {
       return { nombre: SENSOR[q].nombre, como: SENSOR[q].como, ancla: G.puntaSensor[q], col: FILAS_SONDAS[q][0], fila: FILAS_SONDAS[q][1],
@@ -1365,7 +1369,7 @@
   // Ladera: el cerro es más alto que el valle y la torre queda arriba; la vista de cerca va a los tres sensores.
   var VISTAS_LADERA = {
     general: { obj: [3.0, 6.4, -4.2], yaw: -0.12, pitch: 0.16, dist: 46, lim: [-1.0, 0.7, 0.04, 0.7], agua: 0, tubo: 0 },
-    ladera:  { obj: [3.2, 3.2, 1.0], yaw: -0.08, pitch: 0.16, dist: 15, lim: [-0.7, 0.6, 0, 0.5], agua: 0, tubo: 0 },
+    ladera:  { obj: [3.8, 3.8, 1.2], yaw: -0.08, pitch: 0.14, dist: 19, lim: [-0.7, 0.6, 0, 0.5], agua: 0, tubo: 0 },
     enlace:  { obj: [6.2, 11.5, -5.5], yaw: 0.55, pitch: 0.1, dist: 30, lim: [0.1, 1.0, 0.02, 0.45], agua: 0, tubo: 0 }
   };
   // En la vista de cerca, las fases que se quieren ver van a tiempo real (ui.js lo consulta).

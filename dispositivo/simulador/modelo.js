@@ -153,10 +153,16 @@
       return a.concat([[d * 24, 7, 0.65 * mm], [d * 24 + 8.5, 5, 0.35 * mm]]); }, []) },
     deslave:           { nombre: 'Deslave', lluvias: [[0, 8, 70], [10, 9, 80]], salto: [13, 3.8] }
   };
-  function Ladera(semilla) {
+  // suelo: la entrada de su ladera en suelo_laderas.json (scripts/103_suelo_laderas.py). Con ella la humedad drena
+  // hasta la capacidad de campo de ese suelo y satura en su porosidad; arranca seco (80 % de la capacidad de campo,
+  // como `tormenta_ladera`). Sin ella, los valores genéricos de LADERA.
+  function Ladera(semilla, suelo) {
+    this.humBase = suelo ? suelo.capacidad_campo_pct : LADERA.humBase;
+    this.humSatura = suelo ? suelo.saturacion_pct : LADERA.humSatura;
+    this.umbral = suelo ? suelo.umbral_cerca_saturacion_pct : null;
     this.eventos = [];
     this.t = null;                         // hasta dónde va integrada la humedad
-    this.hum = LADERA.humBase;
+    this.hum = suelo ? Math.round(0.8 * this.humBase * 10) / 10 : this.humBase;   // arranca seco, como el escenario de tormenta
     this.incl = 0;                         // cambio de inclinación desde la instalación, grados
     this.acum = 0;                         // lluvia caída desde el inicio, mm (el pluviómetro cuenta de aquí)
     this.r = mulberry32(semilla || 3);
@@ -187,9 +193,9 @@
     while (this.t < t - 1e-9) {
       var dt = Math.min(60, t - this.t), mmh = this.intensidad(this.t + dt / 2), mm = mmh * dt / 3600;
       this.acum += mm;
-      this.hum += LADERA.ganancia * mm * (LADERA.humSatura - this.hum) - LADERA.drenaje15 * dt / 900 * (this.hum - LADERA.humBase);
-      this.hum = Math.min(this.hum, LADERA.humSatura);
-      if (this.hum >= LADERA.reptarDesde && mmh >= LADERA.reptarLluvia) this.incl += LADERA.reptarGradosH * dt / 3600;
+      this.hum += LADERA.ganancia * mm * (this.humSatura - this.hum) - LADERA.drenaje15 * dt / 900 * Math.max(0, this.hum - this.humBase);   // solo drena lo que pasa de la capacidad de campo
+      this.hum = Math.min(this.hum, this.humSatura);
+      if (this.hum >= (this.umbral || LADERA.reptarDesde) && mmh >= LADERA.reptarLluvia) this.incl += LADERA.reptarGradosH * dt / 3600;
       this.t += dt;
       var self = this;
       this.eventos.forEach(function (ev) {        // el deslave: reptar 0.1° → 0.6° en 2.5 h y luego el salto
@@ -237,7 +243,7 @@
     // Módulo de ladera (docs/20 §2). Supuestos de diseño, como las sondas: humedad capacitiva enterrada a
     // ~50 cm; inclinómetro de dos ejes con ruido de ±0.05°; pluviómetro de balancín de 0.2 mm, sin consumo
     // entre mediciones (cuenta por interrupción).
-    HUM_SUELO: { unidad: '%', rango: [0, 60],      res: 0.1,  ruidoAbs: 0.15, ruidoRel: 0,     sesgoAbs: 1.0,  sesgoRel: 0,     derivaAbs: 0.005, derivaRel: 0,      ensuciaAbs: 0,   estabS: 2,  mW: 40 },
+    HUM_SUELO: { unidad: '%', rango: [0, 64],      res: 0.1,  ruidoAbs: 0.15, ruidoRel: 0,     sesgoAbs: 1.0,  sesgoRel: 0,     derivaAbs: 0.005, derivaRel: 0,      ensuciaAbs: 0,   estabS: 2,  mW: 40 },
     INCL:      { unidad: '°', rango: [-15, 15],    res: 0.01, ruidoAbs: 0.03, ruidoRel: 0,     sesgoAbs: 0,    sesgoRel: 0,     derivaAbs: 0,     derivaRel: 0,      ensuciaAbs: 0,   estabS: 1,  mW: 15 },
     LLUVIA:    { unidad: 'mm', rango: [0, 200],    res: 0.2,  estabS: 0, mW: 0 }
   };

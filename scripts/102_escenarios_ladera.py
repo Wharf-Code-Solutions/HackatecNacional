@@ -10,14 +10,15 @@ Escribe tres escenarios, DERIVADOS (se edita este script, no los JSON), en contr
 
 Los tres son de la estación EST-LAD-01 (Tecuantla, Jopala; con inclinómetro, `escuelas_ladera.json`). Todo el modelo es
 SINTÉTICO y sus parámetros son supuestos: la lluvia es un hietograma inventado con la forma de una tormenta; la humedad es
-una cubeta simple (sube con la lluvia, baja con el drenaje lento, satura cerca de 50 %); el inclinómetro está quieto con
+una cubeta simple (sube con la lluvia, drena hasta la capacidad de campo y satura en la porosidad del suelo de la ladera,
+de suelo_laderas.json); el inclinómetro está quieto con
 ruido de ±0.05° hasta el evento. Sirven para probar el motor y el backend, no para decir cómo se comporta una ladera real.
 Paquetes cada 15 min, con la misma forma que los del agua (lectura.schema.json): valor crudo, sin corregir.
 
 Lo que cada escenario espera del motor (con los umbrales de umbrales_lluvia.json, que son hipótesis):
 
     tormenta_ladera           unos 120 mm en 24 h: pasa el mínimo de Caine (103 mm), muy por debajo de lo de 1999 → Preventiva
-    lluvia_prolongada         máximo de 24 h unos 92 mm (no pasa 103) pero 72 h unos 244 mm (pasa 201) y suelo > 45 % → Preventiva,
+    lluvia_prolongada         máximo de 24 h unos 92 mm (no pasa 103) pero 72 h unos 244 mm (pasa 201) y suelo sobre su umbral calibrado → Preventiva,
                               y Crítica con la combinación propuesta (lluvia Preventiva + suelo saturado)
     deslave                   INCL salta de unos 0.1° a unos 3.8° (> 2° crítico) → Crítica, sin esperar la lluvia
 
@@ -36,8 +37,17 @@ ZONA = timezone(timedelta(hours=-6))
 PASO_MIN = 15
 BASCULADA_MM = 0.2          # el pluviómetro de balancín cuenta de 0.2 en 0.2 mm (docs/20 §2)
 
-HUM_BASE = 31.0             # % de humedad del suelo en seco, supuesto
-HUM_SATURA = 50.0           # satura alrededor de 45-50 % (docs/20 §4), supuesto
+HUM_BASE = 31.0             # % de humedad del suelo en seco, supuesto (si no hay suelo calibrado)
+HUM_SATURA = 50.0           # satura alrededor de 45-50 % (docs/20 §4), supuesto (si no hay suelo calibrado)
+# Suelo de la ladera de la estación (scripts/103_suelo_laderas.py): la humedad drena hasta su capacidad de campo y satura
+# en su porosidad. "Suelo seco" (la tormenta) arranca en el 80 % de la capacidad de campo, supuesto.
+_SUELO = os.path.join(RAIZ, 'contrato', 'fixtures', 'suelo_laderas.json')
+if os.path.exists(_SUELO):
+    with open(_SUELO, encoding='utf-8') as _f:
+        _s = next((x for x in json.load(_f)['laderas'] if x['c_estacion'] == ESTACION), None)
+    if _s:
+        HUM_BASE, HUM_SATURA = _s['capacidad_campo_pct'], _s['saturacion_pct']
+HUM_SECO = round(0.8 * HUM_BASE, 1)
 GANANCIA = 0.009            # fracción del hueco hasta la saturación que se llena por mm de lluvia, supuesto
 DRENAJE = 0.0025            # fracción del exceso sobre la base que drena por paso de 15 min, supuesto
 
@@ -71,7 +81,7 @@ def serie_lluvia(pasos, tormentas, rng):
 def serie_humedad(lluvia, rng, h0=HUM_BASE):
     h, salida = h0, []
     for mm in lluvia:
-        h += GANANCIA * mm * (HUM_SATURA - h) - DRENAJE * (h - HUM_BASE)
+        h += GANANCIA * mm * (HUM_SATURA - h) - DRENAJE * max(0.0, h - HUM_BASE)   # solo drena lo que pasa de la capacidad de campo
         h = min(h, HUM_SATURA)
         salida.append(round(h + rng.gauss(0, 0.12), 2))
     return salida
@@ -138,7 +148,7 @@ def main():
     rng = random.Random(1)
     centro = paso_de(inicio, '2026-11-23T17:00:00-06:00')
     lluvia = serie_lluvia(96, [(centro, 16, 120.0)], rng)
-    hum = serie_humedad(lluvia, rng)
+    hum = serie_humedad(lluvia, rng, h0=HUM_SECO)                # suelo seco: lejos de la temporada de lluvias
     incl = serie_inclinacion(96, rng)
     escribir('tormenta_ladera',
              'Tormenta de las 15:00 a las 19:00 sobre una ladera con suelo seco (unos 120 mm en 24 h). Escenario sintético '
@@ -167,7 +177,7 @@ def main():
     inicio = datetime(2026, 11, 22, 0, 0, tzinfo=ZONA)
     rng = random.Random(3)
     lluvia = serie_lluvia(192, [(96 - 40, 30, 70.0), (96 + 28, 36, 80.0)], rng)
-    hum = serie_humedad(lluvia, rng, h0=36.0)                  # empieza húmedo: ya venía lloviendo antes
+    hum = serie_humedad(lluvia, rng, h0=HUM_BASE)              # empieza húmedo: en capacidad de campo, ya venía lloviendo
     p_salto = paso_de(inicio, '2026-11-23T10:30:00-06:00')
     # Un reptar previo (0.1° a 0.6° en 2.5 h) y luego el salto a unos 3.8°.
     incl = serie_inclinacion(192, rng, saltos=[(p_salto - 10 + k, 0.1 + 0.05 * k) for k in range(10)] + [(p_salto, 3.8)])

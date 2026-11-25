@@ -24,12 +24,13 @@
     "valor": { "type": ["number", "null"] },
     "regla": {
       "type": "string",
-      "enum": ["umbral_fijo", "desviacion_linea_base", "persistencia", "cambio_brusco"]
+      "description": "Las tres ultimas son del modulo de ladera (docs/20 seccion 5): lluvia acumulada en 24 o 72 h, suelo cerca de saturacion y movimiento del inclinometro.",
+      "enum": ["umbral_fijo", "desviacion_linea_base", "persistencia", "cambio_brusco", "lluvia_acumulada", "suelo_saturado", "movimiento_ladera"]
     },
     "criterio_aplicado": {
       "description": "Contra que se comparo. Importa porque la NOM-001 regula DESCARGAS, no cuerpos receptores: en un sitio de cauce se usa la escala de CONAGUA, no la norma.",
       "type": ["string", "null"],
-      "enum": ["CONAGUA_SUP", "NOM001_2021_RIO", "NOM001_2021_EMBALSE", "LINEA_BASE_SITIO", null]
+      "enum": ["CONAGUA_SUP", "NOM001_2021_RIO", "NOM001_2021_EMBALSE", "LINEA_BASE_SITIO", "UMBRAL_LLUVIA_24H", "UMBRAL_LLUVIA_72H", "SATURACION_SUELO_SITIO", "INCLINACION_LADERA", null]
     },
     "lecturas_consecutivas": {
       "description": "Cuantas lecturas anomalas seguidas la respaldan. La regla de persistencia exige n >= 3 antes de emitir.",

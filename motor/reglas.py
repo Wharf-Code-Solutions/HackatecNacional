@@ -36,6 +36,7 @@ import math
 import os
 import statistics as st
 from collections import defaultdict, deque
+from datetime import datetime
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FIX = os.path.join(RAIZ, 'contrato', 'fixtures')
@@ -57,6 +58,20 @@ RANGO_FISICO = {
 SALTO_IMPOSIBLE = {'TEMP': 6.0, 'PH': 3.0, 'OD': 10.0}
 # Codigos del modulo de ladera (docs/20 §3.1): no son de calidad del agua y no pasan por sus capas.
 PARAMETROS_LADERA = frozenset(('LLUVIA', 'HUM_SUELO', 'INCL'))
+# Reglas de derrumbe (docs/20 §5). Los umbrales viven en contrato/fixtures/: lluvia en umbrales_lluvia.json (cada uno con su
+# fuente), el p99 de cada sitio en lluvia_sitios.json y la humedad de cada ladera en suelo_laderas.json (calibrada con su
+# suelo, scripts/103_suelo_laderas.py). Si falta la calibracion de una ladera, queda el 45 % declarado como hipotesis.
+NIVELES = ('', 'Informativa', 'Preventiva', 'Critica')
+HUMEDAD_SIN_CALIBRAR = 45.0
+HISTERESIS_HUMEDAD = 1.0     # puntos bajo el umbral para dar por terminada la saturacion
+MEDIDAS_LADERA = {
+    1: [{'plazo': 'mediano_plazo', 'accion': 'Revisar la ladera, sus grietas y el drenaje en la siguiente visita',
+         'autoridad': 'CAPCEE'}],
+    2: [{'plazo': 'inmediata', 'accion': 'Avisar a la direccion de la escuela; no usar los salones ni el patio del lado del cerro',
+         'autoridad': 'Proteccion Civil municipal'}],
+    3: [{'plazo': 'inmediata', 'accion': 'Evacuar la escuela hacia su zona de menor riesgo y llamar a Proteccion Civil',
+         'autoridad': 'Proteccion Civil municipal y estatal'}],
+}
 
 LECTURAS_CONGELADAS = 8      # 8 lecturas de 15 min = 2 h con el valor identico
 VENTANA_RECIENTE = 16        # 4 h de referencia para el detector de escalon
@@ -99,7 +114,7 @@ class Motor:
     """
 
     def __init__(self, linea_base=None, estaciones=None, umbrales=None,
-                 candidatos=None):
+                 candidatos=None, ladera=None):
         self.lb = linea_base if linea_base is not None else cargar_linea_base()
         self.est = estaciones if estaciones is not None else cargar_estaciones()
         self.esc = umbrales if umbrales is not None else cargar_escala_conagua()
@@ -110,6 +125,11 @@ class Motor:
         self.ultimo = {}
         self.racha = defaultdict(int)
         self.folio = defaultdict(int)
+        # modulo de ladera: lluvia de las ultimas 72 h, ultima humedad e inclinacion, y el nivel ya avisado por regla
+        self.ul = ladera if ladera is not None else cargar_umbrales_ladera()
+        self.lluvia = defaultdict(deque)
+        self.hum_ult = {}
+        self.avisado = defaultdict(int)
 
     # ---------------------------------------------------------- clasificacion
     def clase_conagua(self, cp, valor):
@@ -224,6 +244,16 @@ class Motor:
         # --- capa 4: coherencia y persistencia
         self._decidir(paquete, salida, candidatos, senales, valores, refs, sitio)
 
+        # --- modulo de ladera: reglas de derrumbe
+        if any(l['c_parametro'] in PARAMETROS_LADERA for l in paquete['lecturas']):
+            self._ladera(paquete, salida)
+
+        # las escuelas que protege el mecanismo (docs/19 §4.4), en toda alerta de una estacion reubicada
+        protegidas = est.get('escuelas_protegidas')
+        if protegidas:
+            for a in salida['alertas']:
+                a['escuelas_afectadas'] = list(protegidas)
+
         if excedencias:
             peor = max(excedencias)
             salida['indice_deterioro'] = round(min(100.0, 100 * peor / 5.0), 1)
@@ -327,6 +357,90 @@ class Motor:
             'lecturas_consecutivas': necesaria,
             'fuente_probable': self._fuente_probable(senales, valores, refs, sitio),
             'medidas_sugeridas': [], 'estado': 'Abierta', 'responsable': None,
+        })
+
+    # ------------------------------------------------------------ ladera
+    def _ladera(self, paquete, salida):
+        """Reglas de derrumbe (docs/20 §5). Emite cuando una regla sube de nivel; se rearma al volver a cero.
+
+        Lluvia: la acumulada en 24 h y en 72 h contra tres niveles. Informativa, el p99 del propio sitio (la misma idea
+        que el resto del motor: desviacion respecto de la historia del punto); Preventiva, el minimo global de Caine
+        (1980); Critica, la lluvia de Teziutlan en 1999. Con suelo cerca de saturacion, la Preventiva sube a Critica.
+        Suelo: humedad sobre el umbral calibrado de su ladera, Informativa por si sola.
+        Inclinometro: un cambio de aviso es Informativa, o Preventiva si llueve o el suelo esta saturado; un cambio
+        critico es Critica sin mas. Todos los umbrales son hipotesis con su fuente en contrato/fixtures/.
+        """
+        ce = paquete['c_estacion']
+        t = datetime.fromisoformat(paquete['fecha_hora']).timestamp()
+        v = {l['c_parametro']: l['valor'] for l in paquete['lecturas']}
+
+        def valido(x):
+            return x is not None and x > -900
+
+        dq = self.lluvia[ce]
+        if valido(v.get('LLUVIA')):
+            dq.append((t, v['LLUVIA']))
+        while dq and dq[0][0] <= t - 72 * 3600:
+            dq.popleft()
+        s24 = round(sum(mm for tt, mm in dq if tt > t - 24 * 3600), 1)
+        s72 = round(sum(mm for tt, mm in dq), 1)
+        if valido(v.get('HUM_SUELO')):
+            self.hum_ult[ce] = v['HUM_SUELO']
+        hum = self.hum_ult.get(ce)
+        umbral_h = self.ul['humedad'].get(ce, self.ul['humedad_por_defecto'])
+        saturado = hum is not None and hum >= umbral_h
+
+        # lluvia acumulada: el nivel mas alto que alcance cualquiera de las dos ventanas
+        L = self.ul['lluvia']
+        nl, crit = 0, None
+        for n, (u24, u72) in ((3, L['Critica']), (2, L['Preventiva']), (1, self.ul['p99'].get(ce, (None, None)))):
+            if u24 is not None and s24 >= u24:
+                nl, crit = n, ('UMBRAL_LLUVIA_24H', s24)
+            elif u72 is not None and s72 >= u72:
+                nl, crit = n, ('UMBRAL_LLUVIA_72H', s72)
+            if nl:
+                break
+        if nl == 2 and saturado:
+            nl = 3                                   # combinacion: lluvia Preventiva sobre suelo saturado
+        self._emite_ladera(paquete, salida, 'lluvia_acumulada', 'LLUVIA', nl, crit)
+
+        # suelo cerca de saturacion (con histeresis para no parpadear en el umbral)
+        if saturado:
+            nh = 1
+        elif hum is None or hum < umbral_h - HISTERESIS_HUMEDAD:
+            nh = 0
+        else:
+            nh = min(self.avisado[(ce, 'suelo_saturado')], 1)
+        self._emite_ladera(paquete, salida, 'suelo_saturado', 'HUM_SUELO', nh, ('SATURACION_SUELO_SITIO', hum))
+
+        # movimiento de la estaca
+        if valido(v.get('INCL')):
+            a, I = abs(v['INCL']), self.ul['inclinacion']
+            if a >= I['critico']:
+                ni = 3
+            elif a >= I['aviso']:
+                ni = 2 if (nl or saturado) else 1
+            else:
+                ni = 0
+            self._emite_ladera(paquete, salida, 'movimiento_ladera', 'INCL', ni, ('INCLINACION_LADERA', v['INCL']))
+
+    def _emite_ladera(self, paquete, salida, regla, cp, nivel, criterio):
+        ce = paquete['c_estacion']
+        clave = (ce, regla)
+        if nivel <= self.avisado[clave]:
+            if nivel == 0:
+                self.avisado[clave] = 0
+            return
+        self.avisado[clave] = nivel
+        self.folio[ce] += 1
+        folio = 'AL-{}-{}-{:02d}'.format(paquete['fecha_hora'][:10].replace('-', ''),
+                                        ce.replace('EST-', '').replace('-', ''), self.folio[ce])
+        salida['alertas'].append({
+            'version': VERSION, 'c_alerta': folio, 'c_estacion': ce, 'c_sitio': None,
+            'fecha_hora': paquete['fecha_hora'], 'nivel': NIVELES[nivel], 'c_parametro': cp,
+            'valor': criterio[1], 'regla': regla, 'criterio_aplicado': criterio[0],
+            'lecturas_consecutivas': None, 'fuente_probable': None,
+            'medidas_sugeridas': MEDIDAS_LADERA[nivel], 'estado': 'Abierta', 'responsable': None,
         })
 
     # -------------------------------------------------------- fuente probable
@@ -436,6 +550,41 @@ def cargar_linea_base(ruta=None):
     with open(ruta, encoding='utf-8') as f:
         filas = json.load(f)['linea_base']
     return {(r['c_sitio'], r['c_parametro']): r for r in filas}
+
+
+def cargar_umbrales_ladera():
+    """Umbrales de las reglas de derrumbe: lluvia (umbrales_lluvia.json), p99 de cada sitio (lluvia_sitios.json) y humedad
+    calibrada por ladera (suelo_laderas.json). Si falta un archivo, la regla que lo necesita no se evalua o usa su valor
+    declarado; nunca se inventa."""
+    def leer(nombre):
+        ruta = os.path.join(FIX, nombre)
+        if not os.path.exists(ruta):
+            return None
+        with open(ruta, encoding='utf-8') as f:
+            return json.load(f)
+
+    u = leer('umbrales_lluvia.json') or {}
+    niveles = {n['nivel']: n for n in u.get('lluvia', {}).get('niveles', [])}
+
+    def par(n):
+        x = niveles.get(n, {})
+        a, b = x.get('acumulada_24h_mm'), x.get('acumulada_72h_mm')
+        return (a if isinstance(a, (int, float)) else None, b if isinstance(b, (int, float)) else None)
+
+    p99 = {}
+    for s in (leer('lluvia_sitios.json') or {}).get('sitios', []):
+        tem = s.get('temporada') or {}
+        a = (tem.get('lluvia_diaria_dia_con_lluvia_mm') or {}).get('p99')
+        b = (tem.get('lluvia_3_dias_mm') or {}).get('p99')
+        if s.get('c_estacion') and (a or b):
+            p99[s['c_estacion']] = (a, b)
+    humedad = {x['c_estacion']: x['umbral_cerca_saturacion_pct'] + x.get('correccion_sensor_pct', 0.0)
+               for x in (leer('suelo_laderas.json') or {}).get('laderas', [])}
+    hs = u.get('humedad_suelo', {}).get('cerca_de_saturacion_pct')
+    inc = u.get('inclinacion', {})
+    return {'lluvia': {'Critica': par('Critica'), 'Preventiva': par('Preventiva')}, 'p99': p99, 'humedad': humedad,
+            'humedad_por_defecto': hs if isinstance(hs, (int, float)) else HUMEDAD_SIN_CALIBRAR,
+            'inclinacion': {'aviso': inc.get('aviso_grados', 0.5), 'critico': inc.get('critico_grados', 2.0)}}
 
 
 def cargar_estaciones(ruta=None):

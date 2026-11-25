@@ -50,8 +50,10 @@ CAMPOS_GESTION = ('estado', 'responsable')
 CAMPOS_GESTION_REPORTE = ('estado',)
 # Paquetes de la estacion con que se reconstruye el motor en cada lote. Sus
 # ventanas abarcan 24 paquetes (VENTANA_RECIENTE + BRECHA_GUARDA en reglas.py);
-# 200 sobran y cuestan unos milisegundos.
+# 200 sobran y cuestan unos milisegundos. Las de ladera suman la lluvia de 72 h (docs/20 §5): a 5 min por paquete,
+# 864; con 900 alcanza aun con el muestreo adaptativo, y sus paquetes no pasan por las capas del agua (es barato).
 REHIDRATAR = 200
+REHIDRATAR_LADERA = 900
 DB_POR_OMISION = os.path.join(AQUI, 'datos', 'atoyac.sqlite')
 
 
@@ -69,7 +71,7 @@ reglas = _cargar('reglas', os.path.join(RAIZ, 'motor', 'reglas.py'))
 ESQ = {n: validador.cargar_esquema(n) for n in ('lectura', 'reporte_ciudadano', 'alerta', 'prediccion_propagacion')}
 # Tablas que el motor lee al construirse: se cargan una vez por proceso.
 TABLAS_MOTOR = dict(linea_base=reglas.cargar_linea_base(), estaciones=reglas.cargar_estaciones(),
-                    umbrales=reglas.cargar_escala_conagua())
+                    umbrales=reglas.cargar_escala_conagua(), ladera=reglas.cargar_umbrales_ladera())
 
 
 def url_base(url=None):
@@ -109,7 +111,8 @@ def motor_de_estacion(almacen, c_estacion):
     """Motor con el estado que tendria si hubiera recibido todo sin apagarse.
     Llamar dentro de almacen.transaccion(c_estacion)."""
     motor = reglas.Motor(**TABLAS_MOTOR)
-    for p in almacen.lecturas_recientes(c_estacion, REHIDRATAR):
+    mide_lluvia = 'LLUVIA' in (TABLAS_MOTOR['estaciones'].get(c_estacion, {}).get('parametros') or [])
+    for p in almacen.lecturas_recientes(c_estacion, REHIDRATAR_LADERA if mide_lluvia else REHIDRATAR):
         motor.evaluar(p)     # lo que devuelve se descarta: ya esta guardado
     motor.folio[c_estacion] = almacen.folio_maximo(c_estacion)
     return motor

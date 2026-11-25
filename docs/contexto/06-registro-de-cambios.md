@@ -21,6 +21,30 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · M2 y módulo A: reglas de derrumbe y umbral de humedad calibrado por ladera
+
+**Qué cambió.** `motor/reglas.py` evalúa el módulo de ladera (`_ladera`): lluvia acumulada en 24 y 72 h (Informativa al p99
+del sitio, Preventiva al mínimo de Caine, Crítica a la lluvia de Teziutlán 1999; con suelo saturado la Preventiva sube a
+Crítica), suelo cerca de saturación (Informativa) e inclinómetro (aviso: Informativa, o Preventiva con lluvia o suelo
+saturado; crítico: Crítica). Avisa cuando una regla sube de nivel y se rearma al volver a cero. Toda alerta de una estación
+reubicada lleva `escuelas_afectadas`. `alerta.schema.json` suma las reglas `lluvia_acumulada`, `suelo_saturado` y
+`movimiento_ladera` y sus criterios (compatible). El backend rehidrata 900 paquetes en las estaciones con lluvia
+(`REHIDRATAR_LADERA`). Nuevo `scripts/103_suelo_laderas.py` (fuente F22, SoilGrids) → `suelo_laderas.json`: umbral =
+máx(0.9 × porosidad, capacidad de campo + 5); da 46.5 a 57.7 % en lugar del 45 % sin fuente. `102_escenarios_ladera.py` y el
+simulador usan ese suelo (drena a su capacidad de campo, satura en su porosidad; solo drena lo que pasa de la capacidad de
+campo); rango del sensor de humedad a 0-64 % (TEROS 10). En la figura de ladera los tres sensores se dibujan a 3× (no se
+distinguían a 1.6×), el pluviómetro se aparta del gabinete y el sensor de humedad se ve en el corte dentro de su hoyo de relleno.
+**Por qué.** docs/20 §5; el 45 % no tenía fuente y la saturación depende del suelo de cada ladera.
+**Qué arrastró.** `04-fuentes-de-datos.md` y `datos/bitacora.md` (F22), `02-mapa-del-repo.md`, `docs/20`, `CLAUDE.md`,
+`prueba.js`, escenarios de ladera regenerados.
+**Impacto en otros módulos.** Escenarios: `tormenta_ladera` da Informativa y Preventiva; `lluvia_prolongada`, Crítica por lluvia
+de 72 h sobre suelo saturado (47.96 % contra 47.9 %); `deslave`, Crítica por la estaca (3.81°). Los del agua no cambian
+(0, 1, 5, 3 y 0). Rehidratando 200 paquetes, como antes, se perdía la Crítica de la lluvia prolongada. Bonillagco (EST-LAD-05)
+satura en 64.2 %: al tope del TEROS 10. La autocalibración con el sensor (`--serie`) recupera la capacidad de campo por la
+curva de secado: 39.3 % contra 38.8 % en una serie simulada de 12 días.
+
+---
+
 ## 2026-11-24 · Módulo B: tipografía del Sistema Nacional de Diseño en el panel
 
 **Qué cambió.** Títulos en Patria y texto en Noto Sans (snd.gob.mx) en lugar de Montserrat. Patria se carga con

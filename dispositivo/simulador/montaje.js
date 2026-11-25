@@ -38,7 +38,7 @@
     var linea = lineaDeSitio(lineaBase, est.banda_simulacion || est.c_sitio);
     // El agua solo existe donde hay cauce; la ladera, donde la estación tiene su módulo (docs/20).
     var agua = esLadera(est) ? null : new M.Agua(linea, sem);
-    var ladera = params.some(function (p) { return M.PARAMS_LADERA.indexOf(p) >= 0; }) ? new M.Ladera(sem + 41) : null;
+    var ladera = params.some(function (p) { return M.PARAMS_LADERA.indexOf(p) >= 0; }) ? new M.Ladera(sem + 41, (opc.suelos || {})[est.c_estacion]) : null;
     var sondas = {};
     params.forEach(function (p) { sondas[p] = p === 'LLUVIA' ? new M.Pluviometro(ladera, t0) : new M.Sonda(p, rng, t0); });
     var cfgE = M.ENERGIA[esLadera(est) ? 'ladera' : 'rio'];

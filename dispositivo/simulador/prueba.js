@@ -19,6 +19,8 @@ var RAIZ = path.resolve(__dirname, '..', '..');
 var estaciones = JSON.parse(fs.readFileSync(path.join(RAIZ, 'contrato/fixtures/estaciones.json'), 'utf8')).estaciones;
 var lineaBase = JSON.parse(fs.readFileSync(path.join(RAIZ, 'contrato/fixtures/linea_base.json'), 'utf8'));
 var rutaMec = path.join(RAIZ, 'contrato/fixtures/mecanismos.json');
+var rutaSuelo = path.join(RAIZ, 'contrato/fixtures/suelo_laderas.json'), suelos = {};
+if (fs.existsSync(rutaSuelo)) JSON.parse(fs.readFileSync(rutaSuelo, 'utf8')).laderas.forEach(function (x) { suelos[x.c_estacion] = x; });
 var mecanismos = fs.existsSync(rutaMec) ? JSON.parse(fs.readFileSync(rutaMec, 'utf8')).estaciones : [];
 
 var fallas = 0;
@@ -231,7 +233,7 @@ var laderas = mecanismos.filter(function (e) { return Mont.esLadera(e); });
 var aguaMec = mecanismos.filter(function (e) { return !Mont.esLadera(e); });
 function correLadera(est, horas, evento) {
   var envs = [], ad = [], alertas = 0;
-  var s = Mont.crearEstacion(est, lineaBase, { alEvento: function (e) {
+  var s = Mont.crearEstacion(est, lineaBase, { suelos: suelos, alEvento: function (e) {
     if (e.tipo === 'envio') envs = envs.concat(e.datos);
     if (e.tipo === 'adaptativo') ad.push(e.msg);
     if (/alerta/i.test(e.tipo)) alertas++;
@@ -263,7 +265,15 @@ var tor = correLadera(e0, 30, 'tormenta'), pro = correLadera(e0, 100, 'lluvia_pr
 ok(tor.ventana(24) === 120 && tor.ventana(24) > 103, 'tormenta: ' + tor.ventana(24) + ' mm en 24 h (pasa los 103 mm de Caine)');
 ok(pro.ventana(24) < 103 && pro.ventana(72) > 201, 'lluvia prolongada: ' + pro.ventana(24) + ' mm en 24 h (no pasa 103) y ' + pro.ventana(72) + ' mm en 72 h (pasa 201)');
 var hp = Math.max.apply(null, pro.serie('HUM_SUELO')), h0 = pro.serie('HUM_SUELO')[0];
-ok(hp > h0 + 10 && hp <= 50.5, 'el suelo se moja con la lluvia y no pasa la saturación: ' + h0 + ' → ' + hp + ' %');
+var su = suelos[e0.c_estacion];
+ok(su && hp > h0 + 10 && hp <= su.saturacion_pct + 0.5, 'el suelo de ' + e0.localidad + ' se moja con la lluvia y no pasa su saturación (' +
+  (su && su.saturacion_pct) + ' %): ' + h0 + ' → ' + hp + ' %');
+var ht = Math.max.apply(null, tor.serie('HUM_SUELO'));
+ok(su && hp >= su.umbral_cerca_saturacion_pct && ht < su.umbral_cerca_saturacion_pct,
+  'umbral calibrado de su suelo (' + (su && su.umbral_cerca_saturacion_pct) + ' %): la lluvia prolongada lo cruza (' + hp +
+  ' %) y la tormenta sobre suelo seco no (' + ht + ' %)');
+var sinCrecer = correLadera(e0, 48).serie('HUM_SUELO');
+ok(Math.max.apply(null, sinCrecer) - sinCrecer[0] < 1.5, 'sin lluvia el suelo seco no se moja solo: ' + sinCrecer[0] + ' → ' + sinCrecer[sinCrecer.length - 1] + ' %');
 var inc = des.serie('INCL').map(Math.abs), im = Math.max.apply(null, inc);
 ok(im > 2 && Math.max.apply(null, tor.serie('INCL').map(Math.abs)) < 0.5, 'deslave: la estaca salta a ' + im.toFixed(2) + '° (> 2°); con la tormenta sola no se mueve');
 

@@ -61,7 +61,7 @@ for (const f of ['cuenca.geojson', 'red_hidrografica.geojson', 'confluencias.geo
 
 const fixDestino = join(DIST, 'contrato', 'fixtures');
 mkdirSync(fixDestino, { recursive: true });
-for (const f of ['estaciones.json', 'mecanismos.json', 'linea_base.json', 'sitios.geojson']) {
+for (const f of ['estaciones.json', 'mecanismos.json', 'linea_base.json', 'sitios.geojson', 'umbrales_lluvia.json', 'suelo_laderas.json']) {
   exige(join(RAIZ, 'contrato', 'fixtures', f));
   cpSync(join(RAIZ, 'contrato', 'fixtures', f), join(fixDestino, f));
 }

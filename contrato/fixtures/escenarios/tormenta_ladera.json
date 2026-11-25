@@ -1296,7 +1296,7 @@
     },
     {
      "c_parametro": "HUM_SUELO",
-     "valor": 31.21
+     "valor": 31.26
     },
     {
      "c_parametro": "INCL",
@@ -1317,7 +1317,7 @@
     },
     {
      "c_parametro": "HUM_SUELO",
-     "valor": 32.07
+     "valor": 32.24
     },
     {
      "c_parametro": "INCL",
@@ -1338,7 +1338,7 @@
     },
     {
      "c_parametro": "HUM_SUELO",
-     "valor": 33.3
+     "valor": 33.64
     },
     {
      "c_parametro": "INCL",
@@ -1359,7 +1359,7 @@
     },
     {
      "c_parametro": "HUM_SUELO",
-     "valor": 34.12
+     "valor": 34.65
     },
     {
      "c_parametro": "INCL",
@@ -1380,7 +1380,7 @@
     },
     {
      "c_parametro": "HUM_SUELO",
-     "valor": 35.25
+     "valor": 36.01
     },
     {
      "c_parametro": "INCL",
@@ -1401,7 +1401,7 @@
     },
     {
      "c_parametro": "HUM_SUELO",
-     "valor": 36.88
+     "valor": 37.9
     },
     {
      "c_parametro": "INCL",
@@ -1422,7 +1422,7 @@
     },
     {
      "c_parametro": "HUM_SUELO",
-     "valor": 38.69
+     "valor": 40.0
     },
     {
      "c_parametro": "INCL",
@@ -1443,7 +1443,7 @@
     },
     {
      "c_parametro": "HUM_SUELO",
-     "valor": 39.92
+     "valor": 41.5
     },
     {
      "c_parametro": "INCL",
@@ -1464,7 +1464,7 @@
     },
     {
      "c_parametro": "HUM_SUELO",
-     "valor": 41.27
+     "valor": 43.05
     },
     {
      "c_parametro": "INCL",
@@ -1485,7 +1485,7 @@
     },
     {
      "c_parametro": "HUM_SUELO",
-     "valor": 41.96
+     "valor": 43.9
     },
     {
      "c_parametro": "INCL",
@@ -1506,7 +1506,7 @@
     },
     {
      "c_parametro": "HUM_SUELO",
-     "valor": 42.74
+     "valor": 44.78
     },
     {
      "c_parametro": "INCL",
@@ -1527,7 +1527,7 @@
     },
     {
      "c_parametro": "HUM_SUELO",
-     "valor": 43.08
+     "valor": 45.2
     },
     {
      "c_parametro": "INCL",
@@ -1548,7 +1548,7 @@
     },
     {
      "c_parametro": "HUM_SUELO",
-     "valor": 43.37
+     "valor": 45.56
     },
     {
      "c_parametro": "INCL",
@@ -1569,7 +1569,7 @@
     },
     {
      "c_parametro": "HUM_SUELO",
-     "valor": 43.79
+     "valor": 46.04
     },
     {
      "c_parametro": "INCL",
@@ -1590,7 +1590,7 @@
     },
     {
      "c_parametro": "HUM_SUELO",
-     "valor": 43.59
+     "valor": 45.87
     },
     {
      "c_parametro": "INCL",
@@ -1611,7 +1611,7 @@
     },
     {
      "c_parametro": "HUM_SUELO",
-     "valor": 43.52
+     "valor": 45.82
     },
     {
      "c_parametro": "INCL",
@@ -1632,7 +1632,7 @@
     },
     {
      "c_parametro": "HUM_SUELO",
-     "valor": 43.8
+     "valor": 46.1
     },
     {
      "c_parametro": "INCL",
@@ -1653,7 +1653,7 @@
     },
     {
      "c_parametro": "HUM_SUELO",
-     "valor": 43.44
+     "valor": 45.76
     },
     {
      "c_parametro": "INCL",
@@ -1674,7 +1674,7 @@
     },
     {
      "c_parametro": "HUM_SUELO",
-     "valor": 43.77
+     "valor": 46.11
     },
     {
      "c_parametro": "INCL",
@@ -1695,7 +1695,7 @@
     },
     {
      "c_parametro": "HUM_SUELO",
-     "valor": 43.47
+     "valor": 45.82
     },
     {
      "c_parametro": "INCL",
@@ -1716,7 +1716,7 @@
     },
     {
      "c_parametro": "HUM_SUELO",
-     "valor": 43.32
+     "valor": 45.69
     },
     {
      "c_parametro": "INCL",
@@ -1737,7 +1737,7 @@
     },
     {
      "c_parametro": "HUM_SUELO",
-     "valor": 43.42
+     "valor": 45.79
     },
     {
      "c_parametro": "INCL",
@@ -1758,7 +1758,7 @@
     },
     {
      "c_parametro": "HUM_SUELO",
-     "valor": 43.4
+     "valor": 45.79
     },
     {
      "c_parametro": "INCL",
@@ -1779,7 +1779,7 @@
     },
     {
      "c_parametro": "HUM_SUELO",
-     "valor": 43.38
+     "valor": 45.78
     },
     {
      "c_parametro": "INCL",
@@ -1800,7 +1800,7 @@
     },
     {
      "c_parametro": "HUM_SUELO",
-     "valor": 43.3
+     "valor": 45.72
     },
     {
      "c_parametro": "INCL",
@@ -1821,7 +1821,7 @@
     },
     {
      "c_parametro": "HUM_SUELO",
-     "valor": 43.42
+     "valor": 45.85
     },
     {
      "c_parametro": "INCL",
@@ -1842,7 +1842,7 @@
     },
     {
      "c_parametro": "HUM_SUELO",
-     "valor": 42.98
+     "valor": 45.43
     },
     {
      "c_parametro": "INCL",
@@ -1863,7 +1863,7 @@
     },
     {
      "c_parametro": "HUM_SUELO",
-     "valor": 43.16
+     "valor": 45.62
     },
     {
      "c_parametro": "INCL",
@@ -1884,7 +1884,7 @@
     },
     {
      "c_parametro": "HUM_SUELO",
-     "valor": 43.17
+     "valor": 45.64
     },
     {
      "c_parametro": "INCL",
@@ -1905,7 +1905,7 @@
     },
     {
      "c_parametro": "HUM_SUELO",
-     "valor": 43.39
+     "valor": 45.87
     },
     {
      "c_parametro": "INCL",
@@ -1926,7 +1926,7 @@
     },
     {
      "c_parametro": "HUM_SUELO",
-     "valor": 42.9
+     "valor": 45.4
     },
     {
      "c_parametro": "INCL",
@@ -1947,7 +1947,7 @@
     },
     {
      "c_parametro": "HUM_SUELO",
-     "valor": 43.07
+     "valor": 45.58
     },
     {
      "c_parametro": "INCL",
@@ -1968,7 +1968,7 @@
     },
     {
      "c_parametro": "HUM_SUELO",
-     "valor": 42.94
+     "valor": 45.47
     },
     {
      "c_parametro": "INCL",
@@ -1989,7 +1989,7 @@
     },
     {
      "c_parametro": "HUM_SUELO",
-     "valor": 42.97
+     "valor": 45.51
     },
     {
      "c_parametro": "INCL",
@@ -2010,7 +2010,7 @@
     },
     {
      "c_parametro": "HUM_SUELO",
-     "valor": 43.1
+     "valor": 45.65
     },
     {
      "c_parametro": "INCL",

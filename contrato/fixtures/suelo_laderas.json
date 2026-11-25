@@ -1,0 +1,109 @@
+{
+ "version": "0.1-propuesta",
+ "_provisional": true,
+ "fuente": "SoilGrids 2.0 (ISRIC), capa 30-60 cm, media; F22. Se reemplaza por lo medido en campo (--serie).",
+ "regla": "umbral = max(0.9 x saturacion, capacidad de campo + 5.0 puntos). 0.9 es hipotesis de diseno.",
+ "umbral_anterior_pct": 45.0,
+ "laderas": [
+  {
+   "c_estacion": "EST-LAD-01",
+   "cct": "21KTV0122C",
+   "localidad": "Tecuantla (los Reyes)",
+   "municipio": "Jopala",
+   "suelo_30_60cm": {
+    "densidad_aparente_g_cm3": 1.24,
+    "arcilla_pct": 43.2,
+    "arena_pct": 33.7,
+    "carbono_organico_g_kg": 12.2
+   },
+   "materia_organica_pct": 2.1,
+   "saturacion_pct": 53.2,
+   "origen_saturacion": "porosidad = 1 - densidad aparente / 2.65, densidad aparente de SoilGrids",
+   "capacidad_campo_pct": 38.8,
+   "origen_capacidad_campo": "Saxton y Rawls (2006) con la textura y el carbono de SoilGrids",
+   "umbral_cerca_saturacion_pct": 47.9,
+   "correccion_sensor_pct": 0.0,
+   "fuera_de_rango_del_sensor": false
+  },
+  {
+   "c_estacion": "EST-LAD-02",
+   "cct": "21DPR0901Z",
+   "localidad": "El Tabacal",
+   "municipio": "Xicotepec",
+   "suelo_30_60cm": {
+    "densidad_aparente_g_cm3": 1.11,
+    "arcilla_pct": 38.7,
+    "arena_pct": 38.1,
+    "carbono_organico_g_kg": 15.0
+   },
+   "materia_organica_pct": 2.59,
+   "saturacion_pct": 58.1,
+   "origen_saturacion": "porosidad = 1 - densidad aparente / 2.65, densidad aparente de SoilGrids",
+   "capacidad_campo_pct": 36.6,
+   "origen_capacidad_campo": "Saxton y Rawls (2006) con la textura y el carbono de SoilGrids",
+   "umbral_cerca_saturacion_pct": 52.3,
+   "correccion_sensor_pct": 0.0,
+   "fuera_de_rango_del_sensor": false
+  },
+  {
+   "c_estacion": "EST-LAD-03",
+   "cct": "21DCC0912Z",
+   "localidad": "Xinachapan de Allende",
+   "municipio": "Huitzilan de Serdán",
+   "suelo_30_60cm": {
+    "densidad_aparente_g_cm3": 1.18,
+    "arcilla_pct": 33.7,
+    "arena_pct": 39.3,
+    "carbono_organico_g_kg": 12.1
+   },
+   "materia_organica_pct": 2.09,
+   "saturacion_pct": 55.5,
+   "origen_saturacion": "porosidad = 1 - densidad aparente / 2.65, densidad aparente de SoilGrids",
+   "capacidad_campo_pct": 33.8,
+   "origen_capacidad_campo": "Saxton y Rawls (2006) con la textura y el carbono de SoilGrids",
+   "umbral_cerca_saturacion_pct": 49.9,
+   "correccion_sensor_pct": 0.0,
+   "fuera_de_rango_del_sensor": false
+  },
+  {
+   "c_estacion": "EST-LAD-04",
+   "cct": "21KJN1742B",
+   "localidad": "San Pablito",
+   "municipio": "Pahuatlán",
+   "suelo_30_60cm": {
+    "densidad_aparente_g_cm3": 1.28,
+    "arcilla_pct": 39.5,
+    "arena_pct": 33.8,
+    "carbono_organico_g_kg": 9.5
+   },
+   "materia_organica_pct": 1.64,
+   "saturacion_pct": 51.7,
+   "origen_saturacion": "porosidad = 1 - densidad aparente / 2.65, densidad aparente de SoilGrids",
+   "capacidad_campo_pct": 37.0,
+   "origen_capacidad_campo": "Saxton y Rawls (2006) con la textura y el carbono de SoilGrids",
+   "umbral_cerca_saturacion_pct": 46.5,
+   "correccion_sensor_pct": 0.0,
+   "fuera_de_rango_del_sensor": false
+  },
+  {
+   "c_estacion": "EST-LAD-05",
+   "cct": "21DCC1196M",
+   "localidad": "Bonillagco",
+   "municipio": "Xochitlán de Vicente Suárez",
+   "suelo_30_60cm": {
+    "densidad_aparente_g_cm3": 0.95,
+    "arcilla_pct": 36.1,
+    "arena_pct": 40.1,
+    "carbono_organico_g_kg": 13.1
+   },
+   "materia_organica_pct": 2.26,
+   "saturacion_pct": 64.2,
+   "origen_saturacion": "porosidad = 1 - densidad aparente / 2.65, densidad aparente de SoilGrids",
+   "capacidad_campo_pct": 35.0,
+   "origen_capacidad_campo": "Saxton y Rawls (2006) con la textura y el carbono de SoilGrids",
+   "umbral_cerca_saturacion_pct": 57.7,
+   "correccion_sensor_pct": 0.0,
+   "fuera_de_rango_del_sensor": true
+  }
+ ]
+}

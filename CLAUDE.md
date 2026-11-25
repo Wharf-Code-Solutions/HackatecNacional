@@ -270,9 +270,10 @@ backend (M5), panel de autoridad (M7), prototipo de app ciudadana (M8) y la red 
    `linea_base.json`: el motor solo los compara contra su historia reciente y el simulador usa `banda_simulacion`;
    regenerarla pide los crudos F05); la Sierra Norte queda fuera hasta bajar su red del INEGI; ficha del colector
    (`dispositivo/ficha-colector.md`), D32 y propuesta de contrato para su paquete; costos (M10).
-   **Módulo de ladera** construido en el simulador (`EST-LAD-01..05`); faltan las reglas de derrumbe del motor (docs/20 §5),
-   que el panel muestre esas escuelas (hoy filtra a la cuenca) y calibrar la humedad con el suelo de cada ladera (el umbral
-   de 45 % no tiene fuente).
+   **Módulo de ladera** construido en el simulador (`EST-LAD-01..05`) y **reglas de derrumbe en el motor** (`_ladera` en
+   `motor/reglas.py`), con el umbral de humedad calibrado por el suelo de cada ladera (`scripts/103_suelo_laderas.py`,
+   SoilGrids, 46.5 a 57.7 %). Falta que el panel muestre esas escuelas (hoy filtra a la cuenca), calibrar en campo (muestra
+   gravimétrica al instalar y una temporada del sensor con `--serie`) y confirmar el umbral de saturación (0.9 es hipótesis).
 1. **Pendientes de la red nueva de estaciones** (fixtures regenerados con las 5 de docs/18):
    - correr `backend/prueba.py` (ya espera 0, 1, 5, 3 y 0 alertas; necesita el entorno del backend);
    - recapturar `panel/public/demo/foto.json` con el backend real (`npm run capturar-demo`);

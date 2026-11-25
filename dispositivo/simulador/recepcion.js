@@ -42,11 +42,15 @@
   function valido(v) { return v !== null && v !== undefined && v > -900; }
 
   // params: lo que mide la estación elegida; umbrales: umbrales_lluvia.json, si se pudo leer.
-  function construye(ps, umbrales) {
+  // umbralHumedad: el calibrado de la ladera (suelo_laderas.json); si no hay, el genérico de umbrales_lluvia.json.
+  function construye(ps, umbrales, umbralHumedad) {
     var sel = $('recParam');
     params = ps || M.PARAMS; param = params[0];
     if (umbrales) {
       if (umbrales.humedad_suelo) referencia.HUM_SUELO = umbrales.humedad_suelo.cerca_de_saturacion_pct;
+    }
+    if (umbralHumedad) referencia.HUM_SUELO = umbralHumedad;
+    if (umbrales) {
       if (umbrales.inclinacion) referencia.INCL = umbrales.inclinacion.aviso_grados;
     }
     params.forEach(function (p) {
