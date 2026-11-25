@@ -22,6 +22,8 @@ const colorZ = (z) => paso(z)[2];
 const PARAMS_AGUA = ['OD', 'PH', 'COND', 'TEMP', 'TURB'];
 // Ladera: 0, 1, 2 o 3 umbrales alcanzados se pintan como habitual, algo, más y mucho más alto.
 const Z_LADERA = [0, 2.5, 4.5, 7];
+// 48 lecturas = 12 h al muestreo normal de 15 min.
+const MAX_LECTURAS = 48;
 
 // Huella de las ultimas horas de UNA estacion: cada fila es una sonda y cada columna una lectura.
 // La estacion es la elegida en el panel (mapa, tabla o filtro); si no hay, la primera con alerta por
@@ -37,7 +39,9 @@ export default function Huella({ estaciones, veredictos, alertas, elegida }) {
   const est = estaciones[c] || {};
   const ladera = (est.parametros || []).includes('LLUVIA');
   const PARAMS = ladera ? LADERA : PARAMS_AGUA;
-  const vs = [...(veredictos[c] || [])].sort((a, b) => (a.fecha_hora < b.fecha_hora ? -1 : 1));
+  // Solo las últimas MAX_LECTURAS: con más, los cuadros se vuelven rayas y las horas se enciman.
+  const todas = [...(veredictos[c] || [])].sort((a, b) => (a.fecha_hora < b.fecha_hora ? -1 : 1));
+  const vs = todas.slice(-MAX_LECTURAS);
   // En ladera la lluvia se lee acumulada en 24 h hasta cada lectura, que es lo que compara el motor.
   const acum = {};
   if (ladera) {
@@ -87,7 +91,9 @@ export default function Huella({ estaciones, veredictos, alertas, elegida }) {
     const d = new Date(t);
     if (t < ms[0] || d.getHours() % paso_h) continue;
     const i = ms.findIndex((m) => m >= t);
-    if (i >= 0) marcas.push({ i, iso: d.toISOString() });
+    // Las columnas son lecturas, no tiempo: si el firmware aceleró el muestreo o hubo un hueco, dos horas pueden caer
+    // juntas. Se salta la marca que quede a menos de 64 px de la anterior.
+    if (i >= 0 && (!marcas.length || (i - marcas[marcas.length - 1].i) * cw >= 64)) marcas.push({ i, iso: d.toISOString() });
   }
   return (
     <div ref={ref} className="lienzo">

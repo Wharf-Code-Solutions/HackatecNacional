@@ -199,7 +199,9 @@ class Motor:
                     'c_parametro': cp, 'valor': v, 'clase_conagua': None, 'veces_el_limite': None,
                     'posicion_en_banda': 'sin_linea_base', 'z_robusto': None, 'n_linea_base': None})
                 continue
-            base = self.lb.get((sitio, cp), {})
+            # Una estacion junto a escuela cuyo sitio CONAGUA no tiene linea base usa la del sitio mas cercano que si
+            # la tiene (banda_simulacion, scripts/99_reubicacion.py): provisional hasta medir la suya en el piloto.
+            base = self.lb.get((sitio, cp)) or self.lb.get((est.get('banda_simulacion'), cp), {})
             clave = (ce, cp)
             item = {
                 'c_parametro': cp, 'valor': v, 'clase_conagua': None,
