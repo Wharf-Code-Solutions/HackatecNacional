@@ -14,7 +14,9 @@ import { COLOR_RIESGO, NIVEL_RIESGO } from './FichaEscuela.jsx';
 // lo que se está escribiendo.
 function Gestion({ alerta, guardar, demo }) {
   const [estado, setEstado] = useState(alerta.estado);
-  const [responsable, setResponsable] = useState(alerta.responsable || '');
+  // La que cerró el motor solo («Se normalizó») sale de la lista cuando alguien la cierra con su nombre.
+  const normalizada = !!alerta.normalizada;
+  const [responsable, setResponsable] = useState(normalizada ? '' : alerta.responsable || '');
   const [msg, setMsg] = useState({ texto: '', clase: '' });
   const [ocupado, setOcupado] = useState(false);
   const enviar = async (e) => {
@@ -44,7 +46,9 @@ function Gestion({ alerta, guardar, demo }) {
         <input type="text" maxLength={120} placeholder="Nombre o área" value={responsable}
           onChange={(e) => setResponsable(e.target.value)} />
       </label>
-      <button className="boton primario" type="submit" disabled={ocupado}>Guardar</button>
+      {normalizada && <p className="nota">El valor volvió a lo normal y el sistema la cerró. Escribe tu nombre y ciérrala para sacarla de la lista.</p>}
+      <button className="boton primario" type="submit" disabled={ocupado || (normalizada && !responsable.trim())}>
+        {normalizada && estado === 'Cerrada' ? 'Cerrar alerta' : 'Guardar'}</button>
       <p className={'nota ' + msg.clase} role="status">{msg.texto}</p>
     </form>
   );

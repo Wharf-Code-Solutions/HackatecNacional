@@ -1,10 +1,11 @@
-import { hora, porAtender } from '../lib/formato.js';
+import { enLista, hora } from '../lib/formato.js';
 
 // Lo que la autoridad necesita saber antes de abrir nada, con su hora de corte (I12).
 export default function Resumen({ alertas, veredictos, totalEstaciones, corte }) {
-  const activas = alertas.filter(porAtender);
+  // Cuenta también las que el motor cerró solo y nadie ha revisado: si no, con la simulación rápida siempre daría 0.
+  const activas = alertas.filter(enLista);
   const criticas = activas.filter((a) => a.nivel === 'Critica').length;
-  const sinResp = activas.filter((a) => !a.responsable).length;
+  const sinResp = activas.filter((a) => !a.responsable || a.normalizada).length;
   const conAviso = Object.keys(veredictos).filter((c) =>
     veredictos[c].slice(-4).some((v) => (v.avisos_tecnicos || []).length)).length;
   const cifras = [

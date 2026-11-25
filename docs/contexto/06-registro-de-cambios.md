@@ -21,6 +21,16 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-25 · Módulo B: las cifras cuentan las alertas normalizadas y se cierran a mano
+
+**Qué cambió.** `Resumen.jsx` y el contador de la pestaña cuentan las alertas «Se normalizó» como por atender (y sin
+responsable). En el expediente, una alerta normalizada pide un nombre y muestra «Cerrar alerta»; al guardarla sale de la lista.
+**Por qué.** Con la simulación rápida las cifras siempre daban 0 y no estaba claro cómo cerrar una alerta a mano.
+**Qué arrastró.** `App.jsx`, `Resumen.jsx`, `Expediente.jsx`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
 ## 2026-11-25 · Módulo B: las alertas que el motor cierra solo se quedan a la vista
 
 **Qué cambió.** `formato.js` (`marcarNormalizadas`, `enLista`): una alerta cerrada por el motor (responsable `Sistema`, D33)

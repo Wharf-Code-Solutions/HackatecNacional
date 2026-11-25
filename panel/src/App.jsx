@@ -67,7 +67,7 @@ export default function App() {
   const [filtros, setFiltros] = useState({ estado: 'activas', nivel: 'todos', estacion: 'todas' });
 
   const demo = be.origen.modo === 'demo';
-  const activas = be.alertas.filter(porAtender).length;
+  const activas = be.alertas.filter(enLista).length;
   // Si la alerta abierta en el expediente se cierra (el motor la cierra al normalizarse, D33), sale también de ahí.
   const selCerrada = sel && filtros.estado === 'activas' && be.alertas.some((a) => a.c_alerta === sel && !enLista(a));
   useEffect(() => { if (selCerrada) setSel(null); }, [selCerrada]);
