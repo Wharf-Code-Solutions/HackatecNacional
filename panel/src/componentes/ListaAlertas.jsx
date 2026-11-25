@@ -52,7 +52,8 @@ export default function ListaAlertas({ alertas, filtros, setFiltros, sel, onEleg
             </select>
           </label>
         </div>
-        <p className="conteo">{lista.length} de {alertas.length} alertas</p>
+        <p className="conteo">{lista.length} de {alertas.length} alertas
+          {filtros.estado === 'todas' && alertas.length > 0 && !alertas.some((a) => porAtender(a)) && ' · ninguna por atender: el motor las cierra cuando el valor vuelve a lo normal'}</p>
       </div>
       <ol className="alertas">
         {!lista.length && (

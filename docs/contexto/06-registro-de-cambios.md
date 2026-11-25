@@ -21,6 +21,18 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-25 · Módulo B: la lista de alertas abre en «Todas» si no hay ninguna por atender
+
+**Qué cambió.** `App.jsx`: si al llegar los datos no hay alertas por atender y la persona no ha tocado el filtro, la lista
+pasa de «Por atender» a «Todas»; `ListaAlertas.jsx` lo explica junto al conteo.
+**Por qué.** El panel de Alertas se veía vacío: en Vercel las 196 alertas de los mecanismos (103 de agua, 93 de ladera)
+están cerradas, porque el motor las cierra al normalizarse el valor (D33) y el simulador cierra las pendientes al
+reiniciar; las 78 abiertas eran de las ATY, que el panel ya no muestra.
+**Qué arrastró.** `App.jsx`, `ListaAlertas.jsx`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
 ## 2026-11-25 · Módulo B: el panel deja las estaciones del Atoyac
 
 **Qué cambió.** El panel ya no muestra ni pide las 5 estaciones del Atoyac (`EST-ATY-01..05`, A1 a A5 en el mapa): mapa,
