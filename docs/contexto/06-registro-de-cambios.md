@@ -21,6 +21,16 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Módulo B: cifras de Escuelas como tarjetas separadas
+
+**Qué cambió.** Las tres cifras de la pestaña Escuelas son tarjetas separadas, con 16 px entre ellas y hacia el mapa,
+la misma separación que entre el mapa y la lista. Las de Alertas y Autorizaciones no cambian.
+**Por qué.** Petición del usuario.
+**Qué arrastró.** `estilos.css`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
 ## 2026-11-24 · M4: escuela grande, modelos por pieza y pruebas visibles en el simulador
 
 **Qué cambió.** Ladera: escuela a 1.7×, textos más cortos y, en las vistas de cerca (río y ladera), el modelo comercial de cada

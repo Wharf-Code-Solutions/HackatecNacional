@@ -566,6 +566,9 @@ main.tablero-main { padding: 0; flex: 1; display: flex; }
 
 /* Pestaña Escuelas: mapa y lista lado a lado, misma altura; la ficha va abajo a todo el ancho. */
 .resumen-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+/* En Escuelas cada cifra es su propia tarjeta, con la misma separación (16 px) que el mapa y la lista. */
+.resumen.resumen-3 { gap: 16px; margin-bottom: 16px; background: none; border: 0; box-shadow: none; border-radius: 0; }
+.resumen-3 .cifra { background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio); box-shadow: var(--sombra); }
 .escuelas-arriba { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(320px, 1fr); gap: 16px; align-items: stretch; margin-bottom: 16px; }
 .escuelas-arriba .mapa-escuelas { margin: 0; }
 .escuelas-arriba .lista-escuelas { position: static; height: 560px; max-height: none; }
