@@ -26,7 +26,7 @@ const FUENTE_TXT = { red_publica: 'red pública', pozo: 'pozo', manantial: 'mana
 const COLOR_ZONA = { derrumbe: '#8a6a3c', inundacion: '#1d6fa5', contaminacion: '#5f6b3a' };
 const TIPO_ZONA = { derrumbe: 'Derrumbe', inundacion: 'Inundación', contaminacion: 'Contaminación' };
 
-export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir, escuelas = [], onElegirEscuela, zonas = null, escuelaElegida = null }) {
+export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir, escuelas = [], onElegirEscuela, zonas = null, escuelaElegida = null, mecanismos = null }) {
   const caja = useRef(null);
   const mapa = useRef(null);
   const marcas = useRef({});
@@ -44,15 +44,18 @@ export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir,
       import('maplibre-gl'),
       Promise.all(['cuenca', 'subcuencas', 'red_hidrografica', 'confluencias', 'toponimia_hidrografica']
         .map((n) => getJSON(base + n + '.geojson'))),
-    ]).then(([mod, capas]) => {
+      mecanismos ? getJSON(base + 'red_mecanismos.geojson').catch(() => null) : Promise.resolve(null),
+    ]).then(([mod, capas, redMec]) => {
       if (!vivo) return;
       const gl = mod.default || mod;
       const [cuenca, subcuencas, red, confluencias, toponimia] = capas;
       const cods = Object.keys(estaciones).sort();
       // La vista inicial abarca estaciones y escuelas.
       const conCoord = escuelas.filter((e) => e.longitud != null && e.latitud != null);
-      const lons = cods.map((c) => estaciones[c].longitud).concat(conCoord.map((e) => e.longitud));
-      const lats = cods.map((c) => estaciones[c].latitud).concat(conCoord.map((e) => e.latitud));
+      // Mecanismos junto a escuelas (agua y ladera), en el orden y con el número de mapa/ (1 a 10).
+      const mecs = mecanismos ? Object.values(mecanismos).filter((x) => x.longitud != null) : [];
+      const lons = cods.map((c) => estaciones[c].longitud).concat(conCoord.map((e) => e.longitud), mecs.map((x) => x.longitud));
+      const lats = cods.map((c) => estaciones[c].latitud).concat(conCoord.map((e) => e.latitud), mecs.map((x) => x.latitud));
       const m = new gl.Map({
         container: caja.current, style: ESTILO, attributionControl: false, dragRotate: false, pitchWithRotate: false,
         // Sin puntos (por ejemplo, sin escuelas en los datos): la cuenca del Alto Atoyac.
@@ -72,6 +75,8 @@ export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir,
         // calles y comercios; los nombres de lugar, en español. Igual que apagaBase() de mapa/.
         m.getStyle().layers.forEach((l) => {
           if (/waterway/.test(l.id)) m.setLayoutProperty(l.id, 'visibility', 'none');
+          else if (l.type === 'line' && /(road|street|highway|motorway|bridge|tunnel|rail|transit|ferry|path|aeroway)/.test(l.id)) m.setLayoutProperty(l.id, 'visibility', 'none');
+          else if (l.type === 'line' && /(admin|boundar)/.test(l.id)) { m.setPaintProperty(l.id, 'line-color', '#d3d9dd'); m.setPaintProperty(l.id, 'line-opacity', 0.7); }
           else if (l.type === 'symbol' && /(poi|road|highway|transport|housenum|water_name|aeroway)/.test(l.id)) m.setLayoutProperty(l.id, 'visibility', 'none');
           else if (l.type === 'symbol' && l.layout && l.layout['text-field']) m.setLayoutProperty(l.id, 'text-field', ['coalesce', ['get', 'name:es'], ['get', 'name']]);
         });
@@ -201,16 +206,35 @@ export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir,
         emergente('confluencias', (p) => '<b>Confluencia</b><br>' + p.detalle + '<br>Red aguas arriba: ' +
           miles(p.km_red_principal) + ' y ' + miles(p.km_red_afluente) + ' km');
 
-        // Estaciones: el marcador de mapa/ (numero en circulo negro, nombre al acercarse). Un clic
+        // Tramos que llegan a un mecanismo desde un cauce menor (red_mecanismos.geojson), igual que en mapa/.
+        if (redMec) {
+          m.addSource('rios_mecanismos', { type: 'geojson', data: redMec });
+          m.addLayer({ id: 'rios_mecanismos', type: 'line', source: 'rios_mecanismos', filter: ['==', ['get', 'conexion'], true],
+            layout: { 'line-cap': 'round', 'line-join': 'round' },
+            paint: { 'line-color': AGUA, 'line-opacity': 0.95, 'line-width': ['interpolate', ['linear'], ['zoom'], 7, 0.6, 10, 1.1, 13, 1.8] } });
+        }
+
+        // Estaciones: el marcador de mapa/ (numero en circulo negro, nombre al acercarse, pulso de radar con una
+        // alerta). Los mecanismos llevan el número de mapa/ (1 a 10); las estaciones del Atoyac, A1 a A5. Un clic
         // filtra las alertas del panel por esa estacion.
+        const marca = (c, num, nombre, titulo, lon, lat, clase) => {
+          const el = document.createElement('div');
+          el.className = 'est-marca' + (clase ? ' ' + clase : '');
+          el.innerHTML = '<div class="punto">' + num + '</div><div class="nombre">' + nombre + '</div>';
+          el.title = titulo;
+          el.addEventListener('click', () => alElegir.current(c));
+          marcas.current[c] = { el, marca: new gl.Marker({ element: el, anchor: 'left', offset: [-13, 0] }).setLngLat([lon, lat]).addTo(m) };
+        };
         cods.forEach((c, i) => {
           const e = estaciones[c];
-          const el = document.createElement('div');
-          el.className = 'est-marca';
-          el.innerHTML = '<div class="punto">' + (i + 1) + '</div><div class="nombre">' + inicial(e.cuerpo_agua) + '</div>';
-          el.title = c + ' · ' + inicial(e.cuerpo_agua) + ', ' + inicial(e.municipio);
-          el.addEventListener('click', () => alElegir.current(c));
-          marcas.current[c] = { el, marca: new gl.Marker({ element: el, anchor: 'left', offset: [-13, 0] }).setLngLat([e.longitud, e.latitud]).addTo(m) };
+          marca(c, (mecs.length ? 'A' : '') + (i + 1), inicial(e.cuerpo_agua), c + ' · ' + inicial(e.cuerpo_agua) + ', ' + inicial(e.municipio),
+            e.longitud, e.latitud, mecs.length ? 'atoyac' : '');
+        });
+        mecs.forEach((x, i) => {
+          const ladera = (x.parametros || []).includes('LLUVIA');
+          const lugar = inicial(x.localidad || x.escuela || x.c_estacion);
+          marca(x.c_estacion, i + 1, lugar, x.c_estacion + ' · ' + (ladera ? 'ladera' : 'agua') + ' · ' + (x.escuela || '') + ', ' + inicial(x.municipio || ''),
+            x.longitud, x.latitud, ladera ? 'ladera' : 'agua');
         });
         // La atribucion queda plegada en el boton "i", como en mapa/.
         caja.current?.querySelector('.maplibregl-ctrl-attrib')?.classList.remove('maplibregl-compact-show');

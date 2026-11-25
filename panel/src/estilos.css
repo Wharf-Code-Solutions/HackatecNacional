@@ -595,3 +595,13 @@ main.tablero-main { padding: 0; flex: 1; display: flex; }
 .protocolo-plazo { display: inline-block; font-size: 12px; font-weight: 600; color: var(--principal); margin-right: 8px; }
 .protocolo-si { font-style: italic; margin-right: 4px; }
 .protocolo-acciones li.hecha .protocolo-texto { color: var(--tenue); text-decoration: line-through; }
+
+/* Mapa de Alertas con el marcador de mapa/: pulso de radar con una alerta abierta; las estaciones del Atoyac
+   (A1 a A5) en un círculo algo menor, para que los mecanismos junto a escuelas manden. */
+.est-marca .punto { position: relative; }
+.est-marca.alerta .punto::before, .est-marca.alerta .punto::after { content: ''; position: absolute; inset: -2px; border-radius: 50%;
+  border: 2px solid #b3261e; opacity: 0; pointer-events: none; animation: radar 2.4s ease-out infinite; }
+.est-marca.alerta .punto::after { animation-delay: 1.2s; }
+@keyframes radar { 0% { transform: scale(1); opacity: 0.85; } 100% { transform: scale(3.6); opacity: 0; } }
+.est-marca.atoyac .punto { width: 24px; height: 24px; font-size: 11px; background: #5b6770; box-shadow: 0 0 0 1px #5b6770; }
+.est-marca.atoyac.alerta .punto { background: #b3261e; box-shadow: 0 0 0 1px #b3261e; }

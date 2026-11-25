@@ -35,6 +35,8 @@ const ARCHIVOS = [
   'datos/procesados/mapa/red_hidrografica.geojson',
   'datos/procesados/mapa/confluencias.geojson',
   'datos/procesados/mapa/toponimia_hidrografica.geojson',
+  // Tramos que conectan cada mecanismo con la red (scripts/99_reubicacion.py), como en mapa/.
+  'datos/procesados/mapa/red_mecanismos.geojson',
 ];
 
 // Para el mapa del panel: la red hidrografica completa pesa 2 MB. Se recorta a los rios de

@@ -17,7 +17,7 @@ export function filtrar(alertas, { estado, nivel, estacion }) {
 export const Nivel = ({ nivel }) => <span className={'nivel ' + nivel}>{txt(nivel)}</span>;
 
 export default function ListaAlertas({ alertas, filtros, setFiltros, sel, onElegir, conectado }) {
-  const { estaciones, nombreEstacion, unidad, escuelasDe } = useDatos();
+  const { estaciones, mecanismos = {}, nombreEstacion, unidad, escuelasDe } = useDatos();
   const lista = filtrar(alertas, filtros);
   const cambia = (k) => (e) => setFiltros({ ...filtros, [k]: e.target.value });
   return (
@@ -46,6 +46,9 @@ export default function ListaAlertas({ alertas, filtros, setFiltros, sel, onEleg
           <label>Estación
             <select value={filtros.estacion} onChange={cambia('estacion')}>
               <option value="todas">Todas</option>
+              {Object.keys(mecanismos).sort().map((c) => (
+                <option key={c} value={c}>{c.replace('EST-', '')} · {nombreEstacion(c)}</option>
+              ))}
               {Object.keys(estaciones).sort().map((c) => (
                 <option key={c} value={c}>{c.replace('EST-', '')} · {nombreEstacion(c)}</option>
               ))}

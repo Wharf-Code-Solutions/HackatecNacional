@@ -21,6 +21,19 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Módulo B: el mapa de Alertas muestra los mecanismos de agua y ladera
+
+**Qué cambió.** `MapaEstaciones.jsx` dibuja los 10 mecanismos de `mecanismos.json` con el número de `mapa/` (1 a 5
+agua, 6 a 10 ladera) y las 5 del Atoyac como A1 a A5 en un círculo menor y gris. Trae de `mapa/` el pulso de radar
+con alerta abierta, los tramos de conexión (`red_mecanismos.geojson`, copiado por `copiar-datos.mjs`) y la limpieza de
+la base (sin calles ni vías). El filtro de estación de la lista de alertas incluye los mecanismos.
+**Por qué.** Petición del usuario: ver también las estaciones de deslave y que el mapa coincida con el del simulador.
+Verificado con datos de Vercel: 15 estaciones, 12 con alerta.
+**Qué arrastró.** `MapaEstaciones.jsx`, `Panorama.jsx`, `ListaAlertas.jsx`, `copiar-datos.mjs`, `estilos.css`.
+**Impacto en otros módulos.** Ninguno. La tabla, la matriz y la huella siguen con las 5 del Atoyac.
+
+---
+
 ## 2026-11-24 · Módulo B: «Qué hacer», protocolos de respuesta por tipo de incidente
 
 **Qué cambió.** `contrato/fixtures/protocolos.json` (nuevo, provisional): 11 protocolos (4 de agua por fuente probable, 2
