@@ -53,3 +53,15 @@ export function leeCSV(texto) {
 }
 
 export const porAtender = (a) => a.estado === 'Abierta' || a.estado === 'En atencion';
+
+// Cerrada sola por el motor al normalizarse el valor (D33, responsable «Sistema»). Una simulación rápida abre y cierra una
+// alerta en segundos; si saliera de la lista al cerrarse, nadie la vería. Se queda a la vista, marcada «Se normalizó», hasta
+// que una persona la cierre con su nombre. Solo las de las últimas 24 h de su estación (las viejas son historial).
+export const VENTANA_NORMALIZADA_MS = 24 * 3600 * 1000;
+export function marcarNormalizadas(alertas) {
+  const ultima = {};
+  for (const a of alertas) { const t = Date.parse(a.fecha_hora); if (!(ultima[a.c_estacion] >= t)) ultima[a.c_estacion] = t; }
+  return alertas.map((a) => (a.estado === 'Cerrada' && a.responsable === 'Sistema'
+    && Date.parse(a.fecha_hora) >= ultima[a.c_estacion] - VENTANA_NORMALIZADA_MS ? { ...a, normalizada: true } : a));
+}
+export const enLista = (a) => porAtender(a) || !!a.normalizada;

@@ -21,6 +21,17 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-25 · Módulo B: las alertas que el motor cierra solo se quedan a la vista
+
+**Qué cambió.** `formato.js` (`marcarNormalizadas`, `enLista`): una alerta cerrada por el motor (responsable `Sistema`, D33)
+de las últimas 24 h de su estación sigue en «Por atender», marcada «Se normalizó», hasta que una persona la cierra. Lo que
+cierra una persona sale de la lista, como en la entrada anterior.
+**Por qué.** Con la simulación acelerada el motor abría y cerraba la alerta en segundos y el panel parecía no recibir alertas.
+**Qué arrastró.** `App.jsx`, `ListaAlertas.jsx`, `formato.js`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
 ## 2026-11-25 · Módulo B: las alertas cerradas salen de la lista
 
 **Qué cambió.** Revierte la entrada anterior («abre en Todas»). La lista de alertas muestra solo las por atender; se quitó

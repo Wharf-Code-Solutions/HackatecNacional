@@ -1,12 +1,12 @@
 import { useDatos } from '../lib/contexto.js';
 import { PARAM, txt } from '../lib/etiquetas.js';
-import { hora, num, porAtender } from '../lib/formato.js';
+import { enLista, hora, num, porAtender } from '../lib/formato.js';
 
 const ORDEN = { Critica: 0, Preventiva: 1, Informativa: 2 };
 
 export function filtrar(alertas, { estado, nivel, estacion }) {
   return alertas.filter((a) => {
-    if (estado === 'activas' && !porAtender(a)) return false;
+    if (estado === 'activas' && !enLista(a)) return false;
     if (estado !== 'activas' && estado !== 'todas' && a.estado !== estado) return false;
     if (nivel !== 'todos' && a.nivel !== nivel) return false;
     if (estacion !== 'todas' && a.c_estacion !== estacion) return false;
@@ -51,7 +51,9 @@ export default function ListaAlertas({ alertas, filtros, setFiltros, sel, onEleg
             </select>
           </label>
         </div>
-        <p className="conteo">{lista.length} {filtros.estado === 'activas' ? (lista.length === 1 ? 'alerta por atender' : 'alertas por atender') : 'alertas'}</p>
+        <p className="conteo">{filtros.estado === 'activas'
+          ? <>{lista.filter(porAtender).length} por atender{lista.some((a) => a.normalizada) && <> · {lista.filter((a) => a.normalizada).length} se normalizaron solas</>}</>
+          : lista.length + ' alertas'}</p>
       </div>
       <ol className="alertas">
         {!lista.length && (
@@ -68,7 +70,7 @@ export default function ListaAlertas({ alertas, filtros, setFiltros, sel, onEleg
               <Nivel nivel={a.nivel} />
               <span className="cuando">{hora(a.fecha_hora)}</span>
               <span className="que">{PARAM[a.c_parametro] || a.c_parametro} {num(a.valor)}{unidad(a)}</span>
-              <span className="estado">{txt(a.estado)}</span>
+              <span className="estado">{a.normalizada ? 'Se normalizó' : txt(a.estado)}</span>
               <span className="donde">{a.c_estacion.replace('EST-', '')} · {nombreEstacion(a.c_estacion)}
                 {escuelasDe(a).length > 0 && <> · <b className="afecta">{escuelasDe(a).length} {escuelasDe(a).length === 1 ? 'escuela' : 'escuelas'}</b></>}</span>
             </button>

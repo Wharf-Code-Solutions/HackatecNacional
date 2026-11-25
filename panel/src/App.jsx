@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useRuta } from './lib/ruta.js';
 import { Datos, ayudantes, conAutorizaciones } from './lib/contexto.js';
 import { useBackend, useDatosFijos } from './lib/datos.js';
-import { hora, porAtender } from './lib/formato.js';
+import { enLista, hora, marcarNormalizadas, porAtender } from './lib/formato.js';
 import { REPORTE_ABIERTO } from './lib/etiquetas.js';
 import Autorizaciones from './componentes/Autorizaciones.jsx';
 import Avisos from './componentes/Avisos.jsx';
@@ -49,7 +49,7 @@ export default function App() {
   // del panel. El backend las sigue conociendo; el panel ni pide sus lecturas ni muestra sus alertas.
   const codigos = useMemo(() => (fijos ? Object.keys(fijos.mecanismos || {}).sort() : []), [fijos]);
   const beTodo = useBackend(codigos);
-  const be = useMemo(() => ({ ...beTodo, alertas: beTodo.alertas.filter((a) => codigos.includes(a.c_estacion)) }), [beTodo, codigos]);
+  const be = useMemo(() => ({ ...beTodo, alertas: marcarNormalizadas(beTodo.alertas.filter((a) => codigos.includes(a.c_estacion))) }), [beTodo, codigos]);
   // Los trámites registrados desde el panel se sobreponen a los de los fixtures (activo/propuesto en todo el panel).
   const ctx = useMemo(() => (fijos ? ayudantes(conAutorizaciones(fijos, be.autorizaciones)) : null), [fijos, be.autorizaciones]);
   // Sección, vista, escuela abierta y página de reportes viven en la URL (lib/ruta.js): Atrás regresa.
@@ -63,13 +63,13 @@ export default function App() {
   const abrirEscuela = (cct) => { ir({ seccion: 'escuelas', escuela: cct }); window.scrollTo(0, 0); };
   useEffect(() => { window.scrollTo(0, 0); }, [seccion, vista, paginaReportes]);
   const [sel, setSel] = useState(null);
-  // La lista muestra lo que falta atender; una alerta cerrada sale de la lista (queda en el filtro «Cerrada»).
+  // La lista muestra lo que falta atender y lo que el motor cerró solo hace poco; lo que cierra una persona sale de la lista.
   const [filtros, setFiltros] = useState({ estado: 'activas', nivel: 'todos', estacion: 'todas' });
 
   const demo = be.origen.modo === 'demo';
   const activas = be.alertas.filter(porAtender).length;
   // Si la alerta abierta en el expediente se cierra (el motor la cierra al normalizarse, D33), sale también de ahí.
-  const selCerrada = sel && filtros.estado === 'activas' && be.alertas.some((a) => a.c_alerta === sel && !porAtender(a));
+  const selCerrada = sel && filtros.estado === 'activas' && be.alertas.some((a) => a.c_alerta === sel && !enLista(a));
   useEffect(() => { if (selCerrada) setSel(null); }, [selCerrada]);
   const nAvisos = contarAvisos(be.veredictos);
   const conteo = { alertas: activas, avisos: nAvisos };
