@@ -63,6 +63,15 @@
   Agua.prototype.agregaEvento = function (tipo, t0) {
     this.eventos.push({ tipo: tipo, t0: t0, dur: EVENTOS[tipo].dur });
   };
+  // Detiene la prueba `tipo` en t: la descarga o la lluvia sale con la misma rampa de 30 min, sin corte.
+  Agua.prototype.detiene = function (tipo, t) {
+    this.eventos.forEach(function (ev) {
+      if (ev.tipo === tipo && t >= ev.t0 && t < ev.t0 + ev.dur) ev.dur = Math.min(ev.dur, (t - ev.t0) + RAMPA);
+    });
+  };
+  Agua.prototype.enCurso = function (tipo, t) {
+    return this.eventos.some(function (ev) { return ev.tipo === tipo && t >= ev.t0 && t < ev.t0 + ev.dur; });
+  };
   Agua.prototype._env = function (ev, t) {
     var x = t - ev.t0;
     if (x <= 0 || x >= ev.dur) return 0;
@@ -171,6 +180,13 @@
     var e = EVENTOS_LADERA[tipo], fin = 0;
     e.lluvias.forEach(function (l) { fin = Math.max(fin, l[0] + l[1]); });
     this.eventos.push({ tipo: tipo, t0: t0, def: e, fin: t0 + fin * 3600 });
+  };
+  // Detiene la prueba `tipo`: la lluvia cesa en seco; la humedad y la inclinación ya acumuladas se quedan.
+  Ladera.prototype.detiene = function (tipo, t) {
+    this.eventos = this.eventos.filter(function (ev) { return !(ev.tipo === tipo && t >= ev.t0 && t < ev.fin); });
+  };
+  Ladera.prototype.enCurso = function (tipo, t) {
+    return this.eventos.some(function (ev) { return ev.tipo === tipo && t >= ev.t0 && t < ev.fin; });
   };
   // Intensidad de la lluvia en t, mm/h: hietogramas triangulares que suman sus mm.
   Ladera.prototype.intensidad = function (t) {

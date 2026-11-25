@@ -105,7 +105,13 @@
     Array.prototype.forEach.call(document.querySelectorAll('.ev'), function (b) {
       var deLadera = !!M.EVENTOS_LADERA[b.dataset.ev];
       b.hidden = deLadera !== (estado.tipo === 'ladera');
-      b.onclick = function () { (deLadera ? actual().ladera : actual().agua).agregaEvento(b.dataset.ev, actual().fw.t); };
+      b.dataset.texto = b.textContent;
+      // El mismo botón inicia la prueba y la detiene; mientras corre queda en azul.
+      b.onclick = function () {
+        var s = actual(), sim = deLadera ? s.ladera : s.agua, t = s.fw.t;
+        if (sim.enCurso(b.dataset.ev, t)) sim.detiene(b.dataset.ev, t); else sim.agregaEvento(b.dataset.ev, t);
+        marcaPruebas(s);
+      };
     });
     $('btnCorte').onclick = function () { var s = actual(); s.enlace.caido = !s.enlace.caido; refresca(); };
 
@@ -119,6 +125,13 @@
     requestAnimationFrame(bucle);
   }
 
+  function marcaPruebas(s) {
+    Array.prototype.forEach.call(document.querySelectorAll('.ev'), function (b) {
+      if (b.hidden) return;
+      var sim = M.EVENTOS_LADERA[b.dataset.ev] ? s.ladera : s.agua, on = sim.enCurso(b.dataset.ev, s.fw.t);
+      b.classList.toggle('activo', on);
+    });
+  }
   function actual() { return estado.por[estado.sel]; }
   // La reubicada se nombra por la localidad de su escuela; la del Atoyac, por su río.
   function lugar(e) { return e.localidad || nombre(e.cuerpo_agua); }
@@ -162,7 +175,7 @@
     $('relojFecha').textContent = M.iso(s.fw.t).substr(0, 10);
     $('relojHora').textContent = M.iso(s.fw.t).substr(11, 8);
     var al = estado.alarma = alarmaVigente(s);
-    Recepcion.pinta(s);
+    Recepcion.pinta(s); marcaPruebas(s);
     var linea = $('alarmaLinea');
     linea.hidden = !al;
     if (al) linea.textContent = 'Alarma: ' + NOMBRE[al.c_parametro] + ', ' + al.fecha_hora.substr(11, 5) + '.';

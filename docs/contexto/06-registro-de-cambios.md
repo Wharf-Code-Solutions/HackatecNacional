@@ -21,6 +21,14 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · M4: los botones de prueba inician y detienen la simulación
+
+**Qué cambió.** Cada botón de prueba del simulador inicia la simulación y se pone azul; al pulsarlo de nuevo la detiene y recupera su color. En el agua la prueba sale con la rampa de 30 min; en la ladera la lluvia se corta y lo acumulado (humedad, inclinación) se queda (`detiene` y `enCurso` en `modelo.js`).
+**Por qué.** Pedido del usuario: el botón era confuso porque solo iniciaba.
+**Qué arrastró.** `modelo.js`, `ui.js`, `estilos.css`, `index.html` (versiones).
+
+---
+
 ## 2026-11-24 · Módulo B: cifras de Escuelas como tarjetas separadas
 
 **Qué cambió.** Las tres cifras de la pestaña Escuelas son tarjetas separadas, con 16 px entre ellas y hacia el mapa,
