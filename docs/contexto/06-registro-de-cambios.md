@@ -43,6 +43,18 @@ Con el cambio, 20 peticiones simultáneas a un backend recién creado dan 200 y 
 
 ---
 
+## 2026-11-25 · M8: la app se instala aunque se abra sin la diagonal final
+
+**Qué cambió.** `vercel.json` redirige `/ciudadano` a `/ciudadano/`, y `ciudadano/index.html` pide el manifiesto y los
+íconos con `%BASE_URL%` (`/ciudadano/…`) en lugar de `./`.
+**Por qué.** En `/ciudadano` (sin diagonal) Vercel servía la app, pero `./manifest.webmanifest` se resolvía a la raíz (404)
+y el service worker (alcance `/ciudadano/`) no controlaba la página: Chrome en Android decía «No se puede instalar esta
+app». Los íconos PNG de la entrada anterior no eran la causa.
+**Qué arrastró.** `vercel.json`, `ciudadano/index.html`.
+**Impacto en otros módulos.** Módulo C (Carlos): compartir la dirección con la diagonal final; la redirección cubre la otra.
+
+---
+
 ## 2026-11-25 · M7 y M8: el panel siempre tiene datos y la app se instala en Android
 
 **Qué cambió.** El panel usa siempre como base una foto fija (`panel/public/demo/foto.json`): 24 h de los 10 mecanismos
