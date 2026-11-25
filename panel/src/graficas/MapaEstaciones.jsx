@@ -63,6 +63,12 @@ export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir,
         fitBoundsOptions: { padding: { top: 40, bottom: 60, left: 50, right: 80 } }, minZoom: 6, maxZoom: 17, cooperativeGestures: true,
       });
       mapa.current = m;
+      // El lienzo cambia de alto con la tarjeta (en Alertas iguala a la de al lado): el mapa se ajusta solo.
+      if (window.ResizeObserver && caja.current) {
+        const ro = new ResizeObserver(() => { try { m.resize(); } catch (e) { /* ya se quitó */ } });
+        ro.observe(caja.current);
+        m.once('remove', () => ro.disconnect());
+      }
       window.mapaPanel = m;   // para depurar desde la consola, como window.mapaAtoyac en mapa/
       m.touchZoomRotate.disableRotation();
       m.addControl(new gl.NavigationControl({ showCompass: false }), 'top-left');

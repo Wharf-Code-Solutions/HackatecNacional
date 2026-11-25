@@ -21,6 +21,17 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-25 · Módulo B: el mapa de Alertas llena el alto de su tarjeta
+
+**Qué cambió.** En la pestaña Alertas la tarjeta del mapa es una columna y el mapa ocupa el alto que le sobra (mínimo
+420 px; 340 en teléfono), igualando la tarjeta de la matriz. `MapaEstaciones.jsx` observa el tamaño del lienzo
+(`ResizeObserver`) y llama a `resize()` para redibujarse.
+**Por qué.** Petición del usuario: la matriz creció con los mecanismos y quedaba un hueco en blanco bajo el mapa.
+**Qué arrastró.** `estilos.css`, `MapaEstaciones.jsx`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
 ## 2026-11-25 · Módulo C: alarma de deslave en la app ciudadana
 
 **Qué cambió.** Con la app abierta, cada 10 s consulta `GET /alertas?nivel=Critica&abiertas=1&modulo=ladera` (filtros nuevos
