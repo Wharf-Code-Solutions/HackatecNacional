@@ -260,7 +260,7 @@ function Detalle({ it, nombreSitio, onCerrar, cambiar, ocupado }) {
   );
 }
 
-export default function Reportes({ reportes, prioridades, huella, conectado, guardarReporte, refrescar, demo }) {
+export default function Reportes({ reportes, prioridades, huella, conectado, guardarReporte, refrescar, demo, pagina, setPagina }) {
   const { nombresSitio } = useDatos();
   const nombreSitio = (c) => (c && nombresSitio[c] ? nombresSitio[c] : c ? c : 'Sin cauce cerca');
   const [pestana, setPestana] = useState('activas');
@@ -270,7 +270,7 @@ export default function Reportes({ reportes, prioridades, huella, conectado, gua
   const [calor, setCalor] = useState(true);
   const [ocupado, setOcupado] = useState(false);
   const [aviso, setAviso] = useState(null);
-  const [pagina, setPagina] = useState('incidencias');   // incidencias | dashboard, como /admin y /admin/dashboard de SIGRIV
+  // pagina (incidencias | dashboard, como /admin y /admin/dashboard de SIGRIV) la lleva App: se elige en el menú de la barra.
 
   const items = useMemo(() => elementos(pestana, reportes, prioridades), [pestana, reportes, prioridades]);
   const tipos = useMemo(() => {
@@ -334,12 +334,6 @@ export default function Reportes({ reportes, prioridades, huella, conectado, gua
             </div>
             <div className="lateral-derecha">
               <div className="contador-total">{items.length} {pestana === 'activas' ? (items.length === 1 ? 'activo' : 'activos') : 'en esta lista'}</div>
-              <button type="button" className="btn-dashboard" onClick={() => setPagina('dashboard')}>
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
-                  <path d="M4 20V10M10 20V4M16 20v-7M22 20H2" />
-                </svg>
-                Dashboard
-              </button>
             </div>
           </div>
           <div className="pestanas-sigriv" role="tablist">

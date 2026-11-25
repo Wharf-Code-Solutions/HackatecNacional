@@ -21,6 +21,17 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Módulo B: menú de Reportes ciudadanos y tarjeta de reporte sin franja
+
+**Qué cambió.** La pestaña "Reportes ciudadanos" de la barra es un menú desplegable (`MenuSeccion.jsx`, nuevo) con
+Reportes y Estadísticas, que marca la opción actual; la página la lleva `App.jsx` y se quitó el botón "Dashboard" de la
+cabecera de la lista. La tarjeta de detalle de un reporte (`.incidente-cabeza`) ya no tiene la franja dorada superior.
+**Por qué.** Petición del usuario: el botón quedaba amontonado y la franja se confundía con la navegación.
+**Qué arrastró.** `App.jsx`, `Reportes.jsx` (recibe `pagina` y `setPagina`), `estilos.css`.
+**Impacto en otros módulos.** C: `Reportes.jsx` cambió poco (sin botón Dashboard; la página llega por props).
+
+---
+
 ## 2026-11-24 · M2 y módulo A: reglas de derrumbe y umbral de humedad calibrado por ladera
 
 **Qué cambió.** `motor/reglas.py` evalúa el módulo de ladera (`_ladera`): lluvia acumulada en 24 y 72 h (Informativa al p99

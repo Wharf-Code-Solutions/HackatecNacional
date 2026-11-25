@@ -5,6 +5,7 @@ import { hora, porAtender } from './lib/formato.js';
 import { REPORTE_ABIERTO } from './lib/etiquetas.js';
 import Autorizaciones from './componentes/Autorizaciones.jsx';
 import Avisos from './componentes/Avisos.jsx';
+import MenuSeccion from './componentes/MenuSeccion.jsx';
 import Escuelas from './componentes/Escuelas.jsx';
 import Expediente from './componentes/Expediente.jsx';
 import ListaAlertas from './componentes/ListaAlertas.jsx';
@@ -50,6 +51,8 @@ export default function App() {
   const [vista, setVista] = useState('alertas');
   const [sel, setSel] = useState(null);
   const [escuelaSel, setEscuelaSel] = useState(null);
+  // Reportes ciudadanos tiene dos páginas, que se eligen en el menú de la barra (antes, un botón en la lista).
+  const [paginaReportes, setPaginaReportes] = useState('incidencias');
   const [filtros, setFiltros] = useState({ estado: 'activas', nivel: 'todos', estacion: 'todas' });
 
   const demo = be.origen.modo === 'demo';
@@ -83,11 +86,16 @@ export default function App() {
             <span className="navbar-titulo">Escuelas en riesgo</span>
           </div>
           <nav className="secciones" aria-label="Paneles">
-            {SECCIONES.map(([id, nombre, resto, tel]) => (
+            {SECCIONES.map(([id, nombre, resto, tel]) => (id === 'reportes' ? (
+              <MenuSeccion key={id} activa={seccion === id} cuenta={conteoSeccion[id]} actual={paginaReportes}
+                etiqueta={<><span className="largo">{nombre}{resto}</span><span className="tel">{nombre}</span></>}
+                opciones={[['incidencias', 'Reportes'], ['dashboard', 'Estadísticas']]}
+                onElegir={(p) => { setPaginaReportes(p); setSeccion('reportes'); window.scrollTo(0, 0); }} />
+            ) : (
               <button key={id} className={seccion === id ? 'activa' : ''} onClick={() => setSeccion(id)} aria-current={seccion === id ? 'page' : undefined}>
                 {tel ? <><span className="largo">{nombre}</span><span className="tel">{tel}</span></> : nombre}<span className="resto">{resto}</span> {conteoSeccion[id] > 0 && <span className="cuenta">({conteoSeccion[id]})</span>}
               </button>
-            ))}
+            )))}
           </nav>
         </div>
       </header>
@@ -159,7 +167,8 @@ export default function App() {
               onElegirEscuela={(cct) => { setEscuelaSel(cct); setSeccion('escuelas'); window.scrollTo(0, 0); }} />}
             {seccion === 'reportes' && (
               <Reportes reportes={be.reportes} prioridades={be.prioridades} huella={be.huella} conectado={be.conectado}
-                guardarReporte={be.guardarReporte} refrescar={be.refrescar} demo={demo} />
+                guardarReporte={be.guardarReporte} refrescar={be.refrescar} demo={demo}
+                pagina={paginaReportes} setPagina={setPaginaReportes} />
             )}
           </Datos.Provider>
         )}

@@ -421,8 +421,7 @@ main.tablero-main { padding: 0; flex: 1; display: flex; }
   box-shadow: -4px 0 15px rgba(0,0,0,.1); z-index: 100; display: flex; flex-direction: column; color: var(--gob-gris-oscuro);
   animation: entra-derecha .3s ease-out; }
 @keyframes entra-derecha { from { transform: translateX(100%); } to { transform: translateX(0); } }
-.incidente-cabeza { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: 1px solid #eee;
-  border-top: 4px solid var(--gob-dorado); }
+.incidente-cabeza { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: 1px solid #eee; }
 .incidente-etiquetas { display: flex; gap: 8px; flex-wrap: wrap; }
 .tag-folio { background: var(--gob-gris-claro); color: var(--gob-gris-oscuro); padding: 6px 12px; font-weight: 700; font-size: 13px; border-radius: 4px; }
 .tag-prioridad { padding: 6px 12px; font-weight: 700; font-size: 13px; border-radius: 4px; }
@@ -550,3 +549,17 @@ main.tablero-main { padding: 0; flex: 1; display: flex; }
 
 .secciones span.tel { display: none; }
 .secciones span.largo, .secciones span.tel { font-weight: inherit; opacity: 1; }
+
+/* Menú desplegable de la barra (Reportes ciudadanos → Reportes / Estadísticas). */
+.secciones .menu-seccion { font: inherit; font-size: 14px; color: #fff; opacity: .85; background: none; border: 0; border-bottom: 3px solid transparent;
+  padding: 0 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.secciones .menu-seccion:hover { opacity: 1; }
+.secciones .menu-seccion.activa { opacity: 1; font-weight: 600; border-bottom-color: var(--gob-dorado); }
+.menu-seccion .flecha { opacity: .8; }
+.menu-seccion[aria-expanded="true"] .flecha { transform: rotate(180deg); }
+.menu-desplegable { position: fixed; z-index: 60; width: 200px; background: #fff; border: 1px solid var(--linea); border-radius: 6px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.14); padding: 4px 0; }
+.menu-desplegable button { display: block; width: 100%; text-align: left; font: inherit; font-size: 14px; color: var(--titulo);
+  background: none; border: 0; padding: 10px 16px; cursor: pointer; }
+.menu-desplegable button:hover { background: var(--neutro200); }
+.menu-desplegable button.elegida { color: var(--principal); font-weight: 600; box-shadow: inset 3px 0 0 var(--principal); }
