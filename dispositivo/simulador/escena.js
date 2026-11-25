@@ -595,7 +595,52 @@
     // el deslizamiento: una lengua de lodo que baja desde la estaca cuando el inclinómetro marca el salto (pintaLadera)
     G.lodo = new T.Mesh(new T.SphereGeometry(1, 24, 14), mate(0x7a5a3c, { roughness: 1 }));
     G.lodo.visible = false; G.lodo.userData.sinSombra = true; G.escena.add(G.lodo);
+    construyeDeslave();
     return trazo;
+  }
+  // El deslave a la vista: una cicatriz de tierra removida en la ladera, bloques de tierra y piedra que ruedan hasta el arroyo,
+  // la lengua de lodo y una nube de polvo. Todo avanza con `p` (0 a 1, en tiempo real, pintaLadera).
+  var CICATRIZ = { x: 8.6, z: 0.7 };
+  function construyeDeslave() {
+    var r = M.mulberry32(77), tierra = [mate(0x6b4d33, { roughness: 1 }), mate(0x8a6b4a, { roughness: 1 }), mate(0x77705f, { roughness: 0.9 })];
+    G.cicatriz = new T.Mesh(new T.CircleGeometry(1, 28).rotateX(-Math.PI / 2), mate(0x5a3f2a, { roughness: 1 }));
+    G.cicatriz.rotation.z = Math.atan(PENDIENTE);
+    G.cicatriz.position.set(CICATRIZ.x, alturaLadera(CICATRIZ.x, CICATRIZ.z) + 0.07, CICATRIZ.z);
+    G.cicatriz.visible = false; G.cicatriz.userData.sinSombra = true; G.escena.add(G.cicatriz);
+    var geo = new T.DodecahedronGeometry(1, 0);
+    G.bloques = [];
+    for (var i = 0; i < 64; i++) {
+      var m = new T.Mesh(geo, tierra[(r() * 3) | 0]), t = 0.2 + r() * 0.5;
+      m.scale.set(t * (0.8 + r() * 0.5), t * 0.8, t * (0.8 + r() * 0.5));
+      m.visible = false; m.userData.sinSombra = true; G.escena.add(m);
+      G.bloques.push({ m: m, t: t, x0: 7.0 + r() * 3.8, z0: -0.8 + r() * 2.8, x1: 4.0 + r() * 2.6, z1: -1.0 + r() * 3.2,
+        espera: r() * 0.3, rebotes: 2 + ((r() * 4) | 0), giro: [r() * 9, r() * 9, r() * 9] });
+    }
+    G.polvo = [];
+    for (var j = 0; j < 7; j++) {
+      var d = new T.Mesh(new T.SphereGeometry(1, 12, 10), new T.MeshBasicMaterial({ color: 0xb59a78, transparent: true, opacity: 0, depthWrite: false, fog: false }));
+      d.visible = false; d.userData.sinSombra = true; G.escena.add(d); G.polvo.push({ m: d, x: 7.4 + r() * 3, z: -0.2 + r() * 2.2, v: 0.6 + r() * 0.8 });
+    }
+  }
+  function pintaDeslave(p) {
+    G.cicatriz.visible = p > 0.01;
+    G.cicatriz.scale.set(4.8 * Math.min(1, p * 2.5), 1, 3.4 * Math.min(1, p * 2.5));
+    G.bloques.forEach(function (b) {
+      var u = M.acota((p - b.espera * 0.5) / (1 - b.espera * 0.5), 0, 1), e = u * u * (3 - 2 * u);
+      b.m.visible = u > 0 && u < 1.001;
+      if (!b.m.visible) return;
+      var x = b.x0 + (b.x1 - b.x0) * e, z = b.z0 + (b.z1 - b.z0) * e;
+      b.m.position.set(x, alturaLadera(x, z) + b.t * 0.5 + 0.3 * Math.abs(Math.sin(e * b.rebotes * Math.PI)) * (1 - e), z);
+      b.m.rotation.set(b.giro[0] * e, b.giro[1] * e, b.giro[2] * e);
+    });
+    G.polvo.forEach(function (d) {
+      var o = 0.45 * (1 - p) * Math.min(1, p * 6);
+      d.m.visible = p > 0.01 && p < 0.995;
+      d.m.material.opacity = o;
+      var x = d.x - 3.2 * p * d.v;
+      d.m.position.set(x, alturaLadera(x, d.z) + 0.5 + 1.6 * p * d.v, d.z);
+      d.m.scale.setScalar(0.5 + 1.8 * p * d.v);
+    });
   }
   // La lluvia: trazos que caen; se ven tantos como la intensidad (0 a 1) del modelo (caeLluvia). Sirve a las dos figuras.
   function construyeLluvia() {
@@ -625,11 +670,11 @@
   function clima(k) {
     if (G.clima !== undefined && Math.abs(k - G.clima) < 0.004) return;
     G.clima = k;
-    G.sol.intensity = 1.6 * (1 - 0.62 * k);
+    G.sol.intensity = 1.6 * (1 - 0.72 * k);
     G.sol.color.setHex(0xfff4e4).lerp(new T.Color(0xc4cdd6), k);
-    G.cieloLuz.intensity = 0.42 * (1 - 0.3 * k);
-    G.boveda.material.color.setRGB(1 - 0.52 * k, 1 - 0.5 * k, 1 - 0.44 * k);
-    G.matNube.color.setRGB(1 - 0.5 * k, 1 - 0.5 * k, 1 - 0.46 * k);
+    G.cieloLuz.intensity = 0.42 * (1 - 0.42 * k);
+    G.boveda.material.color.setRGB(1 - 0.62 * k, 1 - 0.6 * k, 1 - 0.54 * k);
+    G.matNube.color.setRGB(1 - 0.6 * k, 1 - 0.6 * k, 1 - 0.55 * k);
     G.escena.fog.color.setHex(HORIZONTE).multiply(G.boveda.material.color);
   }
   function pintaLadera(s, nom, dtr) {
@@ -638,24 +683,25 @@
     G.matSueloL.color.setRGB(1 - 0.12 * k, 1 - 0.12 * k, 1 - 0.1 * k);
     G.estaca.rotation.z = L.incl * EXAGERA_INCL * Math.PI / 180;                        // hacia abajo del cerro
     // lluvia: hasta 1 400 trazos con 40 mm/h
-    var mmh = L.intensidad(fw.t), lluvia = suaviza('lluviaL', M.acota(mmh / 40, 0, 1), dtr);
+    var mmh = L.intensidad(fw.t), lluvia = suaviza('lluviaL', M.acota(mmh / 15, 0, 1), dtr);   // 15 mm/h ya es lluvia fuerte para el dibujo
     caeLluvia(lluvia, dtr);
     // el arroyo crece y corre más rápido con la lluvia del modelo (sin lluvia, ≈ 0.4 m/s dibujado)
     G.creceL = (G.creceL || 0) + (lluvia - (G.creceL || 0)) * Math.min(1, dtr * 0.8);
     clima(G.creceL);                                                                    // y el día se oscurece con la tormenta
     nivelArroyo(G.fondoArroyo + NIVEL_ARROYO.base + NIVEL_ARROYO.crece * G.creceL);
     G.ondasL.offset.y = (G.ondasL.offset.y + (0.4 + 1.6 * G.creceL) * dtr / 3) % 1;
-    // deslizamiento: pasado 1° de cambio (el salto del deslave), una lengua de lodo baja de la estaca al arroyo
-    var kd = M.acota((L.incl - 1.0) / 2.8, 0, 1);
-    G.lodo.visible = kd > 0;
-    if (kd > 0) {
-      var xl = 9.6 - 5.0 * kd, zl = 0.9;
+    // deslizamiento: pasado 1° de cambio (el salto del deslave) la ladera cede. `p` avanza en tiempo real (≈ 5 s)
+    var kd = M.acota((L.incl - 1.0) / 2.8, 0, 1), p = suaviza('lodo', M.acota(kd * 3, 0, 1), dtr, 2.0);
+    pintaDeslave(p);
+    G.lodo.visible = p > 0.01;
+    if (G.lodo.visible) {
+      var xl = 9.4 - 5.2 * p, zl = 0.9;
       G.lodo.position.set(xl, alturaLadera(xl, zl) + 0.12, zl);
       G.lodo.rotation.z = Math.atan(PENDIENTE);
-      G.lodo.scale.set(0.7 + 1.1 * kd, 0.28, 1.0);
+      G.lodo.scale.set(0.8 + 2.4 * p, 0.34, 1.0 + 1.1 * p);
     }
     G.matArroyo.color.setHex(G.creceL > 0.3 ? 0x7b6f58 : 0x5f7f86);                      // turbia con la crecida
-    G.matArroyo.color.lerp(new T.Color(0x6a4d33), 0.85 * kd); G.matCaraArroyo.color.copy(G.matArroyo.color);   // y marrón con el lodo
+    G.matArroyo.color.lerp(new T.Color(0x6a4d33), 0.85 * p); G.matCaraArroyo.color.copy(G.matArroyo.color);   // y marrón con el lodo
     var midiendo = nom === 'CALENTAMIENTO' || nom === 'MEDICIÓN';
     Object.keys(G.puntasL).forEach(function (q) {
       var son = s.sondas[q], fa = son && son.falla !== 'ninguna';
@@ -926,7 +972,7 @@
     { id: 'barrera', nombre: 'Barrera', ancla: [(COL.a[0] + COL.e[0]) / 2, SUP_AGUA + 0.7, (COL.a[1] + COL.e[1]) / 2], lado: 'izq', vista: 'barrera' },
     { id: 'banda', nombre: 'Banda', ancla: cwa(1.25, 2.4, 0), lado: 'izq', vista: 'banda' },
     { id: 'contenedor', nombre: 'Contenedor', ancla: cwa(BANDA.bin, 0.2, 0), lado: 'der', vista: 'contenedor' },
-    { id: 'rio', nombre: 'Corriente', ancla: [3.4, SUP_AGUA, 0.2], lado: 'der' }
+    { id: 'rio', nombre: 'Corriente', ancla: [3.4, SUP_AGUA, 0.2], lado: 'der', siempre: true }
   ];
 
   function corto(t, n) { return t.length > n ? t.slice(0, n - 1).replace(/[\s,]+\S*$/, '') + '…' : t; }
@@ -938,9 +984,9 @@
       { id: 'ctrl', nombre: 'Gabinete', ancla: S([-4.62, 2.15, 0.45]), lado: 'izq', vista: 'gabinete' },
       { id: 'panel', nombre: 'Energía', ancla: S([-5.1, 4.95, 0.2]), lado: 'izq', vista: 'energia' },
       { id: 'torre', nombre: 'Comunicación', ancla: [G.torreTope.x + 0.4, G.torreTope.y + 0.6, G.torreTope.z], lado: 'izq', vista: 'enlace' },
-      { id: 'escuela', nombre: 'Escuela', ancla: G.anclaEscuela, lado: 'der', fijo: corto((est && est.escuela) || '', 30) },
+      { id: 'escuela', nombre: 'Escuela', ancla: G.anclaEscuela, lado: 'der', siempre: true, fijo: corto((est && est.escuela) || '', 30) },
       // río arriba, lejos de los rótulos de la estación
-      { id: 'cauce', nombre: 'Cauce', ancla: [ejeArroyo(-24), PIE - ARROYO.hondo + NIVEL_ARROYO.base, -24], lado: 'der',
+      { id: 'cauce', nombre: 'Cauce', ancla: [ejeArroyo(-24), PIE - ARROYO.hondo + NIVEL_ARROYO.base, -24], lado: 'der', siempre: true,
         fijo: est && est.distancia_cauce_m != null ? 'A ' + est.distancia_cauce_m + ' m' : 'Junto a la escuela' }
     ];
     if (est && (est.parametros || []).indexOf('INCL') >= 0) r.splice(2, 0, { id: 'incl', nombre: 'Inclinómetro', ancla: G.anclaIncl.toArray(), lado: 'der', vista: 'ladera' });
@@ -1069,7 +1115,7 @@
     var z = -30, xe = ejeRio(z) - 6.45, tub = mate(0x6f7b84, { roughness: 0.5 });   // al inicio del tramo: lo vertido corre río abajo
     var t = cilindro(0.55, 6, tub, xe - 3, 1.05, z, null, 20); t.rotation.z = Math.PI / 2;
     var boca = cilindro(0.59, 0.25, mate(TINTA), xe, 1.05, z, null, 20); boca.rotation.z = Math.PI / 2;
-    G.matDescarga = new T.MeshStandardMaterial({ color: 0xbf8a2e, roughness: 0.3, transparent: true, opacity: 0.9, depthWrite: false });
+    G.matDescarga = new T.MeshStandardMaterial({ color: 0xd48a14, roughness: 0.3, transparent: true, opacity: 0.9, depthWrite: false });
     // el chorro: gotas alargadas que salen de la boca, caen en arco y se reciclan; se ven tantas como el caudal (pintaDescarga)
     G.gotas = []; G.xBoca = xe + 0.14; G.zBoca = z;
     var geoGota = new T.SphereGeometry(1, 10, 8);
@@ -1094,16 +1140,16 @@
   var DESCARGAS = ['descarga_industrial', 'descarga_organica'];
   function pintaPluma(base, s, ind, org, vel, dtr) {
     var zp = G.zBoca, paso = EXAGERA_CORRIENTE * vel * 1.5 * dtr, activa = s > 0.02;
-    if (G.cabeza === undefined) { G.cabeza = G.cola = zp; G.ampD = 0; G.colD = new T.Color(0xbf8a2e); G.cofD = 0.85; }
+    if (G.cabezaP === undefined) { G.cabezaP = G.colaP = zp; G.ampD = 0; G.colD = new T.Color(0xd48a14); G.cofD = 0.85; }
     if (activa) {
-      G.ampD = s; G.cola = zp; G.cabeza = Math.min(G.cabeza + paso, Z_CORTE + 12);
-      G.colD.setHex(ind >= org ? 0xbf8a2e : 0x4a5a30); G.cofD = ind >= org ? 0.85 : 0.7;
-    } else if (G.cola < G.cabeza) {
-      G.cola += paso;
-      if (G.cola >= G.cabeza) { G.cabeza = G.cola = zp; G.ampD = 0; }
+      G.ampD = s; G.colaP = zp; G.cabezaP = Math.min(G.cabezaP + paso, Z_CORTE + 12);
+      G.colD.setHex(ind >= org ? 0xd48a14 : 0x4a5a30); G.cofD = ind >= org ? 1 : 0.85;
+    } else if (G.colaP < G.cabezaP) {
+      G.colaP += paso;
+      if (G.colaP >= G.cabezaP) { G.cabezaP = G.colaP = zp; G.ampD = 0; }
     }
     G.tmpC = G.tmpC || new T.Color();
-    function en(z) { return suave((G.cabeza - z) / 3) * suave((z - G.cola) / 3) * G.ampD * G.cofD; }
+    function en(z) { return suave((G.cabezaP - z) / 3) * suave((z - G.colaP) / 3) * G.ampD * G.cofD; }
     for (var i = 0; i < G.supZ.length; i++) {
       G.tmpC.copy(base).lerp(G.colD, en(G.supZ[i]));
       G.supCol[i * 3] = G.tmpC.r; G.supCol[i * 3 + 1] = G.tmpC.g; G.supCol[i * 3 + 2] = G.tmpC.b;
@@ -1121,7 +1167,7 @@
       if (!g.visible) return;
       var u = (i / n + G.tFlujo) % 1;                            // 0 en la boca, 1 en el agua
       g.position.set(x0 + 0.5 * u, 1.08 - 1.15 * u * u, z0 + 0.15 * Math.sin(i * 2.4));
-      g.scale.set(0.14, 0.14 + 0.16 * u, 0.14);
+      g.scale.set(0.22, 0.22 + 0.22 * u, 0.22);
     });
     G.canal.visible = v > 0.02;
     G.canal.scale.set(1.2, 1, 0.3 + 0.5 * v);
@@ -1144,7 +1190,29 @@
       capa.appendChild(d);
       r.el = d; r.v = new T.Vector3(r.ancla[0], r.ancla[1], r.ancla[2]);
       if (r.vista) d.addEventListener('click', function () { irA(r.vista); });
+      // Los demás rótulos aparecen al pasar el cursor sobre su pieza: en su lugar, un punto discreto.
+      if (!r.siempre) {
+        r.punto = document.createElement('div'); r.punto.className = 'punto3d' + (r.vista ? ' clic' : '');
+        capa.appendChild(r.punto);
+        if (r.vista) r.punto.addEventListener('click', function () { irA(r.vista); });
+      }
     });
+    var cont = $('escena3d');
+    cont.addEventListener('mousemove', function (ev) {
+      if (G.vista !== 'general' || G.trans) return;
+      var rc = G.lienzo.getBoundingClientRect(), x = ev.clientX - rc.left, y = ev.clientY - rc.top, mejor = null, md = 1600;
+      if (G.hover && G.hover.el) {                              // sigue visible mientras el cursor esté sobre su rótulo
+        var rr = G.hover.el.getBoundingClientRect();
+        if (ev.clientX >= rr.left - 8 && ev.clientX <= rr.right + 8 && ev.clientY >= rr.top - 8 && ev.clientY <= rr.bottom + 8) return;
+      }
+      ROTULOS.forEach(function (r) {
+        if (!r.enVista || r.siempre) return;
+        var d = (r.px - x) * (r.px - x) + (r.py - y) * (r.py - y);
+        if (d < md) { md = d; mejor = r; }
+      });
+      if (mejor !== G.hover) { G.hover = mejor; visibilidad(); }
+    });
+    cont.addEventListener('mouseleave', function () { if (G.hover) { G.hover = null; visibilidad(); } });
     G.lineas = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     G.lineas.setAttribute('class', 'lineas3d');
     capa.appendChild(G.lineas);
@@ -1167,15 +1235,26 @@
     G.volver.addEventListener('click', function () { irA('general'); });
     $('escena3d').appendChild(G.volver);
   }
+  // Rótulo visible: los fijos, el que está bajo el cursor y el que está en alarma; los demás, solo su punto.
+  function visibilidad() {
+    ROTULOS.forEach(function (r) {
+      if (!r.el) return;
+      var ver = r.enVista && (r.siempre || r === G.hover || r.mal);
+      r.el.style.display = ver ? '' : 'none';
+      if (r.punto) r.punto.style.display = r.enVista && !ver ? '' : 'none';
+    });
+  }
   function colocaRotulos() {
     var w = G.lienzo.clientWidth, h = G.lienzo.clientHeight, quieto = !G.trans;
     function pantalla(v) { var p = v.clone().project(G.camara); return { x: (p.x + 1) / 2 * w, y: (1 - p.y) / 2 * h, z: p.z }; }
     ROTULOS.forEach(function (r) {
       var p = pantalla(r.v);
+      r.px = p.x; r.py = p.y; r.enVista = p.z < 1 && G.vista === 'general' && quieto;
       r.el.style.left = p.x.toFixed(1) + 'px';
       r.el.style.top = p.y.toFixed(1) + 'px';
-      r.el.style.display = p.z < 1 && G.vista === 'general' && quieto ? '' : 'none';
+      if (r.punto) { r.punto.style.left = p.x.toFixed(1) + 'px'; r.punto.style.top = p.y.toFixed(1) + 'px'; }
     });
+    visibilidad();
     var activo = G.vista !== 'general' && quieto ? G.detalle[G.vista] : null;
     G.lineas.style.display = activo ? '' : 'none';
     var dx = Math.min(0.22 * w, 280);
@@ -1204,6 +1283,8 @@
     var e = $('rv_' + id);
     if (e.textContent !== texto) e.textContent = texto;
     e.classList.toggle('mal', !!alarma);
+    var r = ROTULOS.filter(function (q) { return q.id === id; })[0];
+    if (r && r.mal !== !!alarma) { r.mal = !!alarma; visibilidad(); }
   }
   function pintaDetalle(e) {
     var det = G.detalle[G.vista];

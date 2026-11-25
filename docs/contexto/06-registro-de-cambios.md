@@ -21,6 +21,15 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · M4: deslave gráfico, lluvia que oscurece y rótulos al pasar el cursor
+
+**Qué cambió.** Deslave: cicatriz en la ladera, hasta 64 bloques que ruedan al arroyo, polvo y lodo, en tiempo real. La lluvia oscurece más el día (sol, cielo, nubes). Tubo de descarga al inicio del tramo, con la pluma corriendo río abajo. En las dos vistas generales los rótulos salen al pasar el cursor sobre un punto; fijos: Escuela y Cauce (ladera), Corriente (río) y los que estén en alarma.
+**Por qué.** Pedido del usuario: el deslave no se veía, la lluvia no oscurecía y las etiquetas se encimaban.
+**Qué arrastró.** `escena.js`, `estilos.css`, `index.html` (versiones). Verificado en Chrome sin ventana (río con descarga y lluvia, ladera con deslave); el hover no se probó con cursor real ni en pantalla táctil.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
 ## 2026-11-24 · M5: aviso por correo en cada paso del reporte
 
 **Qué cambió.** Además del recibo al crear, `PATCH /reportes/<c_reporte>` manda un correo cada vez que el reporte pasa

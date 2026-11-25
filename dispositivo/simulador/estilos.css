@@ -85,3 +85,7 @@ select { font: inherit; font-size: 13px; color: var(--tinta); background: var(--
 .rot3d .mod { display: block; color: var(--tenue); font-size: 11.5px; font-weight: 600; }
 
 .boton.ev.activo { background: var(--agua); border-color: var(--agua); color: #fff; }
+
+.punto3d { position: absolute; width: 9px; height: 9px; border-radius: 50%; background: var(--tinta); border: 2px solid #fff;
+  box-sizing: content-box; transform: translate(-50%, -50%); }
+.punto3d.clic { pointer-events: auto; cursor: pointer; }
