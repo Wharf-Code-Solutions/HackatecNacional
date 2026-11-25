@@ -625,3 +625,9 @@ main.tablero-main { padding: 0; flex: 1; display: flex; }
    relleno superior en 0 y las cifras quedaban pegadas al encabezado). */
 main.contenedor { padding-top: 16px; }
 .vista > .resumen { margin-bottom: 16px; }
+
+/* Una sola separación entre bloques de cada vista: 16 px, en vertical y entre columnas. Los márgenes propios de
+   cada bloque se anulan para que no se sumen ni falten (antes había huecos de 0 y de 24 px). */
+.vista { display: flex; flex-direction: column; gap: 16px; }
+.vista > * { margin-top: 0 !important; margin-bottom: 0 !important; }
+.trabajo { gap: 16px; }

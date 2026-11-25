@@ -21,6 +21,16 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-25 · Módulo B: 16 px entre todas las tarjetas
+
+**Qué cambió.** `.vista` separa sus bloques con `gap: 16px` y anula los márgenes propios de cada bloque; `.trabajo` también
+usa 16 px entre columnas. Antes había bloques pegados (0 px: Autorizaciones, Escuelas) y otros a 24 px (Alertas).
+**Por qué.** Petición del usuario: que las tarjetas no se vean pegadas, con la misma separación de 16 px.
+**Qué arrastró.** `estilos.css`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
 ## 2026-11-25 · Módulo B: 16 px entre el encabezado y las cifras
 
 **Qué cambió.** `main.contenedor` tiene 16 px de relleno superior y `.vista > .resumen` 16 px abajo: las cifras de Alertas,
