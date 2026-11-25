@@ -94,7 +94,6 @@ main { flex: 1; padding-top: 24px; padding-bottom: 48px; height: auto; }
 .cifra span { display: block; font-size: 14px; color: var(--texto); margin-top: 2px; }
 .cifra small { display: block; font-size: 12.5px; color: var(--tenue); }
 .cifra.critica b { color: var(--error); }
-.cifra.critica { box-shadow: inset 0 4px 0 var(--error); }
 
 /* ---------------------------------------------------------------- gráficas */
 .panorama { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
@@ -227,11 +226,13 @@ ul.lista { margin: 8px 0 0; padding-left: 20px; font-size: 14px; }
 .bloque .nota { margin-top: 8px; }
 
 /* Pie en el verde de la barra, como el de gob.mx. */
-.pie { background: var(--gob-verde); color: #e6ebe9; font-size: 13.5px; padding: 32px 0 36px; border-top: 4px solid var(--gob-dorado); }
-.pie-rejilla { display: grid; grid-template-columns: 2fr 1.4fr 1fr; gap: 24px 40px; }
-.pie-titulo { font-family: var(--titular); color: #fff; font-size: 16px; font-weight: 700; margin-bottom: 8px; }
-.pie ul { margin: 0; padding-left: 18px; }
-.pie li + li { margin-top: 4px; }
+/* Pie: una franja sobria, del mismo verde que la barra; solo el nombre y el aviso de que no es oficial. */
+.pie { background: var(--gob-nav); color: #c9d3d0; font-size: 13px; padding: 18px 0; margin-top: 32px; }
+.pie-fila { display: flex; align-items: center; justify-content: space-between; gap: 12px 32px; flex-wrap: wrap; }
+.pie-marca { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.pie-titulo { font-family: var(--titular); color: #fff; font-size: 15px; font-weight: 600; }
+.pie-sub { color: #9fb0ab; }
+.pie-legal { margin: 0; max-width: 560px; text-align: right; color: #9fb0ab; }
 
 /* Avisos como los de la app (alert-warning) y uno informativo en azul. */
 .aviso { padding: 10px 14px; border: 1px solid transparent; border-radius: 6px; font-size: 14px; }
@@ -273,7 +274,7 @@ ul.lista { margin: 8px 0 0; padding-left: 20px; font-size: 14px; }
   .navbar-fila .secciones button { padding: 0 4px; font-size: 13px; }
   .secciones button span.cuenta { display: none; }
   .titulo-panel { font-size: 26px; }
-  .pie-rejilla { grid-template-columns: 1fr; }
+  .pie-legal { text-align: left; }
   .resumen { grid-template-columns: 1fr 1fr; }
   .cifra:nth-child(3) { border-left: 0; }
   .cifra:nth-child(n+3) { border-top: 1px solid var(--linea); }

@@ -70,10 +70,6 @@ export default function App() {
     }
   };
 
-  let conexion = 'Comprobando conexión.', claseConexion = 'conexion';
-  if (demo) { conexion = 'Modo demostración'; claseConexion += ' ok'; }
-  else if (be.conectado === false) { conexion = 'Sin conexión con ' + be.origen.url.replace(/^https?:\/\//, '') + '. Se muestra lo último recibido.'; claseConexion += ' mal'; }
-  else if (be.conectado) { conexion = 'Conectado a ' + be.origen.url.replace(/^https?:\/\//, ''); claseConexion += ' ok'; }
 
   return (
     <>
@@ -99,10 +95,9 @@ export default function App() {
       {conPagina && (
       <div className="encabezado-pagina">
         <div className="contenedor">
-          {seccion === 'monitoreo' && <p className={claseConexion}>{conexion}</p>}
           <h1 className="titulo-panel">{SECCIONES.find(([id]) => id === seccion)[1]}</h1>
           <p className="bajada">
-            {BAJADA[seccion]}{seccion === 'monitoreo' && corte && <> Datos al {hora(corte)}.</>}
+            {BAJADA[seccion]}{seccion === 'monitoreo' && corte && <> Datos al {hora(corte).replace(/\.$/, '')}.</>}
           </p>
           {seccion === 'monitoreo' ? (
             <nav className="subnav" aria-label="Vistas de alertas">
@@ -172,24 +167,14 @@ export default function App() {
 
       {conPagina && (
       <footer className="pie">
-        <div className="contenedor pie-rejilla">
-          <div>
-            <p className="pie-titulo">Escuelas rurales en riesgo</p>
-            <p>Prevención de contaminación y derrumbes en escuelas rurales de Puebla. Prototipo para el HackaTec 2026,
-              reto CAPCEE. No es un sitio oficial del Gobierno de México, de CAPCEE ni de CEASPUE.</p>
+        <div className="contenedor pie-fila">
+          <div className="pie-marca">
+            <span className="pie-titulo">Escuelas en riesgo</span>
+            <span className="pie-sub">Cuenca del Alto Atoyac, Puebla</span>
           </div>
-          <div>
-            <p className="pie-titulo">Fuentes de datos</p>
-            <ul>
-              <li>CONAGUA, Red Nacional de Medición de Calidad del Agua, 2012 a 2025</li>
-              <li>INEGI, Red hidrográfica 1:50 000, DENUE y censo 2020 por localidad</li>
-              <li>Escuelas y zonas de riesgo: provisionales, ilustrativas</li>
-            </ul>
-          </div>
-          <div>
-            <p className="pie-titulo">Diseño</p>
-            <p>Aspecto del kit gob.mx v3, el mismo de la app ciudadana y de SIGRIV: Montserrat y Noto Sans, guinda y dorado.</p>
-          </div>
+          <p className="pie-legal">
+            Prototipo para el HackaTec 2026, reto CAPCEE. No es un sitio oficial del Gobierno de México, de CAPCEE ni de CEASPUE.
+          </p>
         </div>
       </footer>
       )}

@@ -21,6 +21,17 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Módulo B: sin aviso de conexión, cifra crítica sin franja y pie sobrio
+
+**Qué cambió.** La pestaña Alertas ya no muestra "Conectado a …"; la cifra destacada (crítica) conserva el número en
+rojo pero sin la franja superior; el pie pasa de tres columnas (fuentes, diseño) a una franja del verde de la barra con
+el nombre, "Cuenca del Alto Atoyac, Puebla" y el aviso de que no es un sitio oficial. Corrige el doble punto tras la hora.
+**Por qué.** Petición del usuario: la franja se confundía con la navegación y el pie no decía nada útil.
+**Qué arrastró.** `App.jsx`, `estilos.css`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
 ## 2026-11-24 · Módulo A: módulo de ladera en el simulador y en los mecanismos
 
 **Qué cambió.** `99_reubicacion.py` agrega a `mecanismos.json` las 5 estaciones `EST-LAD-01..05` de `escuelas_ladera.json`
