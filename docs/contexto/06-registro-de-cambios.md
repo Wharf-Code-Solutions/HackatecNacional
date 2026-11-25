@@ -21,6 +21,31 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-25 · Módulo C: alarma de deslave en la app ciudadana
+
+**Qué cambió.** Con la app abierta, cada 10 s consulta `GET /alertas?nivel=Critica&abiertas=1&modulo=ladera` (filtros nuevos
+y opcionales en backend y mock) y, si hay una alerta nueva de una estación a menos de 5 km, muestra una alarma a pantalla
+completa con vibración, tono, 911 y Protección Civil, y «Ver en el mapa» con un pulso en la estación. `?alarma=todas` hace
+que suene cualquiera, para la demostración. La app lee `mecanismos.json` para nombrar la escuela.
+**Por qué.** Mostrar en tiempo real el deslave del simulador: lecturas, motor, alerta y aviso al ciudadano. Es un aviso del
+sistema, no una alerta oficial, y lo dice.
+**Qué arrastró.** `backend/app.py`, `contrato/servidor_mock.py`, `contrato/README.md`, `ciudadano/src/` (Alarma.jsx nuevo).
+**Impacto en otros módulos.** Ninguno: `GET /alertas` sin filtros responde igual. Con la app cerrada no suena (haría falta push).
+
+---
+
+## 2026-11-25 · Módulo C: huella de deslaves y pines en su punto exacto
+
+**Qué cambió.** `prioridad_huella.huella()` suma una capa de ladera: 3 o más deslaves a menos de 1.5 km dan puntos con
+`capa: 'ladera'` que la app dibuja como mancha de calor; los deslaves ya no colorean el río. Los pines se dibujan en su
+coordenada exacta (antes, redondeada a ~100 m; la API ya la daba exacta) y los términos lo dicen. Tras enviar un reporte,
+el marcador central se oculta hasta mover el mapa, porque tapaba el pin nuevo.
+**Por qué.** Un deslave no vive en un cauce y se ubica por metros.
+**Qué arrastró.** `contrato/prioridad_huella.py`, `ciudadano/src/`.
+**Impacto en otros módulos.** `GET /huella` trae además puntos `capa: 'ladera'`; quien dibuje sus líneas debe filtrar por geometría.
+
+---
+
 ## 2026-11-25 · Módulo B: cifras de todas las pestañas como tarjetas separadas
 
 **Qué cambió.** `.resumen` pasa a tarjetas separadas con 16 px entre cifras en Alertas y Autorizaciones, como ya estaba
@@ -48,6 +73,7 @@ Escuelas y Autorizaciones quedan a 16 px del encabezado y de lo que sigue, como 
 **Por qué.** Petición del usuario: las cifras quedaban pegadas al encabezado (`.contenedor` ponía el relleno superior en 0).
 **Qué arrastró.** `estilos.css`.
 **Impacto en otros módulos.** Ninguno.
+
 
 ---
 

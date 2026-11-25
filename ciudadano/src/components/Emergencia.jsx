@@ -5,7 +5,7 @@ import BottomSheet from './BottomSheet.jsx';
 // Protección Civil de Puebla: 222 246 27 50, «Teléfonos de atención 24 horas, 365 días del año» en el Programa Especial
 // de Protección Civil para la Temporada de Lluvias y Ciclones Tropicales 2024 (Coordinación General de Protección Civil
 // del Estado, p. 91). Su sitio web da el mismo número con horario de oficina: por eso el 911 va primero.
-const NUMEROS = [
+export const NUMEROS = [
   { tel: '911', titulo: 'Llamar al 911', detalle: 'Personas en peligro, heridos o casas afectadas', principal: true },
   { tel: '+522222462750', titulo: 'Protección Civil de Puebla', detalle: '222 246 27 50 · para reportar un riesgo' },
 ];

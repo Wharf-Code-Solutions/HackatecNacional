@@ -14,7 +14,6 @@ const INICIO = { center: [-98.2, 19.1], zoom: 8.6 };
 // dejaba arrastrar con el ratón (y corregía el zoom solo); más margen solo mueve el problema a pantallas
 // más anchas. Que el pin quede en la cuenca lo valida el formulario, y el mapa abre sobre ella.
 
-const redondea = (v) => Math.round(v * 1000) / 1000; // los reportes se dibujan a unos 100 m, no en su coordenada exacta
 
 // ------------------------------------------------------------------ ríos
 // Los ríos del INEGI encima de la base, como en mapa/ (M6): en la base se pierde por dónde va el cauce
@@ -128,6 +127,7 @@ const Mapa = forwardRef(function Mapa({ cuenca, huella, reportes, rios = true, o
   const mapa = useRef(null);
   const gl = useRef(null);
   const marcas = useRef([]);
+  const alarmaMarca = useRef(null);
   const [lista, setLista] = useState(false);
   const cb = useRef({});
   cb.current = { onCentro, onUsuarioMovio, onReporte };
@@ -136,6 +136,15 @@ const Mapa = forwardRef(function Mapa({ cuenca, huella, reportes, rios = true, o
 
   useImperativeHandle(ref, () => ({
     volarA(lat, lon, zoom = 16) { mapa.current?.flyTo({ center: [lon, lat], zoom, essential: true }); },
+    // La estación de una alarma de deslave: un círculo rojo que late, uno a la vez
+    marcarAlarma(lat, lon) {
+      if (!mapa.current || !gl.current) return;
+      alarmaMarca.current?.remove();
+      const el = document.createElement('div');
+      el.className = 'pulso-alarma';
+      el.setAttribute('aria-label', 'Estación con alarma de deslave');
+      alarmaMarca.current = new gl.current.Marker({ element: el }).setLngLat([lon, lat]).addTo(mapa.current);
+    },
   }), []);
 
   useEffect(() => {
@@ -187,8 +196,9 @@ const Mapa = forwardRef(function Mapa({ cuenca, huella, reportes, rios = true, o
     return undefined;
   }, [cuenca, lista]);
 
-  // Huella de calor: el propio río coloreado por la densidad de reportes (la calcula el backend, GET /huella).
-  // Solo trae tramos donde hay evidencia suficiente; sin ellos no se dibuja nada.
+  // Huella de calor (la calcula el backend, GET /huella). Agua: el propio río coloreado por la densidad de reportes.
+  // Deslaves: una mancha de calor sobre el terreno (puntos con capa 'ladera'). Solo llega donde hay evidencia
+  // suficiente; sin ella no se dibuja nada.
   useEffect(() => {
     const m = mapa.current;
     if (!m || !lista) return;
@@ -197,7 +207,20 @@ const Mapa = forwardRef(function Mapa({ cuenca, huella, reportes, rios = true, o
     if (fuente) { fuente.setData(datos); return; }
     m.addSource('huella', { type: 'geojson', data: datos });
     m.addLayer({
-      id: 'huella-linea', type: 'line', source: 'huella', layout: { 'line-cap': 'round', 'line-join': 'round' },
+      id: 'huella-ladera', type: 'heatmap', source: 'huella', filter: ['==', ['geometry-type'], 'Point'],
+      paint: {
+        'heatmap-weight': ['get', 'intensidad'],
+        'heatmap-intensity': 3,
+        // ~1.5 km de mancha a cualquier zoom: el radio va en píxeles y se duplica con cada nivel
+        'heatmap-radius': ['interpolate', ['exponential', 2], ['zoom'], 8, 6, 12, 70, 16, 450],
+        'heatmap-color': ['interpolate', ['linear'], ['heatmap-density'],
+          0, 'rgba(227,201,154,0)', 0.25, 'rgba(227,201,154,0.55)', 0.6, '#C2557A', 1, '#611232'],
+        'heatmap-opacity': 0.8,
+      },
+    });
+    m.addLayer({
+      id: 'huella-linea', type: 'line', source: 'huella', filter: ['==', ['geometry-type'], 'LineString'],
+      layout: { 'line-cap': 'round', 'line-join': 'round' },
       paint: {
         'line-color': ['interpolate', ['linear'], ['get', 'intensidad'], 0, '#E3C99A', 0.5, '#C2557A', 1, '#611232'],
         'line-width': ['interpolate', ['linear'], ['zoom'], 8, 2, 12, 4, 16, 7],
@@ -206,7 +229,7 @@ const Mapa = forwardRef(function Mapa({ cuenca, huella, reportes, rios = true, o
     });
   }, [huella, lista]);
 
-  // Pines: reportes de otras personas
+  // Pines: reportes de otras personas, en su punto exacto (un deslave se ubica por metros, no por cuadra)
   useEffect(() => {
     const m = mapa.current;
     if (!m || !lista || !gl.current) return undefined;
@@ -216,7 +239,7 @@ const Mapa = forwardRef(function Mapa({ cuenca, huella, reportes, rios = true, o
       (reportes || []).forEach((r) => {
         const cerrado = r.estado === 'Cerrado' || r.estado === 'Descartado';
         const el = boton('pin-publico ' + (cerrado ? 'pin-cerrado' : 'pin-abierto'), 'Reporte ciudadano', () => cb.current.onReporte?.(r));
-        marcas.current.push(new gl.current.Marker({ element: el, anchor: 'bottom' }).setLngLat([redondea(r.longitud), redondea(r.latitud)]).addTo(m));
+        marcas.current.push(new gl.current.Marker({ element: el, anchor: 'bottom' }).setLngLat([r.longitud, r.latitud]).addTo(m));
       });
     };
     pon();

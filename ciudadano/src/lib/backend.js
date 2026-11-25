@@ -33,9 +33,12 @@ export const datosFijos = () => Promise.all([
   getJSON(BASE + 'datos/cuenca.geojson').catch(() => null),
   // Sin el área, la app usa la ventana del esquema (ubicacion.js): no se bloquea a nadie por un archivo que no cargó.
   getJSON(BASE + 'datos/area_reportes.json').catch(() => null),
-]).then(([g, cuenca, area]) => {
+  getJSON(BASE + 'datos/mecanismos.json').catch(() => null),
+]).then(([g, cuenca, area, mec]) => {
   const sitios = g.features.map((f) => ({ ...f.properties, lon: f.geometry.coordinates[0], lat: f.geometry.coordinates[1] }));
-  return { sitios, cuenca, area: area && { celda: area.celda, celdas: new Set(area.celdas) } };
+  const estaciones = {};
+  ((mec && mec.estaciones) || []).forEach((e) => { estaciones[e.c_estacion] = e; });
+  return { sitios, cuenca, area: area && { celda: area.celda, celdas: new Set(area.celdas) }, estaciones };
 });
 
 export const fotoDemo = () => getJSON(BASE + 'demo/foto.json');

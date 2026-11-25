@@ -11,6 +11,8 @@ const DESTINO = resolve(AQUI, '..', 'public', 'datos');
 
 const ARCHIVOS = [
   'contrato/fixtures/sitios.geojson',
+  // Estaciones (agua y ladera) con su escuela: la alarma de deslave dice de qué escuela se trata y dónde.
+  'contrato/fixtures/mecanismos.json',
   'datos/procesados/mapa/cuenca.geojson',
   // Cauces de orden 3 (scripts/61_rios_menores_para_app.py): la app los pide solo al acercar el mapa.
   'datos/procesados/mapa/rios_orden3.json',

@@ -23,7 +23,7 @@ Rutas:
     GET  /escenarios/<nombre>        paquetes de lecturas de ese escenario
     POST /lecturas                   valida contra el esquema y evalua
     GET  /veredictos                 ultimos veredictos emitidos (?c_estacion= filtra)
-    GET  /alertas                    alertas generadas
+    GET  /alertas                    alertas generadas (?nivel=Critica&abiertas=1&modulo=ladera para filtrar)
     PATCH /alertas/<c_alerta>        cambia estado y responsable (panel de autoridad)
     POST /reportes                   reporte ciudadano
     PATCH /reportes/<c_reporte>      cambia el estado de un reporte (panel de autoridad)
@@ -229,7 +229,16 @@ class Manejador(BaseHTTPRequestHandler):
             lista = [v for v in VEREDICTOS if not est or v['c_estacion'] == est]
             return self._responder(200, {'veredictos': lista[-50:]})
         if ruta == '/alertas':
-            return self._responder(200, {'alertas': ALERTAS})
+            # Filtros opcionales, los mismos que el backend: ?nivel=Critica&abiertas=1&modulo=ladera
+            q = {k: v[0] for k, v in parse_qs(urlparse(self.path).query).items()}
+            lista = ALERTAS
+            if q.get('nivel'):
+                lista = [a for a in lista if a.get('nivel') == q['nivel']]
+            if q.get('abiertas') in ('1', 'true'):
+                lista = [a for a in lista if a.get('estado') in ('Abierta', 'En atencion')]
+            if q.get('modulo') == 'ladera':
+                lista = [a for a in lista if a.get('regla') in ('movimiento_ladera', 'lluvia_acumulada', 'suelo_saturado')]
+            return self._responder(200, {'alertas': lista})
         if ruta == '/reportes':
             publico = [{k: v for k, v in r.items() if k != 'correo'} for r in REPORTES]
             return self._responder(200, {'reportes': publico})

@@ -40,6 +40,9 @@ from almacen import Almacen, es_postgres, huella   # noqa: E402
 from propagacion import Propagacion                 # noqa: E402
 from asignacion import Asignador               # noqa: E402
 import correo                                   # noqa: E402
+
+# Reglas de derrumbe del motor (motor/reglas.py, modulo de ladera): ?modulo=ladera en GET /alertas
+REGLAS_LADERA = ('movimiento_ladera', 'lluvia_acumulada', 'suelo_saturado')
 import antispam                                 # noqa: E402
 import time                                     # noqa: E402
 
@@ -192,8 +195,18 @@ def crear_app(url=None):
         return {'veredictos': ctx()['almacen'].veredictos(c_estacion, 50)}
 
     @app.get('/alertas')
-    def alertas():
-        return {'alertas': ctx()['almacen'].alertas()}
+    def alertas(request: Request):
+        # Filtros opcionales, los mismos que el mock: ?nivel=Critica&abiertas=1&modulo=ladera. La app ciudadana los usa
+        # para su alarma: consulta cada pocos segundos y no debe bajar todas las alertas del Atoyac.
+        q = request.query_params
+        lista = ctx()['almacen'].alertas()
+        if q.get('nivel'):
+            lista = [a for a in lista if a.get('nivel') == q['nivel']]
+        if q.get('abiertas') in ('1', 'true'):
+            lista = [a for a in lista if a.get('estado') in ('Abierta', 'En atencion')]
+        if q.get('modulo') == 'ladera':
+            lista = [a for a in lista if a.get('regla') in REGLAS_LADERA]
+        return {'alertas': lista}
 
     @app.get('/alertas/{c_alerta}/prediccion')
     def prediccion(c_alerta: str):

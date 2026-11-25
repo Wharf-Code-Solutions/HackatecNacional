@@ -4,12 +4,29 @@ import Toast from './Toast.jsx';
 import FormularioReporte from './FormularioReporte.jsx';
 import FichaReporte from './FichaReporte.jsx';
 import Emergencia, { Telefono } from './Emergencia.jsx';
+import Alarma from './Alarma.jsx';
 import { TerminosGate } from './Terminos.jsx';
 import { avisoAceptado } from '../lib/almacen.js';
 import { fotoDemo, getJSON } from '../lib/backend.js';
 import { dentroDeArea, haversine, posicion, TEXTO_FUERA, textoErrorUbicacion } from '../lib/ubicacion.js';
 
 const REFRESCO_MS = 60000;
+
+// Alarma de deslave: mientras la app está abierta, pide cada ALARMA_MS las alertas Críticas de ladera abiertas y suena
+// con las que no había visto, si su estación queda a menos de ALARMA_RADIO_M de la persona (su GPS o, sin él, el centro
+// del mapa). Lo que ya estaba abierto al abrir la app no suena. Se compara por folio, no por hora: el simulador corre
+// más rápido que el reloj y la hora de sus alertas no es la real. Con ?alarma=todas (se recuerda en este teléfono)
+// suena cualquiera, para la demostración. Sin la app abierta no suena: eso pediría notificaciones push.
+const ALARMA_MS = 10000;
+const ALARMA_RADIO_M = 5000;
+const CLAVE_ALARMA = 'atoyac.alarma';
+const alarmaTodas = () => {
+  try {
+    const q = new URLSearchParams(window.location.search).get('alarma');
+    if (q) localStorage.setItem(CLAVE_ALARMA, q);
+    return (q || localStorage.getItem(CLAVE_ALARMA)) === 'todas';
+  } catch { return false; }
+};
 
 // Preferencia de ver los ríos, solo de este teléfono. Si el navegador no deja guardar, se ven.
 const CLAVE_RIOS = 'atoyac.rios';
@@ -29,6 +46,10 @@ export default function MapaPage({ origen, datos, conectado, pendientes, setPend
   const [tick, setTick] = useState(0);
   const [rios, setRios] = useState(leerRios);
   const [punto, setPunto] = useState(null);       // centro del mapa, para saber si ahí se puede reportar
+  // Tras enviar, el pin nuevo queda justo bajo el marcador central (el reporte se hace en el centro): el marcador se
+  // oculta hasta que la persona mueva el mapa, para que vea su reporte en su lugar.
+  const [recienEnviado, setRecienEnviado] = useState(false);
+  const [alarma, setAlarma] = useState(null);     // { alerta, estacion, recibida }
   const area = datos && datos.area;
   const fuera = punto ? !dentroDeArea(area, punto.lat, punto.lon) : false;
   const alternarRios = () => setRios((v) => { guardarRios(!v); return !v; });
@@ -56,6 +77,41 @@ export default function MapaPage({ origen, datos, conectado, pendientes, setPend
     return () => clearInterval(t);
   }, []);
 
+  // Alarma de deslave (ver ALARMA_MS arriba)
+  const vistas = useRef(null);                    // folios ya vistos; null hasta la primera consulta
+  useEffect(() => {
+    if (origen.modo !== 'api' || !datos) return undefined;
+    const todas = alarmaTodas();
+    let vigente = true;
+    const revisar = () => getJSON(origen.url + '/alertas?nivel=Critica&abiertas=1&modulo=ladera').then((j) => {
+      if (!vigente) return;
+      const lista = j.alertas || [];
+      if (vistas.current === null) { vistas.current = new Set(lista.map((a) => a.c_alerta)); return; }
+      const nuevas = lista.filter((a) => !vistas.current.has(a.c_alerta));
+      nuevas.forEach((a) => vistas.current.add(a.c_alerta));
+      const yo = gps.current || centro.current;
+      const cerca = nuevas.filter((a) => {
+        const e = datos.estaciones && datos.estaciones[a.c_estacion];
+        if (todas) return true;
+        return e && yo && haversine(yo.lat, yo.lon, e.latitud, e.longitud) <= ALARMA_RADIO_M;
+      });
+      if (cerca.length) {
+        const a = cerca[cerca.length - 1];
+        setAlarma({ alerta: a, estacion: datos.estaciones && datos.estaciones[a.c_estacion], recibida: new Date() });
+      }
+    }).catch(() => {});
+    revisar();
+    const t = setInterval(revisar, ALARMA_MS);
+    return () => { vigente = false; clearInterval(t); };
+  }, [origen, datos]);
+
+  const verAlarma = () => {
+    const e = alarma && alarma.estacion;
+    setAlarma(null);
+    // El pulso cae en el centro del mapa: se oculta el marcador central hasta que la persona mueva el mapa
+    if (e) { mapa.current?.marcarAlarma(e.latitud, e.longitud); mapa.current?.volarA(e.latitud, e.longitud, 15); setRecienEnviado(true); }
+  };
+
   const ubicarme = () => {
     setAviso({ tipo: 'info', texto: 'Buscando tu ubicación… puedes seguir usando el mapa.' });
     posicion().then((p) => {
@@ -71,6 +127,7 @@ export default function MapaPage({ origen, datos, conectado, pendientes, setPend
 
   const generar = () => {
     if (!centro.current || fuera) return;
+    setRecienEnviado(false);
     setHoja({ tipo: 'form', ...centro.current });
   };
 
@@ -92,17 +149,17 @@ export default function MapaPage({ origen, datos, conectado, pendientes, setPend
         reportes={reportes}
         rios={rios}
         onCentro={(c) => { centro.current = c; setPunto(c); }}
-        onUsuarioMovio={() => {}}
+        onUsuarioMovio={() => setRecienEnviado(false)}
         onReporte={(reporte) => setHoja({ tipo: 'reporte', reporte })}
         onError={() => setAviso({ tipo: 'danger', texto: 'No se pudo cargar el mapa. Revisa tu conexión.' })}
       />
 
-      <div className="map-marker-container">
+      {!recienEnviado && <div className="map-marker-container">
         <div className="map-marker-tooltip">Ubica el problema aquí</div>
         <svg width="32" height="32" viewBox="0 0 24 24" fill="var(--gob-guinda)" stroke="var(--gob-dorado)" strokeWidth="1" aria-hidden="true">
           <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z" />
         </svg>
-      </div>
+      </div>}
 
       <button className="btn-ubicarme" onClick={ubicarme}>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gob-guinda)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -131,8 +188,9 @@ export default function MapaPage({ origen, datos, conectado, pendientes, setPend
 
       {hoja && hoja.tipo === 'form' && (
         <FormularioReporte lat={hoja.lat} lon={hoja.lon} precision={precision(hoja)} origen={origen} datos={datos}
-          onClose={() => setHoja(null)} onEnviado={() => setTick((n) => n + 1)} onPendiente={() => setPendientes((n) => n + 1)} ir={ir} />
+          onClose={() => setHoja(null)} onEnviado={() => { setTick((n) => n + 1); setRecienEnviado(true); }} onPendiente={() => setPendientes((n) => n + 1)} ir={ir} />
       )}
+      {alarma && <Alarma {...alarma} onVer={verAlarma} onClose={() => setAlarma(null)} />}
       {hoja && hoja.tipo === 'emergencia' && <Emergencia punto={punto} onClose={() => setHoja(null)} />}
       {hoja && hoja.tipo === 'reporte' && <FichaReporte reporte={hoja.reporte} onClose={() => setHoja(null)} />}
     </div>

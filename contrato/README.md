@@ -46,7 +46,7 @@ día entero de lecturas de cinco estaciones con una descarga industrial inyectad
 | GET | `/escenarios/<nombre>` | los paquetes de lecturas de ese escenario |
 | POST | `/lecturas` | valida contra el esquema y evalúa; acepta un objeto o un arreglo |
 | GET | `/veredictos` | los últimos 50 veredictos emitidos; `?c_estacion=` los filtra por estación |
-| GET | `/alertas` | alertas generadas |
+| GET | `/alertas` | alertas generadas; filtros opcionales `?nivel=Critica&abiertas=1&modulo=ladera` (los usa la alarma de la app ciudadana) |
 | PATCH | `/alertas/<c_alerta>` | cambia `estado` y `responsable`; cualquier otro campo da 422 (lo usa el panel M7) |
 | PATCH | `/reportes/<c_reporte>` | cambia solo el `estado` de un reporte ciudadano (Recibido, Validado, En atencion, Cerrado, Descartado); otro campo o un estado fuera del enum da 422, un folio inexistente 404. No devuelve el `correo` (lo usa la gestión de reportes del panel) |
 | GET | `/alertas/<c_alerta>/prediccion` | **solo en el backend (M5)**: propagación aguas abajo de M3. El mock no la tiene |
