@@ -51,13 +51,10 @@ export default function Escuelas({ escuelas, alertas, zonas, sel, onElegir }) {
   const altas = escuelas.filter((e) => ['alto', 'muy_alto'].includes(r(e).nivel)).length;
   const { mecanismosDe } = useDatos();
   const conMec = escuelas.filter((e) => mecanismosDe(e.cct).length).length;
-  const conMat = escuelas.filter((e) => e.matricula != null);
-  const alumnos = conMat.reduce((s, e) => s + e.matricula, 0);
   const cifras = [
     [altas ? 'critica' : '', altas, 'Riesgo alto o muy alto', total ? Math.round(100 * altas / total) + ' % de ' + total : 'sin escuelas'],
     ['', total, 'Escuelas rurales del Alto Atoyac', 'públicas, de Puebla'],
     ['', conMec, 'Con mecanismo propuesto', (total - conMec) + ' sin mecanismo'],
-    ['', conMat.length ? num(alumnos) : 'sin dato', 'Alumnos', conMat.length ? 'en ' + conMat.length + ' de ' + total + ' escuelas con dato' : 'falta la matrícula en los datos'],
   ];
 
   const filasNivel = NIVELES_RIESGO.map((k) => {
@@ -91,7 +88,7 @@ export default function Escuelas({ escuelas, alertas, zonas, sel, onElegir }) {
 
   return (
     <section className="vista">
-      <div className="resumen" aria-live="polite">
+      <div className="resumen resumen-3" aria-live="polite">
         {cifras.map(([clase, n, etiqueta, nota]) => (
           <div key={etiqueta} className={'cifra ' + clase}><b>{n}</b><span>{etiqueta}</span><small>{nota}</small></div>
         ))}
@@ -99,15 +96,15 @@ export default function Escuelas({ escuelas, alertas, zonas, sel, onElegir }) {
 
       {/* El mismo mapa de Alertas, para ver dónde está cada escuela sin cambiar de pestaña. Un clic en una
           escuela abre su ficha; la elegida se resalta y el mapa se acerca. */}
-      <figure className="tarjeta ancha mapa-escuelas">
+      <div className="escuelas-arriba">
+      <figure className="tarjeta mapa-escuelas">
         <h2 className="titulo-seccion">Dónde están</h2>
         <p className="subtitulo-seccion">Escuelas por nivel de riesgo y las zonas que las contienen (tierra: derrumbe; verde oliva: contaminación). Un clic abre su ficha.</p>
         <MapaEstaciones estaciones={SIN_ESTACIONES} alertas={alertas} elegida={null} onElegir={() => {}}
           escuelas={escuelas} zonas={zonas} onElegirEscuela={elegir} escuelaElegida={sel} />
       </figure>
 
-      <div className="trabajo">
-        <section className="lista-col" aria-label="Escuelas">
+        <section className="lista-col lista-escuelas" aria-label="Escuelas">
           <div className="lista-cabeza">
             <h2 className="titulo-seccion">Escuelas por atender</h2>
             <div className="filtros">
@@ -147,8 +144,8 @@ export default function Escuelas({ escuelas, alertas, zonas, sel, onElegir }) {
             ))}
           </ol>
         </section>
-        <FichaEscuela escuela={elegida} alertas={alertas} zonas={zonas} />
       </div>
+      <FichaEscuela escuela={elegida} alertas={alertas} zonas={zonas} />
 
       <div className="panorama">
         <Tarjeta titulo="Por nivel de riesgo" subtitulo="Índice de riesgo de cada escuela; los pesos son hipótesis.">

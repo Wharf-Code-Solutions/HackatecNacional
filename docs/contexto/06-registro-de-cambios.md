@@ -21,6 +21,16 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Módulo B: escuelas con mapa y lista lado a lado
+
+**Qué cambió.** La pestaña Escuelas quita la cifra de alumnos (la matrícula no viene en los datos), pone el mapa y la
+lista lado a lado con la misma altura y la ficha abajo a todo el ancho. En teléfono se apilan.
+**Por qué.** Petición del usuario.
+**Qué arrastró.** `Escuelas.jsx`, `estilos.css`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
 ## 2026-11-24 · Módulo B: alertas de ladera, 10 mecanismos y escuelas del Alto Atoyac
 
 **Qué cambió.** El panel pide lecturas de las 15 estaciones (las 5 del Atoyac y los 10 mecanismos), no solo de las 5.

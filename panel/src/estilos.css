@@ -563,3 +563,16 @@ main.tablero-main { padding: 0; flex: 1; display: flex; }
   background: none; border: 0; padding: 10px 16px; cursor: pointer; }
 .menu-desplegable button:hover { background: var(--neutro200); }
 .menu-desplegable button.elegida { color: var(--principal); font-weight: 600; box-shadow: inset 3px 0 0 var(--principal); }
+
+/* Pestaña Escuelas: mapa y lista lado a lado, misma altura; la ficha va abajo a todo el ancho. */
+.resumen-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.escuelas-arriba { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(320px, 1fr); gap: 16px; align-items: stretch; margin-bottom: 16px; }
+.escuelas-arriba .mapa-escuelas { margin: 0; }
+.escuelas-arriba .lista-escuelas { position: static; height: 560px; max-height: none; }
+.escuelas-arriba .lista-escuelas .alertas { min-height: 0; }
+#ficha-escuela { margin-bottom: 16px; }
+@media (max-width: 1000px) {
+  .escuelas-arriba { grid-template-columns: 1fr; }
+  .escuelas-arriba .lista-escuelas { height: auto; }
+}
+@media (max-width: 700px) { .resumen-3 { grid-template-columns: 1fr 1fr; } }
