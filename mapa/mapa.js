@@ -279,7 +279,7 @@
 
   function abre(e) {
     abierta = e;
-    $('detTitulo').textContent = e.c_estacion + ' · ' + lugar(e) + ', ' + inicial(e.municipio);
+    $('detTitulo').textContent = lugar(e);
     // El simulador arma su escena 3D en el mismo hilo que el mapa: si se carga a la vez, el
     // desplazamiento se detiene un momento. Se carga cuando el mapa termina de moverse.
     var src = '../dispositivo/simulador/index.html?incrustado=1&vel=300&r=' + Date.now() + '&estacion=' + encodeURIComponent(e.c_estacion) +

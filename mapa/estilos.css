@@ -89,10 +89,11 @@ h1::after { content: ""; display: block; width: 40px; height: 4px; background: v
 }
 /* con una estación abierta: la zona en el mapa a la izquierda (≈ 40 %) y su simulador a la derecha */
 .app.abierto .detalle { flex: 0 0 58%; width: auto; }
-.detalle header { display: flex; align-items: center; padding: 6px 10px; background: var(--superficie); border-bottom: 1px solid var(--linea); flex: none; }
+.detalle header { display: flex; align-items: center; gap: 8px; padding: 6px 10px; background: var(--superficie); border-bottom: 1px solid var(--linea); flex: none; }
 .volver { width: 32px; height: 32px; display: grid; place-items: center; padding: 0; cursor: pointer; background: none;
   border: 1px solid transparent; border-radius: 6px; color: var(--texto); }
 .volver:hover { border-color: var(--linea); background: #F4F4F4; }
+.detalle h2 { font-family: var(--titular); font-size: 15px; font-weight: 600; color: var(--tinta); }
 .solo-lectores { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .detalle iframe { flex: 1; border: 0; width: 100%; background: var(--papel); }
 

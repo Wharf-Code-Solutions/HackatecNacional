@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://framework-gb.cdn.gob.mx" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&display=swap">
-<link rel="stylesheet" href="estilos.css?v=14">
+<link rel="stylesheet" href="estilos.css?v=15">
 </head>
 <body>
 <div class="app" id="app">
@@ -30,7 +30,7 @@
   <section class="detalle" id="detalle" aria-hidden="true">
     <header>
       <button id="btnVolver" class="volver" aria-label="Volver al mapa" title="Volver al mapa"><svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true"><path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
-      <h2 id="detTitulo" class="solo-lectores">—</h2>
+      <h2 id="detTitulo">—</h2>
     </header>
     <iframe id="marco" title="Simulador de la estación seleccionada"></iframe>
   </section>
@@ -46,7 +46,7 @@
   var js = mb ? 'https://api.mapbox.com/mapbox-gl-js/v3.8.0/mapbox-gl.js' : 'https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js';
   var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = css; document.head.appendChild(l);
   var s = document.createElement('script'); s.src = js;
-  s.onload = function () { var m = document.createElement('script'); m.src = 'mapa.js?v=23'; document.body.appendChild(m); };
+  s.onload = function () { var m = document.createElement('script'); m.src = 'mapa.js?v=24'; document.body.appendChild(m); };
   document.body.appendChild(s);
 })();
 </script>
