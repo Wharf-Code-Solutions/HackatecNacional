@@ -63,18 +63,14 @@ export default function App() {
   const abrirEscuela = (cct) => { ir({ seccion: 'escuelas', escuela: cct }); window.scrollTo(0, 0); };
   useEffect(() => { window.scrollTo(0, 0); }, [seccion, vista, paginaReportes]);
   const [sel, setSel] = useState(null);
-  const [filtros, setFiltrosBase] = useState({ estado: 'activas', nivel: 'todos', estacion: 'todas' });
-  // La lista abre en «Por atender». Si al llegar los datos no hay ninguna (el motor cierra solas las alertas cuando el
-  // valor vuelve a lo normal, D33), abre en «Todas» para que se vean las más recientes. Si la persona ya movió el
-  // filtro, se respeta lo que eligió.
-  const [filtroTocado, setFiltroTocado] = useState(false);
-  const setFiltros = (f) => { setFiltroTocado(true); setFiltrosBase(f); };
+  // La lista muestra lo que falta atender; una alerta cerrada sale de la lista (queda en el filtro «Cerrada»).
+  const [filtros, setFiltros] = useState({ estado: 'activas', nivel: 'todos', estacion: 'todas' });
 
   const demo = be.origen.modo === 'demo';
   const activas = be.alertas.filter(porAtender).length;
-  useEffect(() => {
-    if (!filtroTocado && be.alertas.length && !activas && filtros.estado === 'activas') setFiltrosBase((f) => ({ ...f, estado: 'todas' }));
-  }, [be.alertas.length, activas]); // eslint-disable-line react-hooks/exhaustive-deps
+  // Si la alerta abierta en el expediente se cierra (el motor la cierra al normalizarse, D33), sale también de ahí.
+  const selCerrada = sel && filtros.estado === 'activas' && be.alertas.some((a) => a.c_alerta === sel && !porAtender(a));
+  useEffect(() => { if (selCerrada) setSel(null); }, [selCerrada]);
   const nAvisos = contarAvisos(be.veredictos);
   const conteo = { alertas: activas, avisos: nAvisos };
   const reportesAbiertos = be.reportes.filter((x) => REPORTE_ABIERTO(x.estado)).length;

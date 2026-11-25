@@ -21,6 +21,17 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-25 · Módulo B: las alertas cerradas salen de la lista
+
+**Qué cambió.** Revierte la entrada anterior («abre en Todas»). La lista de alertas muestra solo las por atender; se quitó
+la opción «Todas» y las cerradas y descartadas quedan en el filtro Estado como «historial». Si la alerta abierta en el
+expediente se cierra (D33), sale también del expediente. La ficha de escuela lista solo las alertas por atender.
+**Por qué.** Pedido del usuario: una alerta cerrada no tiene por qué seguir en la lista.
+**Qué arrastró.** `App.jsx`, `ListaAlertas.jsx`, `FichaEscuela.jsx`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
 ## 2026-11-25 · Módulo B: la lista de alertas abre en «Todas» si no hay ninguna por atender
 
 **Qué cambió.** `App.jsx`: si al llegar los datos no hay alertas por atender y la persona no ha tocado el filtro, la lista

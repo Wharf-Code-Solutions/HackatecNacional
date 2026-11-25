@@ -30,9 +30,8 @@ export default function ListaAlertas({ alertas, filtros, setFiltros, sel, onEleg
               <option value="activas">Por atender</option>
               <option value="Abierta">Abierta</option>
               <option value="En atencion">En atención</option>
-              <option value="Cerrada">Cerrada</option>
-              <option value="Descartada">Descartada</option>
-              <option value="todas">Todas</option>
+              <option value="Cerrada">Cerradas (historial)</option>
+              <option value="Descartada">Descartadas (historial)</option>
             </select>
           </label>
           <label>Nivel
@@ -52,13 +51,13 @@ export default function ListaAlertas({ alertas, filtros, setFiltros, sel, onEleg
             </select>
           </label>
         </div>
-        <p className="conteo">{lista.length} de {alertas.length} alertas
-          {filtros.estado === 'todas' && alertas.length > 0 && !alertas.some((a) => porAtender(a)) && ' · ninguna por atender: el motor las cierra cuando el valor vuelve a lo normal'}</p>
+        <p className="conteo">{lista.length} {filtros.estado === 'activas' ? (lista.length === 1 ? 'alerta por atender' : 'alertas por atender') : 'alertas'}</p>
       </div>
       <ol className="alertas">
         {!lista.length && (
           <li className="vacio">
             {conectado === false && !alertas.length ? 'Sin conexión: no hay alertas que mostrar.'
+              : filtros.estado === 'activas' ? 'No hay alertas por atender. Las cerradas se consultan en el filtro Estado.'
               : alertas.length ? 'Ninguna alerta con estos filtros.'
                 : 'Sin alertas. Reproduce un escenario contra el backend para generar algunas.'}
           </li>

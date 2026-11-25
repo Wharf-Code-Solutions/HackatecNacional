@@ -87,7 +87,7 @@ export default function FichaEscuela({ escuela: e, alertas, zonas }) {
           <dt>Mecanismo</dt>
           <dd>{mecs.length ? mecs.map((m) => m.c_estacion + ((m.parametros || []).includes('LLUVIA') ? ' (ladera)' : ' (agua)')
             + (mecanismoActivo(m) ? ' · activo' : ' · propuesto')).join('; ') : 'Ninguno cerca'}</dd>
-          {mecs.length > 0 && <><dt>Alertas por atender</dt><dd>{abiertas.length} de {suyas.length}</dd></>}
+          {mecs.length > 0 && <><dt>Alertas por atender</dt><dd>{abiertas.length}</dd></>}
         </dl>
         {mecs.map((m) => (
           <p key={m.c_estacion} className="por-que">
@@ -101,9 +101,9 @@ export default function FichaEscuela({ escuela: e, alertas, zonas }) {
       {mecs.length > 0 && (
         <section className="bloque">
           <h3>Alertas de sus mecanismos</h3>
-          {!suyas.length ? <p className="vacio">Sin alertas de {codigosMec.join(' ni ')}.</p> : (
+          {!abiertas.length ? <p className="vacio">Sin alertas por atender de {codigosMec.join(' ni ')}.</p> : (
             <ol className="ficha-alertas">
-              {suyas.slice(0, 8).map((a) => (
+              {abiertas.slice(0, 8).map((a) => (
                 <li key={a.c_alerta}>
                   <Nivel nivel={a.nivel} />
                   <span>{PARAM[a.c_parametro] || a.c_parametro}</span>
@@ -113,7 +113,7 @@ export default function FichaEscuela({ escuela: e, alertas, zonas }) {
               ))}
             </ol>
           )}
-          {suyas.length > 8 && <p className="nota">Las 8 más recientes de {suyas.length}.</p>}
+          {abiertas.length > 8 && <p className="nota">Las 8 más recientes de {abiertas.length}.</p>}
         </section>
       )}
 
