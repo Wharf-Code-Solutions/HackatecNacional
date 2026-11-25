@@ -57,7 +57,6 @@ h1::after { content: ""; display: block; width: 40px; height: 4px; background: v
 .boton { font: inherit; font-size: 14px; color: var(--texto); background: var(--superficie); border: 1px solid #999;
   border-radius: 6px; padding: 6px 14px; cursor: pointer; }
 .boton:hover { background: #F4F4F4; }
-.detalle .boton { border-color: var(--gob-dorado); white-space: nowrap; }
 
 .mapa-col { position: relative; flex: 1 1 0; min-width: 0; }
 #mapa { position: absolute; inset: 0; background: var(--papel); }
@@ -90,10 +89,11 @@ h1::after { content: ""; display: block; width: 40px; height: 4px; background: v
 }
 /* con una estación abierta: la zona en el mapa a la izquierda (≈ 40 %) y su simulador a la derecha */
 .app.abierto .detalle { flex: 0 0 58%; width: auto; }
-.detalle header { display: flex; align-items: center; gap: 14px; padding: 0 16px; min-height: 52px; background: var(--gob-nav); box-shadow: 0 2px 4px rgba(0,0,0,.2); flex: none; }
-.navbar-logo { height: 28px; display: block; }
-.navbar-divisor { border-left: 1px solid var(--gob-dorado); height: 28px; }
-.detalle h2 { font-family: var(--titular); font-size: 16px; font-weight: 600; letter-spacing: .5px; color: #fff; }
+.detalle header { display: flex; align-items: center; padding: 6px 10px; background: var(--superficie); border-bottom: 1px solid var(--linea); flex: none; }
+.volver { width: 32px; height: 32px; display: grid; place-items: center; padding: 0; cursor: pointer; background: none;
+  border: 1px solid transparent; border-radius: 6px; color: var(--texto); }
+.volver:hover { border-color: var(--linea); background: #F4F4F4; }
+.solo-lectores { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .detalle iframe { flex: 1; border: 0; width: 100%; background: var(--papel); }
 
 @media (max-width: 900px) {
