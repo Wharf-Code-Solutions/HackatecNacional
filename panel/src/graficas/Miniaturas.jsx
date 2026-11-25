@@ -1,5 +1,5 @@
 import { useAncho } from '../lib/datos.js';
-import { PARAM } from '../lib/etiquetas.js';
+import { LADERA, PARAM } from '../lib/etiquetas.js';
 import { num } from '../lib/formato.js';
 import { Mensaje } from './marcas.jsx';
 
@@ -31,7 +31,7 @@ export default function Miniaturas({ alerta, estacion, lineaBase, veredictos, el
         const pts = serie.map((v, i) => (v != null ? x(i).toFixed(1) + ',' + y(v).toFixed(1) : null)).filter(Boolean);
         const ultimo = ok[ok.length - 1], li = serie.lastIndexOf(ultimo);
         const u = b && b.unidad ? ' ' + b.unidad : '';
-        const fuera = b ? (ultimo > b.p90 ? 'sobre lo habitual' : ultimo < b.p10 ? 'bajo lo habitual' : 'dentro de lo habitual') : 'sin línea base';
+        const fuera = b ? (ultimo > b.p90 ? 'sobre lo habitual' : ultimo < b.p10 ? 'bajo lo habitual' : 'dentro de lo habitual') : LADERA.includes(p) ? 'se compara contra un umbral' : 'sin línea base';
         const tip = `${PARAM[p] || p}: última ${num(ultimo)}${u}, ${fuera}` + (b ? ` (banda ${num(b.p10)} a ${num(b.p90)}, n = ${b.n})` : '');
         return (
           <div key={p} className={'mini' + (p === marcado ? ' actual' : '') + (onElegir ? ' elegible' : '')} data-tip={tip}

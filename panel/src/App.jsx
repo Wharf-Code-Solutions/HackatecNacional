@@ -45,7 +45,9 @@ function contarAvisos(veredictos) {
 export default function App() {
   const { datos: fijos, error } = useDatosFijos();
   const codigos = useMemo(() => (fijos ? Object.keys(fijos.estaciones).sort() : []), [fijos]);
-  const be = useBackend(codigos);
+  // Lecturas de todas las estaciones: las del Atoyac y los mecanismos junto a escuelas (agua y ladera).
+  const codigosBackend = useMemo(() => (fijos ? [...codigos, ...Object.keys(fijos.mecanismos || {}).sort()] : []), [fijos, codigos]);
+  const be = useBackend(codigosBackend);
   const ctx = useMemo(() => (fijos ? ayudantes(fijos) : null), [fijos]);
   const [seccion, setSeccion] = useState('monitoreo');
   const [vista, setVista] = useState('alertas');

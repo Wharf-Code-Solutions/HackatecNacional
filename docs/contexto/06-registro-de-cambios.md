@@ -21,6 +21,25 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Módulo B: alertas de ladera, 10 mecanismos y escuelas del Alto Atoyac
+
+**Qué cambió.** El panel pide lecturas de las 15 estaciones (las 5 del Atoyac y los 10 mecanismos), no solo de las 5.
+Las alertas de ladera (LLUVIA, HUM_SUELO, INCL) se muestran contra los umbrales del motor, leídos de
+`umbrales_lluvia.json`, `suelo_laderas.json` y `lluvia_sitios.json` con la lógica de `cargar_umbrales_ladera`: cifras
+de valor, umbral alcanzado y siguiente; serie de la lluvia acumulada en la ventana de la alerta (24 o 72 h) con los
+umbrales como líneas. Una escuela tiene los mecanismos que la listan en `escuelas_protegidas` o su `c_estacion` (43, no
+8); un mecanismo de ladera queda activo con la autorización de CAPCEE, uno de agua con la de CEASPUE. El filtro de
+escuelas pasa de la cuenca RH18A a las cuatro subcuencas del Alto Atoyac (`SUBCUENCAS_ALTO_ATOYAC`): 205 de 503 (la
+RH18A daba 216, con 11 en Nexapa, Tehuitzingo, Balcón del Diablo y Acatlán).
+**Por qué.** Datos nuevos del módulo A (`d1cb636`: 503 escuelas, 10 mecanismos) y reglas de derrumbe de M2 (`188dfeb`).
+Probado con `deslave` en un backend aparte: 4 alertas de `EST-LAD-01` con sus umbrales y 2 escuelas afectadas.
+**Qué arrastró.** `App.jsx`, `contexto.js`, `datos.js`, `etiquetas.js`, `copiar-datos.mjs`, `Serie.jsx`, `Miniaturas.jsx`,
+`Expediente.jsx`, `FichaEscuela.jsx`, `Escuelas.jsx`, `Autorizaciones.jsx`.
+**Impacto en otros módulos.** El backend regresa 50 veredictos por estación: una alerta vieja puede quedar fuera de la
+serie. Si cambian los umbrales o su lógica en el motor, cambiarlos aquí.
+
+---
+
 ## 2026-11-24 · Módulo C: botón de emergencia en la app ciudadana
 
 **Qué cambió.** Botón rojo de solo icono bajo «Ríos» (que también pasa a solo icono). Abre una hoja con «Llamar al 911»,

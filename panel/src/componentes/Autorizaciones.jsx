@@ -1,5 +1,6 @@
 import { inicial } from '../lib/formato.js';
 import BarrasH from '../graficas/BarrasH.jsx';
+import { useDatos } from '../lib/contexto.js';
 
 // Tablero de autorizaciones (docs/19 §4.3 y §6, punto 5): qué falta autorizar a CEASPUE y CAPCEE.
 // Dos fuentes: los mecanismos (mecanismos.json, módulo A) y los trámites de cada escuela (escuelas.json).
@@ -18,7 +19,7 @@ const deOrganismo = (auts, org) => (auts || []).find((a) => a.organismo === org)
 
 export default function Autorizaciones({ escuelas, mecanismos = {}, onElegirEscuela }) {
   const mecs = Object.values(mecanismos).sort((a, b) => a.c_estacion.localeCompare(b.c_estacion));
-  const activo = (m) => (m.autorizaciones || []).some((a) => a.organismo === 'CEASPUE' && a.estado === 'otorgada');
+  const { mecanismoActivo: activo } = useDatos();
   const nActivos = mecs.filter(activo).length;
 
   // Todos los trámites: los de los mecanismos y los de las escuelas.
@@ -28,7 +29,7 @@ export default function Autorizaciones({ escuelas, mecanismos = {}, onElegirEscu
   ];
   const cuenta = (est) => tramites.filter((a) => a.estado === est).length;
   const cifras = [
-    [nActivos ? '' : 'critica', nActivos + ' de ' + mecs.length, 'Mecanismos activos', 'con autorización de CEASPUE otorgada'],
+    [nActivos ? '' : 'critica', nActivos + ' de ' + mecs.length, 'Mecanismos activos', 'con todo autorizado (agua: CEASPUE)'],
     ['', cuenta('pendiente'), 'Trámites pendientes', 'sin solicitar todavía'],
     ['', cuenta('solicitada'), 'Trámites solicitados', 'en espera de respuesta'],
     ['', cuenta('otorgada'), 'Trámites otorgados', 'de ' + tramites.length + ' en total'],
@@ -67,11 +68,11 @@ export default function Autorizaciones({ escuelas, mecanismos = {}, onElegirEscu
 
       <figure className="tarjeta ancha">
         <h2 className="titulo-seccion">Mecanismos</h2>
-        <p className="subtitulo-seccion">Un mecanismo sigue como propuesto mientras CEASPUE no otorgue su instalación.</p>
+        <p className="subtitulo-seccion">Uno de agua sigue como propuesto mientras CEASPUE no otorgue su instalación; uno de ladera, mientras CAPCEE no lo autorice.</p>
         {!mecs.length ? <p className="vacio">Sin mecanismos en los datos.</p> : (
           <div className="tabla-desliza">
             <table className="estaciones">
-              <thead><tr><th>Mecanismo</th><th>Escuela</th><th>Situación</th><th>CEASPUE</th><th>CAPCEE</th></tr></thead>
+              <thead><tr><th>Mecanismo</th><th>Vigila</th><th>Escuela</th><th>Situación</th><th>CEASPUE</th><th>CAPCEE</th></tr></thead>
               <tbody>
                 {mecs.map((m) => {
                   const ce = deOrganismo(m.autorizaciones, 'CEASPUE'), ca = deOrganismo(m.autorizaciones, 'CAPCEE');
@@ -79,6 +80,7 @@ export default function Autorizaciones({ escuelas, mecanismos = {}, onElegirEscu
                   return (
                     <tr key={m.c_estacion}>
                       <td><b>{m.c_estacion}</b><br /><span className="tenue">{inicial(m.municipio || '')}</span></td>
+                      <td>{(m.parametros || []).includes('LLUVIA') ? 'Ladera' : 'Agua'}</td>
                       <td>
                         {onElegirEscuela && m.cct
                           ? <button className="enlace" onClick={() => onElegirEscuela(m.cct)}>{m.escuela || m.cct}</button>

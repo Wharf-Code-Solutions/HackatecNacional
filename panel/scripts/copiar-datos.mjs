@@ -22,6 +22,10 @@ const ARCHIVOS = [
   'contrato/fixtures/escuelas.json',
   'contrato/fixtures/zonas_riesgo.geojson',
   'contrato/fixtures/mecanismos.json',
+  // Umbrales de las reglas de derrumbe (M2, motor/reglas.py cargar_umbrales_ladera): para dibujarlos en el expediente.
+  'contrato/fixtures/umbrales_lluvia.json',
+  'contrato/fixtures/suelo_laderas.json',
+  'contrato/fixtures/lluvia_sitios.json',
   // Las capas del modulo del mapa (M6, scripts/60_red_para_mapa.py): el mapa de la red del panel
   // usa las mismas, con la misma base, para verse igual que mapa/.
   'datos/procesados/mapa/cuenca.geojson',

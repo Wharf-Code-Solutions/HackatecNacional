@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { inicial, num } from '../lib/formato.js';
 import BarrasH from '../graficas/BarrasH.jsx';
+import { useDatos } from '../lib/contexto.js';
 import MapaEstaciones from '../graficas/MapaEstaciones.jsx';
 import Urbanizacion from './Urbanizacion.jsx';
 import FichaEscuela, { COLOR_RIESGO, FUENTE_AGUA, NIVEL_RIESGO } from './FichaEscuela.jsx';
@@ -48,12 +49,13 @@ export default function Escuelas({ escuelas, alertas, zonas, sel, onElegir }) {
   const [filtro, setFiltro] = useState({ nivel: 'todos', tipo: 'todos', municipio: 'todos' });
   const total = escuelas.length;
   const altas = escuelas.filter((e) => ['alto', 'muy_alto'].includes(r(e).nivel)).length;
-  const conMec = escuelas.filter((e) => e.c_estacion).length;
+  const { mecanismosDe } = useDatos();
+  const conMec = escuelas.filter((e) => mecanismosDe(e.cct).length).length;
   const conMat = escuelas.filter((e) => e.matricula != null);
   const alumnos = conMat.reduce((s, e) => s + e.matricula, 0);
   const cifras = [
     [altas ? 'critica' : '', altas, 'Riesgo alto o muy alto', total ? Math.round(100 * altas / total) + ' % de ' + total : 'sin escuelas'],
-    ['', total, 'Escuelas rurales en la cuenca', 'públicas, de Puebla'],
+    ['', total, 'Escuelas rurales del Alto Atoyac', 'públicas, de Puebla'],
     ['', conMec, 'Con mecanismo propuesto', (total - conMec) + ' sin mecanismo'],
     ['', conMat.length ? num(alumnos) : 'sin dato', 'Alumnos', conMat.length ? 'en ' + conMat.length + ' de ' + total + ' escuelas con dato' : 'falta la matrícula en los datos'],
   ];
@@ -139,7 +141,7 @@ export default function Escuelas({ escuelas, alertas, zonas, sel, onElegir }) {
                   <span className="cuando">{r(e).indice != null ? 'índice ' + num(r(e).indice, 2) : 'sin índice'}</span>
                   <span className="que">{e.nombre}</span>
                   <span className="estado">{TIPO[tipoPrincipal(e)] || ''}</span>
-                  <span className="donde">{inicial(e.localidad || 'sin dato')}, {inicial(e.municipio || '')}{e.c_estacion ? ' · ' + e.c_estacion : ''}</span>
+                  <span className="donde">{inicial(e.localidad || 'sin dato')}, {inicial(e.municipio || '')}{mecanismosDe(e.cct).length ? ' · ' + mecanismosDe(e.cct).map((m) => m.c_estacion).join(', ') : ''}</span>
                 </button>
               </li>
             ))}

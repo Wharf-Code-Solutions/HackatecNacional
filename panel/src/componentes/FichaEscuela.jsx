@@ -2,6 +2,7 @@ import { hora, inicial, num, porAtender } from '../lib/formato.js';
 import { PARAM, txt } from '../lib/etiquetas.js';
 import BarrasH from '../graficas/BarrasH.jsx';
 import { Nivel } from './ListaAlertas.jsx';
+import { useDatos } from '../lib/contexto.js';
 
 // Ficha de una escuela (docs/19 §6, punto 2): por qué tiene ese riesgo (el desglose, que suma el
 // índice), su fuente de agua, su mecanismo, sus alertas, las zonas de riesgo que la contienen y sus
@@ -25,6 +26,7 @@ const nombreFactor = (k) => FACTOR[k] || inicial(k.replace(/_/g, ' '));
 const tramite = (t) => inicial((t || '').replace(/_/g, ' '));
 
 export default function FichaEscuela({ escuela: e, alertas, zonas }) {
+  const { mecanismosDe, mecanismoActivo } = useDatos();
   if (!e) {
     return (
       <article className="expediente" aria-label="Ficha de la escuela">
@@ -37,9 +39,10 @@ export default function FichaEscuela({ escuela: e, alertas, zonas }) {
     .sort((a, b) => b[1] - a[1])
     .map(([k, v]) => ({ nombre: nombreFactor(k), partes: { v: Math.round(v * 1000) / 1000 }, total: Math.round(v * 1000) / 1000 }));
   const auts = e.autorizaciones || [];
-  const ceaspue = auts.some((a) => a.organismo === 'CEASPUE' && a.estado === 'otorgada');
-  const suyas = e.c_estacion ? alertas.filter((a) => a.c_estacion === e.c_estacion)
-    .sort((a, b) => (a.fecha_hora < b.fecha_hora ? 1 : -1)) : [];
+  const mecs = mecanismosDe(e.cct);
+  const codigosMec = mecs.map((m) => m.c_estacion);
+  const suyas = alertas.filter((a) => codigosMec.includes(a.c_estacion)
+    || (a.escuelas_afectadas || []).includes(e.cct)).sort((a, b) => (a.fecha_hora < b.fecha_hora ? 1 : -1));
   const abiertas = suyas.filter(porAtender);
   const zonasSuyas = ((zonas && zonas.features) || []).filter((f) => (f.properties.escuelas || []).includes(e.cct));
   const cifras = [
@@ -82,15 +85,16 @@ export default function FichaEscuela({ escuela: e, alertas, zonas }) {
         <dl className="datos">
           <dt>Fuente de agua</dt><dd>{FUENTE_AGUA[e.fuente_agua] || 'Sin dato'}</dd>
           <dt>Mecanismo</dt>
-          <dd>{e.c_estacion ? e.c_estacion + (ceaspue ? ' · activo' : ' · propuesto, falta autorización de CEASPUE') : 'Ninguno cerca'}</dd>
-          {e.c_estacion && <><dt>Alertas por atender</dt><dd>{abiertas.length} de {suyas.length}</dd></>}
+          <dd>{mecs.length ? mecs.map((m) => m.c_estacion + ((m.parametros || []).includes('LLUVIA') ? ' (ladera)' : ' (agua)')
+            + (mecanismoActivo(m) ? ' · activo' : ' · propuesto')).join('; ') : 'Ninguno cerca'}</dd>
+          {mecs.length > 0 && <><dt>Alertas por atender</dt><dd>{abiertas.length} de {suyas.length}</dd></>}
         </dl>
       </section>
 
-      {e.c_estacion && (
+      {mecs.length > 0 && (
         <section className="bloque">
-          <h3>Alertas de su mecanismo</h3>
-          {!suyas.length ? <p className="vacio">Sin alertas de {e.c_estacion}.</p> : (
+          <h3>Alertas de sus mecanismos</h3>
+          {!suyas.length ? <p className="vacio">Sin alertas de {codigosMec.join(' ni ')}.</p> : (
             <ol className="ficha-alertas">
               {suyas.slice(0, 8).map((a) => (
                 <li key={a.c_alerta}>

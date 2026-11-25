@@ -28,8 +28,11 @@ async function getJSON(url) {
   return r.json();
 }
 
-// El reto pide la cuenca: solo escuelas de Puebla (CCT 21...) dentro del contorno de la cuenca
-// (datos/procesados/mapa/cuenca.geojson). Punto en poligono por paridad de cruces.
+// El reto pide el Alto Atoyac: solo escuelas de Puebla (CCT 21...) dentro de sus cuatro subcuencas, las mismas
+// que usa el modulo A para colocar los mecanismos (scripts/_comun.py, SUBCUENCAS_ALTO_ATOYAC), leidas de
+// datos/procesados/mapa/subcuencas.geojson. La cuenca RH18A completa (cuenca.geojson) es mas grande: incluye
+// Nexapa, Mixteco, Acatlan y el Atoyac aguas abajo. Punto en poligono por paridad de cruces.
+const SUBCUENCAS_ALTO_ATOYAC = ['RH18Ad', 'RH18Ai', 'RH18Aj', 'RH18Ac'];   // Texmelucan, Zahuapan, Alseseca, Valsequillo
 function dentroDe(anillo, x, y) {
   let r = false;
   for (let i = 0, j = anillo.length - 1; i < anillo.length; j = i++) {
@@ -39,9 +42,12 @@ function dentroDe(anillo, x, y) {
   return r;
 }
 function anillosDe(geo) {
-  const g = geo && geo.features && geo.features[0] && geo.features[0].geometry;
-  if (!g) return [];
-  return g.type === 'MultiPolygon' ? g.coordinates.map((p) => p[0]) : [g.coordinates[0]];
+  return ((geo && geo.features) || []).filter((f) => SUBCUENCAS_ALTO_ATOYAC.includes((f.properties || {}).clave))
+    .flatMap((f) => {
+      const g = f.geometry;
+      if (!g) return [];
+      return g.type === 'MultiPolygon' ? g.coordinates.map((q) => q[0]) : [g.coordinates[0]];
+    });
 }
 
 export function useDatosFijos() {
@@ -59,9 +65,12 @@ export function useDatosFijos() {
       // Escuelas y zonas (docs/19 §4): si faltan, el panel sigue con listas vacias.
       getJSON(base + 'escuelas.json').catch(() => []),
       getJSON(base + 'zonas_riesgo.geojson').catch(() => ({ type: 'FeatureCollection', features: [] })),
-      getJSON(base + 'cuenca.geojson').catch(() => null),
+      getJSON(base + 'subcuencas.geojson').catch(() => null),
       getJSON(base + 'mecanismos.json').catch(() => ({ estaciones: [] })),
-    ]).then(([est, lb, abajo, pares, geo, rios, esc, zonas, cuenca, mec]) => {
+      getJSON(base + 'umbrales_lluvia.json').catch(() => ({})),
+      getJSON(base + 'suelo_laderas.json').catch(() => ({})),
+      getJSON(base + 'lluvia_sitios.json').catch(() => ({})),
+    ]).then(([est, lb, abajo, pares, geo, rios, esc, zonas, cuenca, mec, uLluvia, suelo, lluviaSitios]) => {
       const estaciones = Object.fromEntries(est.estaciones.map((e) => [e.c_estacion, e]));
       const lineaBase = {};
       lb.linea_base.forEach((r) => {
@@ -81,7 +90,22 @@ export function useDatosFijos() {
         && (!anillos.length || anillos.some((a) => dentroDe(a, e.longitud, e.latitud))));
       // Mecanismos junto a escuelas (EST-ESC-xx, del modulo A): para nombrar su estacion y saber que escuelas protege.
       const mecanismos = Object.fromEntries((mec.estaciones || []).map((m) => [m.c_estacion, m]));
-      setDatos({ estaciones, lineaBase, nombresSitio, pares: listaPares, sitios, rios: rios.lineas, escuelas, zonas, mecanismos });
+      // Umbrales de ladera, leídos igual que el motor (motor/reglas.py, cargar_umbrales_ladera): no se inventan.
+      const num = (x) => (typeof x === 'number' ? x : null);
+      const niv = Object.fromEntries(((uLluvia.lluvia || {}).niveles || []).map((n) => [n.nivel, n]));
+      const p99 = Object.fromEntries((lluviaSitios.sitios || []).filter((x) => x.c_estacion).map((x) => {
+        const t = x.temporada || {};
+        return [x.c_estacion, [num((t.lluvia_diaria_dia_con_lluvia_mm || {}).p99), num((t.lluvia_3_dias_mm || {}).p99)]];
+      }));
+      const humedad = Object.fromEntries((suelo.laderas || []).map((x) => [x.c_estacion, x.umbral_cerca_saturacion_pct + (x.correccion_sensor_pct || 0)]));
+      const inc = uLluvia.inclinacion || {};
+      const umbralesLadera = {
+        lluvia: { Preventiva: [num((niv.Preventiva || {}).acumulada_24h_mm), num((niv.Preventiva || {}).acumulada_72h_mm)],
+          Critica: [num((niv.Critica || {}).acumulada_24h_mm), num((niv.Critica || {}).acumulada_72h_mm)] },
+        p99, humedad, humedadPorDefecto: num((uLluvia.humedad_suelo || {}).cerca_de_saturacion_pct) ?? 45,
+        inclinacion: { aviso: num(inc.aviso_grados) ?? 0.5, critico: num(inc.critico_grados) ?? 2 },
+      };
+      setDatos({ estaciones, lineaBase, nombresSitio, pares: listaPares, sitios, rios: rios.lineas, escuelas, zonas, mecanismos, umbralesLadera });
     }).catch((e) => setError(e.message));
   }, []);
   return { datos, error };

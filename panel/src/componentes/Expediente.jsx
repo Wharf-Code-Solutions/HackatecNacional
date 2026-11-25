@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDatos } from '../lib/contexto.js';
-import { CRITERIO, FUENTE, PARAM, REGLA, txt } from '../lib/etiquetas.js';
+import { COLOR_NIVEL, CRITERIO, FUENTE, LADERA, PARAM, REGLA, txt } from '../lib/etiquetas.js';
 import { hora, inicial, km, num } from '../lib/formato.js';
 import Miniaturas from '../graficas/Miniaturas.jsx';
 import Serie from '../graficas/Serie.jsx';
@@ -153,7 +153,7 @@ function Sondas({ alerta, alertas, estacion, banda, veredictos, lineaBase, evide
 }
 
 export default function Expediente({ alerta, alertas, veredictos, motor, guardar, prediccion, demo, onElegirEscuela }) {
-  const { estaciones, lineaBase, nombreEstacion, banda, unidad, escuelasDe } = useDatos();
+  const { estaciones, lineaBase, nombreEstacion, banda, unidad, escuelasDe, estacionDe, umbralesDe } = useDatos();
   if (!alerta) {
     return (
       <article className="expediente" aria-label="Expediente de la alerta">
@@ -162,12 +162,21 @@ export default function Expediente({ alerta, alertas, veredictos, motor, guardar
     );
   }
   const a = alerta;
-  const e = estaciones[a.c_estacion] || {};
+  const e = estacionDe(a.c_estacion);
   const b = banda(a);
   const fuera = b && a.valor != null
     ? (a.valor > b.p90 ? num(a.valor / b.p90, 1) + ' veces el p90' : a.valor < b.p10 ? 'debajo del p10 (' + num(b.p10) + ')' : 'dentro de la banda')
     : 'sin línea base';
-  const cifras = [
+  // Ladera (docs/20): sin banda; el valor se compara contra el umbral del motor que alcanzó.
+  const ladera = LADERA.includes(a.c_parametro);
+  const umb = ladera ? umbralesDe(a.c_estacion, a.c_parametro, a.criterio_aplicado === 'UMBRAL_LLUVIA_72H' ? 72 : 24) : [];
+  const alcanzado = umb.filter((u) => a.valor != null && Math.abs(a.valor) >= u.valor).pop();
+  const siguiente = umb.find((u) => a.valor == null || Math.abs(a.valor) < u.valor);
+  const cifras = ladera ? [
+    [num(a.valor, 1) + unidad(a), a.c_parametro === 'LLUVIA' ? (CRITERIO[a.criterio_aplicado] || 'Lluvia acumulada') : 'Valor medido'],
+    [alcanzado ? num(alcanzado.valor, 1) + unidad(a) : 'sin dato', 'Umbral alcanzado · ' + (alcanzado ? alcanzado.etiqueta.toLowerCase() : 'sin dato')],
+    [siguiente ? num(siguiente.valor, 1) + unidad(a) : 'ninguno', siguiente ? 'Siguiente umbral · ' + siguiente.etiqueta.toLowerCase() : 'Ya superó el umbral más alto'],
+  ] : [
     [num(a.valor) + unidad(a), 'Valor medido'],
     [b ? num(b.p10) + ' a ' + num(b.p90) : 'sin dato', b ? 'Banda habitual del sitio · n = ' + b.n : 'Banda habitual del sitio'],
     [a.lecturas_consecutivas == null ? 'sin dato' : String(a.lecturas_consecutivas), 'Lecturas seguidas fuera · ' + fuera],
@@ -175,13 +184,16 @@ export default function Expediente({ alerta, alertas, veredictos, motor, guardar
   const evidencia = [
     ['Regla que la disparó', REGLA[a.regla] || a.regla],
     ['Comparado contra', a.criterio_aplicado ? (CRITERIO[a.criterio_aplicado] || a.criterio_aplicado) : 'sin dato'],
-    ['Respaldo de la banda', b ? `${b.n} mediciones de CONAGUA, ${b.primera_fecha} a ${b.ultima_fecha}` : 'sin línea base para este parámetro'],
+    ladera
+      ? ['Respaldo del umbral', a.c_parametro === 'HUM_SUELO' ? 'Suelo de esa ladera (SoilGrids); hipótesis hasta medir en campo'
+        : a.c_parametro === 'INCL' ? 'Ruido de diseño del sensor; sin umbral publicado' : 'Literatura y p99 de la lluvia del sitio; hipótesis hasta una temporada de datos']
+      : ['Respaldo de la banda', b ? `${b.n} mediciones de CONAGUA, ${b.primera_fecha} a ${b.ultima_fecha}` : 'sin línea base para este parámetro'],
   ];
   return (
     <article className="expediente" id="expediente" aria-label="Expediente de la alerta">
       <header className="exp-cabeza">
         <p className="exp-meta"><Nivel nivel={a.nivel} /><span>Folio {a.c_alerta}</span></p>
-        <h2>{PARAM[a.c_parametro] || a.c_parametro} fuera de lo habitual en {nombreEstacion(a.c_estacion)}</h2>
+        <h2>{PARAM[a.c_parametro] || a.c_parametro} {ladera ? 'sobre su umbral' : 'fuera de lo habitual'} en {nombreEstacion(a.c_estacion)}</h2>
         <p className="exp-sub">
           {hora(a.fecha_hora)} · estación {a.c_estacion}, sitio {a.c_sitio || e.c_sitio || 'sin dato'}
           {e.municipio && ` · ${inicial(e.municipio)}, ${inicial(e.estado)}`}

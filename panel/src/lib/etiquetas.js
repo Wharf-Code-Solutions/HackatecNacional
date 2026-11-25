@@ -2,15 +2,23 @@
 export const PARAM = {
   OD: 'Oxígeno disuelto', PH: 'pH', COND: 'Conductividad', TEMP: 'Temperatura',
   TURB: 'Turbiedad', SDT: 'Sólidos disueltos totales',
+  LLUVIA: 'Lluvia', HUM_SUELO: 'Humedad del suelo', INCL: 'Inclinación de la ladera',
 };
+// Sensores de ladera (docs/20): sin línea base; el motor los compara contra umbrales.
+export const LADERA = ['LLUVIA', 'HUM_SUELO', 'INCL'];
+export const UNIDAD_LADERA = { LLUVIA: 'mm', HUM_SUELO: '%', INCL: '°' };
 export const PARAM_CORTO = { OD: 'Oxígeno', PH: 'pH', COND: 'Conduct.', TEMP: 'Temp.', TURB: 'Turbiedad' };
 export const REGLA = {
   umbral_fijo: 'Umbral fijo', desviacion_linea_base: 'Desviación de la línea base del sitio',
   persistencia: 'Persistencia', cambio_brusco: 'Cambio brusco',
+  lluvia_acumulada: 'Lluvia acumulada sobre el umbral', suelo_saturado: 'Suelo cerca de saturación',
+  movimiento_ladera: 'Movimiento de la ladera',
 };
 export const CRITERIO = {
   CONAGUA_SUP: 'Escala de calidad de CONAGUA', NOM001_2021_RIO: 'NOM-001-SEMARNAT-2021, río',
   NOM001_2021_EMBALSE: 'NOM-001-SEMARNAT-2021, embalse', LINEA_BASE_SITIO: 'Historia del propio sitio',
+  UMBRAL_LLUVIA_24H: 'Lluvia acumulada en 24 h', UMBRAL_LLUVIA_72H: 'Lluvia acumulada en 72 h',
+  SATURACION_SUELO_SITIO: 'Saturación del suelo de esa ladera', INCLINACION_LADERA: 'Cambio de inclinación desde la instalación',
 };
 export const FUENTE = {
   aguas_residuales_municipales: 'Aguas residuales municipales', descarga_industrial: 'Descarga industrial',
