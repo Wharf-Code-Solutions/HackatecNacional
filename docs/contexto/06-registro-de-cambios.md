@@ -21,6 +21,17 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · M4: escuela grande, modelos por pieza y pruebas visibles en el simulador
+
+**Qué cambió.** Ladera: escuela a 1.7×, textos más cortos y, en las vistas de cerca (río y ladera), el modelo comercial de cada
+pieza (`catalogo-componentes.md`). Las pruebas se ven en la figura: lluvia fuerte oscurece el día y hace llover; la descarga
+industrial vira el agua a ocre, acelera su flujo dibujado y vierte por un tubo en la orilla; la orgánica la vira a verde oscuro;
+el deslave baja una lengua de lodo desde la estaca y vuelve marrón el arroyo.
+**Por qué.** Pedido del usuario: que cada prueba se note en la figura y que cada componente diga qué es.
+**Qué arrastró.** `escena.js`, `estilos.css`, `index.html` (versiones). El aumento de flujo con la descarga es solo del dibujo: el modelo no lo cambia.
+
+---
+
 ## 2026-11-24 · Módulo B: escuelas con mapa y lista lado a lado
 
 **Qué cambió.** La pestaña Escuelas quita la cifra de alumnos (la matrícula no viene en los datos), pone el mapa y la

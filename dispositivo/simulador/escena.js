@@ -170,6 +170,7 @@
     }
     var tex = new T.CanvasTexture(c2); tex.encoding = T.sRGBEncoding;
     var matNube = new T.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, fog: false, toneMapped: false });
+    G.boveda = boveda; G.matNube = matNube;
     [[-90, 38, -150, 70], [-10, 52, -175, 90], [70, 34, -160, 64], [130, 46, -110, 70], [-150, 44, -90, 60], [30, 70, -150, 50]].forEach(function (n, i) {
       var m = new T.Mesh(new T.PlaneGeometry(n[3], n[3] / 2), matNube);
       m.position.set(n[0], n[1], n[2]); m.lookAt(0, n[1] * 0.6, 0); m.scale.x = i % 2 ? -1 : 1;
@@ -388,7 +389,9 @@
   var ARROYO = { x: 1.6, ancho: 1.1, talud: 1.0, hondo: 1.4 };    // cauce: eje, medio ancho del lecho, talud y hondura
   var EXAGERA_INCL = 5;                            // la estaca se dibuja inclinada 5 veces lo medido; el rótulo da el valor real
   // La escuela queda atrás y a la izquierda de la estación, separada de ella y del arroyo: así se lee cada pieza.
-  var LAD = { pluvio: [-1.0, 1.4], hum: 6.2, estaca: [9.0, 1.3], escuela: [-13.4, -7.0] };
+  // La escuela se dibuja a 1.7× (EW × EF de planta) para que se lea junto al cerro y a la estación.
+  var KE = 1.7, EW = 6.4 * KE, EF = 3.2 * KE;
+  var LAD = { pluvio: [-1.0, 1.4], hum: 6.2, estaca: [9.0, 1.3], escuela: [-12.6, -7.8] };
   function ejeArroyo(z) { return ARROYO.x + 0.35 * Math.sin(z * 0.15 + 0.4); }
   function alturaLadera(x, z) {
     var u = x - INICIO_CERRO, y = PIE + PENDIENTE * Math.max(0, u) * suave(u / 2.6);     // explanada y pie del cerro
@@ -401,7 +404,7 @@
   function enArroyo(x, z) { return Math.abs(x - ejeArroyo(z)) < ARROYO.ancho + ARROYO.talud * 0.8; }
   function libreLadera(x, z) {
     var e = LAD.escuela;
-    return Math.hypot(x + 4.3, z - 0.1) > 1.9 && !(x > e[0] - 3.4 && x < e[0] + 3.4 && z > e[1] - 2.2 && z < e[1] + 2.4) &&
+    return Math.hypot(x + 4.3, z - 0.1) > 1.9 && !(x > e[0] - EW / 2 - 0.8 && x < e[0] + EW / 2 + 0.8 && z > e[1] - EF / 2 - 0.6 && z < e[1] + EF / 2 + 0.9) &&
       Math.hypot(x - LAD.pluvio[0], z - LAD.pluvio[1]) > 0.7 && Math.hypot(x - LAD.estaca[0], z - LAD.estaca[1]) > 0.9 &&
       Math.hypot(x - 16.5, z + 12) > 1.1 && !(x > LAD.hum - 0.6 && x < LAD.hum + 0.6 && z > 1.2) && z < Z_CORTE - 0.15 &&
       !enArroyo(x, z);
@@ -416,7 +419,7 @@
     for (var i = 0; i < pos.count; i++) {
       var x = pos.getX(i), z = pos.getZ(i), y = alturaLadera(x, z);
       pos.setY(i, y);
-      var e = LAD.escuela, patio = x > e[0] - 4 && x < e[0] + 4 && z > e[1] - 2.8 && z < Z_CORTE;   // patio de tierra de la escuela
+      var e = LAD.escuela, patio = x > e[0] - EW / 2 - 1 && x < e[0] + EW / 2 + 1 && z > e[1] - EF / 2 - 1.2 && z < Z_CORTE;   // patio de tierra de la escuela
       c.copy(PASTO).lerp(MONTE, suave((x - 3) / 8));
       if (patio) c.copy(PATIO);
       if (enArroyo(x, z)) c.copy(LECHO_L).lerp(c, suave((Math.abs(x - ejeArroyo(z)) - ARROYO.ancho) / ARROYO.talud));
@@ -459,7 +462,7 @@
 
     construyeEscuela();
     construyeArboles([[11.5, -5.5], [13.8, -2.4], [12.6, -9.5], [15.6, -6.8], [9.6, -8.2], [17.6, -1.2], [-11.8, -11.5],
-      [-8.2, -12.4], [-3.4, -10.5], [3.8, -12], [7.2, -15], [14.2, -17], [-17.4, -12.8], [-16.6, -3.6], [-9.2, -3.2]], [0x6f8a5f, 0x627d55]);
+      [-6.4, -13.4], [-3.4, -10.5], [3.8, -12], [7.2, -15], [14.2, -17], [-17.4, -14.8], [-17.8, -2.6]], [0x6f8a5f, 0x627d55]);
     construyeVegetacionLadera();
   }
   // El arroyo: una lámina que sigue el eje del cauce, con ondas que corren hacia el corte, y su cara en el corte.
@@ -507,18 +510,18 @@
 
   // Escuela rural de un piso: muros claros con guardapolvo de color, losa con alero, ventanas y puerta.
   function construyeEscuela() {
-    var e = LAD.escuela, y0 = PIE, ANCHO = 6.4, FONDO = 3.2, ALTO = 2.9;
+    var e = LAD.escuela, y0 = PIE, k = KE, ANCHO = EW, FONDO = EF, ALTO = 2.9 * k;
     var muro = mate(0xefeae0, { roughness: 0.85 }), guarda = mate(0x8f3b33, { roughness: 0.8 }), losa = mate(0xd4cdbf, { roughness: 0.9 });
     var vidrio = mate(0x3c5566, { roughness: 0.15, metalness: 0.1, envMap: G.cielo, envMapIntensity: 0.5 });
     caja(ANCHO, ALTO, FONDO, muro, e[0], y0 + ALTO / 2, e[1]);
-    caja(ANCHO + 0.02, 0.9, FONDO + 0.02, guarda, e[0], y0 + 0.45, e[1], null, 0);
-    caja(ANCHO + 0.7, 0.22, FONDO + 0.8, losa, e[0], y0 + ALTO + 0.11, e[1] + 0.2);
+    caja(ANCHO + 0.02, 0.9 * k, FONDO + 0.02, guarda, e[0], y0 + 0.45 * k, e[1], null, 0);
+    caja(ANCHO + 0.7 * k, 0.22 * k, FONDO + 0.8 * k, losa, e[0], y0 + ALTO + 0.11 * k, e[1] + 0.2 * k);
     for (var i = 0; i < 4; i++) {
-      var x = e[0] - ANCHO / 2 + 0.9 + i * 1.45;
-      if (i === 2) caja(0.95, 2.0, 0.06, mate(0x5b4636, { roughness: 0.7 }), x, y0 + 1.0, e[1] + FONDO / 2 + 0.02, null, 0.5);   // puerta
-      else caja(1.0, 1.0, 0.05, vidrio, x, y0 + 1.75, e[1] + FONDO / 2 + 0.02, null, 0.5);
+      var x = e[0] - ANCHO / 2 + 0.9 * k + i * 1.45 * k;
+      if (i === 2) caja(0.95 * k, 2.0 * k, 0.06, mate(0x5b4636, { roughness: 0.7 }), x, y0 + 1.0 * k, e[1] + FONDO / 2 + 0.02, null, 0.5);   // puerta
+      else caja(1.0 * k, 1.0 * k, 0.05, vidrio, x, y0 + 1.75 * k, e[1] + FONDO / 2 + 0.02, null, 0.5);
     }
-    G.anclaEscuela = [e[0] - ANCHO / 2 + 0.6, y0 + ALTO + 0.6, e[1] + FONDO / 2];   // sobre la esquina izquierda del techo
+    G.anclaEscuela = [e[0] - ANCHO / 2 + 0.6 * k, y0 + ALTO + 0.6 * k, e[1] + FONDO / 2];   // sobre la esquina izquierda del techo
   }
   function construyeVegetacionLadera() {
     var r = M.mulberry32(41), pasto = [], macollos = [], i, x, z;
@@ -526,7 +529,7 @@
     for (i = 0; i < 11000 && pasto.length < 3600; i++) {
       x = -19 + r() * 38; z = -30 + r() * (Z_CORTE + 30);
       if (!libreLadera(x, z)) continue;
-      var e = LAD.escuela; if (x > e[0] - 4 && x < e[0] + 4 && z > e[1] - 2.8) continue;   // el patio, sin pasto
+      var e = LAD.escuela; if (x > e[0] - EW / 2 - 1 && x < e[0] + EW / 2 + 1 && z > e[1] - EF / 2 - 1.2) continue;   // el patio, sin pasto
       var h = 0.14 + r() * 0.24;
       pasto.push({ x: x, y: alturaLadera(x, z) - 0.01, z: z, giro: r() * 6.28, s: [h * 1.1, h, h * 1.1], color: VERDES[(r() * 4) | 0] });
     }
@@ -583,24 +586,24 @@
     zona('ladera', [p[0], yp + 0.8 * E, p[1]], [0.7 * E, 1.7 * E, 0.7 * E]);
     zona('ladera', [xh, yh + 0.2 * E, Z_CORTE - 0.3], [0.8 * E, 1.0 * E, 1.0]);
     zona('ladera', [s[0], ye + 0.5 * E, s[1]], [0.7 * E, 1.4 * E, 0.7 * E]);
-    // la lluvia: trazos que caen; se ven tantos como la intensidad del modelo (pinta)
+    // el deslizamiento: una lengua de lodo que baja desde la estaca cuando el inclinómetro marca el salto (pintaLadera)
+    G.lodo = new T.Mesh(new T.SphereGeometry(1, 24, 14), mate(0x7a5a3c, { roughness: 1 }));
+    G.lodo.visible = false; G.lodo.userData.sinSombra = true; G.escena.add(G.lodo);
+    return trazo;
+  }
+  // La lluvia: trazos que caen; se ven tantos como la intensidad (0 a 1) del modelo (caeLluvia). Sirve a las dos figuras.
+  function construyeLluvia() {
     var N = 1400, pts = new Float32Array(N * 6), rr = M.mulberry32(9);
     for (var i = 0; i < N; i++) {
-      var x = -12 + rr() * 30, z = -16 + rr() * (Z_CORTE + 16), y = rr() * 18;
+      var x = -14 + rr() * 32, z = -20 + rr() * (Z_CORTE + 20), y = rr() * 18;
       pts.set([x, y, z, x - 0.03, y - 0.42, z], i * 6);
     }
     var gl = new T.BufferGeometry(); gl.setAttribute('position', new T.BufferAttribute(pts, 3)); gl.setDrawRange(0, 0);
     G.lluvia = new T.LineSegments(gl, new T.LineBasicMaterial({ color: 0x8fa9bd, transparent: true, opacity: 0.6, depthWrite: false }));
     G.lluvia.userData.sinSombra = true; G.lluvia.frustumCulled = false; G.escena.add(G.lluvia);
-    return trazo;
   }
-  function pintaLadera(s, nom, dtr) {
-    var L = s.ladera, fw = s.fw, k = M.acota((L.hum - L.humBase) / (L.humSatura - L.humBase), 0, 1);
-    G.matCorteL.color.setRGB(1 - 0.35 * k, 1 - 0.38 * k, 1 - 0.4 * k);                // el suelo mojado, más oscuro
-    G.matSueloL.color.setRGB(1 - 0.12 * k, 1 - 0.12 * k, 1 - 0.1 * k);
-    G.estaca.rotation.z = L.incl * EXAGERA_INCL * Math.PI / 180;                        // hacia abajo del cerro
-    // lluvia: hasta 1 400 trazos con 40 mm/h; caen a ≈ 7 m/s en tiempo real
-    var mmh = L.intensidad(fw.t), n = Math.round(M.acota(mmh / 40, 0, 1) * 1400);
+  function caeLluvia(k, dtr) {            // hasta 1 400 trazos; caen a ≈ 7 m/s en tiempo real
+    var n = Math.round(M.acota(k, 0, 1) * 1400);
     if (n) {
       var a = G.lluvia.geometry.attributes.position, d = 7 * dtr;
       for (var i = 0; i < n; i++) {
@@ -611,11 +614,42 @@
       a.needsUpdate = true;
     }
     G.lluvia.geometry.setDrawRange(0, n * 2);
+  }
+  // Con lluvia fuerte el día se apaga un poco: sol, cielo, nubes y niebla (k de 0 a 1). Solo cuando cambia de verdad.
+  function clima(k) {
+    if (G.clima !== undefined && Math.abs(k - G.clima) < 0.004) return;
+    G.clima = k;
+    G.sol.intensity = 1.6 * (1 - 0.62 * k);
+    G.sol.color.setHex(0xfff4e4).lerp(new T.Color(0xc4cdd6), k);
+    G.cieloLuz.intensity = 0.42 * (1 - 0.3 * k);
+    G.boveda.material.color.setRGB(1 - 0.52 * k, 1 - 0.5 * k, 1 - 0.44 * k);
+    G.matNube.color.setRGB(1 - 0.5 * k, 1 - 0.5 * k, 1 - 0.46 * k);
+    G.escena.fog.color.setHex(HORIZONTE).multiply(G.boveda.material.color);
+  }
+  function pintaLadera(s, nom, dtr) {
+    var L = s.ladera, fw = s.fw, k = M.acota((L.hum - L.humBase) / (L.humSatura - L.humBase), 0, 1);
+    G.matCorteL.color.setRGB(1 - 0.35 * k, 1 - 0.38 * k, 1 - 0.4 * k);                // el suelo mojado, más oscuro
+    G.matSueloL.color.setRGB(1 - 0.12 * k, 1 - 0.12 * k, 1 - 0.1 * k);
+    G.estaca.rotation.z = L.incl * EXAGERA_INCL * Math.PI / 180;                        // hacia abajo del cerro
+    // lluvia: hasta 1 400 trazos con 40 mm/h
+    var mmh = L.intensidad(fw.t);
+    caeLluvia(mmh / 40, dtr);
     // el arroyo crece y corre más rápido con la lluvia del modelo (sin lluvia, ≈ 0.4 m/s dibujado)
     G.creceL = (G.creceL || 0) + (M.acota(mmh / 40, 0, 1) - (G.creceL || 0)) * Math.min(1, dtr * 0.8);
+    clima(G.creceL);                                                                    // y el día se oscurece con la tormenta
     nivelArroyo(G.fondoArroyo + NIVEL_ARROYO.base + NIVEL_ARROYO.crece * G.creceL);
     G.ondasL.offset.y = (G.ondasL.offset.y + (0.4 + 1.6 * G.creceL) * dtr / 3) % 1;
-    G.matArroyo.color.setHex(G.creceL > 0.3 ? 0x7b6f58 : 0x5f7f86); G.matCaraArroyo.color.copy(G.matArroyo.color);   // turbia con la crecida
+    // deslizamiento: pasado 1° de cambio (el salto del deslave), una lengua de lodo baja de la estaca al arroyo
+    var kd = M.acota((L.incl - 1.0) / 2.8, 0, 1);
+    G.lodo.visible = kd > 0;
+    if (kd > 0) {
+      var xl = 9.6 - 5.0 * kd, zl = 0.9;
+      G.lodo.position.set(xl, alturaLadera(xl, zl) + 0.12, zl);
+      G.lodo.rotation.z = Math.atan(PENDIENTE);
+      G.lodo.scale.set(0.7 + 1.1 * kd, 0.28, 1.0);
+    }
+    G.matArroyo.color.setHex(G.creceL > 0.3 ? 0x7b6f58 : 0x5f7f86);                      // turbia con la crecida
+    G.matArroyo.color.lerp(new T.Color(0x6a4d33), 0.85 * kd); G.matCaraArroyo.color.copy(G.matArroyo.color);   // y marrón con el lodo
     var midiendo = nom === 'CALENTAMIENTO' || nom === 'MEDICIÓN';
     Object.keys(G.puntasL).forEach(function (q) {
       var son = s.sondas[q], fa = son && son.falla !== 'ninguna';
@@ -625,8 +659,8 @@
     G.matCable.color.setHex(midiendo ? TINTA : 0x55626c);
     function med(q) { var d = fw.detalleMed[q]; return d && d.valor !== null && d.valor !== undefined ? d.valor : null; }
     rotulo('pluvio', mmh >= 0.5 ? 'Llueve ' + Math.round(mmh) + ' mm/h' : 'Sin lluvia');
-    rotulo('suelo', med('HUM_SUELO') === null ? (midiendo ? 'Midiendo' : 'Sin medición todavía') : 'Humedad ' + med('HUM_SUELO').toFixed(1) + ' %');
-    if (s.sondas.INCL) rotulo('incl', med('INCL') === null ? (midiendo ? 'Midiendo' : 'Sin medición todavía') : med('INCL').toFixed(2) + '° desde la instalación');
+    rotulo('suelo', med('HUM_SUELO') === null ? (midiendo ? 'Midiendo' : 'Sin dato') : med('HUM_SUELO').toFixed(1) + ' %');
+    if (s.sondas.INCL) rotulo('incl', med('INCL') === null ? (midiendo ? 'Midiendo' : 'Sin dato') : med('INCL').toFixed(2) + '°');
   }
 
   // ------------------------------------------------------------ colector de residuos
@@ -901,7 +935,7 @@
       { id: 'escuela', nombre: 'Escuela', ancla: G.anclaEscuela, lado: 'der', fijo: corto((est && est.escuela) || '', 30) },
       // río arriba, lejos de los rótulos de la estación
       { id: 'cauce', nombre: 'Cauce', ancla: [ejeArroyo(-24), PIE - ARROYO.hondo + NIVEL_ARROYO.base, -24], lado: 'der',
-        fijo: est && est.distancia_cauce_m != null ? 'A ' + est.distancia_cauce_m + ' m de la escuela' : 'Junto a la escuela' }
+        fijo: est && est.distancia_cauce_m != null ? 'A ' + est.distancia_cauce_m + ' m' : 'Junto a la escuela' }
     ];
     if (est && (est.parametros || []).indexOf('INCL') >= 0) r.splice(2, 0, { id: 'incl', nombre: 'Inclinómetro', ancla: G.anclaIncl.toArray(), lado: 'der', vista: 'ladera' });
     return r;
@@ -910,11 +944,11 @@
   // Vistas de cerca: un rótulo por pieza, en dos columnas a los lados, con una línea a la pieza.
   // Qué es sale de la ficha técnica; el estado y el dato, de la estación simulada.
   var SENSOR = {
-    COND: { nombre: 'Conductividad', como: 'dos electrodos, K = 1.0', dec: 0 },
-    OD:   { nombre: 'Oxígeno disuelto', como: 'membrana; la más lenta en estabilizar', dec: 2 },
-    PH:   { nombre: 'pH', como: 'electrodo de vidrio', dec: 2 },
-    TEMP: { nombre: 'Temperatura', como: 'compensa a las demás sondas', dec: 1 },
-    TURB: { nombre: 'Turbiedad', como: 'óptica, con limpiador', dec: 1 }
+    COND: { nombre: 'Conductividad', modelo: 'Atlas ENV-40-EC-K1.0', como: 'dos electrodos, K = 1.0', dec: 0 },
+    OD:   { nombre: 'Oxígeno disuelto', modelo: 'Atlas ENV-50-DO', como: 'membrana; la más lenta en estabilizar', dec: 2 },
+    PH:   { nombre: 'pH', modelo: 'Atlas ENV-40-pH', como: 'electrodo de vidrio', dec: 2 },
+    TEMP: { nombre: 'Temperatura', modelo: 'Atlas PT-1000', como: 'compensa a las demás sondas', dec: 1 },
+    TURB: { nombre: 'Turbiedad', modelo: 'Pyxis LT-633', como: 'óptica, con limpiador', dec: 1 }
   };
   var FILAS_SONDAS = { COND: [-1, -0.2], OD: [-1, 0.02], PH: [-1, 0.24], TEMP: [1, -0.1], TURB: [1, 0.14] };
   function v3(p) { return new T.Vector3(p[0], p[1], p[2]); }
@@ -931,25 +965,22 @@
       var vl = function (q, dec, u) {
         return function (e) {
           var son = e.s.sondas[q], med = e.s.fw.detalleMed && e.s.fw.detalleMed[q];
-          if (son.falla === 'sin_respuesta') return ['No responde: se envía vacío', true];
-          if (son.falla === 'menos999') return ['Roto: se envía −999', true];
+          if (son.falla === 'sin_respuesta') return ['No responde', true];
+          if (son.falla === 'menos999') return ['Roto: −999', true];
           if (e.nom === 'MEDICIÓN' || e.nom === 'CALENTAMIENTO') return ['Midiendo'];
-          if (!med || med.valor === null || med.valor === undefined) return ['Sin medición todavía'];
-          return ['Enviado: ' + med.valor.toFixed(dec) + u];
+          if (!med || med.valor === null || med.valor === undefined) return ['Sin dato'];
+          return [med.valor.toFixed(dec) + u];
         };
       };
       d.ladera = { centro: lado, items: [
-        { nombre: 'Pluviómetro', como: 'balancín de 0.2 mm; cuenta aun dormido', ancla: G.anclaPluvio, col: -1, fila: -0.22,
-          valor: function (e) {
-            var med = e.s.fw.detalleMed.LLUVIA, mmh = e.s.ladera.intensidad(e.s.fw.t);
-            return [(mmh >= 0.5 ? 'Llueve ' + Math.round(mmh) + ' mm/h' : 'Sin lluvia') + (med && med.valor !== null ? ' · enviado ' + med.valor.toFixed(1) + ' mm' : '')];
-          } },
-        { nombre: 'Humedad del suelo', como: 'capacitivo, enterrado a 50 cm', ancla: G.anclaHum, col: -1, fila: 0.18, valor: vl('HUM_SUELO', 1, ' %') }
+        { nombre: 'Pluviómetro', modelo: 'Davis 6466M', como: 'Cuenta cada 0.2 mm', ancla: G.anclaPluvio, col: -1, fila: -0.22,
+          valor: function (e) { var mmh = e.s.ladera.intensidad(e.s.fw.t); return [mmh >= 0.5 ? 'Llueve ' + Math.round(mmh) + ' mm/h' : 'Sin lluvia']; } },
+        { nombre: 'Humedad del suelo', modelo: 'METER TEROS 10', como: 'Enterrado a 50 cm', ancla: G.anclaHum, col: -1, fila: 0.18, valor: vl('HUM_SUELO', 1, ' %') }
       ] };
-      if (G.conIncl) d.ladera.items.push({ nombre: 'Inclinómetro', como: 'dos ejes, en una estaca anclada; giro dibujado 5 veces', ancla: G.anclaIncl, col: 1, fila: -0.12,
-        valor: vl('INCL', 2, '° desde la instalación') });
+      if (G.conIncl) d.ladera.items.push({ nombre: 'Inclinómetro', modelo: 'Murata SCL3300-D01', como: 'En una estaca anclada', ancla: G.anclaIncl, col: 1, fila: -0.12,
+        valor: vl('INCL', 2, '°') });
     } else d.sondas = { centro: G.centroSondas, items: M.PARAMS.map(function (q) {
-      return { nombre: SENSOR[q].nombre, como: SENSOR[q].como, ancla: G.puntaSensor[q], col: FILAS_SONDAS[q][0], fila: FILAS_SONDAS[q][1],
+      return { nombre: SENSOR[q].nombre, modelo: SENSOR[q].modelo, como: SENSOR[q].como, ancla: G.puntaSensor[q], col: FILAS_SONDAS[q][0], fila: FILAS_SONDAS[q][1],
         valor: function (e) {
           var son = e.s.sondas[q], esp = son.espec, med = e.s.fw.detalleMed && e.s.fw.detalleMed[q];
           if (son.falla === 'sin_respuesta') return ['No responde: se envía vacío', true];
@@ -962,68 +993,88 @@
         } };
     }) };
     d.gabinete = { centro: v3(S([-4.05, 2.0, 0.45])), items: [
-      { nombre: 'Controlador ESP32', como: 'despierta, mide, guarda y envía', ancla: v3(S([-4.25, 2.22, 0.33])), col: -1, fila: -0.22,
+      { nombre: 'Controlador', modelo: 'LILYGO T-SIM7080G-S3', como: 'Mide, guarda y envía', ancla: v3(S([-4.25, 2.22, 0.33])), col: -1, fila: -0.22,
         valor: function (e) { return [e.env ? 'Enviando los datos' : estado(e.s.fw)]; } },
-      { nombre: 'Reloj', como: 'pone la hora a cada medición', ancla: v3(S([-4.32, 2.12, 0.37])), col: -1, fila: -0.02,
+      { nombre: 'Reloj', modelo: 'DS3231SN', como: 'Pone la hora', ancla: v3(S([-4.32, 2.12, 0.37])), col: -1, fila: -0.02,
         valor: function (e) { return [hora(e.s.fw.t)]; } },
-      { nombre: 'Baterías', como: EN.celdas + ' × 18650, ' + Math.round(EN.capWh) + ' Wh', ancla: v3(S([-4.2, 1.55, 0.42])), col: -1, fila: 0.2,
+      { nombre: 'Baterías', modelo: 'Samsung INR18650-30Q', como: EN.celdas + ' celdas, ' + Math.round(EN.capWh) + ' Wh', ancla: v3(S([-4.2, 1.55, 0.42])), col: -1, fila: 0.2,
         valor: function (e) { var c = e.s.energia.soc(); return ['Carga ' + Math.round(c * 100) + ' %', c < 0.2]; } },
-      { nombre: 'Módem LTE-M', como: 'envía por la red celular', ancla: v3(S([-3.85, 2.42, 0.37])), col: 1, fila: -0.16,
+      { nombre: 'Módem', modelo: 'SIMCom SIM7080G', como: 'LTE-M', ancla: v3(S([-3.85, 2.42, 0.37])), col: 1, fila: -0.16,
         valor: function (e) { return e.s.enlace.caido ? ['Sin red', true] : ['Señal ' + Math.round(e.s.enlace.rssi) + ' dBm']; } },
-      { nombre: 'Memoria microSD', como: 'guarda cada paquete antes de enviarlo', ancla: v3(S([-4.08, 1.95, 0.4])), col: 1, fila: 0.1,
+      { nombre: 'Memoria', modelo: 'microSD industrial, 8 GB', como: 'Guarda antes de enviar', ancla: v3(S([-4.08, 1.95, 0.4])), col: 1, fila: 0.1,
         valor: function (e) { return [enSD(e.nSD), e.nSD > 1 && !e.env]; } }
     ] };
     d.energia = { centro: v3(S([-4.15, 3.6, 0.3])), items: [
-      { nombre: 'Panel solar', como: EN.panelW + ' W, inclinado al sur', ancla: v3(S([-4.75, 4.95, 0.2])), col: -1, fila: -0.2,
+      { nombre: 'Panel solar', modelo: 'Monocristalino, 6 V', como: EN.panelW + ' W', ancla: v3(S([-4.75, 4.95, 0.2])), col: -1, fila: -0.2,
         valor: function (e) { var w = e.s.energia.solarW; return [w > 0.05 ? 'Genera ' + w.toFixed(1) + ' W' : 'Sin sol']; } },
-      { nombre: 'Baterías', como: Math.round(EN.capWh) + ' Wh: ≈ ' + EN_MEDIDO[TIPO].dias + ' días sin sol', ancla: v3(S([-4.2, 1.55, 0.42])), col: -1, fila: 0.18,
+      { nombre: 'Baterías', modelo: 'Samsung INR18650-30Q', como: Math.round(EN.capWh) + ' Wh, ≈ ' + EN_MEDIDO[TIPO].dias + ' días sin sol', ancla: v3(S([-4.2, 1.55, 0.42])), col: -1, fila: 0.18,
         valor: function (e) { var c = e.s.energia.soc(); return ['Carga ' + Math.round(c * 100) + ' %', c < 0.2]; } },
-      { nombre: 'Consumo', como: '≈ ' + EN_MEDIDO[TIPO].wh + ' Wh al día; ' + EN_MEDIDO[TIPO].nota, ancla: v3(S([-4.25, 2.22, 0.33])), col: 1, fila: 0.05,
+      { nombre: 'Consumo', como: '≈ ' + EN_MEDIDO[TIPO].wh + ' Wh al día', ancla: v3(S([-4.25, 2.22, 0.33])), col: 1, fila: 0.05,
         valor: function (e) { return ['Gasta ' + Math.round(e.f.mW || 0) + ' mW: ' + (ESTADO[e.nom] || e.nom).toLowerCase()]; } }
     ] };
     var antena = v3(S([-3.65, 3.98, 0.35]));
     d.enlace = { centro: antena.clone().add(G.torreTope).multiplyScalar(0.5), items: [
-      { nombre: 'Antena del módem', como: 'LTE-M, con SIM de datos', ancla: antena, col: -1, fila: -0.12,
+      { nombre: 'Antena', modelo: 'LTE 698–2 700 MHz, SMA', como: 'Con SIM de datos', ancla: antena, col: -1, fila: -0.12,
         valor: function (e) { return e.s.enlace.caido ? ['Sin red: guarda y reintenta', true] : ['Señal ' + Math.round(e.s.enlace.rssi) + ' dBm']; } },
-      { nombre: 'Memoria microSD', como: 'lo que no se envía se queda', ancla: v3(S([-4.08, 1.95, 0.4])), col: -1, fila: 0.16,
+      { nombre: 'Memoria', modelo: 'microSD industrial, 8 GB', como: 'Lo que no sale, se queda', ancla: v3(S([-4.08, 1.95, 0.4])), col: -1, fila: 0.16,
         valor: function (e) { return [enSD(e.nSD), e.nSD > 1 && !e.env]; } },
-      { nombre: 'Paquete', como: 'lecturas por HTTPS a la plataforma', ancla: G.rutaAire.getPoint(0.5), col: 1, fila: -0.26,
+      { nombre: 'Paquete', como: 'Lecturas por HTTPS', ancla: G.rutaAire.getPoint(0.5), col: 1, fila: -0.26,
         valor: function (e) { return [e.env ? (e.env.k < ENV.llega ? 'Viajando a la torre' : e.env.k < ENV.ack ? 'Llegó: vuelve la confirmación' : 'Confirmado') : 'Esperando la próxima medición']; } },
-      { nombre: 'Torre celular', como: 'del operador; no es nuestra', ancla: G.torreTope, col: 1, fila: 0.04,
+      { nombre: 'Torre celular', como: 'Del operador', ancla: G.torreTope, col: 1, fila: 0.04,
         valor: function (e) { return e.s.enlace.caido ? ['Sin cobertura en el sitio', true] : [e.env && e.env.k < ENV.ack ? 'Recibiendo los datos' : 'Con cobertura']; } }
     ] };
     if (TIPO === 'ladera') return d;
     var K = G.col;
     d.barrera = { centro: cw(-1.2, 0.2, -1.0), items: [
-      { nombre: 'Barrera flotante', como: 'flotadores de HDPE con faldón; guía lo que flota a la orilla', ancla: K.puntoBarrera, col: -1, fila: -0.2,
+      { nombre: 'Barrera flotante', modelo: 'Flotadores de HDPE con faldón', como: 'flotadores de HDPE con faldón; guía lo que flota a la orilla', ancla: K.puntoBarrera, col: -1, fila: -0.2,
         valor: function (e) {
           var c = e.s.col, st = c.stats, tot = st.capturados + st.escapados;
           return c.crecida ? ['Elevada por la crecida', true] : [tot ? 'Atrapó ' + st.capturados + ' de ' + tot + ' objetos' : 'Esperando basura'];
         } },
       { nombre: 'Embudo', como: 'junta lo atrapado frente a la banda', ancla: cw(-0.8, 0.1, 0), col: 1, fila: -0.12,
         valor: function (e) { var n = e.s.col.embudo.length; return [n ? 'Esperando ' + n + (n === 1 ? ' objeto' : ' objetos') : 'Vacío']; } },
-      { nombre: 'Nivel del río', como: 'ultrasonido; detecta la crecida', ancla: K.puntoNivel, col: -1, fila: 0.2,
+      { nombre: 'Nivel del río', modelo: 'MaxBotix MB7389', como: 'Ultrasonido; detecta la crecida', ancla: K.puntoNivel, col: -1, fila: 0.2,
         valor: function (e) { return ['Nivel ' + Math.round(e.s.col.nivelRio()) + ' cm', e.s.col.crecida]; } }
     ] };
     d.banda = { centro: cw(1.4, 1.2, 0), items: [
-      { nombre: 'Banda con paletas', como: 'sube lo atrapado al contenedor', ancla: cw(1.0, 0.95, 0.2), col: -1, fila: -0.15,
+      { nombre: 'Banda con paletas', modelo: 'PVC con rodillos de acero', como: 'sube lo atrapado al contenedor', ancla: cw(1.0, 0.95, 0.2), col: -1, fila: -0.15,
         valor: function (e) { var f = e.s.col.fase.nombre; return [f === 'ELEVACIÓN' ? 'Subiendo la basura' : f === 'REVERSA' ? 'Atascada: en reversa' : 'Detenida', f === 'REVERSA']; } },
-      { nombre: 'Motor de 24 V', como: 'vigila su corriente; si se atora, invierte', ancla: cw(BANDA.h[0], BANDA.h[1] + 0.1, 0.55), col: 1, fila: -0.1,
+      { nombre: 'Motor de 24 V', modelo: 'MY1016Z2 + BTS7960', como: 'vigila su corriente; si se atora, invierte', ancla: cw(BANDA.h[0], BANDA.h[1] + 0.1, 0.55), col: 1, fila: -0.1,
         valor: function (e) { var f = e.s.col.fase.nombre; return [f === 'ELEVACIÓN' ? 'Corriente 5 A' : f === 'REVERSA' ? 'Corriente alta: invierte' : 'En reposo', f === 'REVERSA']; } },
-      { nombre: 'Cámara', como: 'cuenta y clasifica lo que sube', ancla: K.puntoCamara, col: -1, fila: 0.2,
+      { nombre: 'Cámara', modelo: 'Seeed XIAO ESP32S3 Sense', como: 'cuenta y clasifica lo que sube', ancla: K.puntoCamara, col: -1, fila: 0.2,
         valor: function (e) { var u = e.s.col.ultimoObjeto; return [u ? 'Último: ' + R.TIPOS[u].nombre.toLowerCase() : 'Sin objetos todavía']; } }
     ] };
     d.contenedor = { centro: cw(4.0, 1.5, 0.4), items: [
-      { nombre: 'Contenedor', como: '240 L; avisa cuándo retirarlo', ancla: K.puntoContenedor, col: -1, fila: -0.2,
+      { nombre: 'Contenedor', modelo: 'Contenedor de 240 L con ruedas', como: '240 L; avisa cuándo retirarlo', ancla: K.puntoContenedor, col: -1, fila: -0.2,
         valor: function (e) { var c = e.s.col, p = Math.round(c.llenado() * 100); return ['Lleno al ' + p + ' %' + (c.retiroEn !== null ? ' · retiro avisado' : ''), p >= 80]; } },
-      { nombre: 'Báscula', como: 'celda de carga bajo el contenedor', ancla: K.puntoBascula, col: -1, fila: 0.15,
+      { nombre: 'Báscula', modelo: '4 celdas de 50 kg + HX711', como: 'celda de carga bajo el contenedor', ancla: K.puntoBascula, col: -1, fila: 0.15,
         valor: function (e) { return ['Pesa ' + e.s.col.kgLeido.toFixed(1) + ' kg']; } },
-      { nombre: 'Panel solar', como: '100 W, con batería de 12 V', ancla: K.puntoPanel, col: 1, fila: -0.22,
+      { nombre: 'Panel solar', modelo: 'Monocristalino, 100 W', como: 'Con batería LiFePO4 de 12 V', ancla: K.puntoPanel, col: 1, fila: -0.22,
         valor: function (e) { var w = e.s.col.energia.solarW, c = e.s.col.energia.soc(); return [(w > 0.5 ? 'Genera ' + Math.round(w) + ' W' : 'Sin sol') + ' · ' + Math.round(c * 100) + ' %', c < 0.25]; } },
-      { nombre: 'Antena y módem', como: 'LTE-M, el mismo operador de la estación', ancla: K.puntoAntena, col: 1, fila: 0.1,
+      { nombre: 'Antena y módem', modelo: 'LILYGO T-SIM7080G-S3', como: 'LTE-M, como la estación', ancla: K.puntoAntena, col: 1, fila: 0.1,
         valor: function (e) { var f = e.s.col.fase.nombre; return e.s.enlace.caido ? ['Sin red: guarda y reintenta', true] : [f === 'ENVÍO' ? 'Enviando los datos' : 'Señal ' + Math.round(e.s.enlace.rssi) + ' dBm']; } }
     ] };
     return d;
+  }
+
+  // Tubo de descarga en la orilla de la estación, río arriba: por él entra la descarga industrial y la orgánica (pinta).
+  // Su canal baja por el talud hasta el agua; se ve solo con el caudal de la descarga.
+  function construyeDescarga() {
+    var z = -17, xe = ejeRio(z) - 6.45, tub = mate(0x6f7b84, { roughness: 0.5 });
+    var t = cilindro(0.4, 5, tub, xe - 2.5, 0.95, z, null, 20); t.rotation.z = Math.PI / 2;
+    var boca = cilindro(0.43, 0.2, mate(TINTA), xe, 0.95, z, null, 20); boca.rotation.z = Math.PI / 2;
+    G.matDescarga = new T.MeshStandardMaterial({ color: 0xbf8a2e, roughness: 0.3, transparent: true, opacity: 0.9, depthWrite: false });
+    G.chorro = new T.Mesh(new T.BoxGeometry(0.8, 0.8, 0.8), G.matDescarga);       // el chorro cae de la boca al talud
+    G.chorro.position.set(xe + 0.1, 0.55, z); G.chorro.userData.sinSombra = true; G.chorro.visible = false; G.escena.add(G.chorro);
+    G.canal = new T.Mesh(new T.BoxGeometry(1, 0.05, 0.8), G.matDescarga);          // y el canal que baja por el talud
+    G.canal.position.set(xe + 0.55, 0.28, z); G.canal.rotation.z = -0.72; G.canal.scale.x = 1.2;
+    G.canal.userData.sinSombra = true; G.canal.visible = false; G.escena.add(G.canal);
+  }
+  // Intensidad (0 a 1) de un tipo de evento del agua en t, sumando los que se traslapen.
+  function nivelEv(agua, tipo, t) {
+    var k = 0;
+    agua.eventos.forEach(function (ev) { if (ev.tipo === tipo) k += agua._env(ev, t); });
+    return Math.min(1, k);
   }
 
   function construyeRotulos() {
@@ -1045,7 +1096,7 @@
       G.detalle[k].items.forEach(function (it) {
         var izq = it.col < 0, d = document.createElement('div');
         d.className = 'rot3d sensor ' + (izq ? 'izq' : 'der');
-        d.innerHTML = '<b>' + it.nombre + '</b><span class="eq">' + it.como + '</span><span class="val"></span>';
+        d.innerHTML = '<b>' + it.nombre + '</b>' + (it.modelo ? '<span class="mod">' + it.modelo + '</span>' : '') + '<span class="eq">' + it.como + '</span><span class="val"></span>';
         d.style.display = 'none';
         capa.appendChild(d);
         it.el = d; it.val = d.querySelector('.val'); it.izq = izq;
@@ -1180,6 +1231,7 @@
       G.objetivo.set(vg.obj[0], vg.obj[1], vg.obj[2]); G.orbita = { yaw: vg.yaw, pitch: vg.pitch, dist: vg.dist };
     } else {
     construyeValle();
+    construyeDescarga();
 
     // Tubo de protección con las cinco sondas, en el agua y anclado a la orilla con un brazo.
     caja(2.5, 0.08, 0.12, acero, -0.3, 0.58, 0.9);
@@ -1355,7 +1407,9 @@
       o.castShadow = true; o.receiveShadow = true;
     });
 
+    construyeLluvia();
     luzSoleada();
+    G.clima = undefined; clima(0);
     construyeRotulos();
     arrastre();
     window.addEventListener('resize', ajusta);
@@ -1518,13 +1572,25 @@
     G.tAgua = ahora;
     if (TIPO === 'ladera') pintaLadera(s, nom, dtr);
     else {
-    G.matAgua.color.copy(colorAgua(s.agua.valor('TURB', fw.t))); G.matCaraAgua.color.copy(G.matAgua.color);
+    // Pruebas del agua. Lluvia: el día se oscurece, cae la lluvia, el agua se enturbia y corre más (del modelo).
+    // Descarga industrial: el agua vira a ocre y su flujo se dibuja más fuerte, con el tubo de descarga vertiendo;
+    // la orgánica la vira a verde oscuro. El modelo no mueve la velocidad con las descargas: el aumento es solo del dibujo.
+    var llu = s.agua.lluvia(fw.t), ind = nivelEv(s.agua, 'descarga_industrial', fw.t), org = nivelEv(s.agua, 'descarga_organica', fw.t);
+    clima(M.acota(llu, 0, 1)); caeLluvia(llu, dtr);
+    var cAgua = colorAgua(s.agua.valor('TURB', fw.t));
+    cAgua.lerp(new T.Color(0xbf8a2e), 0.78 * ind).lerp(new T.Color(0x4a5a30), 0.65 * org);
+    G.matAgua.color.copy(cAgua); G.matCaraAgua.color.copy(cAgua);
+    var vierte = Math.max(ind, org);
+    G.chorro.visible = G.canal.visible = vierte > 0.02;
+    G.matDescarga.color.setHex(ind >= org ? 0xbf8a2e : 0x4a5a30);
+    G.chorro.scale.set(0.5, 0.6 * vierte + 0.01, 0.6 + 0.4 * vierte); G.chorro.position.y = 0.95 - 0.4 * (0.6 * vierte + 0.01) * 1.0;
+    G.canal.scale.set(1.2, 1, 0.6 + 0.4 * vierte);
     // corriente: la textura avanza aguas abajo (una baldosa mide 3.84 m a lo largo del cauce); con la
     // simulación en pausa, el agua sigue corriendo. A escala real, 0.6 m/s casi no se percibe desde la
     // distancia de la cámara: se dibuja 4 veces más rápido. El rótulo da la velocidad del modelo, sin
     // exagerar, y la proporción entre corriente normal y crecida se conserva.
     var vel = s.agua.velocidad(fw.t);
-    G.ondas.forEach(function (t) { t.offset.y = (t.offset.y + EXAGERA_CORRIENTE * vel * dtr / 3.84) % 1; });
+    G.ondas.forEach(function (t) { t.offset.y = (t.offset.y + EXAGERA_CORRIENTE * vel * (1 + 1.1 * ind + 0.3 * org) * dtr / 3.84) % 1; });
     rotulo('rio', vel.toFixed(2) + ' m/s, simulada');
     pintaColector(s, ahora, dtr);
 
