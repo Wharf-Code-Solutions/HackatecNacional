@@ -21,6 +21,18 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Módulo B: mapa en la pestaña Escuelas y zonas visibles de lejos
+
+**Qué cambió.** La pestaña Escuelas tiene el mismo mapa ("Dónde están") arriba de la lista: un clic en una escuela abre su
+ficha y la escuela elegida se marca con un anillo en tinta y el mapa se acerca. Las zonas de riesgo, que miden menos de
+1 km, se dibujan alejadas como anillo de color en su centro (tierra: derrumbe; verde oliva: contaminación) y desde zoom 12
+como polígono. Las gráficas de escuelas pasan al final.
+**Por qué.** El usuario no veía las zonas y se perdía cambiando de pestaña para ubicar cada escuela.
+**Qué arrastró.** `MapaEstaciones.jsx` (`escuelaElegida`), `Escuelas.jsx`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
 ## 2026-11-24 · Módulo B: zonas de riesgo en el mapa
 
 **Qué cambió.** `MapaEstaciones.jsx` dibuja las zonas de `zonas_riesgo.geojson` que contienen alguna escuela de la

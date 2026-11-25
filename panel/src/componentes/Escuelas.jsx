@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { inicial, num } from '../lib/formato.js';
+import { useDatos } from '../lib/contexto.js';
 import BarrasH from '../graficas/BarrasH.jsx';
+import MapaEstaciones from '../graficas/MapaEstaciones.jsx';
 import FichaEscuela, { COLOR_RIESGO, FUENTE_AGUA, NIVEL_RIESGO } from './FichaEscuela.jsx';
 
 // Vista de escuelas (docs/19 §6, punto 1): cuántas hay por nivel de riesgo, por tipo y por municipio,
@@ -42,6 +44,7 @@ function Tarjeta({ titulo, subtitulo, ancha, children }) {
 
 export default function Escuelas({ escuelas, alertas, zonas, sel, onElegir }) {
   const [filtro, setFiltro] = useState({ nivel: 'todos', tipo: 'todos', municipio: 'todos' });
+  const { estaciones } = useDatos();
   const total = escuelas.length;
   const altas = escuelas.filter((e) => ['alto', 'muy_alto'].includes(r(e).nivel)).length;
   const conMec = escuelas.filter((e) => e.c_estacion).length;
@@ -91,17 +94,14 @@ export default function Escuelas({ escuelas, alertas, zonas, sel, onElegir }) {
         ))}
       </div>
 
-      <div className="panorama">
-        <Tarjeta titulo="Por nivel de riesgo" subtitulo="Índice de riesgo de cada escuela; los pesos son hipótesis.">
-          <BarrasH filas={filasNivel} claves={presentes} colores={COLOR_RIESGO} nombreClave={nombreNivel} />
-        </Tarjeta>
-        <Tarjeta titulo="Qué riesgo pesa más" subtitulo="El mayor de sus dos subíndices, por nivel de riesgo.">
-          <BarrasH filas={filasTipo} claves={presentes} colores={COLOR_RIESGO} nombreClave={nombreNivel} />
-        </Tarjeta>
-        <Tarjeta titulo="Por municipio" subtitulo="Escuelas en riesgo por municipio, por nivel." ancha>
-          <BarrasH filas={filasMun} claves={presentes} colores={COLOR_RIESGO} nombreClave={nombreNivel} />
-        </Tarjeta>
-      </div>
+      {/* El mismo mapa de Alertas, para ver dónde está cada escuela sin cambiar de pestaña. Un clic en una
+          escuela abre su ficha; la elegida se resalta y el mapa se acerca. */}
+      <figure className="tarjeta ancha mapa-escuelas">
+        <h2 className="titulo-seccion">Dónde están</h2>
+        <p className="subtitulo-seccion">Escuelas por nivel de riesgo y sus zonas (tierra: derrumbe; verde oliva: contaminación). Un clic en una escuela abre su ficha.</p>
+        <MapaEstaciones estaciones={estaciones} alertas={alertas} elegida={null} onElegir={() => {}}
+          escuelas={escuelas} zonas={zonas} onElegirEscuela={elegir} escuelaElegida={sel} />
+      </figure>
 
       <div className="trabajo">
         <section className="lista-col" aria-label="Escuelas">
@@ -145,6 +145,18 @@ export default function Escuelas({ escuelas, alertas, zonas, sel, onElegir }) {
           </ol>
         </section>
         <FichaEscuela escuela={elegida} alertas={alertas} zonas={zonas} />
+      </div>
+
+      <div className="panorama">
+        <Tarjeta titulo="Por nivel de riesgo" subtitulo="Índice de riesgo de cada escuela; los pesos son hipótesis.">
+          <BarrasH filas={filasNivel} claves={presentes} colores={COLOR_RIESGO} nombreClave={nombreNivel} />
+        </Tarjeta>
+        <Tarjeta titulo="Qué riesgo pesa más" subtitulo="El mayor de sus dos subíndices, por nivel de riesgo.">
+          <BarrasH filas={filasTipo} claves={presentes} colores={COLOR_RIESGO} nombreClave={nombreNivel} />
+        </Tarjeta>
+        <Tarjeta titulo="Por municipio" subtitulo="Escuelas en riesgo por municipio, por nivel." ancha>
+          <BarrasH filas={filasMun} claves={presentes} colores={COLOR_RIESGO} nombreClave={nombreNivel} />
+        </Tarjeta>
       </div>
     </section>
   );

@@ -26,7 +26,7 @@ const FUENTE_TXT = { red_publica: 'red pública', pozo: 'pozo', manantial: 'mana
 const COLOR_ZONA = { derrumbe: '#8a6a3c', inundacion: '#1d6fa5', contaminacion: '#5f6b3a' };
 const TIPO_ZONA = { derrumbe: 'Derrumbe', inundacion: 'Inundación', contaminacion: 'Contaminación' };
 
-export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir, escuelas = [], onElegirEscuela, zonas = null }) {
+export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir, escuelas = [], onElegirEscuela, zonas = null, escuelaElegida = null }) {
   const caja = useRef(null);
   const mapa = useRef(null);
   const marcas = useRef({});
@@ -123,10 +123,23 @@ export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir,
         m.addSource('zonas', { type: 'geojson', data: { type: 'FeatureCollection', features: zonasVis } });
         m.addLayer({ id: 'zonas', type: 'fill', source: 'zonas',
           paint: { 'fill-color': ['match', ['get', 'tipo'], 'derrumbe', COLOR_ZONA.derrumbe, 'inundacion', COLOR_ZONA.inundacion, COLOR_ZONA.contaminacion],
-            'fill-opacity': ['match', ['get', 'nivel'], 'muy_alto', 0.32, 'alto', 0.22, 0.14] } });
+            'fill-opacity': ['match', ['get', 'nivel'], 'muy_alto', 0.32, 'alto', 0.22, 0.14] }, minzoom: 12 });
+        // Las zonas miden menos de 1 km: alejado, un anillo en su centro (radio minimo en pixeles) dice que
+        // esa escuela esta dentro de una zona; de cerca se ve el poligono real.
+        const centro = (f) => {
+          const c = f.geometry.type === 'Polygon' ? f.geometry.coordinates[0] : f.geometry.coordinates[0][0];
+          return [c.reduce((a, q) => a + q[0], 0) / c.length, c.reduce((a, q) => a + q[1], 0) / c.length];
+        };
+        m.addSource('zonas_centro', { type: 'geojson', data: { type: 'FeatureCollection', features: zonasVis.map((f) => ({
+          type: 'Feature', properties: f.properties, geometry: { type: 'Point', coordinates: centro(f) } })) } });
+        const colorTipo = ['match', ['get', 'tipo'], 'derrumbe', COLOR_ZONA.derrumbe, 'inundacion', COLOR_ZONA.inundacion, COLOR_ZONA.contaminacion];
+        m.addLayer({ id: 'zonas_anillo', type: 'circle', source: 'zonas_centro', maxzoom: 12.5,
+          paint: { 'circle-radius': ['interpolate', ['linear'], ['zoom'], 7, 11, 12, 18],
+            'circle-color': colorTipo, 'circle-opacity': ['match', ['get', 'nivel'], 'muy_alto', 0.35, 'alto', 0.25, 0.15],
+            'circle-stroke-color': colorTipo, 'circle-stroke-width': 1.5 } });
         m.addLayer({ id: 'zonas_borde', type: 'line', source: 'zonas',
           paint: { 'line-color': ['match', ['get', 'tipo'], 'derrumbe', COLOR_ZONA.derrumbe, 'inundacion', COLOR_ZONA.inundacion, COLOR_ZONA.contaminacion],
-            'line-width': 1, 'line-opacity': 0.8 } });
+            'line-width': 1, 'line-opacity': 0.8 }, minzoom: 12 });
 
         // Escuelas de escuelas.json, encima de la red y debajo de las estaciones. Varias comparten
         // coordenada (otro turno en el mismo plantel, o la coordenada de la localidad): se dibujan
@@ -149,7 +162,7 @@ export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir,
           const html = (g.length > 1 ? '<b>' + g.length + ' escuelas en ' + lugar + '</b><br><br>' : '') +
             g.map(fila).join('<br><br>') + (g.length > 1 ? '' : '<br>' + lugar);
           return { type: 'Feature', geometry: { type: 'Point', coordinates: [g[0].longitud, g[0].latitud] },
-            properties: { n: g.length, riesgo, html, cct: g[0].cct } };
+            properties: { n: g.length, riesgo, html, cct: g[0].cct, ccts: ',' + g.map((e) => e.cct).join(',') + ',' } };
         });
         m.addSource('escuelas', { type: 'geojson', data: { type: 'FeatureCollection', features: puntosEsc } });
         m.addLayer({ id: 'escuelas', type: 'circle', source: 'escuelas',
@@ -160,6 +173,9 @@ export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir,
             'circle-color': ['match', ['get', 'riesgo'], 'muy_alto', '#5c0f24', 'alto', '#9D2449', 'medio', '#c56a87', '#e3a9ba'],
             'circle-stroke-color': '#fff', 'circle-stroke-width': 1.5,
           } });
+        m.addLayer({ id: 'escuela_sel', type: 'circle', source: 'escuelas', filter: ['==', ['get', 'cct'], ''],
+          paint: { 'circle-radius': ['interpolate', ['linear'], ['zoom'], 7, 12, 12, 17], 'circle-color': 'rgba(0,0,0,0)',
+            'circle-stroke-color': TINTA, 'circle-stroke-width': 2.5 } });
         m.addLayer({ id: 'escuelas_n', type: 'symbol', source: 'escuelas', filter: ['>', ['get', 'n'], 1],
           layout: { 'text-field': ['to-string', ['get', 'n']], 'text-font': ['Noto Sans Bold'], 'text-size': 11,
             'text-allow-overlap': true, 'text-ignore-placement': true },
@@ -174,6 +190,10 @@ export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir,
         emergente('escuelas', (p) => p.html + '<br><span style="color:#767676">Clic para abrir su ficha</span>');
         // Un clic abre la ficha de la escuela (la de mayor riesgo si el punto agrupa varias).
         m.on('click', 'escuelas', (e) => { const f = e.features[0]; if (f && alElegirEsc.current) alElegirEsc.current(f.properties.cct); });
+        const htmlZona = (p) => '<b>Zona de riesgo por ' + (TIPO_ZONA[p.tipo] || p.tipo).toLowerCase() + '</b><br>Nivel ' +
+          (RIESGO_TXT[p.nivel] || 'sin dato') + ' · ' + p.n_esc + (p.n_esc === 1 ? ' escuela' : ' escuelas') + '<br>' +
+          '<span style="color:#767676">' + (p.fuente || '') + '</span>';
+        emergente('zonas_anillo', htmlZona);
         emergente('zonas', (p) => '<b>Zona de riesgo por ' + (TIPO_ZONA[p.tipo] || p.tipo).toLowerCase() + '</b><br>Nivel ' +
           (RIESGO_TXT[p.nivel] || 'sin dato') + ' · ' + p.n_esc + (p.n_esc === 1 ? ' escuela' : ' escuelas') + '<br>' +
           '<span style="color:#767676">' + (p.fuente || '') + '</span>');
@@ -215,6 +235,15 @@ export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir,
       el.classList.toggle('activa', c === elegida);
     });
   }, [alertas, elegida, listo]);
+
+  // La escuela elegida en el panel: anillo en tinta y el mapa se acerca a ella.
+  useEffect(() => {
+    const m = mapa.current;
+    if (!listo || !m || !m.getLayer('escuela_sel')) return;
+    m.setFilter('escuela_sel', ['in', ',' + (escuelaElegida || '#') + ',', ['get', 'ccts']]);
+    const e = escuelaElegida && escuelas.find((x) => x.cct === escuelaElegida);
+    if (e && e.longitud != null) m.easeTo({ center: [e.longitud, e.latitud], zoom: Math.max(m.getZoom(), 11), duration: 600 });
+  }, [escuelaElegida, listo]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="mapa-estaciones">
