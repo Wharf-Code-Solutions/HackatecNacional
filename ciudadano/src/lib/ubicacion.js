@@ -49,5 +49,5 @@ export function cercanos(sitios, lat, lon, k = 5) {
     .sort((a, b) => a.dist - b.dist).slice(0, k);
 }
 
-// Lo que se muestra en pantalla va a unos 100 m (tres decimales); la exacta solo viaja al backend.
-export const redondeada = (v) => v.toFixed(3);
+// Coordenada para mostrar: cinco decimales (≈ 1 m), la misma precisión con que se dibuja el pin.
+export const coordenada = (v) => v.toFixed(5);

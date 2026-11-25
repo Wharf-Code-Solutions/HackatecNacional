@@ -52,6 +52,10 @@ SIGMA_LATERAL_M = 600         # cercania en linea recta al foco
 MAX_LATERAL_M = 2500
 ALCANCE_ABAJO_M = 4500        # hasta donde se sigue el calor aguas abajo (3 sigmas)
 INTENSIDAD_TOPE = 6.0         # suma de pesos que se pinta como intensidad 1
+# Deslaves: no viven en un cauce, asi que su calor es una mancha sobre el terreno (puntos que la app dibuja como mapa
+# de calor), no el rio coloreado. Mismos umbrales que el agua: con menos de 3 reportes una persona sola pintaria.
+TIPOS_LADERA = ('deslave',)
+ZONA_LADERA_RADIO_M = 1500    # focos de deslave a menos de esto forman una zona (una ladera, un mismo cerro)
 INTENSIDAD_MIN = 0.05
 TOPE_CIUDADANA = 2.0          # tope del aporte de corroboracion ciudadana (log2 de reportes)
 BONO_SENSOR_MISMO_SITIO = 3
@@ -260,13 +264,44 @@ def zonas(grupos):
 
 
 # ----------------------------------------------------------------- huella
+def zonas_ladera(grupos):
+    """Une focos de deslave a menos de ZONA_LADERA_RADIO_M, sin depender del cauce. Activa con los mismos
+    umbrales que una zona del rio."""
+    lad = [g for g in grupos if g['tipo'] in TIPOS_LADERA]
+    padre = list(range(len(lad)))
+
+    def raiz(i):
+        while padre[i] != i:
+            padre[i] = padre[padre[i]]
+            i = padre[i]
+        return i
+    for i, a in enumerate(lad):
+        for j in range(i + 1, len(lad)):
+            b = lad[j]
+            if math.hypot(a['x'] - b['x'], a['y'] - b['y']) <= ZONA_LADERA_RADIO_M:
+                padre[raiz(i)] = raiz(j)
+    por_raiz = defaultdict(list)
+    for i, g in enumerate(lad):
+        por_raiz[raiz(i)].append(g)
+    salida = []
+    for miembros in por_raiz.values():
+        peso = sum(g['peso'] for g in miembros)
+        n = sum(g['n'] for g in miembros)
+        salida.append({'focos': miembros, 'peso': peso, 'n_reportes': n,
+                       'activa': peso >= UMBRAL_ZONA and n >= MIN_REPORTES_ZONA,
+                       'ultima': max(g['ultima'] for g in miembros)})
+    return salida
+
+
 def huella(reportes, ahora=None):
-    """GeoJSON de los tramos del rio con su intensidad (0 a 1). Publica: usa el trazo simplificado de la
-    red, nunca la coordenada de un reporte. Solo zonas activas."""
+    """GeoJSON de dos capas. Agua: los tramos del rio con su intensidad (0 a 1), con el trazo de la red.
+    Ladera: un punto por foco de deslave con su intensidad, que la app dibuja como mancha de calor; lleva
+    'capa': 'ladera'. Solo zonas activas en las dos."""
     tramos, _, por_sitio = _red()
     viaje = _viaje()
     grupos = focos(reportes, ahora)
-    zs = zonas(grupos)
+    # Los deslaves no colorean el rio: van a su propia capa
+    zs = zonas([g for g in grupos if g['tipo'] not in TIPOS_LADERA])
     activas = [z for z in zs if z['activa']]
     crudo = defaultdict(float)
     for z in activas:
@@ -298,11 +333,18 @@ def huella(reportes, ahora=None):
                           'geometry': {'type': 'LineString', 'coordinates': tramos[c]['p']},
                           'properties': {'c_tramo': c, 'intensidad': round(inten, 3)}})
     feats.sort(key=lambda f: f['properties']['intensidad'])
+    laderas = [z for z in zonas_ladera(grupos) if z['activa']]
+    for z in laderas:
+        for g in z['focos']:
+            feats.append({'type': 'Feature', 'geometry': {'type': 'Point', 'coordinates': [g['lon'], g['lat']]},
+                          'properties': {'capa': 'ladera', 'intensidad': round(min(1.0, g['peso'] / UMBRAL_ZONA), 3)}})
     return {'type': 'FeatureCollection', 'features': feats,
             'metadatos': {'version': '1.0', 'generado': (ahora or _ahora()).isoformat(timespec='seconds'),
                           'n_reportes_abiertos': sum(g['n'] for g in grupos),
                           'zonas_activas': [{'c_sitio': z['c_sitio'], 'n_reportes': z['n_reportes'],
                                              'ultimo_reporte': z['ultima'].isoformat(timespec='seconds')} for z in activas],
+                          'zonas_ladera_activas': [{'n_reportes': z['n_reportes'],
+                                                    'ultimo_reporte': z['ultima'].isoformat(timespec='seconds')} for z in laderas],
                           'umbral': {'peso': UMBRAL_ZONA, 'reportes': MIN_REPORTES_ZONA}, 'semivida_h': SEMIVIDA_H}}
 
 

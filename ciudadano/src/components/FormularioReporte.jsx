@@ -4,7 +4,7 @@ import CategoriaIcono from './CategoriaIcono.jsx';
 import { encolar, guardarFolio } from '../lib/almacen.js';
 import { analizarFoto, enviarReporte, getJSON } from '../lib/backend.js';
 import { prepararFoto } from '../lib/foto.js';
-import { dentroDeArea, redondeada, TEXTO_FUERA } from '../lib/ubicacion.js';
+import { coordenada, dentroDeArea, TEXTO_FUERA } from '../lib/ubicacion.js';
 import { TIPOS, km, nombreTipo } from '../lib/etiquetas.js';
 
 const CORREO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -156,7 +156,7 @@ export default function FormularioReporte({ lat, lon, precision, origen, datos, 
   return (
     <BottomSheet titulo="Nuevo reporte" onClose={onClose}>
       <form onSubmit={enviar} noValidate>
-        <p className="report-form__meta">Ubicación aproximada del reporte: {redondeada(lat)}, {redondeada(lon)}{precision ? ' · GPS ±' + precision + ' m' : ''}</p>
+        <p className="report-form__meta">Ubicación del reporte: {coordenada(lat)}, {coordenada(lon)}{precision ? ' · GPS ±' + precision + ' m' : ''}</p>
         {errores.ubicacion && <div className="alert alert-danger mb-3" role="alert">{errores.ubicacion}</div>}
 
         <div className="mb-3">
