@@ -8700,6 +8700,64 @@
   "autorizaciones": []
  },
  {
+  "cct": "21KJN1187D",
+  "nombre": "Preescolar Comunitario Tla el Pipirin",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Tlahuapan",
+  "localidad": "El Pipirín",
+  "ambito": "rural",
+  "latitud": 19.350354,
+  "longitud": -98.62649,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.425,
+   "nivel": "medio",
+   "contaminacion": 0.434,
+   "derrumbe": 0.451,
+   "desglose": {
+    "pendiente": 0.098,
+    "susceptibilidad_laderas": 0.15,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.15,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21KPR0477D",
+  "nombre": "Curso Comunitario el Pipir-n",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Tlahuapan",
+  "localidad": "El Pipirín",
+  "ambito": "rural",
+  "latitud": 19.350354,
+  "longitud": -98.62649,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.425,
+   "nivel": "medio",
+   "contaminacion": 0.434,
+   "derrumbe": 0.451,
+   "desglose": {
+    "pendiente": 0.098,
+    "susceptibilidad_laderas": 0.15,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.15,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
   "cct": "21DJN1096C",
   "nombre": "Huitzitzilin",
   "nivel": "preescolar",
@@ -9013,6 +9071,35 @@
   "autorizaciones": []
  },
  {
+  "cct": "21DPR3699Y",
+  "nombre": "Lazaro Cardenas",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Amozoc",
+  "localidad": "San José la Laguna",
+  "ambito": "rural",
+  "latitud": 19.026713,
+  "longitud": -98.03059,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.394,
+   "nivel": "medio",
+   "contaminacion": 0.02,
+   "derrumbe": 0.567,
+   "desglose": {
+    "pendiente": 0.062,
+    "susceptibilidad_laderas": 0.15,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.003,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.004,
+    "marginacion": 0.075
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
   "cct": "21DPR0448Z",
   "nombre": "Joaquin Leal",
   "nivel": "primaria",
@@ -9065,6 +9152,35 @@
     "calidad_agua": 0.15,
     "sin_drenaje": 0.0,
     "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21ETV0934P",
+  "nombre": "Jose Vasconcelos",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "Amozoc",
+  "localidad": "San José la Laguna",
+  "ambito": "rural",
+  "latitud": 19.027267,
+  "longitud": -98.030585,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.38,
+   "nivel": "medio",
+   "contaminacion": 0.037,
+   "derrumbe": 0.531,
+   "desglose": {
+    "pendiente": 0.042,
+    "susceptibilidad_laderas": 0.15,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.009,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.004,
+    "marginacion": 0.075
    }
   },
   "c_estacion": null,
@@ -9287,6 +9403,64 @@
   "autorizaciones": []
  },
  {
+  "cct": "21DTV0497G",
+  "nombre": "Gilberto Montalvo Aleman",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "Juan C. Bonilla",
+  "localidad": "San Lucas Nextetelco",
+  "ambito": "rural",
+  "latitud": 19.119556,
+  "longitud": -98.341341,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.364,
+   "nivel": "medio",
+   "contaminacion": 0.486,
+   "derrumbe": 0.307,
+   "desglose": {
+    "pendiente": 0.006,
+    "susceptibilidad_laderas": 0.15,
+    "urbanizacion_reciente": 0.013,
+    "cercania_cauce_o_descarga": 0.015,
+    "calidad_agua": 0.15,
+    "sin_drenaje": 0.005,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21EBH1078T",
+  "nombre": "Bachillerato General Digital Num. 134",
+  "nivel": "media_superior",
+  "matricula": null,
+  "municipio": "Juan C. Bonilla",
+  "localidad": "San Lucas Nextetelco",
+  "ambito": "rural",
+  "latitud": 19.119556,
+  "longitud": -98.341341,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.364,
+   "nivel": "medio",
+   "contaminacion": 0.486,
+   "derrumbe": 0.307,
+   "desglose": {
+    "pendiente": 0.006,
+    "susceptibilidad_laderas": 0.15,
+    "urbanizacion_reciente": 0.013,
+    "cercania_cauce_o_descarga": 0.015,
+    "calidad_agua": 0.15,
+    "sin_drenaje": 0.005,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
   "cct": "21DBS0024P",
   "nombre": "Profesora Alejandrina C. de Lara",
   "nivel": "secundaria",
@@ -9339,6 +9513,122 @@
     "calidad_agua": 0.15,
     "sin_drenaje": 0.0,
     "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21ETV0610I",
+  "nombre": "Gabino Barreda",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "Amozoc",
+  "localidad": "San Mateo",
+  "ambito": "rural",
+  "latitud": 19.035415,
+  "longitud": -98.075891,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.358,
+   "nivel": "medio",
+   "contaminacion": 0.483,
+   "derrumbe": 0.207,
+   "desglose": {
+    "pendiente": 0.014,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.145,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.024,
+    "marginacion": 0.075
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DBA0042F",
+  "nombre": "Moctezuma",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "San Pedro Cholula",
+  "localidad": "San Cristóbal Tepontla",
+  "ambito": "rural",
+  "latitud": 19.074804,
+  "longitud": -98.331998,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.354,
+   "nivel": "medio",
+   "contaminacion": 0.389,
+   "derrumbe": 0.305,
+   "desglose": {
+    "pendiente": 0.068,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.126,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.01,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DBS0025O",
+  "nombre": "Otilio Montaño",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "San Pedro Cholula",
+  "localidad": "San Cristóbal Tepontla",
+  "ambito": "rural",
+  "latitud": 19.074804,
+  "longitud": -98.331998,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.354,
+   "nivel": "medio",
+   "contaminacion": 0.389,
+   "derrumbe": 0.305,
+   "desglose": {
+    "pendiente": 0.068,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.126,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.01,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21EBH0651Z",
+  "nombre": "Yolot'si",
+  "nivel": "media_superior",
+  "matricula": null,
+  "municipio": "San Pedro Cholula",
+  "localidad": "San Cristóbal Tepontla",
+  "ambito": "rural",
+  "latitud": 19.074804,
+  "longitud": -98.331998,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.354,
+   "nivel": "medio",
+   "contaminacion": 0.389,
+   "derrumbe": 0.305,
+   "desglose": {
+    "pendiente": 0.068,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.126,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.01,
+    "marginacion": 0.05
    }
   },
   "c_estacion": null,
@@ -9458,6 +9748,106 @@
   "autorizaciones": []
  },
  {
+  "cct": "21EBH0783R",
+  "nombre": "Xochiquetzal",
+  "nivel": "media_superior",
+  "matricula": null,
+  "municipio": "Huejotzingo",
+  "localidad": "Santa María Atexcac",
+  "ambito": "rural",
+  "latitud": 19.139529,
+  "longitud": -98.494323,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.335,
+   "nivel": "medio",
+   "contaminacion": 0.431,
+   "derrumbe": 0.289,
+   "desglose": {
+    "pendiente": 0.059,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.15,
+    "sin_drenaje": 0.001,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DCC1184H",
+  "nombre": "Atsin",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Puebla",
+  "localidad": "Resurgimiento Atotonilco",
+  "ambito": "rural",
+  "latitud": 18.951667,
+  "longitud": -98.205833,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.327,
+   "nivel": "medio",
+   "contaminacion": 0.429,
+   "derrumbe": 0.276,
+   "desglose": {
+    "pendiente": 0.002,
+    "susceptibilidad_laderas": 0.15,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.15,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": "EST-ATY-05",
+  "autorizaciones": [
+   {
+    "organismo": "CEASPUE",
+    "tramite": "instalacion_en_fuente",
+    "estado": "pendiente",
+    "fecha": null
+   },
+   {
+    "organismo": "CAPCEE",
+    "tramite": "acceso_al_plantel",
+    "estado": "pendiente",
+    "fecha": null
+   }
+  ]
+ },
+ {
+  "cct": "21ETV0654F",
+  "nombre": "Lazaro Cardenas del Rio",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "Ocoyucan",
+  "localidad": "Santa Martha Hidalgo",
+  "ambito": "rural",
+  "latitud": 18.99022,
+  "longitud": -98.335006,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.325,
+   "nivel": "medio",
+   "contaminacion": 0.006,
+   "derrumbe": 0.542,
+   "desglose": {
+    "pendiente": 0.048,
+    "susceptibilidad_laderas": 0.15,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
   "cct": "21DJN1644R",
   "nombre": "Toltecas",
   "nivel": "preescolar",
@@ -9516,6 +9906,35 @@
   "autorizaciones": []
  },
  {
+  "cct": "21EBH0812W",
+  "nombre": "Jose Vasconcelos",
+  "nivel": "media_superior",
+  "matricula": null,
+  "municipio": "Amozoc",
+  "localidad": "San Mateo",
+  "ambito": "rural",
+  "latitud": 19.049064,
+  "longitud": -98.071041,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.314,
+   "nivel": "medio",
+   "contaminacion": 0.314,
+   "derrumbe": 0.235,
+   "desglose": {
+    "pendiente": 0.029,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.086,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.024,
+    "marginacion": 0.075
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
   "cct": "21KJN0786S",
   "nombre": "Preescolar Comunitario San Mart-n la Joya",
   "nivel": "preescolar",
@@ -9568,6 +9987,122 @@
     "calidad_agua": 0.0,
     "sin_drenaje": 0.05,
     "marginacion": 0.1
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DJN1221K",
+  "nombre": "Luis Donaldo Colosio Murrieta",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Tlahuapan",
+  "localidad": "La Preciosita",
+  "ambito": "rural",
+  "latitud": 19.408247,
+  "longitud": -98.546221,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.304,
+   "nivel": "medio",
+   "contaminacion": 0.009,
+   "derrumbe": 0.502,
+   "desglose": {
+    "pendiente": 0.126,
+    "susceptibilidad_laderas": 0.15,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.003,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DCT0001T",
+  "nombre": "Centro de Estudios Tecnologicos Industriales y de Servicios Num. 67",
+  "nivel": "media_superior",
+  "matricula": null,
+  "municipio": "San Pedro Cholula",
+  "localidad": "San Cristóbal Tepontla",
+  "ambito": "rural",
+  "latitud": 19.068668,
+  "longitud": -98.323288,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.3,
+   "nivel": "medio",
+   "contaminacion": 0.429,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.14,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.01,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21KJN1713G",
+  "nombre": "Preescolar Comunitario Rural la Venta",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Amozoc",
+  "localidad": "La Venta",
+  "ambito": "rural",
+  "latitud": 19.04838,
+  "longitud": -98.10164,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.3,
+   "nivel": "medio",
+   "contaminacion": 0.429,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.148,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DST0025D",
+  "nombre": "Escuela Secundaria Tecnica Num. 146",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "Ocoyucan",
+  "localidad": "Santa Clara Ocoyucan",
+  "ambito": "rural",
+  "latitud": 18.971145,
+  "longitud": -98.290513,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.294,
+   "nivel": "bajo",
+   "contaminacion": 0.483,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.017,
+    "calidad_agua": 0.15,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.025
    }
   },
   "c_estacion": null,
@@ -9655,6 +10190,4501 @@
     "calidad_agua": 0.15,
     "sin_drenaje": 0.001,
     "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DJN1098A",
+  "nombre": "Topiltzin",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Puebla",
+  "localidad": "Artículo Primero Constitucional",
+  "ambito": "rural",
+  "latitud": 18.973568,
+  "longitud": -98.159411,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.275,
+   "nivel": "bajo",
+   "contaminacion": 0.36,
+   "derrumbe": 0.225,
+   "desglose": {
+    "pendiente": 0.024,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.125,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.001,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DJN2435S",
+  "nombre": "Frida Kahlo",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Puebla",
+  "localidad": "Artículo Primero Constitucional",
+  "ambito": "rural",
+  "latitud": 18.973568,
+  "longitud": -98.159411,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.275,
+   "nivel": "bajo",
+   "contaminacion": 0.36,
+   "derrumbe": 0.225,
+   "desglose": {
+    "pendiente": 0.024,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.125,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.001,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21KPR0812Q",
+  "nombre": "Curso Comunitario el Ocotal (san Fernando)",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "San Matías Tlalancaleca",
+  "localidad": "San Fernando el Ocotal",
+  "ambito": "rural",
+  "latitud": 19.372778,
+  "longitud": -98.494722,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.27,
+   "nivel": "bajo",
+   "contaminacion": 0.011,
+   "derrumbe": 0.393,
+   "desglose": {
+    "pendiente": 0.066,
+    "susceptibilidad_laderas": 0.15,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.004,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DJN0810S",
+  "nombre": "Mitze",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Coronango",
+  "localidad": "San Martín Zoquiapan",
+  "ambito": "rural",
+  "latitud": 19.133786,
+  "longitud": -98.301576,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.266,
+   "nivel": "bajo",
+   "contaminacion": 0.474,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.016,
+    "calidad_agua": 0.15,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR3504V",
+  "nombre": "Francisco Gonzalez Bocanegra",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Puebla",
+  "localidad": "Artículo Primero Constitucional",
+  "ambito": "rural",
+  "latitud": 18.974152,
+  "longitud": -98.159788,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.263,
+   "nivel": "bajo",
+   "contaminacion": 0.329,
+   "derrumbe": 0.224,
+   "desglose": {
+    "pendiente": 0.023,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.114,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.001,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21EJN1016Z",
+  "nombre": "Santa Lucia",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Puebla",
+  "localidad": "Santa Lucía Altamirano",
+  "ambito": "rural",
+  "latitud": 18.95301,
+  "longitud": -98.230178,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.262,
+   "nivel": "bajo",
+   "contaminacion": 0.263,
+   "derrumbe": 0.218,
+   "desglose": {
+    "pendiente": 0.02,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.09,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DJN0820Z",
+  "nombre": "Francisco Sarabia",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Ocoyucan",
+  "localidad": "Francisco Sarabia",
+  "ambito": "rural",
+  "latitud": 18.96264,
+  "longitud": -98.315979,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.26,
+   "nivel": "bajo",
+   "contaminacion": 0.014,
+   "derrumbe": 0.418,
+   "desglose": {
+    "pendiente": 0.08,
+    "susceptibilidad_laderas": 0.15,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.005,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21KJN1747X",
+  "nombre": "Preescolar Comunitario Rural San Fernando el Ocotal",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "San Matías Tlalancaleca",
+  "localidad": "San Fernando el Ocotal",
+  "ambito": "rural",
+  "latitud": 19.372563,
+  "longitud": -98.494803,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.253,
+   "nivel": "bajo",
+   "contaminacion": 0.011,
+   "derrumbe": 0.362,
+   "desglose": {
+    "pendiente": 0.049,
+    "susceptibilidad_laderas": 0.15,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.004,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21KTV0262C",
+  "nombre": "Secundaria Comunitaria Rural San Fernando el Ocotal",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "San Matías Tlalancaleca",
+  "localidad": "San Fernando el Ocotal",
+  "ambito": "rural",
+  "latitud": 19.372563,
+  "longitud": -98.494803,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.253,
+   "nivel": "bajo",
+   "contaminacion": 0.011,
+   "derrumbe": 0.362,
+   "desglose": {
+    "pendiente": 0.049,
+    "susceptibilidad_laderas": 0.15,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.004,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DST0108M",
+  "nombre": "Escuela Secundaria Tecnica Num. 99",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "Ocoyucan",
+  "localidad": "Santa Clara Ocoyucan",
+  "ambito": "rural",
+  "latitud": 18.98233,
+  "longitud": -98.309485,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.252,
+   "nivel": "bajo",
+   "contaminacion": 0.323,
+   "derrumbe": 0.207,
+   "desglose": {
+    "pendiente": 0.014,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.111,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR3684W",
+  "nombre": "Juan Crisostomo Bonilla",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Puebla",
+  "localidad": "Santa Lucía Altamirano",
+  "ambito": "rural",
+  "latitud": 18.958902,
+  "longitud": -98.226961,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.25,
+   "nivel": "bajo",
+   "contaminacion": 0.429,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.15,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21EJN0699M",
+  "nombre": "C.a.i.c. San Baltazar Temaxcalac",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "San Martín Texmelucan",
+  "localidad": "San Baltazar Temaxcalac (la Ciénega)",
+  "ambito": "rural",
+  "latitud": 19.264121,
+  "longitud": -98.409496,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.249,
+   "nivel": "bajo",
+   "contaminacion": 0.426,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.149,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21EJN1253B",
+  "nombre": "Caic San Baltazar Temaxcalac 2",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "San Martín Texmelucan",
+  "localidad": "San Baltazar Temaxcalac (la Ciénega)",
+  "ambito": "rural",
+  "latitud": 19.264121,
+  "longitud": -98.409496,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.249,
+   "nivel": "bajo",
+   "contaminacion": 0.426,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.149,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DJN2231Y",
+  "nombre": "Juan Ruiz de Alarcon y Mendoza",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "San Jerónimo Tecuanipan",
+  "localidad": "San Miguel Papaxtla",
+  "ambito": "rural",
+  "latitud": 19.062779,
+  "longitud": -98.38252,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.248,
+   "nivel": "bajo",
+   "contaminacion": 0.026,
+   "derrumbe": 0.344,
+   "desglose": {
+    "pendiente": 0.039,
+    "susceptibilidad_laderas": 0.15,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.009,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21EJN0856M",
+  "nombre": "Tonanzintla",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "San Andrés Cholula",
+  "localidad": "Tonantzintla",
+  "ambito": "rural",
+  "latitud": 19.029373,
+  "longitud": -98.32081,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.247,
+   "nivel": "bajo",
+   "contaminacion": 0.42,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.147,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21EJN1136M",
+  "nombre": "San Cristobal Tepontla",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "San Pedro Cholula",
+  "localidad": "San Cristóbal Tepontla",
+  "ambito": "rural",
+  "latitud": 19.066366,
+  "longitud": -98.325405,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.244,
+   "nivel": "bajo",
+   "contaminacion": 0.269,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.084,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.01,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR0310N",
+  "nombre": "Venustiano Carranza",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "San Martín Texmelucan",
+  "localidad": "San Baltazar Temaxcalac (la Ciénega)",
+  "ambito": "rural",
+  "latitud": 19.264239,
+  "longitud": -98.410032,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.241,
+   "nivel": "bajo",
+   "contaminacion": 0.403,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.141,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR1048J",
+  "nombre": "Cadete Juan Escutia",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "San Martín Texmelucan",
+  "localidad": "San Baltazar Temaxcalac (la Ciénega)",
+  "ambito": "rural",
+  "latitud": 19.264239,
+  "longitud": -98.410032,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.241,
+   "nivel": "bajo",
+   "contaminacion": 0.403,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.141,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DTV0086E",
+  "nombre": "Licenciado Alvaro Galvez y Fuentes",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "Coronango",
+  "localidad": "San Antonio Mihuacan",
+  "ambito": "rural",
+  "latitud": 19.155464,
+  "longitud": -98.295602,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.24,
+   "nivel": "bajo",
+   "contaminacion": 0.329,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.114,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.001,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21EBH0189R",
+  "nombre": "Justo Sierra",
+  "nivel": "media_superior",
+  "matricula": null,
+  "municipio": "San Andrés Cholula",
+  "localidad": "Cacalotepec",
+  "ambito": "rural",
+  "latitud": 19.010329,
+  "longitud": -98.289585,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.24,
+   "nivel": "bajo",
+   "contaminacion": 0.4,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.14,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DJN0466Y",
+  "nombre": "Yolilitztli",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Chiautzingo",
+  "localidad": "San Agustín Atzompa",
+  "ambito": "rural",
+  "latitud": 19.19777,
+  "longitud": -98.511832,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.239,
+   "nivel": "bajo",
+   "contaminacion": 0.009,
+   "derrumbe": 0.338,
+   "desglose": {
+    "pendiente": 0.016,
+    "susceptibilidad_laderas": 0.15,
+    "urbanizacion_reciente": 0.02,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.003,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR0284F",
+  "nombre": "Emiliano Zapata",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "San Andrés Cholula",
+  "localidad": "San Rafael Comac",
+  "ambito": "rural",
+  "latitud": 19.036402,
+  "longitud": -98.312491,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.231,
+   "nivel": "bajo",
+   "contaminacion": 0.374,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.13,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.001,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DJN2211K",
+  "nombre": "Tonanzin",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "San Andrés Cholula",
+  "localidad": "San Pedro Tonantzintla",
+  "ambito": "rural",
+  "latitud": 19.022856,
+  "longitud": -98.317247,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.229,
+   "nivel": "bajo",
+   "contaminacion": 0.369,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.129,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR0285E",
+  "nombre": "Miguel Hidalgo",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "San Andrés Cholula",
+  "localidad": "San Pedro Tonantzintla",
+  "ambito": "rural",
+  "latitud": 19.019547,
+  "longitud": -98.316949,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.229,
+   "nivel": "bajo",
+   "contaminacion": 0.369,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.129,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21EJN1310C",
+  "nombre": "Caic Xochiquetzal",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Huejotzingo",
+  "localidad": "Los Encinos",
+  "ambito": "rural",
+  "latitud": 19.179675,
+  "longitud": -98.398621,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.227,
+   "nivel": "bajo",
+   "contaminacion": 0.363,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.127,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21EPR0450M",
+  "nombre": "Doctor y General Rafael Moreno Valle",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Tlahuapan",
+  "localidad": "San Francisco la Unión (san Vicente)",
+  "ambito": "rural",
+  "latitud": 19.439444,
+  "longitud": -98.550278,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.225,
+   "nivel": "bajo",
+   "contaminacion": 0.0,
+   "derrumbe": 0.364,
+   "desglose": {
+    "pendiente": 0.05,
+    "susceptibilidad_laderas": 0.15,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21ETK0080D",
+  "nombre": "Telebachillerato Comunitario Num. 80",
+  "nivel": "media_superior",
+  "matricula": null,
+  "municipio": "Ocoyucan",
+  "localidad": "Santa Martha Hidalgo",
+  "ambito": "rural",
+  "latitud": 18.9902,
+  "longitud": -98.335,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.225,
+   "nivel": "bajo",
+   "contaminacion": 0.006,
+   "derrumbe": 0.36,
+   "desglose": {
+    "pendiente": 0.048,
+    "susceptibilidad_laderas": 0.05,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21KJN1314J",
+  "nombre": "Preescolar Comunitario San Francisco la Union",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Tlahuapan",
+  "localidad": "San Francisco la Unión (san Vicente)",
+  "ambito": "rural",
+  "latitud": 19.439444,
+  "longitud": -98.550278,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.225,
+   "nivel": "bajo",
+   "contaminacion": 0.0,
+   "derrumbe": 0.364,
+   "desglose": {
+    "pendiente": 0.05,
+    "susceptibilidad_laderas": 0.15,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21EJN1359V",
+  "nombre": "San Rafael Comac",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "San Andrés Cholula",
+  "localidad": "San Rafael Comac",
+  "ambito": "rural",
+  "latitud": 19.034908,
+  "longitud": -98.308667,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.222,
+   "nivel": "bajo",
+   "contaminacion": 0.349,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.121,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.001,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21EBH0036N",
+  "nombre": "Bachillerato General Oficial \"guillermo Haro\"",
+  "nivel": "media_superior",
+  "matricula": null,
+  "municipio": "San Andrés Cholula",
+  "localidad": "Tonantzintla (santa María Tonantzintla)",
+  "ambito": "rural",
+  "latitud": 19.028028,
+  "longitud": -98.322,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.216,
+   "nivel": "bajo",
+   "contaminacion": 0.331,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.116,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21EBH0434L",
+  "nombre": "Guillermo Haro",
+  "nivel": "media_superior",
+  "matricula": null,
+  "municipio": "San Andrés Cholula",
+  "localidad": "Tonantzintla (santa María Tonantzintla)",
+  "ambito": "rural",
+  "latitud": 19.028028,
+  "longitud": -98.322,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.216,
+   "nivel": "bajo",
+   "contaminacion": 0.331,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.116,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21NJN0016A",
+  "nombre": "Preescolar del Centro de Desarrollo Infantil \"ciudad Judicial en Puebla\"",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "San Andrés Cholula",
+  "localidad": "San Andrés Cholula",
+  "ambito": "rural",
+  "latitud": 19.017239,
+  "longitud": -98.268702,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.215,
+   "nivel": "bajo",
+   "contaminacion": 0.329,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.115,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21ETV0138T",
+  "nombre": "Alejandro Garcia",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "San Andrés Cholula",
+  "localidad": "Tonantzintla",
+  "ambito": "rural",
+  "latitud": 19.028677,
+  "longitud": -98.313163,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.21,
+   "nivel": "bajo",
+   "contaminacion": 0.237,
+   "derrumbe": 0.231,
+   "desglose": {
+    "pendiente": 0.027,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.083,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR3495D",
+  "nombre": "La Patria Es Primero",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Puebla",
+  "localidad": "Los Ángeles Tetela",
+  "ambito": "rural",
+  "latitud": 18.891146,
+  "longitud": -98.169243,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.208,
+   "nivel": "bajo",
+   "contaminacion": 0.429,
+   "derrumbe": 0.06,
+   "desglose": {
+    "pendiente": 0.033,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.15,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DJN1165I",
+  "nombre": "Ignacio Comonfort",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Puebla",
+  "localidad": "Buenavista Tetela",
+  "ambito": "rural",
+  "latitud": 18.923367,
+  "longitud": -98.173984,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.207,
+   "nivel": "bajo",
+   "contaminacion": 0.497,
+   "derrumbe": 0.06,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.033,
+    "cercania_cauce_o_descarga": 0.024,
+    "calidad_agua": 0.15,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21KJN0640Y",
+  "nombre": "Preescolar Comunitario Colonia Jose Lopez Portillo",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Huejotzingo",
+  "localidad": "José López Portillo",
+  "ambito": "rural",
+  "latitud": 19.185019,
+  "longitud": -98.422844,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.207,
+   "nivel": "bajo",
+   "contaminacion": 0.429,
+   "derrumbe": 0.104,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.057,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.15,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DES0117B",
+  "nombre": "Ignacio Comonfort Rios",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "Puebla",
+  "localidad": "Los Ángeles Tetela",
+  "ambito": "rural",
+  "latitud": 18.891241,
+  "longitud": -98.168414,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.205,
+   "nivel": "bajo",
+   "contaminacion": 0.429,
+   "derrumbe": 0.055,
+   "desglose": {
+    "pendiente": 0.03,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.15,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DJN0687I",
+  "nombre": "Yolanda Benitez Gutierrez",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Puebla",
+  "localidad": "Los Ángeles Tetela",
+  "ambito": "rural",
+  "latitud": 18.891241,
+  "longitud": -98.168414,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.205,
+   "nivel": "bajo",
+   "contaminacion": 0.429,
+   "derrumbe": 0.055,
+   "desglose": {
+    "pendiente": 0.03,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.15,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DJN0546J",
+  "nombre": "Mostlati",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "San Andrés Cholula",
+  "localidad": "San Rafael Comac",
+  "ambito": "rural",
+  "latitud": 19.039013,
+  "longitud": -98.314284,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.204,
+   "nivel": "bajo",
+   "contaminacion": 0.297,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.103,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.001,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21EPR0249Z",
+  "nombre": "Jose Maria Morelos y Pavon",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Puebla",
+  "localidad": "Los Ángeles Tetela",
+  "ambito": "rural",
+  "latitud": 18.891144,
+  "longitud": -98.168002,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.204,
+   "nivel": "bajo",
+   "contaminacion": 0.429,
+   "derrumbe": 0.053,
+   "desglose": {
+    "pendiente": 0.029,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.15,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21EES0317Z",
+  "nombre": "Luis Enrique Erro",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "San Andrés Cholula",
+  "localidad": "Tonantzintla (santa María Tonantzintla)",
+  "ambito": "rural",
+  "latitud": 19.027402,
+  "longitud": -98.322401,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.202,
+   "nivel": "bajo",
+   "contaminacion": 0.291,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.102,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DST0132M",
+  "nombre": "Escuela Secundaria Tecnica Num.121",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "Puebla",
+  "localidad": "Santa María Guadalupe Tecola",
+  "ambito": "rural",
+  "latitud": 18.906474,
+  "longitud": -98.204684,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.201,
+   "nivel": "bajo",
+   "contaminacion": 0.006,
+   "derrumbe": 0.316,
+   "desglose": {
+    "pendiente": 0.074,
+    "susceptibilidad_laderas": 0.1,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR3457A",
+  "nombre": "Carmen Serdan",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "San Martín Texmelucan",
+  "localidad": "San Baltazar Temaxcalac (la Ciénega)",
+  "ambito": "rural",
+  "latitud": 19.262049,
+  "longitud": -98.405332,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.196,
+   "nivel": "bajo",
+   "contaminacion": 0.274,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.096,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DBA0060V",
+  "nombre": "Moctezuma Tochtli",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "San Martín Texmelucan",
+  "localidad": "San Juan Tuxco",
+  "ambito": "rural",
+  "latitud": 19.260846,
+  "longitud": -98.452292,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.195,
+   "nivel": "bajo",
+   "contaminacion": 0.271,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.095,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DBS0018E",
+  "nombre": "Independencia",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "San Martín Texmelucan",
+  "localidad": "San Juan Tuxco",
+  "ambito": "rural",
+  "latitud": 19.260846,
+  "longitud": -98.452292,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.195,
+   "nivel": "bajo",
+   "contaminacion": 0.271,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.095,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21EES0002Z",
+  "nombre": "Elia Peregrina de Cespedes",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "San Andrés Cholula",
+  "localidad": "Cacalotepec",
+  "ambito": "rural",
+  "latitud": 19.009575,
+  "longitud": -98.286841,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.195,
+   "nivel": "bajo",
+   "contaminacion": 0.271,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.095,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21EBH1192L",
+  "nombre": "Bachillerato Digital Num. 216",
+  "nivel": "media_superior",
+  "matricula": null,
+  "municipio": "Puebla",
+  "localidad": "Santa María Guadalupe Tecola",
+  "ambito": "rural",
+  "latitud": 18.905833,
+  "longitud": -98.191667,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.193,
+   "nivel": "bajo",
+   "contaminacion": 0.434,
+   "derrumbe": 0.029,
+   "desglose": {
+    "pendiente": 0.016,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.15,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21ETV0549V",
+  "nombre": "Francisco Perez Salazar",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "Puebla",
+  "localidad": "Santa María Guadalupe Tecola",
+  "ambito": "rural",
+  "latitud": 18.905833,
+  "longitud": -98.191667,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.193,
+   "nivel": "bajo",
+   "contaminacion": 0.434,
+   "derrumbe": 0.029,
+   "desglose": {
+    "pendiente": 0.016,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.15,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR2910V",
+  "nombre": "Lazaro Cardenas",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "San Andrés Cholula",
+  "localidad": "Tonantzintla",
+  "ambito": "rural",
+  "latitud": 19.026957,
+  "longitud": -98.322741,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.192,
+   "nivel": "bajo",
+   "contaminacion": 0.263,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.092,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR1565V",
+  "nombre": "Articulo 27 Constitucional",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Puebla",
+  "localidad": "Santa María Guadalupe Tecola",
+  "ambito": "rural",
+  "latitud": 18.904646,
+  "longitud": -98.191989,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.191,
+   "nivel": "bajo",
+   "contaminacion": 0.434,
+   "derrumbe": 0.025,
+   "desglose": {
+    "pendiente": 0.014,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.15,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21EJN1406P",
+  "nombre": "Jaime Sabines",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Coronango",
+  "localidad": "San Francisco Ocotlán",
+  "ambito": "rural",
+  "latitud": 19.145407,
+  "longitud": -98.272188,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.191,
+   "nivel": "bajo",
+   "contaminacion": 0.189,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.066,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21EJN1433M",
+  "nombre": "Octavio Paz",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Coronango",
+  "localidad": "San Francisco Ocotlán",
+  "ambito": "rural",
+  "latitud": 19.145407,
+  "longitud": -98.272188,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.191,
+   "nivel": "bajo",
+   "contaminacion": 0.189,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.066,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DJN0642M",
+  "nombre": "Atoyatl",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Puebla",
+  "localidad": "Santa María Guadalupe Tecola",
+  "ambito": "rural",
+  "latitud": 18.905645,
+  "longitud": -98.192055,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.188,
+   "nivel": "bajo",
+   "contaminacion": 0.434,
+   "derrumbe": 0.02,
+   "desglose": {
+    "pendiente": 0.011,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.15,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR1123Z",
+  "nombre": "Gregorio Torres Quintero",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Puebla",
+  "localidad": "San José el Rincón",
+  "ambito": "rural",
+  "latitud": 19.104118,
+  "longitud": -98.136269,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.187,
+   "nivel": "bajo",
+   "contaminacion": 0.057,
+   "derrumbe": 0.213,
+   "desglose": {
+    "pendiente": 0.017,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.016,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.004,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21ETV0709S",
+  "nombre": "Simbolos Patrios",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "Calpan",
+  "localidad": "Pueblo Nuevo",
+  "ambito": "rural",
+  "latitud": 19.107528,
+  "longitud": -98.437918,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.187,
+   "nivel": "bajo",
+   "contaminacion": 0.006,
+   "derrumbe": 0.291,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.15,
+    "urbanizacion_reciente": 0.01,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DJN0292Y",
+  "nombre": "Tecuichpoch",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "San Martín Texmelucan",
+  "localidad": "San Baltazar Temaxcalac (la Ciénega)",
+  "ambito": "rural",
+  "latitud": 19.2618,
+  "longitud": -98.4048,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.186,
+   "nivel": "bajo",
+   "contaminacion": 0.246,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.086,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DTV0472Y",
+  "nombre": "Vicente Suarez",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "Tzicatlacoyan",
+  "localidad": "San José Texaluca",
+  "ambito": "rural",
+  "latitud": 18.8975,
+  "longitud": -98.132222,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.184,
+   "nivel": "bajo",
+   "contaminacion": 0.011,
+   "derrumbe": 0.282,
+   "desglose": {
+    "pendiente": 0.055,
+    "susceptibilidad_laderas": 0.1,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.004,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21EJN1024I",
+  "nombre": "Alvaro Obregon",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Tzicatlacoyan",
+  "localidad": "San José Texaluca",
+  "ambito": "rural",
+  "latitud": 18.8975,
+  "longitud": -98.132222,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.184,
+   "nivel": "bajo",
+   "contaminacion": 0.011,
+   "derrumbe": 0.282,
+   "desglose": {
+    "pendiente": 0.055,
+    "susceptibilidad_laderas": 0.1,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.004,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21EPR0465O",
+  "nombre": "Benito Juarez",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Tzicatlacoyan",
+  "localidad": "San José Texaluca",
+  "ambito": "rural",
+  "latitud": 18.8975,
+  "longitud": -98.132222,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.184,
+   "nivel": "bajo",
+   "contaminacion": 0.011,
+   "derrumbe": 0.282,
+   "desglose": {
+    "pendiente": 0.055,
+    "susceptibilidad_laderas": 0.1,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.004,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21KJN0543W",
+  "nombre": "Preescolar Comunitario Santo Domingo Cienega Honda",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Huejotzingo",
+  "localidad": "Santo Domingo Ciénega Honda",
+  "ambito": "rural",
+  "latitud": 19.198889,
+  "longitud": -98.343056,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.178,
+   "nivel": "bajo",
+   "contaminacion": 0.429,
+   "derrumbe": 0.005,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.003,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.15,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21KPR1083Z",
+  "nombre": "Primaria Comunitaria Rural Santo Domingo Cienega Honda",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Huejotzingo",
+  "localidad": "Santo Domingo Ciénega Honda",
+  "ambito": "rural",
+  "latitud": 19.199998,
+  "longitud": -98.343018,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.178,
+   "nivel": "bajo",
+   "contaminacion": 0.429,
+   "derrumbe": 0.005,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.003,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.15,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21KTV0164B",
+  "nombre": "Secundaria Comunitaria Rural Santo Domingo Cienega Honda",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "Huejotzingo",
+  "localidad": "Santo Domingo Ciénega Honda",
+  "ambito": "rural",
+  "latitud": 19.199998,
+  "longitud": -98.343018,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.178,
+   "nivel": "bajo",
+   "contaminacion": 0.429,
+   "derrumbe": 0.005,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.003,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.15,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR0641D",
+  "nombre": "Vicente Guerrero",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Tlahuapan",
+  "localidad": "La Preciosita",
+  "ambito": "rural",
+  "latitud": 19.408333,
+  "longitud": -98.544167,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.177,
+   "nivel": "bajo",
+   "contaminacion": 0.063,
+   "derrumbe": 0.236,
+   "desglose": {
+    "pendiente": 0.127,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.003,
+    "cercania_cauce_o_descarga": 0.019,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.003,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DTV0442D",
+  "nombre": "Ignacio Jose de Allende y Unzaga",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "Tlahuapan",
+  "localidad": "La Preciosita",
+  "ambito": "rural",
+  "latitud": 19.408333,
+  "longitud": -98.544167,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.177,
+   "nivel": "bajo",
+   "contaminacion": 0.063,
+   "derrumbe": 0.236,
+   "desglose": {
+    "pendiente": 0.127,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.003,
+    "cercania_cauce_o_descarga": 0.019,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.003,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPB0329K",
+  "nombre": "Juan Francisco Lucas",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Puebla",
+  "localidad": "San Isidro Tlalcostépetl",
+  "ambito": "rural",
+  "latitud": 19.133255,
+  "longitud": -98.060643,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.171,
+   "nivel": "bajo",
+   "contaminacion": 0.143,
+   "derrumbe": 0.038,
+   "desglose": {
+    "pendiente": 0.021,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.05,
+    "marginacion": 0.1
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DJN0133J",
+  "nombre": "Rafael Ramirez",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "San Andrés Cholula",
+  "localidad": "Tonantzintla (santa María Tonantzintla)",
+  "ambito": "rural",
+  "latitud": 19.025216,
+  "longitud": -98.321023,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.17,
+   "nivel": "bajo",
+   "contaminacion": 0.2,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.07,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21ETV0136V",
+  "nombre": "Maximo Serdan Alatriste",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "San Andrés Cholula",
+  "localidad": "San Rafael Comac",
+  "ambito": "rural",
+  "latitud": 19.02892,
+  "longitud": -98.303573,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.17,
+   "nivel": "bajo",
+   "contaminacion": 0.2,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.069,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.001,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21KCC0278Z",
+  "nombre": "Preescolar Comunitario Indigena San Isidro Tlalcostepetl",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Puebla",
+  "localidad": "San Isidro Tlalcostépetl",
+  "ambito": "rural",
+  "latitud": 19.133858,
+  "longitud": -98.060157,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.168,
+   "nivel": "bajo",
+   "contaminacion": 0.143,
+   "derrumbe": 0.033,
+   "desglose": {
+    "pendiente": 0.018,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.05,
+    "marginacion": 0.1
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR0638Q",
+  "nombre": "Miguel Hidalgo",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Tlahuapan",
+  "localidad": "Guadalupito Las Dalias",
+  "ambito": "rural",
+  "latitud": 19.415833,
+  "longitud": -98.525556,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.163,
+   "nivel": "bajo",
+   "contaminacion": 0.0,
+   "derrumbe": 0.296,
+   "desglose": {
+    "pendiente": 0.013,
+    "susceptibilidad_laderas": 0.15,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21ETV0639N",
+  "nombre": "Arturo Brizuela Jimenez",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "Tlahuapan",
+  "localidad": "Guadalupito Las Dalias",
+  "ambito": "rural",
+  "latitud": 19.415833,
+  "longitud": -98.525556,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.163,
+   "nivel": "bajo",
+   "contaminacion": 0.0,
+   "derrumbe": 0.296,
+   "desglose": {
+    "pendiente": 0.013,
+    "susceptibilidad_laderas": 0.15,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21KJN0222M",
+  "nombre": "Preescolar Comunitario Guadalupito Las Dalias",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Tlahuapan",
+  "localidad": "Guadalupito Las Dalias",
+  "ambito": "rural",
+  "latitud": 19.415833,
+  "longitud": -98.525556,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.163,
+   "nivel": "bajo",
+   "contaminacion": 0.0,
+   "derrumbe": 0.296,
+   "desglose": {
+    "pendiente": 0.013,
+    "susceptibilidad_laderas": 0.15,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DJN0459O",
+  "nombre": "Gandhi",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Huejotzingo",
+  "localidad": "Santa María Tianguistenco",
+  "ambito": "rural",
+  "latitud": 19.157222,
+  "longitud": -98.444167,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.161,
+   "nivel": "bajo",
+   "contaminacion": 0.0,
+   "derrumbe": 0.247,
+   "desglose": {
+    "pendiente": 0.036,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR2424C",
+  "nombre": "Jose Maria Morelos",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Huejotzingo",
+  "localidad": "Santa María Tianguistenco",
+  "ambito": "rural",
+  "latitud": 19.157222,
+  "longitud": -98.444167,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.161,
+   "nivel": "bajo",
+   "contaminacion": 0.0,
+   "derrumbe": 0.247,
+   "desglose": {
+    "pendiente": 0.036,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21ETV0875Q",
+  "nombre": "Jose Vasconcelos",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "Huejotzingo",
+  "localidad": "Santa María Tianguistenco",
+  "ambito": "rural",
+  "latitud": 19.157222,
+  "longitud": -98.444167,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.161,
+   "nivel": "bajo",
+   "contaminacion": 0.0,
+   "derrumbe": 0.247,
+   "desglose": {
+    "pendiente": 0.036,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21EPR1535Z",
+  "nombre": "Nezahualcoyotl",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Domingo Arenas",
+  "localidad": "Domingo Arenas",
+  "ambito": "rural",
+  "latitud": 19.144081,
+  "longitud": -98.456586,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.159,
+   "nivel": "bajo",
+   "contaminacion": 0.026,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.007,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21ETV0154K",
+  "nombre": "Profesor Jesus Leonardo Garcia",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "San Pedro Cholula",
+  "localidad": "San Juan Tlautla",
+  "ambito": "rural",
+  "latitud": 19.096269,
+  "longitud": -98.352493,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.154,
+   "nivel": "bajo",
+   "contaminacion": 0.154,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.054,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR0940B",
+  "nombre": "Benito Juarez",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Chiautzingo",
+  "localidad": "San Agustín Atzompa",
+  "ambito": "rural",
+  "latitud": 19.202778,
+  "longitud": -98.510556,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.153,
+   "nivel": "bajo",
+   "contaminacion": 0.009,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.003,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21ETV0098I",
+  "nombre": "Jaime Nuno",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "Chiautzingo",
+  "localidad": "San Agustín Atzompa",
+  "ambito": "rural",
+  "latitud": 19.202778,
+  "longitud": -98.510556,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.153,
+   "nivel": "bajo",
+   "contaminacion": 0.009,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.003,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DJN1085X",
+  "nombre": "Maria Curie",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "San Jerónimo Tecuanipan",
+  "localidad": "Los Reyes Tlanechicolpan",
+  "ambito": "rural",
+  "latitud": 19.032217,
+  "longitud": -98.350996,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.152,
+   "nivel": "bajo",
+   "contaminacion": 0.006,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR0281I",
+  "nombre": "Aquiles Serdan",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "San Andrés Cholula",
+  "localidad": "Cacalotepec",
+  "ambito": "rural",
+  "latitud": 19.002627,
+  "longitud": -98.295097,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.152,
+   "nivel": "bajo",
+   "contaminacion": 0.149,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.052,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR0294M",
+  "nombre": "Miguel Hidalgo",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "San Jerónimo Tecuanipan",
+  "localidad": "Los Reyes Tlanechicolpan",
+  "ambito": "rural",
+  "latitud": 19.032989,
+  "longitud": -98.352891,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.152,
+   "nivel": "bajo",
+   "contaminacion": 0.006,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR1291W",
+  "nombre": "Aquiles Serdan",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "San Andrés Cholula",
+  "localidad": "Cacalotepec",
+  "ambito": "rural",
+  "latitud": 19.002627,
+  "longitud": -98.295097,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.152,
+   "nivel": "bajo",
+   "contaminacion": 0.149,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.052,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21KPR1082Z",
+  "nombre": "Primaria Comunitaria Rural la Venta",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Amozoc",
+  "localidad": "La Venta",
+  "ambito": "rural",
+  "latitud": 19.059677,
+  "longitud": -98.056322,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.152,
+   "nivel": "bajo",
+   "contaminacion": 0.006,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21KTV0129W",
+  "nombre": "Secundaria Comunitaria Rural la Venta",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "Amozoc",
+  "localidad": "La Venta",
+  "ambito": "rural",
+  "latitud": 19.059677,
+  "longitud": -98.056322,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.152,
+   "nivel": "bajo",
+   "contaminacion": 0.006,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DTV0045E",
+  "nombre": "Telesecundaria de Nueva Creación",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "Amozoc",
+  "localidad": "San Jacinto",
+  "ambito": "rural",
+  "latitud": 19.056681,
+  "longitud": -98.06523,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.151,
+   "nivel": "bajo",
+   "contaminacion": 0.003,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.001,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR1320A",
+  "nombre": "Hermanos Serdan",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Puebla",
+  "localidad": "Santa Cruz la Ixtla",
+  "ambito": "rural",
+  "latitud": 18.938889,
+  "longitud": -98.231389,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.145,
+   "nivel": "bajo",
+   "contaminacion": 0.006,
+   "derrumbe": 0.169,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.093,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21KJN0624G",
+  "nombre": "Preescolar Comunitario Santa Cruz la Ixtla",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Puebla",
+  "localidad": "Santa Cruz la Ixtla",
+  "ambito": "rural",
+  "latitud": 18.938889,
+  "longitud": -98.231389,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.145,
+   "nivel": "bajo",
+   "contaminacion": 0.006,
+   "derrumbe": 0.169,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.093,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR1096T",
+  "nombre": "Miguel Hidalgo",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Ocoyucan",
+  "localidad": "Francisco Sarabia",
+  "ambito": "rural",
+  "latitud": 18.972564,
+  "longitud": -98.318127,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.137,
+   "nivel": "bajo",
+   "contaminacion": 0.014,
+   "derrumbe": 0.195,
+   "desglose": {
+    "pendiente": 0.054,
+    "susceptibilidad_laderas": 0.05,
+    "urbanizacion_reciente": 0.003,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.005,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DJN1217Y",
+  "nombre": "Francisco Javier Clavijero",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Huejotzingo",
+  "localidad": "San José Tlautla",
+  "ambito": "rural",
+  "latitud": 19.139279,
+  "longitud": -98.381673,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.129,
+   "nivel": "bajo",
+   "contaminacion": 0.249,
+   "derrumbe": 0.031,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.017,
+    "cercania_cauce_o_descarga": 0.087,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR1211U",
+  "nombre": "Emancipacion",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Ocoyucan",
+  "localidad": "Santa Martha Hidalgo",
+  "ambito": "rural",
+  "latitud": 18.985,
+  "longitud": -98.324444,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.127,
+   "nivel": "bajo",
+   "contaminacion": 0.006,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21EJN0127Y",
+  "nombre": "Octil Ancatl Miac Xochitl",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Ocoyucan",
+  "localidad": "Santa Martha Hidalgo",
+  "ambito": "rural",
+  "latitud": 18.985,
+  "longitud": -98.324444,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.127,
+   "nivel": "bajo",
+   "contaminacion": 0.006,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR3574Q",
+  "nombre": "Juan Escutia",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "San Salvador el Verde",
+  "localidad": "Guadalupe la Encinera",
+  "ambito": "rural",
+  "latitud": 19.264722,
+  "longitud": -98.533333,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.122,
+   "nivel": "bajo",
+   "contaminacion": 0.063,
+   "derrumbe": 0.182,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.1,
+    "cercania_cauce_o_descarga": 0.022,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21KJN1175Z",
+  "nombre": "Preescolar Comunitario San Jose Zetina",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Puebla",
+  "localidad": "San José Zetina",
+  "ambito": "rural",
+  "latitud": 18.921324,
+  "longitud": -98.273532,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.118,
+   "nivel": "bajo",
+   "contaminacion": 0.046,
+   "derrumbe": 0.049,
+   "desglose": {
+    "pendiente": 0.027,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.016,
+    "marginacion": 0.075
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21KTV0016T",
+  "nombre": "Secundaria Comunitaria Vicente Suarez Ferrer",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "Puebla",
+  "localidad": "San José Zetina",
+  "ambito": "rural",
+  "latitud": 18.921324,
+  "longitud": -98.273532,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.118,
+   "nivel": "bajo",
+   "contaminacion": 0.046,
+   "derrumbe": 0.049,
+   "desglose": {
+    "pendiente": 0.027,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.016,
+    "marginacion": 0.075
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21KJN1287C",
+  "nombre": "Preescolar Comunitario San Miguel",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Puebla",
+  "localidad": "San Miguel",
+  "ambito": "rural",
+  "latitud": 18.920651,
+  "longitud": -98.251536,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.106,
+   "nivel": "bajo",
+   "contaminacion": 0.014,
+   "derrumbe": 0.093,
+   "desglose": {
+    "pendiente": 0.051,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.005,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR3567G",
+  "nombre": "Jose Velez Fuentes",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Puebla",
+  "localidad": "El Oasis Valsequillo",
+  "ambito": "rural",
+  "latitud": 18.926981,
+  "longitud": -98.136728,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.102,
+   "nivel": "bajo",
+   "contaminacion": 0.0,
+   "derrumbe": 0.185,
+   "desglose": {
+    "pendiente": 0.002,
+    "susceptibilidad_laderas": 0.1,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DJN0636B",
+  "nombre": "Matiana Munguia de Equilug",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Puebla",
+  "localidad": "La Libertad Tecola",
+  "ambito": "rural",
+  "latitud": 18.88382,
+  "longitud": -98.184227,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.082,
+   "nivel": "bajo",
+   "contaminacion": 0.009,
+   "derrumbe": 0.053,
+   "desglose": {
+    "pendiente": 0.029,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.003,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR1815K",
+  "nombre": "Licenciado Adolfo Lopez Mateos",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Puebla",
+  "localidad": "La Libertad Tecola",
+  "ambito": "rural",
+  "latitud": 18.883595,
+  "longitud": -98.184242,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.082,
+   "nivel": "bajo",
+   "contaminacion": 0.009,
+   "derrumbe": 0.053,
+   "desglose": {
+    "pendiente": 0.029,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.003,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR0648X",
+  "nombre": "Emiliano Zapata",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Tlahuapan",
+  "localidad": "Santa Cruz Otlatla",
+  "ambito": "rural",
+  "latitud": 19.372222,
+  "longitud": -98.6225,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.079,
+   "nivel": "bajo",
+   "contaminacion": 0.006,
+   "derrumbe": 0.049,
+   "desglose": {
+    "pendiente": 0.027,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DTV0179U",
+  "nombre": "Niños Héroes",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "Tlahuapan",
+  "localidad": "Santa Cruz Otlatla",
+  "ambito": "rural",
+  "latitud": 19.372222,
+  "longitud": -98.6225,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.079,
+   "nivel": "bajo",
+   "contaminacion": 0.006,
+   "derrumbe": 0.049,
+   "desglose": {
+    "pendiente": 0.027,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21EBH1025O",
+  "nombre": "Bachillerato Digital Num. 117",
+  "nivel": "media_superior",
+  "matricula": null,
+  "municipio": "Tlahuapan",
+  "localidad": "Santa Cruz Otlatla",
+  "ambito": "rural",
+  "latitud": 19.372222,
+  "longitud": -98.6225,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.079,
+   "nivel": "bajo",
+   "contaminacion": 0.006,
+   "derrumbe": 0.049,
+   "desglose": {
+    "pendiente": 0.027,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DTV0366O",
+  "nombre": "Netzahualcoyotl",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "San Jerónimo Tecuanipan",
+  "localidad": "San Miguel Papaxtla",
+  "ambito": "rural",
+  "latitud": 19.062077,
+  "longitud": -98.381621,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.077,
+   "nivel": "bajo",
+   "contaminacion": 0.026,
+   "derrumbe": 0.033,
+   "desglose": {
+    "pendiente": 0.018,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.009,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21EBH1133W",
+  "nombre": "Bachillerato Digital Num. 150",
+  "nivel": "media_superior",
+  "matricula": null,
+  "municipio": "San Jerónimo Tecuanipan",
+  "localidad": "San Miguel Papaxtla",
+  "ambito": "rural",
+  "latitud": 19.062077,
+  "longitud": -98.381621,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.077,
+   "nivel": "bajo",
+   "contaminacion": 0.026,
+   "derrumbe": 0.033,
+   "desglose": {
+    "pendiente": 0.018,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.009,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR2535H",
+  "nombre": "Agustin Melgar",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Huejotzingo",
+  "localidad": "San Diego Buenavista",
+  "ambito": "rural",
+  "latitud": 19.130761,
+  "longitud": -98.483996,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.076,
+   "nivel": "bajo",
+   "contaminacion": 0.003,
+   "derrumbe": 0.091,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.05,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.001,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21EBH0983P",
+  "nombre": "Bachillerato General Digital Num.30",
+  "nivel": "media_superior",
+  "matricula": null,
+  "municipio": "Huejotzingo",
+  "localidad": "San Diego Buenavista",
+  "ambito": "rural",
+  "latitud": 19.130523,
+  "longitud": -98.484108,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.076,
+   "nivel": "bajo",
+   "contaminacion": 0.003,
+   "derrumbe": 0.091,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.05,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.001,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21ETV0904V",
+  "nombre": "Narciso Mendoza",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "Huejotzingo",
+  "localidad": "San Diego Buenavista",
+  "ambito": "rural",
+  "latitud": 19.130422,
+  "longitud": -98.485751,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.076,
+   "nivel": "bajo",
+   "contaminacion": 0.003,
+   "derrumbe": 0.091,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.05,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.001,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DJN0808D",
+  "nombre": "Quetzalli",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Tlahuapan",
+  "localidad": "Santa Cruz Otlatla",
+  "ambito": "rural",
+  "latitud": 19.373037,
+  "longitud": -98.623279,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.069,
+   "nivel": "bajo",
+   "contaminacion": 0.006,
+   "derrumbe": 0.031,
+   "desglose": {
+    "pendiente": 0.017,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DJN0651U",
+  "nombre": "La Paz Tlaxcolpan",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Puebla",
+  "localidad": "La Paz Tlaxcolpan",
+  "ambito": "rural",
+  "latitud": 18.902222,
+  "longitud": -98.221944,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.068,
+   "nivel": "bajo",
+   "contaminacion": 0.023,
+   "derrumbe": 0.064,
+   "desglose": {
+    "pendiente": 0.035,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.008,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DJN0540P",
+  "nombre": "Miguel Serrano",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Puebla",
+  "localidad": "San José el Rincón",
+  "ambito": "rural",
+  "latitud": 18.885833,
+  "longitud": -98.199167,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.065,
+   "nivel": "bajo",
+   "contaminacion": 0.011,
+   "derrumbe": 0.02,
+   "desglose": {
+    "pendiente": 0.011,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.004,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DST0076K",
+  "nombre": "Escuela Secundaria Tecnica Num. 67",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "Puebla",
+  "localidad": "San José el Rincón",
+  "ambito": "rural",
+  "latitud": 18.885833,
+  "longitud": -98.199167,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.065,
+   "nivel": "bajo",
+   "contaminacion": 0.011,
+   "derrumbe": 0.02,
+   "desglose": {
+    "pendiente": 0.011,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.004,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DJN1092G",
+  "nombre": "Enrique Cordero y Torres",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Huejotzingo",
+  "localidad": "San Juan Pancoac",
+  "ambito": "rural",
+  "latitud": 19.149167,
+  "longitud": -98.441944,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.06,
+   "nivel": "bajo",
+   "contaminacion": 0.006,
+   "derrumbe": 0.06,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.033,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR2418S",
+  "nombre": "Pedro Morales",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Huejotzingo",
+  "localidad": "San Juan Pancoac",
+  "ambito": "rural",
+  "latitud": 19.149167,
+  "longitud": -98.441944,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.06,
+   "nivel": "bajo",
+   "contaminacion": 0.006,
+   "derrumbe": 0.06,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.033,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21EJN0675C",
+  "nombre": "Caic San Juan Pancoac",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Huejotzingo",
+  "localidad": "San Juan Pancoac",
+  "ambito": "rural",
+  "latitud": 19.149167,
+  "longitud": -98.441944,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.06,
+   "nivel": "bajo",
+   "contaminacion": 0.006,
+   "derrumbe": 0.06,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.033,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21EJN1090H",
+  "nombre": "San Jose Pueblo Nuevo",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Calpan",
+  "localidad": "Pueblo Nuevo",
+  "ambito": "rural",
+  "latitud": 19.106667,
+  "longitud": -98.441755,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.06,
+   "nivel": "bajo",
+   "contaminacion": 0.006,
+   "derrumbe": 0.06,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.033,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21ETV0697D",
+  "nombre": "Leandro Valle",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "Huejotzingo",
+  "localidad": "San Juan Pancoac",
+  "ambito": "rural",
+  "latitud": 19.149167,
+  "longitud": -98.441944,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.06,
+   "nivel": "bajo",
+   "contaminacion": 0.006,
+   "derrumbe": 0.06,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.033,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DJN2044D",
+  "nombre": "Lorenzo Aispuro Gomez",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Huejotzingo",
+  "localidad": "San Diego Buenavista",
+  "ambito": "rural",
+  "latitud": 19.130052,
+  "longitud": -98.483774,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.059,
+   "nivel": "bajo",
+   "contaminacion": 0.003,
+   "derrumbe": 0.06,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.033,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.001,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21ETK0038O",
+  "nombre": "Telebachillerato Comunitario Num.38",
+  "nivel": "media_superior",
+  "matricula": null,
+  "municipio": "San Matías Tlalancaleca",
+  "localidad": "Buenavista",
+  "ambito": "rural",
+  "latitud": 19.3455,
+  "longitud": -98.5078,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.055,
+   "nivel": "bajo",
+   "contaminacion": 0.014,
+   "derrumbe": 0.0,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.005,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DJN0461C",
+  "nombre": "Xochiquetzal",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Tlahuapan",
+  "localidad": "San Juan Cuauhtémoc",
+  "ambito": "rural",
+  "latitud": 19.387695,
+  "longitud": -98.599104,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.054,
+   "nivel": "bajo",
+   "contaminacion": 0.014,
+   "derrumbe": 0.044,
+   "desglose": {
+    "pendiente": 0.021,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.003,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.005,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DJN2252K",
+  "nombre": "Noconetzin",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Domingo Arenas",
+  "localidad": "Cháhuac",
+  "ambito": "rural",
+  "latitud": 19.124389,
+  "longitud": -98.413294,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.054,
+   "nivel": "bajo",
+   "contaminacion": 0.011,
+   "derrumbe": 0.0,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.004,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR2402R",
+  "nombre": "Profesor Otilio Montaño",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Domingo Arenas",
+  "localidad": "Cháhuac",
+  "ambito": "rural",
+  "latitud": 19.116381,
+  "longitud": -98.423715,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.054,
+   "nivel": "bajo",
+   "contaminacion": 0.011,
+   "derrumbe": 0.0,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.004,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DTV0409W",
+  "nombre": "Luis Donaldo Colosio Murrieta",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "Tlahuapan",
+  "localidad": "San Juan Cuauhtémoc",
+  "ambito": "rural",
+  "latitud": 19.387696,
+  "longitud": -98.599105,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.054,
+   "nivel": "bajo",
+   "contaminacion": 0.014,
+   "derrumbe": 0.044,
+   "desglose": {
+    "pendiente": 0.021,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.003,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.005,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DTV0546Z",
+  "nombre": "Domingo Arenas",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "Domingo Arenas",
+  "localidad": "Cháhuac",
+  "ambito": "rural",
+  "latitud": 19.116381,
+  "longitud": -98.423715,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.054,
+   "nivel": "bajo",
+   "contaminacion": 0.011,
+   "derrumbe": 0.0,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.004,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21EBH0992X",
+  "nombre": "Bachillerato General Digital Num. 39",
+  "nivel": "media_superior",
+  "matricula": null,
+  "municipio": "Tlahuapan",
+  "localidad": "San Juan Cuauhtémoc",
+  "ambito": "rural",
+  "latitud": 19.387696,
+  "longitud": -98.599105,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.054,
+   "nivel": "bajo",
+   "contaminacion": 0.014,
+   "derrumbe": 0.044,
+   "desglose": {
+    "pendiente": 0.021,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.003,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.005,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR0642C",
+  "nombre": "Cuauhtemoc",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Tlahuapan",
+  "localidad": "San Juan Cuauhtémoc",
+  "ambito": "rural",
+  "latitud": 19.38809,
+  "longitud": -98.598659,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.051,
+   "nivel": "bajo",
+   "contaminacion": 0.014,
+   "derrumbe": 0.038,
+   "desglose": {
+    "pendiente": 0.018,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.003,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.005,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21KJN0517Y",
+  "nombre": "Preescolar Comunitario Rural la Ocotera Seca",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Calpan",
+  "localidad": "El Palmar (la Ocotera Seca)",
+  "ambito": "rural",
+  "latitud": 19.105,
+  "longitud": -98.425556,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.051,
+   "nivel": "bajo",
+   "contaminacion": 0.003,
+   "derrumbe": 0.0,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.001,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21KJN1619B",
+  "nombre": "Preescolar Comunitario Rural la Cumbre Oyameles",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Tlatlauquitepec",
+  "localidad": "La Cumbre",
+  "ambito": "rural",
+  "latitud": 19.5727,
+  "longitud": -98.1015,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.051,
+   "nivel": "bajo",
+   "contaminacion": 0.003,
+   "derrumbe": 0.0,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.001,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21KPR1098A",
+  "nombre": "Primaria Comunitaria Rural el Palmar (la Ocotera Seca)",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Calpan",
+  "localidad": "El Palmar (la Ocotera Seca)",
+  "ambito": "rural",
+  "latitud": 19.106298,
+  "longitud": -98.425236,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.051,
+   "nivel": "bajo",
+   "contaminacion": 0.003,
+   "derrumbe": 0.0,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.001,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21EJN1034P",
+  "nombre": "Caic Nuevo Tlahupan",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Tlahuapan",
+  "localidad": "Nuevo Tlahuapan",
+  "ambito": "rural",
+  "latitud": 19.22472,
+  "longitud": -98.345079,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.05,
+   "nivel": "bajo",
+   "contaminacion": 0.0,
+   "derrumbe": 0.0,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21EPR0634T",
+  "nombre": "Profesor Luis Bermudez Galicia",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Tlahuapan",
+  "localidad": "Nuevo Tlahuapan",
+  "ambito": "rural",
+  "latitud": 19.22472,
+  "longitud": -98.345079,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.05,
+   "nivel": "bajo",
+   "contaminacion": 0.0,
+   "derrumbe": 0.0,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.05
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR2256X",
+  "nombre": "Cuauhtemoc",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Calpan",
+  "localidad": "Pueblo Nuevo",
+  "ambito": "rural",
+  "latitud": 19.10712,
+  "longitud": -98.439758,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.04,
+   "nivel": "bajo",
+   "contaminacion": 0.006,
+   "derrumbe": 0.024,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.013,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21KJN1447Z",
+  "nombre": "Preescolar Comunitario Rural Alvaro Obregon",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Huejotzingo",
+  "localidad": "Álvaro Obregón",
+  "ambito": "rural",
+  "latitud": 19.156944,
+  "longitud": -98.453333,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.036,
+   "nivel": "bajo",
+   "contaminacion": 0.003,
+   "derrumbe": 0.018,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.01,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.001,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR0288B",
+  "nombre": "Benito Juarez",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "San Felipe Teotlalcingo",
+  "localidad": "San Juan Tlale",
+  "ambito": "rural",
+  "latitud": 19.235367,
+  "longitud": -98.518698,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.035,
+   "nivel": "bajo",
+   "contaminacion": 0.0,
+   "derrumbe": 0.018,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.01,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DCC0315C",
+  "nombre": "Benito Juarez",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Tlahuapan",
+  "localidad": "Santa Cruz Moxolahuac",
+  "ambito": "rural",
+  "latitud": 19.445833,
+  "longitud": -98.545278,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.034,
+   "nivel": "bajo",
+   "contaminacion": 0.006,
+   "derrumbe": 0.013,
+   "desglose": {
+    "pendiente": 0.007,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DJN0628T",
+  "nombre": "Popocatepetl",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "San Matías Tlalancaleca",
+  "localidad": "San Antonio Chiautla de Arenas",
+  "ambito": "rural",
+  "latitud": 19.349444,
+  "longitud": -98.481667,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.034,
+   "nivel": "bajo",
+   "contaminacion": 0.0,
+   "derrumbe": 0.016,
+   "desglose": {
+    "pendiente": 0.009,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR0647Y",
+  "nombre": "Emiliano Zapata",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Tlahuapan",
+  "localidad": "Santa Cruz Moxolahuac",
+  "ambito": "rural",
+  "latitud": 19.445833,
+  "longitud": -98.545278,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.034,
+   "nivel": "bajo",
+   "contaminacion": 0.006,
+   "derrumbe": 0.013,
+   "desglose": {
+    "pendiente": 0.007,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR1528R",
+  "nombre": "Domingo Arenas",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "San Matías Tlalancaleca",
+  "localidad": "San Antonio Chiautla de Arenas",
+  "ambito": "rural",
+  "latitud": 19.349444,
+  "longitud": -98.481667,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.034,
+   "nivel": "bajo",
+   "contaminacion": 0.0,
+   "derrumbe": 0.016,
+   "desglose": {
+    "pendiente": 0.009,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DTV0105C",
+  "nombre": "Tierra y Libertad",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "Tlahuapan",
+  "localidad": "Santa Cruz Moxolahuac",
+  "ambito": "rural",
+  "latitud": 19.445833,
+  "longitud": -98.545278,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.034,
+   "nivel": "bajo",
+   "contaminacion": 0.006,
+   "derrumbe": 0.013,
+   "desglose": {
+    "pendiente": 0.007,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DTV0159G",
+  "nombre": "Fernando Montes de Oca",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "San Matías Tlalancaleca",
+  "localidad": "San Antonio Chiautla de Arenas",
+  "ambito": "rural",
+  "latitud": 19.349444,
+  "longitud": -98.481667,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.034,
+   "nivel": "bajo",
+   "contaminacion": 0.0,
+   "derrumbe": 0.016,
+   "desglose": {
+    "pendiente": 0.009,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR1568S",
+  "nombre": "Venustiano Carranza",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Puebla",
+  "localidad": "La Paz Tlaxcolpan",
+  "ambito": "rural",
+  "latitud": 18.902754,
+  "longitud": -98.231509,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.033,
+   "nivel": "bajo",
+   "contaminacion": 0.023,
+   "derrumbe": 0.0,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.008,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DJN1095D",
+  "nombre": "Jardín de Niños Yucuyuxi",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Tlahuapan",
+  "localidad": "Ignacio Manuel Altamirano",
+  "ambito": "rural",
+  "latitud": 19.36769,
+  "longitud": -98.58328,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.028,
+   "nivel": "bajo",
+   "contaminacion": 0.0,
+   "derrumbe": 0.005,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.003,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR0640E",
+  "nombre": "Ignacio Manuel Altamirano",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Tlahuapan",
+  "localidad": "Ignacio Manuel Altamirano",
+  "ambito": "rural",
+  "latitud": 19.367222,
+  "longitud": -98.583056,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.028,
+   "nivel": "bajo",
+   "contaminacion": 0.0,
+   "derrumbe": 0.005,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.003,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DJN0154W",
+  "nombre": "Americas Unidas",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Huejotzingo",
+  "localidad": "San Luis Coyotzingo",
+  "ambito": "rural",
+  "latitud": 19.197909,
+  "longitud": -98.441236,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.027,
+   "nivel": "bajo",
+   "contaminacion": 0.0,
+   "derrumbe": 0.049,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.027,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DJN0472I",
+  "nombre": "Mauricio Hernandez Anguiano",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Tlahuapan",
+  "localidad": "San Pedro Matamoros",
+  "ambito": "rural",
+  "latitud": 19.369266,
+  "longitud": -98.555173,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.027,
+   "nivel": "bajo",
+   "contaminacion": 0.006,
+   "derrumbe": 0.0,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR0645Z",
+  "nombre": "Benito Juarez",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Tlahuapan",
+  "localidad": "San Pedro Matamoros",
+  "ambito": "rural",
+  "latitud": 19.369722,
+  "longitud": -98.554722,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.027,
+   "nivel": "bajo",
+   "contaminacion": 0.006,
+   "derrumbe": 0.0,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR2403Q",
+  "nombre": "Jose Maria Morelos",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Huejotzingo",
+  "localidad": "San Luis Coyotzingo",
+  "ambito": "rural",
+  "latitud": 19.198333,
+  "longitud": -98.440278,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.027,
+   "nivel": "bajo",
+   "contaminacion": 0.0,
+   "derrumbe": 0.049,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.027,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR3614A",
+  "nombre": "Miguel Hidalgo",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Huejotzingo",
+  "localidad": "Benito Juárez",
+  "ambito": "rural",
+  "latitud": 19.183072,
+  "longitud": -98.458412,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.027,
+   "nivel": "bajo",
+   "contaminacion": 0.006,
+   "derrumbe": 0.0,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR3615Z",
+  "nombre": "Ignacio Zaragoza",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "Huejotzingo",
+  "localidad": "Gustavo Díaz Ordaz (la Cuenca)",
+  "ambito": "rural",
+  "latitud": 19.181389,
+  "longitud": -98.416389,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.027,
+   "nivel": "bajo",
+   "contaminacion": 0.006,
+   "derrumbe": 0.0,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DTV0079V",
+  "nombre": "Francisco Javier Mina",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "Tlahuapan",
+  "localidad": "San Pedro Matamoros",
+  "ambito": "rural",
+  "latitud": 19.369722,
+  "longitud": -98.554722,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.027,
+   "nivel": "bajo",
+   "contaminacion": 0.006,
+   "derrumbe": 0.0,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.002,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21EJN0679Z",
+  "nombre": "Caic San Luis Coyotzingo",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "Huejotzingo",
+  "localidad": "San Luis Coyotzingo",
+  "ambito": "rural",
+  "latitud": 19.198333,
+  "longitud": -98.440278,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.027,
+   "nivel": "bajo",
+   "contaminacion": 0.0,
+   "derrumbe": 0.049,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.027,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21ETV0108Z",
+  "nombre": "Antonio Caso",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "Huejotzingo",
+  "localidad": "San Luis Coyotzingo",
+  "ambito": "rural",
+  "latitud": 19.198333,
+  "longitud": -98.440278,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.027,
+   "nivel": "bajo",
+   "contaminacion": 0.0,
+   "derrumbe": 0.049,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.027,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.0
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DJN0468W",
+  "nombre": "Enrique Laubscher",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "San Matías Tlalancaleca",
+  "localidad": "San Francisco Tláloc",
+  "ambito": "rural",
+  "latitud": 19.369722,
+  "longitud": -98.477222,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.026,
+   "nivel": "bajo",
+   "contaminacion": 0.003,
+   "derrumbe": 0.0,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.001,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DPR0321T",
+  "nombre": "Lazaro Cardenas",
+  "nivel": "primaria",
+  "matricula": null,
+  "municipio": "San Matías Tlalancaleca",
+  "localidad": "San Francisco Tláloc",
+  "ambito": "rural",
+  "latitud": 19.3708,
+  "longitud": -98.4772,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.026,
+   "nivel": "bajo",
+   "contaminacion": 0.003,
+   "derrumbe": 0.0,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.001,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21ETV0821M",
+  "nombre": "Luis Donaldo Colosio Murrieta",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "San Matías Tlalancaleca",
+  "localidad": "San Francisco Tláloc",
+  "ambito": "rural",
+  "latitud": 19.370386,
+  "longitud": -98.479362,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.026,
+   "nivel": "bajo",
+   "contaminacion": 0.003,
+   "derrumbe": 0.0,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.001,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21DJN0290Z",
+  "nombre": "Jose Maria Coss",
+  "nivel": "preescolar",
+  "matricula": null,
+  "municipio": "San Felipe Teotlalcingo",
+  "localidad": "San Juan Tlale",
+  "ambito": "rural",
+  "latitud": 19.23329,
+  "longitud": -98.519286,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.025,
+   "nivel": "bajo",
+   "contaminacion": 0.0,
+   "derrumbe": 0.0,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.025
+   }
+  },
+  "c_estacion": null,
+  "autorizaciones": []
+ },
+ {
+  "cct": "21ETV0165Q",
+  "nombre": "Tycho Brahe",
+  "nivel": "secundaria",
+  "matricula": null,
+  "municipio": "Tlahuapan",
+  "localidad": "Ignacio Manuel Altamirano",
+  "ambito": "rural",
+  "latitud": 19.3704,
+  "longitud": -98.58098,
+  "fuente_agua": "desconocida",
+  "riesgo": {
+   "indice": 0.025,
+   "nivel": "bajo",
+   "contaminacion": 0.0,
+   "derrumbe": 0.0,
+   "desglose": {
+    "pendiente": 0.0,
+    "susceptibilidad_laderas": 0.0,
+    "urbanizacion_reciente": 0.0,
+    "cercania_cauce_o_descarga": 0.0,
+    "calidad_agua": 0.0,
+    "sin_drenaje": 0.0,
+    "marginacion": 0.025
    }
   },
   "c_estacion": null,

@@ -14,299 +14,14 @@
   {
    "tipo": "ladera",
    "c_estacion": "EST-LAD-01",
-   "cct": "21KTV0122C",
-   "localidad": "Tecuantla (los Reyes)",
-   "municipio": "Jopala",
-   "latitud": 20.164262,
-   "longitud": -97.69145,
+   "cct": "21KJN0964E",
+   "localidad": "Ex-hacienda Molino de Guadalupe (san Félix)",
+   "municipio": "San Matías Tlalancaleca",
+   "latitud": 19.368889,
+   "longitud": -98.520833,
    "celda_de_la_fuente": {
-    "longitud": -97.691,
-    "latitud": 20.164
-   },
-   "dias_validos": 9131,
-   "temporada_meses": [
-    "jun",
-    "jul",
-    "ago",
-    "sep",
-    "oct"
-   ],
-   "mm_por_mes_promedio": {
-    "ene": 30.1,
-    "feb": 28.2,
-    "mar": 38.3,
-    "abr": 64.5,
-    "may": 88.3,
-    "jun": 213.5,
-    "jul": 186.2,
-    "ago": 205.7,
-    "sep": 255.6,
-    "oct": 175.4,
-    "nov": 65.2,
-    "dic": 24.7
-   },
-   "mm_anuales_promedio": 1376.0,
-   "temporada": {
-    "dias": 3825,
-    "lluvia_diaria_media_mm": 6.81,
-    "dias_con_lluvia": 2339,
-    "fraccion_dias_con_lluvia": 0.612,
-    "lluvia_diaria_dia_con_lluvia_mm": {
-     "p50": 6.3,
-     "p90": 26.1,
-     "p99": 66.2
-    },
-    "lluvia_3_dias_mm": {
-     "p50": 12.1,
-     "p90": 52.1,
-     "p99": 113.8
-    },
-    "n_ventanas_3_dias": 3825
-   },
-   "maximo_diario_mm": {
-    "valor": 181.4,
-    "fecha": "2005-10-06"
-   }
-  },
-  {
-   "tipo": "ladera",
-   "c_estacion": "EST-LAD-02",
-   "cct": "21DPR0901Z",
-   "localidad": "El Tabacal",
-   "municipio": "Xicotepec",
-   "latitud": 20.287337,
-   "longitud": -97.948396,
-   "celda_de_la_fuente": {
-    "longitud": -97.948,
-    "latitud": 20.287
-   },
-   "dias_validos": 9131,
-   "temporada_meses": [
-    "jun",
-    "jul",
-    "ago",
-    "sep",
-    "oct"
-   ],
-   "mm_por_mes_promedio": {
-    "ene": 23.1,
-    "feb": 22.8,
-    "mar": 30.2,
-    "abr": 52.3,
-    "may": 71.9,
-    "jun": 191.1,
-    "jul": 173.4,
-    "ago": 178.7,
-    "sep": 219.8,
-    "oct": 140.0,
-    "nov": 52.6,
-    "dic": 18.7
-   },
-   "mm_anuales_promedio": 1175.0,
-   "temporada": {
-    "dias": 3825,
-    "lluvia_diaria_media_mm": 5.93,
-    "dias_con_lluvia": 2366,
-    "fraccion_dias_con_lluvia": 0.619,
-    "lluvia_diaria_dia_con_lluvia_mm": {
-     "p50": 5.6,
-     "p90": 22.0,
-     "p99": 55.7
-    },
-    "lluvia_3_dias_mm": {
-     "p50": 11.0,
-     "p90": 43.7,
-     "p99": 95.7
-    },
-    "n_ventanas_3_dias": 3825
-   },
-   "maximo_diario_mm": {
-    "valor": 141.8,
-    "fecha": "2012-08-10"
-   }
-  },
-  {
-   "tipo": "ladera",
-   "c_estacion": "EST-LAD-03",
-   "cct": "21DCC0912Z",
-   "localidad": "Xinachapan de Allende",
-   "municipio": "Huitzilan de Serdán",
-   "latitud": 19.968377,
-   "longitud": -97.679854,
-   "celda_de_la_fuente": {
-    "longitud": -97.68,
-    "latitud": 19.968
-   },
-   "dias_validos": 9131,
-   "temporada_meses": [
-    "jun",
-    "jul",
-    "ago",
-    "sep",
-    "oct"
-   ],
-   "mm_por_mes_promedio": {
-    "ene": 25.4,
-    "feb": 23.6,
-    "mar": 31.1,
-    "abr": 54.5,
-    "may": 78.6,
-    "jun": 187.2,
-    "jul": 161.3,
-    "ago": 179.6,
-    "sep": 215.6,
-    "oct": 143.9,
-    "nov": 44.4,
-    "dic": 15.1
-   },
-   "mm_anuales_promedio": 1160.0,
-   "temporada": {
-    "dias": 3825,
-    "lluvia_diaria_media_mm": 5.83,
-    "dias_con_lluvia": 2339,
-    "fraccion_dias_con_lluvia": 0.612,
-    "lluvia_diaria_dia_con_lluvia_mm": {
-     "p50": 5.3,
-     "p90": 21.0,
-     "p99": 63.0
-    },
-    "lluvia_3_dias_mm": {
-     "p50": 10.0,
-     "p90": 42.7,
-     "p99": 108.8
-    },
-    "n_ventanas_3_dias": 3825
-   },
-   "maximo_diario_mm": {
-    "valor": 188.1,
-    "fecha": "2007-08-22"
-   }
-  },
-  {
-   "tipo": "ladera",
-   "c_estacion": "EST-LAD-04",
-   "cct": "21KJN1742B",
-   "localidad": "San Pablito",
-   "municipio": "Pahuatlán",
-   "latitud": 20.297957,
-   "longitud": -98.15735,
-   "celda_de_la_fuente": {
-    "longitud": -98.157,
-    "latitud": 20.298
-   },
-   "dias_validos": 9131,
-   "temporada_meses": [
-    "jun",
-    "jul",
-    "ago",
-    "sep",
-    "oct"
-   ],
-   "mm_por_mes_promedio": {
-    "ene": 16.3,
-    "feb": 16.8,
-    "mar": 25.4,
-    "abr": 45.6,
-    "may": 59.8,
-    "jun": 157.5,
-    "jul": 145.4,
-    "ago": 143.3,
-    "sep": 170.9,
-    "oct": 101.5,
-    "nov": 37.0,
-    "dic": 10.0
-   },
-   "mm_anuales_promedio": 930.0,
-   "temporada": {
-    "dias": 3825,
-    "lluvia_diaria_media_mm": 4.72,
-    "dias_con_lluvia": 2033,
-    "fraccion_dias_con_lluvia": 0.532,
-    "lluvia_diaria_dia_con_lluvia_mm": {
-     "p50": 4.9,
-     "p90": 19.9,
-     "p99": 51.5
-    },
-    "lluvia_3_dias_mm": {
-     "p50": 7.5,
-     "p90": 36.7,
-     "p99": 86.0
-    },
-    "n_ventanas_3_dias": 3825
-   },
-   "maximo_diario_mm": {
-    "valor": 131.6,
-    "fecha": "2012-08-10"
-   }
-  },
-  {
-   "tipo": "ladera",
-   "c_estacion": "EST-LAD-05",
-   "cct": "21DCC1196M",
-   "localidad": "Bonillagco",
-   "municipio": "Xochitlán de Vicente Suárez",
-   "latitud": 19.934205,
-   "longitud": -97.625876,
-   "celda_de_la_fuente": {
-    "longitud": -97.626,
-    "latitud": 19.934
-   },
-   "dias_validos": 9131,
-   "temporada_meses": [
-    "jun",
-    "jul",
-    "ago",
-    "sep",
-    "oct"
-   ],
-   "mm_por_mes_promedio": {
-    "ene": 25.4,
-    "feb": 23.6,
-    "mar": 31.1,
-    "abr": 54.5,
-    "may": 78.6,
-    "jun": 187.2,
-    "jul": 161.3,
-    "ago": 179.6,
-    "sep": 215.6,
-    "oct": 143.9,
-    "nov": 44.4,
-    "dic": 15.1
-   },
-   "mm_anuales_promedio": 1160.0,
-   "temporada": {
-    "dias": 3825,
-    "lluvia_diaria_media_mm": 5.83,
-    "dias_con_lluvia": 2339,
-    "fraccion_dias_con_lluvia": 0.612,
-    "lluvia_diaria_dia_con_lluvia_mm": {
-     "p50": 5.3,
-     "p90": 21.0,
-     "p99": 63.0
-    },
-    "lluvia_3_dias_mm": {
-     "p50": 10.0,
-     "p90": 42.7,
-     "p99": 108.8
-    },
-    "n_ventanas_3_dias": 3825
-   },
-   "maximo_diario_mm": {
-    "valor": 188.1,
-    "fecha": "2007-08-22"
-   }
-  },
-  {
-   "tipo": "agua",
-   "c_estacion": "EST-ESC-01",
-   "cct": "21DPR0448Z",
-   "localidad": "San Vicente Ferrer",
-   "municipio": "Tehuitzingo",
-   "latitud": 18.401308,
-   "longitud": -98.298206,
-   "celda_de_la_fuente": {
-    "longitud": -98.298,
-    "latitud": 18.401
+    "longitud": -98.521,
+    "latitud": 19.369
    },
    "dias_validos": 9131,
    "temporada_meses": [
@@ -318,44 +33,272 @@
    ],
    "mm_por_mes_promedio": {
     "ene": 6.1,
-    "feb": 9.2,
-    "mar": 11.5,
-    "abr": 22.6,
-    "may": 81.1,
-    "jun": 191.3,
-    "jul": 163.1,
-    "ago": 177.5,
-    "sep": 198.1,
-    "oct": 75.2,
-    "nov": 19.7,
-    "dic": 3.5
+    "feb": 9.8,
+    "mar": 16.5,
+    "abr": 30.3,
+    "may": 68.4,
+    "jun": 128.9,
+    "jul": 127.3,
+    "ago": 131.2,
+    "sep": 120.9,
+    "oct": 48.5,
+    "nov": 13.3,
+    "dic": 3.9
    },
-   "mm_anuales_promedio": 959.0,
+   "mm_anuales_promedio": 705.0,
    "temporada": {
     "dias": 3825,
-    "lluvia_diaria_media_mm": 5.32,
-    "dias_con_lluvia": 2010,
-    "fraccion_dias_con_lluvia": 0.525,
+    "lluvia_diaria_media_mm": 3.79,
+    "dias_con_lluvia": 2375,
+    "fraccion_dias_con_lluvia": 0.621,
     "lluvia_diaria_dia_con_lluvia_mm": {
-     "p50": 6.1,
-     "p90": 23.4,
-     "p99": 51.2
+     "p50": 4.3,
+     "p90": 12.3,
+     "p99": 26.3
     },
     "lluvia_3_dias_mm": {
-     "p50": 8.8,
-     "p90": 42.7,
-     "p99": 79.6
+     "p50": 8.5,
+     "p90": 25.1,
+     "p99": 46.0
     },
     "n_ventanas_3_dias": 3825
    },
    "maximo_diario_mm": {
-    "valor": 89.2,
-    "fecha": "2003-09-19"
+    "valor": 72.4,
+    "fecha": "2011-06-30"
+   }
+  },
+  {
+   "tipo": "ladera",
+   "c_estacion": "EST-LAD-02",
+   "cct": "21DJN1678H",
+   "localidad": "San Isidro Petlácatl",
+   "municipio": "Ocoyucan",
+   "latitud": 18.965556,
+   "longitud": -98.300278,
+   "celda_de_la_fuente": {
+    "longitud": -98.3,
+    "latitud": 18.966
+   },
+   "dias_validos": 9131,
+   "temporada_meses": [
+    "may",
+    "jun",
+    "jul",
+    "ago",
+    "sep"
+   ],
+   "mm_por_mes_promedio": {
+    "ene": 8.9,
+    "feb": 11.5,
+    "mar": 15.6,
+    "abr": 29.5,
+    "may": 82.7,
+    "jun": 178.7,
+    "jul": 164.6,
+    "ago": 176.2,
+    "sep": 188.9,
+    "oct": 75.9,
+    "nov": 20.7,
+    "dic": 5.6
+   },
+   "mm_anuales_promedio": 959.0,
+   "temporada": {
+    "dias": 3825,
+    "lluvia_diaria_media_mm": 5.19,
+    "dias_con_lluvia": 2484,
+    "fraccion_dias_con_lluvia": 0.649,
+    "lluvia_diaria_dia_con_lluvia_mm": {
+     "p50": 5.2,
+     "p90": 17.7,
+     "p99": 35.5
+    },
+    "lluvia_3_dias_mm": {
+     "p50": 11.1,
+     "p90": 35.8,
+     "p99": 63.8
+    },
+    "n_ventanas_3_dias": 3825
+   },
+   "maximo_diario_mm": {
+    "valor": 68.6,
+    "fecha": "2024-07-16"
+   }
+  },
+  {
+   "tipo": "ladera",
+   "c_estacion": "EST-LAD-03",
+   "cct": "21DJN1221K",
+   "localidad": "La Preciosita",
+   "municipio": "Tlahuapan",
+   "latitud": 19.408247,
+   "longitud": -98.546221,
+   "celda_de_la_fuente": {
+    "longitud": -98.546,
+    "latitud": 19.408
+   },
+   "dias_validos": 9131,
+   "temporada_meses": [
+    "may",
+    "jun",
+    "jul",
+    "ago",
+    "sep"
+   ],
+   "mm_por_mes_promedio": {
+    "ene": 6.0,
+    "feb": 9.1,
+    "mar": 15.9,
+    "abr": 32.1,
+    "may": 67.1,
+    "jun": 118.9,
+    "jul": 122.4,
+    "ago": 121.2,
+    "sep": 110.7,
+    "oct": 46.0,
+    "nov": 12.6,
+    "dic": 4.1
+   },
+   "mm_anuales_promedio": 666.0,
+   "temporada": {
+    "dias": 3825,
+    "lluvia_diaria_media_mm": 3.55,
+    "dias_con_lluvia": 2278,
+    "fraccion_dias_con_lluvia": 0.596,
+    "lluvia_diaria_dia_con_lluvia_mm": {
+     "p50": 4.1,
+     "p90": 12.0,
+     "p99": 26.4
+    },
+    "lluvia_3_dias_mm": {
+     "p50": 7.8,
+     "p90": 23.9,
+     "p99": 46.8
+    },
+    "n_ventanas_3_dias": 3825
+   },
+   "maximo_diario_mm": {
+    "valor": 73.1,
+    "fecha": "2011-06-30"
+   }
+  },
+  {
+   "tipo": "ladera",
+   "c_estacion": "EST-LAD-04",
+   "cct": "21KJN1187D",
+   "localidad": "El Pipirín",
+   "municipio": "Tlahuapan",
+   "latitud": 19.350354,
+   "longitud": -98.62649,
+   "celda_de_la_fuente": {
+    "longitud": -98.626,
+    "latitud": 19.35
+   },
+   "dias_validos": 9131,
+   "temporada_meses": [
+    "may",
+    "jun",
+    "jul",
+    "ago",
+    "sep"
+   ],
+   "mm_por_mes_promedio": {
+    "ene": 6.1,
+    "feb": 10.7,
+    "mar": 16.4,
+    "abr": 31.1,
+    "may": 70.6,
+    "jun": 133.2,
+    "jul": 133.9,
+    "ago": 136.6,
+    "sep": 127.9,
+    "oct": 49.9,
+    "nov": 15.2,
+    "dic": 4.5
+   },
+   "mm_anuales_promedio": 736.0,
+   "temporada": {
+    "dias": 3825,
+    "lluvia_diaria_media_mm": 3.96,
+    "dias_con_lluvia": 2433,
+    "fraccion_dias_con_lluvia": 0.636,
+    "lluvia_diaria_dia_con_lluvia_mm": {
+     "p50": 4.3,
+     "p90": 12.8,
+     "p99": 26.8
+    },
+    "lluvia_3_dias_mm": {
+     "p50": 9.0,
+     "p90": 25.9,
+     "p99": 46.5
+    },
+    "n_ventanas_3_dias": 3825
+   },
+   "maximo_diario_mm": {
+    "valor": 84.5,
+    "fecha": "2024-06-27"
+   }
+  },
+  {
+   "tipo": "ladera",
+   "c_estacion": "EST-LAD-05",
+   "cct": "21DPR1567T",
+   "localidad": "Buenavista Tetela",
+   "municipio": "Puebla",
+   "latitud": 18.921891,
+   "longitud": -98.174159,
+   "celda_de_la_fuente": {
+    "longitud": -98.174,
+    "latitud": 18.922
+   },
+   "dias_validos": 9131,
+   "temporada_meses": [
+    "may",
+    "jun",
+    "jul",
+    "ago",
+    "sep"
+   ],
+   "mm_por_mes_promedio": {
+    "ene": 11.9,
+    "feb": 14.2,
+    "mar": 19.5,
+    "abr": 33.0,
+    "may": 91.0,
+    "jun": 189.8,
+    "jul": 157.5,
+    "ago": 172.6,
+    "sep": 187.8,
+    "oct": 82.0,
+    "nov": 27.3,
+    "dic": 7.7
+   },
+   "mm_anuales_promedio": 994.0,
+   "temporada": {
+    "dias": 3825,
+    "lluvia_diaria_media_mm": 5.24,
+    "dias_con_lluvia": 2479,
+    "fraccion_dias_con_lluvia": 0.648,
+    "lluvia_diaria_dia_con_lluvia_mm": {
+     "p50": 5.1,
+     "p90": 17.8,
+     "p99": 37.5
+    },
+    "lluvia_3_dias_mm": {
+     "p50": 10.6,
+     "p90": 37.2,
+     "p99": 70.2
+    },
+    "n_ventanas_3_dias": 3825
+   },
+   "maximo_diario_mm": {
+    "valor": 107.1,
+    "fecha": "2025-09-27"
    }
   },
   {
    "tipo": "agua",
-   "c_estacion": "EST-ESC-02",
+   "c_estacion": "EST-ESC-01",
    "cct": "21DPR2634H",
    "localidad": "Guadalupe Tlatelpa",
    "municipio": "Puebla",
@@ -412,7 +355,7 @@
   },
   {
    "tipo": "agua",
-   "c_estacion": "EST-ESC-03",
+   "c_estacion": "EST-ESC-02",
    "cct": "21EBH0297Z",
    "localidad": "San Matías Tlalancaleca",
    "municipio": "San Matías Tlalancaleca",
@@ -469,7 +412,7 @@
   },
   {
    "tipo": "agua",
-   "c_estacion": "EST-ESC-04",
+   "c_estacion": "EST-ESC-03",
    "cct": "21EJN1205S",
    "localidad": "San Martín Zoquiapan",
    "municipio": "Coronango",
@@ -526,7 +469,7 @@
   },
   {
    "tipo": "agua",
-   "c_estacion": "EST-ESC-05",
+   "c_estacion": "EST-ESC-04",
    "cct": "21EJN0701K",
    "localidad": "San Cristóbal Tepatlaxco",
    "municipio": "San Martín Texmelucan",
@@ -579,6 +522,348 @@
    "maximo_diario_mm": {
     "valor": 77.3,
     "fecha": "2011-06-30"
+   }
+  },
+  {
+   "tipo": "agua",
+   "c_estacion": "EST-ESC-05",
+   "cct": "21DJN1068G",
+   "localidad": "Santa Elena",
+   "municipio": "Huejotzingo",
+   "latitud": 19.168038,
+   "longitud": -98.423775,
+   "celda_de_la_fuente": {
+    "longitud": -98.424,
+    "latitud": 19.168
+   },
+   "dias_validos": 9131,
+   "temporada_meses": [
+    "may",
+    "jun",
+    "jul",
+    "ago",
+    "sep"
+   ],
+   "mm_por_mes_promedio": {
+    "ene": 7.6,
+    "feb": 10.2,
+    "mar": 15.8,
+    "abr": 32.0,
+    "may": 74.4,
+    "jun": 151.9,
+    "jul": 151.3,
+    "ago": 156.9,
+    "sep": 155.3,
+    "oct": 61.4,
+    "nov": 17.5,
+    "dic": 5.1
+   },
+   "mm_anuales_promedio": 840.0,
+   "temporada": {
+    "dias": 3825,
+    "lluvia_diaria_media_mm": 4.53,
+    "dias_con_lluvia": 2577,
+    "fraccion_dias_con_lluvia": 0.674,
+    "lluvia_diaria_dia_con_lluvia_mm": {
+     "p50": 4.6,
+     "p90": 14.1,
+     "p99": 29.9
+    },
+    "lluvia_3_dias_mm": {
+     "p50": 10.4,
+     "p90": 30.2,
+     "p99": 53.0
+    },
+    "n_ventanas_3_dias": 3825
+   },
+   "maximo_diario_mm": {
+    "valor": 71.5,
+    "fecha": "2011-06-30"
+   }
+  },
+  {
+   "tipo": "agua",
+   "c_estacion": "EST-LAD-01",
+   "cct": "21KJN0964E",
+   "localidad": "Ex-hacienda Molino de Guadalupe (san Félix)",
+   "municipio": "San Matías Tlalancaleca",
+   "latitud": 19.368889,
+   "longitud": -98.520833,
+   "celda_de_la_fuente": {
+    "longitud": -98.521,
+    "latitud": 19.369
+   },
+   "dias_validos": 9131,
+   "temporada_meses": [
+    "may",
+    "jun",
+    "jul",
+    "ago",
+    "sep"
+   ],
+   "mm_por_mes_promedio": {
+    "ene": 6.1,
+    "feb": 9.8,
+    "mar": 16.5,
+    "abr": 30.3,
+    "may": 68.4,
+    "jun": 128.9,
+    "jul": 127.3,
+    "ago": 131.2,
+    "sep": 120.9,
+    "oct": 48.5,
+    "nov": 13.3,
+    "dic": 3.9
+   },
+   "mm_anuales_promedio": 705.0,
+   "temporada": {
+    "dias": 3825,
+    "lluvia_diaria_media_mm": 3.79,
+    "dias_con_lluvia": 2375,
+    "fraccion_dias_con_lluvia": 0.621,
+    "lluvia_diaria_dia_con_lluvia_mm": {
+     "p50": 4.3,
+     "p90": 12.3,
+     "p99": 26.3
+    },
+    "lluvia_3_dias_mm": {
+     "p50": 8.5,
+     "p90": 25.1,
+     "p99": 46.0
+    },
+    "n_ventanas_3_dias": 3825
+   },
+   "maximo_diario_mm": {
+    "valor": 72.4,
+    "fecha": "2011-06-30"
+   }
+  },
+  {
+   "tipo": "agua",
+   "c_estacion": "EST-LAD-02",
+   "cct": "21DJN1678H",
+   "localidad": "San Isidro Petlácatl",
+   "municipio": "Ocoyucan",
+   "latitud": 18.965556,
+   "longitud": -98.300278,
+   "celda_de_la_fuente": {
+    "longitud": -98.3,
+    "latitud": 18.966
+   },
+   "dias_validos": 9131,
+   "temporada_meses": [
+    "may",
+    "jun",
+    "jul",
+    "ago",
+    "sep"
+   ],
+   "mm_por_mes_promedio": {
+    "ene": 8.9,
+    "feb": 11.5,
+    "mar": 15.6,
+    "abr": 29.5,
+    "may": 82.7,
+    "jun": 178.7,
+    "jul": 164.6,
+    "ago": 176.2,
+    "sep": 188.9,
+    "oct": 75.9,
+    "nov": 20.7,
+    "dic": 5.6
+   },
+   "mm_anuales_promedio": 959.0,
+   "temporada": {
+    "dias": 3825,
+    "lluvia_diaria_media_mm": 5.19,
+    "dias_con_lluvia": 2484,
+    "fraccion_dias_con_lluvia": 0.649,
+    "lluvia_diaria_dia_con_lluvia_mm": {
+     "p50": 5.2,
+     "p90": 17.7,
+     "p99": 35.5
+    },
+    "lluvia_3_dias_mm": {
+     "p50": 11.1,
+     "p90": 35.8,
+     "p99": 63.8
+    },
+    "n_ventanas_3_dias": 3825
+   },
+   "maximo_diario_mm": {
+    "valor": 68.6,
+    "fecha": "2024-07-16"
+   }
+  },
+  {
+   "tipo": "agua",
+   "c_estacion": "EST-LAD-03",
+   "cct": "21DJN1221K",
+   "localidad": "La Preciosita",
+   "municipio": "Tlahuapan",
+   "latitud": 19.408247,
+   "longitud": -98.546221,
+   "celda_de_la_fuente": {
+    "longitud": -98.546,
+    "latitud": 19.408
+   },
+   "dias_validos": 9131,
+   "temporada_meses": [
+    "may",
+    "jun",
+    "jul",
+    "ago",
+    "sep"
+   ],
+   "mm_por_mes_promedio": {
+    "ene": 6.0,
+    "feb": 9.1,
+    "mar": 15.9,
+    "abr": 32.1,
+    "may": 67.1,
+    "jun": 118.9,
+    "jul": 122.4,
+    "ago": 121.2,
+    "sep": 110.7,
+    "oct": 46.0,
+    "nov": 12.6,
+    "dic": 4.1
+   },
+   "mm_anuales_promedio": 666.0,
+   "temporada": {
+    "dias": 3825,
+    "lluvia_diaria_media_mm": 3.55,
+    "dias_con_lluvia": 2278,
+    "fraccion_dias_con_lluvia": 0.596,
+    "lluvia_diaria_dia_con_lluvia_mm": {
+     "p50": 4.1,
+     "p90": 12.0,
+     "p99": 26.4
+    },
+    "lluvia_3_dias_mm": {
+     "p50": 7.8,
+     "p90": 23.9,
+     "p99": 46.8
+    },
+    "n_ventanas_3_dias": 3825
+   },
+   "maximo_diario_mm": {
+    "valor": 73.1,
+    "fecha": "2011-06-30"
+   }
+  },
+  {
+   "tipo": "agua",
+   "c_estacion": "EST-LAD-04",
+   "cct": "21KJN1187D",
+   "localidad": "El Pipirín",
+   "municipio": "Tlahuapan",
+   "latitud": 19.350354,
+   "longitud": -98.62649,
+   "celda_de_la_fuente": {
+    "longitud": -98.626,
+    "latitud": 19.35
+   },
+   "dias_validos": 9131,
+   "temporada_meses": [
+    "may",
+    "jun",
+    "jul",
+    "ago",
+    "sep"
+   ],
+   "mm_por_mes_promedio": {
+    "ene": 6.1,
+    "feb": 10.7,
+    "mar": 16.4,
+    "abr": 31.1,
+    "may": 70.6,
+    "jun": 133.2,
+    "jul": 133.9,
+    "ago": 136.6,
+    "sep": 127.9,
+    "oct": 49.9,
+    "nov": 15.2,
+    "dic": 4.5
+   },
+   "mm_anuales_promedio": 736.0,
+   "temporada": {
+    "dias": 3825,
+    "lluvia_diaria_media_mm": 3.96,
+    "dias_con_lluvia": 2433,
+    "fraccion_dias_con_lluvia": 0.636,
+    "lluvia_diaria_dia_con_lluvia_mm": {
+     "p50": 4.3,
+     "p90": 12.8,
+     "p99": 26.8
+    },
+    "lluvia_3_dias_mm": {
+     "p50": 9.0,
+     "p90": 25.9,
+     "p99": 46.5
+    },
+    "n_ventanas_3_dias": 3825
+   },
+   "maximo_diario_mm": {
+    "valor": 84.5,
+    "fecha": "2024-06-27"
+   }
+  },
+  {
+   "tipo": "agua",
+   "c_estacion": "EST-LAD-05",
+   "cct": "21DPR1567T",
+   "localidad": "Buenavista Tetela",
+   "municipio": "Puebla",
+   "latitud": 18.921891,
+   "longitud": -98.174159,
+   "celda_de_la_fuente": {
+    "longitud": -98.174,
+    "latitud": 18.922
+   },
+   "dias_validos": 9131,
+   "temporada_meses": [
+    "may",
+    "jun",
+    "jul",
+    "ago",
+    "sep"
+   ],
+   "mm_por_mes_promedio": {
+    "ene": 11.9,
+    "feb": 14.2,
+    "mar": 19.5,
+    "abr": 33.0,
+    "may": 91.0,
+    "jun": 189.8,
+    "jul": 157.5,
+    "ago": 172.6,
+    "sep": 187.8,
+    "oct": 82.0,
+    "nov": 27.3,
+    "dic": 7.7
+   },
+   "mm_anuales_promedio": 994.0,
+   "temporada": {
+    "dias": 3825,
+    "lluvia_diaria_media_mm": 5.24,
+    "dias_con_lluvia": 2479,
+    "fraccion_dias_con_lluvia": 0.648,
+    "lluvia_diaria_dia_con_lluvia_mm": {
+     "p50": 5.1,
+     "p90": 17.8,
+     "p99": 37.5
+    },
+    "lluvia_3_dias_mm": {
+     "p50": 10.6,
+     "p90": 37.2,
+     "p99": 70.2
+    },
+    "n_ventanas_3_dias": 3825
+   },
+   "maximo_diario_mm": {
+    "valor": 107.1,
+    "fecha": "2025-09-27"
    }
   },
   {

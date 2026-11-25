@@ -44,6 +44,31 @@ cabecera de la lista. La tarjeta de detalle de un reporte (`.incidente-cabeza`) 
 
 ---
 
+## 2026-11-24 · Módulo A: los 10 mecanismos, en el Alto Atoyac y junto a cauces
+
+**Qué cambió.** Los mecanismos se limitan al Alto Atoyac: las cuatro subcuencas del INEGI que drenan a Valsequillo (RH18Ad
+Texmelucan, RH18Ai Zahuapan, RH18Aj Alseseca, RH18Ac Valsequillo; `_comun.SUBCUENCAS_ALTO_ATOYAC`, con `en_alto_atoyac` y la
+distancia a cauces movidas a `_comun.py`). `97_escuelas_riesgo.py` agrega a `escuelas.json` todas las escuelas del catálogo
+en esa zona (503 en lugar de 330; las anteriores no cambian). Estaciones de agua (`99`): Tehuitzingo (Mixteca) sale y entra
+Santa Elena (Huejotzingo); se renumeran. Estaciones de ladera (`100`): de la Sierra Norte al Alto Atoyac, con susceptibilidad
+CENAPRED Alta, a menos de 500 m de un cauce y por riesgo de derrumbe (sin el mínimo de 0.7, que solo cumple una escuela en la
+zona), con inclinómetro en las cinco (no hay Muy alta): Tlalancaleca, San Isidro Petlácatl (Ocoyucan), La Preciosita y El
+Pipirín (Tlahuapan) y Buenavista Tetela (Puebla), a 84-210 m de su cauce (`distancia_cauce_m` y `cuerpo_agua`, nuevos en la
+estación de ladera). Lluvia (F21, los 12 puntos descargados de nuevo con las coordenadas nuevas en `00_descargar_fuentes.py`)
+y suelo (F22; `103` detecta si el punto guardado ya no es el de la estación) regenerados: umbrales de humedad 43.5-49.9 %.
+La figura de ladera tiene un arroyo al pie del cerro que crece, corre más y se enturbia con la lluvia del modelo, y un rótulo
+«Cauce» con la distancia real. El simulador arranca el suelo en capacidad de campo (temporada de lluvias).
+**Por qué.** Pedido del usuario: los puntos, cerca de la cuenca y de cuerpos de agua (la ladera que vigila es la que un río
+socava en su pie); en la Sierra Norte el mapa no tiene red de ríos y el panel filtraba esas escuelas.
+**Qué arrastró.** `catalogo-componentes.md` (prefijos), `04-fuentes-de-datos.md`, `02-mapa-del-repo.md`, `docs/20`, `CLAUDE.md`,
+`estacion.schema.json` (`distancia_cauce_m`), escenarios de ladera (EST-LAD-01 es ahora Tlalancaleca), `prueba.js`.
+**Impacto en otros módulos.** Panel y app: `escuelas.json` crece a 503 y las 10 estaciones caen dentro de la cuenca que
+filtran. El p99 de lluvia del Alto Atoyac (≈ 26 mm en 24 h) es mucho menor que el de la Sierra Norte (≈ 66): la alerta
+Informativa llega antes. Motor y escenarios: tormenta Informativa y Preventiva; lluvia prolongada Crítica (72 h sobre suelo
+saturado, 45.91 % contra 45.8 %); deslave Crítica por la estaca. Los del agua no cambian.
+
+---
+
 ## 2026-11-24 · M2 y módulo A: reglas de derrumbe y umbral de humedad calibrado por ladera
 
 **Qué cambió.** `motor/reglas.py` evalúa el módulo de ladera (`_ladera`): lluvia acumulada en 24 y 72 h (Informativa al p99

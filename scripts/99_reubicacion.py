@@ -5,7 +5,8 @@ Un mecanismo es la estación de calidad del agua (sondas en el cauce) más el co
 la misma orilla, ≈ 10 m aguas arriba. Los dos son instrumentos DE CAUCE: miden y limpian el agua que corre junto
 a la escuela y que llega a su pozo, manantial o patio cuando crece. Por eso el criterio es:
 
-  1. Elegibles: escuelas de escuelas.json con un cauce a menos de RADIO_CAUCE_M. El cauce se busca primero en
+  1. Elegibles: escuelas de escuelas.json en el Alto Atoyac (las cuatro subcuencas que drenan a Valsequillo,
+     `_comun.SUBCUENCAS_ALTO_ATOYAC`) con un cauce a menos de RADIO_CAUCE_M. El cauce se busca primero en
      la red de asignación (todos los órdenes, trae el sitio de CONAGUA aguas abajo) y, si no hay, en la red
      del mapa (orden >= 4). Las dos redes del INEGI que tenemos cubren solo la cuenca RH18A: las escuelas de
      la Sierra Norte (otra vertiente) quedan fuera hasta bajar su red, no porque no lo necesiten.
@@ -34,8 +35,8 @@ Salidas (DERIVADAS: se edita este script, no los archivos):
     python -I scripts/99_reubicacion.py
 """
 import csv
+import importlib.util
 import json
-import math
 import os
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -49,45 +50,15 @@ SEPARACION_M = 3000           # dos mecanismos más cerca que esto vigilarían l
 PARAMETROS = ['COND', 'OD', 'PH', 'TEMP', 'TURB']
 POSICION_COLECTOR = 'misma orilla, ≈ 10 m aguas arriba de la estación'
 
+_spec = importlib.util.spec_from_file_location('_comun', os.path.join(RAIZ, 'scripts', '_comun.py'))
+_comun = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_comun)
+metros, lineas, mas_cercano, en_alto_atoyac = _comun.metros, _comun.lineas, _comun.mas_cercano, _comun.en_alto_atoyac
+
 
 def leer(ruta):
     with open(ruta, encoding='utf-8') as f:
         return json.load(f)
-
-
-def metros(lat, lon, lat2, lon2):
-    kx = 111320 * math.cos(math.radians(lat))
-    return math.hypot((lon2 - lon) * kx, (lat2 - lat) * 110540)
-
-
-def proyecta(lat, lon, a, b):
-    """Distancia del punto al segmento a-b ([lon, lat]) y el punto proyectado, en plano local."""
-    kx = 111320 * math.cos(math.radians(lat))
-    ax, ay = (a[0] - lon) * kx, (a[1] - lat) * 110540
-    bx, by = (b[0] - lon) * kx, (b[1] - lat) * 110540
-    dx, dy = bx - ax, by - ay
-    l2 = dx * dx + dy * dy
-    t = 0.0 if l2 == 0 else max(0.0, min(1.0, -(ax * dx + ay * dy) / l2))
-    px, py = ax + t * dx, ay + t * dy
-    return math.hypot(px, py), [lon + px / kx, lat + py / 110540], t
-
-
-def lineas(geom):
-    return geom['coordinates'] if geom['type'] == 'MultiLineString' else [geom['coordinates']]
-
-
-def mas_cercano(lat, lon, tramos):
-    """tramos: [(coords, dato)]. Devuelve (distancia, punto, dato, metros del punto al final del tramo)."""
-    mejor = None
-    for coords, dato in tramos:
-        for i in range(len(coords) - 1):
-            d, p, t = proyecta(lat, lon, coords[i], coords[i + 1])
-            if mejor is None or d < mejor[0]:
-                resto = (1 - t) * metros(coords[i][1], coords[i][0], coords[i + 1][1], coords[i + 1][0])
-                resto += sum(metros(coords[j][1], coords[j][0], coords[j + 1][1], coords[j + 1][0])
-                             for j in range(i + 1, len(coords) - 1))
-                mejor = (d, p, dato, resto, coords)
-    return mejor
 
 
 def estado_de(escuela, organismo):
@@ -115,6 +86,8 @@ def main():
 
     elegibles = []
     for e in escuelas:
+        if not en_alto_atoyac(e['latitud'], e['longitud']):
+            continue                                   # el proyecto se centra en el Alto Atoyac (_comun.SUBCUENCAS_ALTO_ATOYAC)
         asig = mas_cercano(e['latitud'], e['longitud'], t_asig)
         if asig and asig[0] <= RADIO_CAUCE_M:
             d, punto, tramo, resto, coords = asig
@@ -186,6 +159,12 @@ def main():
     por_cct = {e['cct']: e for e in escuelas}
     for m in ladera:
         e = por_cct.get(m['cct'], {})
+        # el cauce que socava su ladera (docs/20, criterio de 100_escuelas_ladera.py): nombre por su sitio CONAGUA
+        a = mas_cercano(m['latitud'], m['longitud'], t_asig)
+        b = mas_cercano(m['latitud'], m['longitud'], t_red)
+        cauce = min((x for x in (a, b) if x), key=lambda x: x[0])
+        sitio_c = cauce[2]['s'] if cauce[2] else None
+        nombre_c = ('Cauce hacia ' + inicial(sitios[sitio_c]['cuerpo_agua'])) if sitio_c in sitios else 'Cauce sin nombre en el INEGI'
         capcee, f_capcee = estado_de(e, 'CAPCEE')
         existente = next((x for x in estaciones if x['c_estacion'] == m.get('estacion_de_agua_existente')), None)
         if existente:
@@ -196,6 +175,7 @@ def main():
             'c_estacion': m['c_estacion'],
             'c_sitio': None,
             'nombre': 'Ladera de ' + m['localidad'],
+            'cuerpo_agua': nombre_c,
             'municipio': m['municipio'],
             'estado': 'Puebla',
             'latitud': m['latitud'],
@@ -207,6 +187,7 @@ def main():
             'localidad': m['localidad'],
             'escuelas_protegidas': m['escuelas_protegidas'],
             'distancia_escuela_m': 0,
+            'distancia_cauce_m': round(cauce[0]),
             'distancia_al_sitio_m': None,
             'banda_simulacion': None,
             # Sin fuente de agua no hace falta CEASPUE: basta el plantel (CAPCEE).
@@ -242,7 +223,7 @@ def main():
         print('  {} {:<24} {:<14} ladera: {}  {}'.format(e['c_estacion'], e['localidad'][:24], e['municipio'][:14],
                                                          ', '.join(e['parametros']), e['instalacion']))
     protegidas = sum(len(e['escuelas_protegidas']) for e in estaciones if e.get('colector'))
-    print('  {} escuelas protegidas; {} elegibles sin mecanismo; {} sin cauce en la red que tenemos (cuenca RH18A)'.format(
+    print('  {} escuelas protegidas; {} elegibles sin mecanismo; {} fuera del Alto Atoyac o sin cauce a menos de 2.5 km'.format(
         protegidas, len(elegibles) - protegidas, len(escuelas) - len(elegibles)))
 
 

@@ -24,6 +24,7 @@ los leerá en lugar de la lista provisional; la forma de la salida no cambia.
     python -I scripts/97_escuelas_riesgo.py
 """
 import csv
+import importlib.util
 import json
 import math
 import os
@@ -181,6 +182,11 @@ INDICE_MINIMO = 0.30
 TOPE_INDICE = 300               # las de mayor índice general
 TOPE_CONTAMINACION = 100        # más las de mayor riesgo de contaminación: sin ellas, la lista es solo de laderas
 CONTAMINACION_MINIMA = 0.5
+# Y TODAS las del Alto Atoyac, sea cual sea su índice: es la zona del proyecto y ahí se eligen los mecanismos de agua y
+# de ladera (99 y 100); sin ellas, esos mecanismos no tendrían escuela que proteger en la lista.
+_spec = importlib.util.spec_from_file_location('_comun', os.path.join(RAIZ, 'scripts', '_comun.py'))
+_comun = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_comun)
 
 
 def escuelas_reales():
@@ -207,7 +213,10 @@ def escuelas_reales():
     ya = {e['cct'] for e in elegidas}
     por_cont = sorted((e for e in salida if e['riesgo']['contaminacion'] >= CONTAMINACION_MINIMA and e['cct'] not in ya),
                       key=lambda e: -e['riesgo']['contaminacion'])
-    return elegidas + por_cont[:TOPE_CONTAMINACION]
+    elegidas = elegidas + por_cont[:TOPE_CONTAMINACION]
+    ya = {e['cct'] for e in elegidas}
+    alto = [e for e in salida if e['cct'] not in ya and _comun.en_alto_atoyac(e['latitud'], e['longitud'])]
+    return elegidas + sorted(alto, key=lambda e: -e['riesgo']['indice'])
 
 
 # Zonas con datos reales: grupos de escuelas (a menos de AGRUPAR_M) cuyo sub-índice de derrumbe o de

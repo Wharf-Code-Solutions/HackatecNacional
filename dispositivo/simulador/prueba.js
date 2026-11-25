@@ -239,15 +239,18 @@ function correLadera(est, horas, evento) {
     if (/alerta/i.test(e.tipo)) alertas++;
   } });
   if (evento) s.ladera.agregaEvento(evento, M.T0_DEFECTO + 2 * 3600);
-  var fin = M.T0_DEFECTO + horas * 3600;
-  while (s.fw.t < fin) s.fw.tick(5);
+  var fin = M.T0_DEFECTO + horas * 3600, humReal = 0;
+  while (s.fw.t < fin) {
+    s.fw.tick(5);
+    if (s.ladera) humReal = Math.max(humReal, s.ladera.hum);        // la humedad del suelo, sin el sesgo de la sonda
+  }
   function serie(p) { return envs.map(function (q) { var l = q.lecturas.filter(function (x) { return x.c_parametro === p; })[0]; return l ? l.valor : undefined; }); }
   function ventana(h) {                    // la mayor lluvia acumulada en h horas
     var t = envs.map(function (q) { return Date.parse(q.fecha_hora) / 1000; }), mm = serie('LLUVIA'), mx = 0;
     t.forEach(function (ti) { var a = 0; t.forEach(function (tj, j) { if (tj > ti - h * 3600 && tj <= ti) a += mm[j]; }); mx = Math.max(mx, a); });
     return Math.round(mx * 10) / 10;
   }
-  return { s: s, envs: envs, ad: ad, alertas: alertas, serie: serie, ventana: ventana };
+  return { s: s, envs: envs, ad: ad, alertas: alertas, serie: serie, ventana: ventana, humReal: Math.round(humReal * 10) / 10 };
 }
 
 console.log('\n17. Módulo de ladera: mecanismos y paquetes');
@@ -269,11 +272,13 @@ var su = suelos[e0.c_estacion];
 ok(su && hp > h0 + 10 && hp <= su.saturacion_pct + 0.5, 'el suelo de ' + e0.localidad + ' se moja con la lluvia y no pasa su saturación (' +
   (su && su.saturacion_pct) + ' %): ' + h0 + ' → ' + hp + ' %');
 var ht = Math.max.apply(null, tor.serie('HUM_SUELO'));
-ok(su && hp >= su.umbral_cerca_saturacion_pct && ht < su.umbral_cerca_saturacion_pct,
-  'umbral calibrado de su suelo (' + (su && su.umbral_cerca_saturacion_pct) + ' %): la lluvia prolongada lo cruza (' + hp +
-  ' %) y la tormenta sobre suelo seco no (' + ht + ' %)');
+ok(su && pro.humReal >= su.umbral_cerca_saturacion_pct,
+  'umbral calibrado de su suelo (' + (su && su.umbral_cerca_saturacion_pct) + ' %): la lluvia prolongada lo cruza (' + pro.humReal + ' % real)');
+console.log('  INFO   la sonda lee ' + hp + ' %: su sesgo de fábrica (' + pro.s.sondas.HUM_SUELO.sesgoAbs.toFixed(2) +
+  ' puntos) lo corrige la muestra de suelo al instalar (correccion_sensor_pct)');
+console.log('  INFO   la tormenta, sobre suelo en capacidad de campo (temporada de lluvias), lo lleva a ' + ht + ' %');
 var sinCrecer = correLadera(e0, 48).serie('HUM_SUELO');
-ok(Math.max.apply(null, sinCrecer) - sinCrecer[0] < 1.5, 'sin lluvia el suelo seco no se moja solo: ' + sinCrecer[0] + ' → ' + sinCrecer[sinCrecer.length - 1] + ' %');
+ok(Math.max.apply(null, sinCrecer) - sinCrecer[0] < 1.5, 'sin lluvia el suelo se queda en su capacidad de campo: ' + sinCrecer[0] + ' → ' + sinCrecer[sinCrecer.length - 1] + ' %');
 var inc = des.serie('INCL').map(Math.abs), im = Math.max.apply(null, inc);
 ok(im > 2 && Math.max.apply(null, tor.serie('INCL').map(Math.abs)) < 0.5, 'deslave: la estaca salta a ' + im.toFixed(2) + '° (> 2°); con la tormenta sola no se mueve');
 

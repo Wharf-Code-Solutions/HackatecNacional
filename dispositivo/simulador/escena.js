@@ -378,24 +378,31 @@
   // ------------------------------------------------------------ ladera (docs/20)
   // La escuela en una explanada al pie de un cerro de la Sierra Norte, la estación junto a ella y el módulo
   // de ladera: el pluviómetro en la explanada (cielo abierto), el sensor de humedad enterrado a 50 cm en la
-  // ladera (se ve en el corte del suelo) y la estaca del inclinómetro más arriba. El cerro sube a la
-  // derecha a ≈ 32°, la pendiente típica de las escuelas elegidas (36° en Tecuantla, escuelas_ladera.json).
-  // Lo que se mueve, se mueve con el dato: la lluvia cae con la intensidad del modelo, el corte se oscurece
-  // con la humedad del suelo y la estaca se inclina con lo que mide el inclinómetro.
+  // ladera (se ve en el corte del suelo) y la estaca del inclinómetro más arriba. Al pie del cerro corre el arroyo
+  // que lo socava: las escuelas de ladera se eligen a menos de 500 m de un cauce (100_escuelas_ladera.py); la figura
+  // es esquemática y el rótulo del cauce da la distancia real. El cerro sube a la derecha a ≈ 32°.
+  // Lo que se mueve, se mueve con el dato: la lluvia cae con la intensidad del modelo, el arroyo sube y corre más
+  // con ella, el corte se oscurece con la humedad del suelo y la estaca se inclina con lo que mide el inclinómetro.
   var PIE = 0.6, PENDIENTE = 0.62;                 // la explanada en y = 0.6 (base del mástil); tan 32° ≈ 0.62
+  var INICIO_CERRO = 3.0;                          // x donde empieza a subir el cerro
+  var ARROYO = { x: 1.6, ancho: 0.75, talud: 0.9, hondo: 1.3 };   // cauce: eje, medio ancho del lecho, talud y hondura
   var EXAGERA_INCL = 5;                            // la estaca se dibuja inclinada 5 veces lo medido; el rótulo da el valor real
-  var LAD = { pluvio: [-0.3, 1.4], hum: 4.4, estaca: [7.8, 1.3], escuela: [-9.2, -4.6] };
+  var LAD = { pluvio: [-0.9, 1.4], hum: 5.4, estaca: [8.4, 1.3], escuela: [-9.2, -4.6] };
+  function ejeArroyo(z) { return ARROYO.x + 0.35 * Math.sin(z * 0.15 + 0.4); }
   function alturaLadera(x, z) {
-    var u = x - PIE, y = PIE + PENDIENTE * Math.max(0, u) * suave(u / 2.6);           // explanada y pie del cerro
+    var u = x - INICIO_CERRO, y = PIE + PENDIENTE * Math.max(0, u) * suave(u / 2.6);     // explanada y pie del cerro
     y += 0.05 * Math.sin(x * 1.1 + z * 0.6) * suave(u / 2) + 0.03 * Math.sin(x * 2.3 - z * 1.7) * suave((u - 1) / 2);
     if (z < -6) y += Math.pow(-6 - z, 1.2) * 0.05 * suave((x + 2) / 6);              // y también hacia el fondo
-    return y;
+    var d = Math.abs(x - ejeArroyo(z));
+    return y - ARROYO.hondo * (1 - suave((d - ARROYO.ancho) / ARROYO.talud));       // el cauce
   }
+  function enArroyo(x, z) { return Math.abs(x - ejeArroyo(z)) < ARROYO.ancho + ARROYO.talud * 0.8; }
   function libreLadera(x, z) {
     var e = LAD.escuela;
     return Math.hypot(x + 4.3, z - 0.1) > 1.9 && !(x > e[0] - 3.4 && x < e[0] + 3.4 && z > e[1] - 2.2 && z < e[1] + 2.4) &&
       Math.hypot(x - LAD.pluvio[0], z - LAD.pluvio[1]) > 0.7 && Math.hypot(x - LAD.estaca[0], z - LAD.estaca[1]) > 0.9 &&
-      Math.hypot(x - 16.5, z + 12) > 1.1 && !(x > LAD.hum - 0.6 && x < LAD.hum + 0.6 && z > 1.2) && z < Z_CORTE - 0.15;
+      Math.hypot(x - 16.5, z + 12) > 1.1 && !(x > LAD.hum - 0.6 && x < LAD.hum + 0.6 && z > 1.2) && z < Z_CORTE - 0.15 &&
+      !enArroyo(x, z);
   }
   function construyeLadera() {
     var X0 = -13, X1 = 19, Z0 = -36, NX = 192, NZ = 180;
@@ -403,13 +410,14 @@
     g.rotateX(-Math.PI / 2);
     g.translate((X0 + X1) / 2, 0, (Z0 + Z_CORTE) / 2);
     var pos = g.attributes.position, col = [], c = new T.Color();
-    var PASTO = new T.Color(0x93a477), MONTE = new T.Color(0x7d9066), PATIO = new T.Color(0xc9bfa9);
+    var PASTO = new T.Color(0x93a477), MONTE = new T.Color(0x7d9066), PATIO = new T.Color(0xc9bfa9), LECHO_L = new T.Color(0x6f675a);
     for (var i = 0; i < pos.count; i++) {
       var x = pos.getX(i), z = pos.getZ(i), y = alturaLadera(x, z);
       pos.setY(i, y);
       var e = LAD.escuela, patio = x > e[0] - 4 && x < e[0] + 4 && z > e[1] - 2.8 && z < Z_CORTE;   // patio de tierra de la escuela
       c.copy(PASTO).lerp(MONTE, suave((x - 3) / 8));
       if (patio) c.copy(PATIO);
+      if (enArroyo(x, z)) c.copy(LECHO_L).lerp(c, suave((Math.abs(x - ejeArroyo(z)) - ARROYO.ancho) / ARROYO.talud));
       c.offsetHSL(0, 0, 0.025 * Math.sin(x * 5.1 + z * 3.7));
       col.push(c.r, c.g, c.b);
     }
@@ -445,12 +453,56 @@
     corte.position.z = Z_CORTE; corte.userData.sinSombra = true; G.escena.add(corte);
     G.escena.add(new T.Line(new T.BufferGeometry().setFromPoints(perfil.map(function (q) { return new T.Vector3(q.x, q.y, Z_CORTE + 0.01); })),
       new T.LineBasicMaterial({ color: TINTA })));
+    construyeArroyo(Z0, perfil);
 
     construyeEscuela();
     construyeArboles([[11.5, -5.5], [13.8, -2.4], [12.6, -9.5], [15.6, -6.8], [9.6, -8.2], [17.6, -1.2], [-11.8, -11.5],
       [-8.2, -12.4], [-3.4, -10.5], [3.8, -12], [7.2, -15], [14.2, -17]], [0x6f8a5f, 0x627d55]);
     construyeVegetacionLadera();
   }
+  // El arroyo: una lámina que sigue el eje del cauce, con ondas que corren hacia el corte, y su cara en el corte.
+  // Su nivel y su corriente cambian con la lluvia del modelo (pintaLadera): de ≈ 35 cm en el lecho a ≈ 1 m en tormenta.
+  var NIVEL_ARROYO = { base: 0.35, crece: 0.65 };
+  function construyeArroyo(Z0, perfil) {
+    var largo = Z_CORTE - Z0, g = new T.PlaneGeometry(ARROYO.ancho * 2 + 1.2, largo, 1, 90);
+    g.rotateX(-Math.PI / 2);
+    var pos = g.attributes.position;
+    for (var i = 0; i < pos.count; i++) {
+      var z = pos.getZ(i) + (Z0 + Z_CORTE) / 2;
+      pos.setZ(i, z); pos.setX(i, pos.getX(i) + ejeArroyo(z));
+    }
+    g.computeVertexNormals();
+    var ra = ruido(29);
+    G.ondasL = normales(256, function (x, y) { var u = x / 256, v = y / 256; return 0.6 * ra(u * 4, v * 12, 3, 4) + 0.4 * ra(u * 12, v * 30, 2, 12); }, 3, [1, 12]);
+    G.matArroyo = new T.MeshStandardMaterial({ color: 0x5f7f86, roughness: 0.25, metalness: 0, normalMap: G.ondasL,
+      normalScale: new T.Vector2(0.35, 0.35), envMap: G.cielo, envMapIntensity: 0.35, transparent: true, opacity: 0.86, depthWrite: false });
+    G.arroyo = new T.Mesh(g, G.matArroyo);
+    G.arroyo.userData.sinSombra = true; G.escena.add(G.arroyo);
+    G.fondoArroyo = PIE - ARROYO.hondo;
+    G.perfilL = perfil;
+    G.matCaraArroyo = new T.MeshStandardMaterial({ color: 0x5f7f86, roughness: 0.6, transparent: true, opacity: 0.72, depthWrite: false, side: T.DoubleSide });
+    G.laminaArroyo = new T.Line(new T.BufferGeometry(), new T.LineBasicMaterial({ color: AGUA }));
+    G.escena.add(G.laminaArroyo);
+    nivelArroyo(G.fondoArroyo + NIVEL_ARROYO.base);
+  }
+  // Coloca la lámina y rehace la cara del agua en el corte (solo cuando el nivel cambia de verdad).
+  function nivelArroyo(y) {
+    if (G.nivelL !== undefined && Math.abs(y - G.nivelL) < 0.01) return;
+    G.nivelL = y;
+    G.arroyo.position.y = y;
+    var x0 = ejeArroyo(Z_CORTE), mojado = G.perfilL.filter(function (q) { return q.y < y && Math.abs(q.x - x0) < ARROYO.ancho + ARROYO.talud; });
+    if (G.caraArroyo) { G.escena.remove(G.caraArroyo); G.caraArroyo.geometry.dispose(); }
+    if (mojado.length < 2) return;
+    var f = new T.Shape();
+    f.moveTo(mojado[0].x, y);
+    mojado.forEach(function (q) { f.lineTo(q.x, q.y); });
+    f.lineTo(mojado[mojado.length - 1].x, y);
+    G.caraArroyo = new T.Mesh(new T.ShapeGeometry(f), G.matCaraArroyo);
+    G.caraArroyo.position.z = Z_CORTE + 0.02; G.escena.add(G.caraArroyo);
+    G.laminaArroyo.geometry.setFromPoints([new T.Vector3(mojado[0].x, y, Z_CORTE + 0.03), new T.Vector3(mojado[mojado.length - 1].x, y, Z_CORTE + 0.03)]);
+    G.anclaArroyo = new T.Vector3(x0, y, Z_CORTE);
+  }
+
   // Escuela rural de un piso: muros claros con guardapolvo de color, losa con alero, ventanas y puerta.
   function construyeEscuela() {
     var e = LAD.escuela, y0 = PIE, ANCHO = 6.4, FONDO = 3.2, ALTO = 2.9;
@@ -519,10 +571,11 @@
     G.puntasL.INCL = caja(0.145 * E, 0.02 * E, 0.105 * E, mate(AGUA), 0, 0.91 * E, 0, G.estaca, 0);
     G.anclaIncl = new T.Vector3(s[0], ye + 0.95 * E, s[1]);
     // Cables, por el suelo, del gabinete a cada sensor.
-    function sobre(x, z) { return [x, alturaLadera(x, z) + 0.05, z]; }
+    function sobre(x, z) { return [x, Math.max(alturaLadera(x, z) + 0.05, enArroyo(x, z) ? PIE + 0.35 : -9), z]; }   // cruza el arroyo por arriba
     var fin = [S([-4.0, 1.3, 0.45]), S([-4.0, 1.12, 0.45])];
     tubo([fin[0], fin[1], sobre(-3.2, 0.9), sobre(-2.0, 1.1), sobre(p[0], p[1] - 0.15)], 0.03, G.matCable);
-    var trazo = [sobre(s[0] - 0.15, s[1]), sobre(6.2, 1.6), sobre(xh - 0.15, Z_CORTE - 0.1), sobre(2.0, 1.5), sobre(0.2, 1.3), sobre(-2.6, 1.0), fin[1], fin[0]];
+    var trazo = [sobre(s[0] - 0.15, s[1]), sobre(7.0, 1.6), sobre(xh - 0.15, Z_CORTE - 0.1), sobre(3.6, 1.6), sobre(2.6, 1.5), sobre(1.6, 1.45),
+      sobre(0.6, 1.4), sobre(-0.2, 1.3), sobre(-2.6, 1.0), fin[1], fin[0]];
     tubo(trazo, 0.03, G.matCable);
     // zonas de clic, más anchas que cada pieza
     zona('ladera', [p[0], yp + 0.8 * E, p[1]], [0.7 * E, 1.7 * E, 0.7 * E]);
@@ -556,6 +609,11 @@
       a.needsUpdate = true;
     }
     G.lluvia.geometry.setDrawRange(0, n * 2);
+    // el arroyo crece y corre más rápido con la lluvia del modelo (sin lluvia, ≈ 0.4 m/s dibujado)
+    G.creceL = (G.creceL || 0) + (M.acota(mmh / 40, 0, 1) - (G.creceL || 0)) * Math.min(1, dtr * 0.8);
+    nivelArroyo(G.fondoArroyo + NIVEL_ARROYO.base + NIVEL_ARROYO.crece * G.creceL);
+    G.ondasL.offset.y = (G.ondasL.offset.y + (0.4 + 1.6 * G.creceL) * dtr / 3) % 1;
+    G.matArroyo.color.setHex(G.creceL > 0.3 ? 0x7b6f58 : 0x5f7f86); G.matCaraArroyo.color.copy(G.matArroyo.color);   // turbia con la crecida
     var midiendo = nom === 'CALENTAMIENTO' || nom === 'MEDICIÓN';
     Object.keys(G.puntasL).forEach(function (q) {
       var son = s.sondas[q], fa = son && son.falla !== 'ninguna';
@@ -837,7 +895,9 @@
       { id: 'ctrl', nombre: 'Gabinete', ancla: S([-4.62, 2.15, 0.45]), lado: 'izq', vista: 'gabinete' },
       { id: 'panel', nombre: 'Energía', ancla: S([-5.1, 4.95, 0.2]), lado: 'izq', vista: 'energia' },
       { id: 'torre', nombre: 'Comunicación', ancla: [G.torreTope.x + 0.4, G.torreTope.y + 0.6, G.torreTope.z], lado: 'izq', vista: 'enlace' },
-      { id: 'escuela', nombre: 'Escuela', ancla: G.anclaEscuela, lado: 'der', fijo: (est && est.escuela) || '' }
+      { id: 'escuela', nombre: 'Escuela', ancla: G.anclaEscuela, lado: 'der', fijo: (est && est.escuela) || '' },
+      { id: 'cauce', nombre: 'Cauce', ancla: [ejeArroyo(Z_CORTE), PIE - 0.4, Z_CORTE], lado: 'izq',
+        fijo: est && est.distancia_cauce_m != null ? 'A ' + est.distancia_cauce_m + ' m de la escuela' : 'Junto a la escuela' }
     ];
     if (est && (est.parametros || []).indexOf('INCL') >= 0) r.splice(2, 0, { id: 'incl', nombre: 'Inclinómetro', ancla: G.anclaIncl.toArray(), lado: 'der', vista: 'ladera' });
     return r;

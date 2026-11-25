@@ -154,15 +154,15 @@
     deslave:           { nombre: 'Deslave', lluvias: [[0, 8, 70], [10, 9, 80]], salto: [13, 3.8] }
   };
   // suelo: la entrada de su ladera en suelo_laderas.json (scripts/103_suelo_laderas.py). Con ella la humedad drena
-  // hasta la capacidad de campo de ese suelo y satura en su porosidad; arranca seco (80 % de la capacidad de campo,
-  // como `tormenta_ladera`). Sin ella, los valores genéricos de LADERA.
+  // hasta la capacidad de campo de ese suelo y satura en su porosidad; arranca en capacidad de campo, como en temporada
+  // de lluvias (la misma condición de `lluvia_prolongada` y `deslave`). Sin ella, los valores genéricos de LADERA.
   function Ladera(semilla, suelo) {
     this.humBase = suelo ? suelo.capacidad_campo_pct : LADERA.humBase;
     this.humSatura = suelo ? suelo.saturacion_pct : LADERA.humSatura;
     this.umbral = suelo ? suelo.umbral_cerca_saturacion_pct : null;
     this.eventos = [];
     this.t = null;                         // hasta dónde va integrada la humedad
-    this.hum = suelo ? Math.round(0.8 * this.humBase * 10) / 10 : this.humBase;   // arranca seco, como el escenario de tormenta
+    this.hum = this.humBase;   // arranca en capacidad de campo: temporada de lluvias (may-sep), cuando hay deslaves
     this.incl = 0;                         // cambio de inclinación desde la instalación, grados
     this.acum = 0;                         // lluvia caída desde el inicio, mm (el pluviómetro cuenta de aquí)
     this.r = mulberry32(semilla || 3);

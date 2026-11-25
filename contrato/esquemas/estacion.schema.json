@@ -49,6 +49,10 @@
       "description": "v2.0. Linea recta de la escuela al punto del cauce donde va la estacion.",
       "type": ["number", "null"], "minimum": 0
     },
+    "distancia_cauce_m": {
+      "description": "v2.0. Estaciones de ladera: linea recta de la escuela al cauce mas cercano, el que socava el pie de su ladera.",
+      "type": ["number", "null"], "minimum": 0
+    },
     "distancia_al_sitio_m": {
       "description": "v2.0. Metros sobre el cauce de la estacion a su c_sitio, aproximados por tramo (red_asignacion.json).",
       "type": ["number", "null"], "minimum": 0

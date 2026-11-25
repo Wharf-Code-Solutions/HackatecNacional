@@ -67,39 +67,40 @@ FUENTES = [
     ('F19', 'IML_2020.zip',
      'https://conapo.segob.gob.mx/work/models/CONAPO/Datos_Abiertos/Localidad/IML_2020.zip'),
     # F21: lluvia diaria satelital (NASA POWER, IMERG) en las 5 escuelas con modulo de ladera (docs/20 §3.3,
-    # scripts/100_escuelas_ladera.py). Un archivo por punto, en hora UTC (IMERG no existe en hora solar local: el dia de POWER corta a las 18:00 en Puebla); si cambia la lista de escuelas, cambian estas lineas.
+    # scripts/100_escuelas_ladera.py), hoy en el Alto Atoyac. Las coordenadas de las 10 estaciones son las de
+    # contrato/fixtures/mecanismos.json; si se mueven, cambian aqui y se baja de nuevo con --forzar. Un archivo por punto, en hora UTC (IMERG no existe en hora solar local: el dia de POWER corta a las 18:00 en Puebla); si cambia la lista de escuelas, cambian estas lineas.
     ('F21', 'power_EST-LAD-01.json',
      'https://power.larc.nasa.gov/api/temporal/daily/point?parameters=IMERG_PRECTOT&community=AG'
-     '&longitude=-97.69145&latitude=20.164262&start=20010101&end=20251231&format=JSON&time-standard=utc'),
+     '&longitude=-98.520833&latitude=19.368889&start=20010101&end=20251231&format=JSON&time-standard=utc'),
     ('F21', 'power_EST-LAD-02.json',
      'https://power.larc.nasa.gov/api/temporal/daily/point?parameters=IMERG_PRECTOT&community=AG'
-     '&longitude=-97.948396&latitude=20.287337&start=20010101&end=20251231&format=JSON&time-standard=utc'),
+     '&longitude=-98.300278&latitude=18.965556&start=20010101&end=20251231&format=JSON&time-standard=utc'),
     ('F21', 'power_EST-LAD-03.json',
      'https://power.larc.nasa.gov/api/temporal/daily/point?parameters=IMERG_PRECTOT&community=AG'
-     '&longitude=-97.679854&latitude=19.968377&start=20010101&end=20251231&format=JSON&time-standard=utc'),
+     '&longitude=-98.546221&latitude=19.408247&start=20010101&end=20251231&format=JSON&time-standard=utc'),
     ('F21', 'power_EST-LAD-04.json',
      'https://power.larc.nasa.gov/api/temporal/daily/point?parameters=IMERG_PRECTOT&community=AG'
-     '&longitude=-98.15735&latitude=20.297957&start=20010101&end=20251231&format=JSON&time-standard=utc'),
+     '&longitude=-98.62649&latitude=19.350354&start=20010101&end=20251231&format=JSON&time-standard=utc'),
     ('F21', 'power_EST-LAD-05.json',
      'https://power.larc.nasa.gov/api/temporal/daily/point?parameters=IMERG_PRECTOT&community=AG'
-     '&longitude=-97.625876&latitude=19.934205&start=20010101&end=20251231&format=JSON&time-standard=utc'),
+     '&longitude=-98.174159&latitude=18.921891&start=20010101&end=20251231&format=JSON&time-standard=utc'),
     # F21, mas puntos (a pedido): las 5 estaciones de agua de mecanismos.json (EST-ESC-) y dos de referencia en la ciudad de
     # Puebla (REF-PUE-01 Centro, REF-PUE-02 Cholula), para contrastar la lluvia de la Sierra Norte, la cuenca y la ciudad.
     ('F21', 'power_EST-ESC-01.json',
      'https://power.larc.nasa.gov/api/temporal/daily/point?parameters=IMERG_PRECTOT&community=AG'
-     '&longitude=-98.298206&latitude=18.401308&start=20010101&end=20251231&format=JSON&time-standard=utc'),
+     '&longitude=-98.175344&latitude=18.968553&start=20010101&end=20251231&format=JSON&time-standard=utc'),
     ('F21', 'power_EST-ESC-02.json',
      'https://power.larc.nasa.gov/api/temporal/daily/point?parameters=IMERG_PRECTOT&community=AG'
-     '&longitude=-98.175344&latitude=18.968553&start=20010101&end=20251231&format=JSON&time-standard=utc'),
+     '&longitude=-98.493854&latitude=19.327466&start=20010101&end=20251231&format=JSON&time-standard=utc'),
     ('F21', 'power_EST-ESC-03.json',
      'https://power.larc.nasa.gov/api/temporal/daily/point?parameters=IMERG_PRECTOT&community=AG'
-     '&longitude=-98.493854&latitude=19.327466&start=20010101&end=20251231&format=JSON&time-standard=utc'),
+     '&longitude=-98.311917&latitude=19.133974&start=20010101&end=20251231&format=JSON&time-standard=utc'),
     ('F21', 'power_EST-ESC-04.json',
      'https://power.larc.nasa.gov/api/temporal/daily/point?parameters=IMERG_PRECTOT&community=AG'
-     '&longitude=-98.311917&latitude=19.133974&start=20010101&end=20251231&format=JSON&time-standard=utc'),
+     '&longitude=-98.446222&latitude=19.305107&start=20010101&end=20251231&format=JSON&time-standard=utc'),
     ('F21', 'power_EST-ESC-05.json',
      'https://power.larc.nasa.gov/api/temporal/daily/point?parameters=IMERG_PRECTOT&community=AG'
-     '&longitude=-98.446222&latitude=19.305107&start=20010101&end=20251231&format=JSON&time-standard=utc'),
+     '&longitude=-98.423775&latitude=19.168038&start=20010101&end=20251231&format=JSON&time-standard=utc'),
     ('F21', 'power_REF-PUE-01.json',
      'https://power.larc.nasa.gov/api/temporal/daily/point?parameters=IMERG_PRECTOT&community=AG'
      '&longitude=-98.1981&latitude=19.0436&start=20010101&end=20251231&format=JSON&time-standard=utc'),

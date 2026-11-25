@@ -6,15 +6,17 @@ se decide DÓNDE. La lista se la entrega a `scripts/99_reubicacion.py`, que arma
 
 Criterio (hipótesis, igual que los pesos del índice):
 
-  1. Elegibles: escuelas de escuelas.json con sub-índice `riesgo.derrumbe` >= DERRUMBE_MINIMO y susceptibilidad
-     de laderas de CENAPRED Alta o Muy alta (columna `susceptibilidad_laderas` de factores_escuelas.csv:
-     0.75 = Alta, 1.0 = Muy alta).
+  1. Elegibles: escuelas de escuelas.json en el Alto Atoyac (`_comun.SUBCUENCAS_ALTO_ATOYAC`, las subcuencas que
+     drenan a Valsequillo), con susceptibilidad de laderas de CENAPRED Alta o Muy alta (columna
+     `susceptibilidad_laderas` de factores_escuelas.csv: 0.75 = Alta, 1.0 = Muy alta) y a menos de CAUCE_M de un
+     cauce del INEGI: la ladera que vigila es la que un río o una barranca socava en su pie. Antes se pedía además
+     `riesgo.derrumbe` >= 0.7, pero en el Alto Atoyac solo una escuela lo cumple: aquí se ordena por él, sin mínimo.
   2. Orden: `riesgo.derrumbe` de mayor a menor; a igual valor, la pendiente de su entorno (p75) y luego la CCT.
   3. Cuántos: N_MODULOS = 5, el mismo presupuesto que las estaciones de agua (docs/18). Se eligen a más de
      SEPARACION_M entre sí: dos laderas pegadas comparten tormenta, pero no la misma ladera. Las escuelas del
      catálogo que quedan a menos de PROTEGE_M de un módulo van en su lista `escuelas_protegidas`.
-  4. Inclinómetro (`INCL`) solo si la susceptibilidad es Muy alta (1.0): es el sensor caro y el que
-     avisa de un movimiento ya iniciado.
+  4. Inclinómetro (`INCL`) en las cinco (susceptibilidad Alta o más): en el Alto Atoyac ninguna ladera es Muy alta,
+     y junto a un cauce que socava el talud es el único sensor que ve un movimiento ya iniciado.
 
 Lo que NO dice: no predice deslaves. Elige dónde vigilar el detonante.
 
@@ -24,6 +26,7 @@ Salida (DERIVADA: se edita este script, no el archivo):
     python -I scripts/100_escuelas_ladera.py
 """
 import csv
+import importlib.util
 import json
 import math
 import os
@@ -32,15 +35,19 @@ RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FIX = os.path.join(RAIZ, 'contrato', 'fixtures')
 FACTORES = os.path.join(RAIZ, 'datos', 'procesados', 'escuelas', 'factores_escuelas.csv')
 
-DERRUMBE_MINIMO = 0.7
 SUSCEPTIBILIDAD_MINIMA = 0.75     # Alta
-SUSCEPTIBILIDAD_INCL = 1.0        # Muy alta
+SUSCEPTIBILIDAD_INCL = 0.75       # Alta: en el Alto Atoyac no hay Muy alta (ver 4)
+CAUCE_M = 500                     # la escuela, a menos de esto de un cauce del INEGI
 N_MODULOS = 5
 SEPARACION_M = 5000
 PROTEGE_M = 1500
 NOMBRE_SUSCEPTIBILIDAD = {0.75: 'Alta', 1.0: 'Muy alta'}
 
 M_LAT = 110574.0
+
+_spec = importlib.util.spec_from_file_location('_comun', os.path.join(RAIZ, 'scripts', '_comun.py'))
+_comun = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_comun)
 
 
 def metros(a, b):
@@ -56,23 +63,27 @@ def main():
         agua = json.load(f)['estaciones']
     con_agua = {c: e['c_estacion'] for e in agua for c in e['escuelas_protegidas']}
 
+    cauces = _comun.tramos_de_cauces()
     elegibles = []
     for e in escuelas:
         fa = factores[e['cct']]
         susc = float(fa['susceptibilidad_laderas'])
-        if e['riesgo']['derrumbe'] >= DERRUMBE_MINIMO and susc >= SUSCEPTIBILIDAD_MINIMA:
-            elegibles.append((e, susc, float(fa['pendiente_p75'] or 0)))
+        if susc < SUSCEPTIBILIDAD_MINIMA or not _comun.en_alto_atoyac(e['latitud'], e['longitud']):
+            continue
+        d = _comun.distancia_a_cauce(e['latitud'], e['longitud'], cauces)
+        if d <= CAUCE_M:
+            elegibles.append((e, susc, float(fa['pendiente_p75'] or 0), d))
     elegibles.sort(key=lambda x: (-x[0]['riesgo']['derrumbe'], -x[2], x[0]['cct']))
 
     elegidos = []
-    for e, susc, p75 in elegibles:
+    for e, susc, p75, d in elegibles:
         punto = (e['latitud'], e['longitud'])
         if len(elegidos) < N_MODULOS and all(metros(punto, (y[0]['latitud'], y[0]['longitud'])) >= SEPARACION_M
                                              for y in elegidos):
-            elegidos.append((e, susc, p75))
+            elegidos.append((e, susc, p75, d))
 
     modulos = []
-    for i, (e, susc, p75) in enumerate(elegidos, 1):
+    for i, (e, susc, p75, d) in enumerate(elegidos, 1):
         punto = (e['latitud'], e['longitud'])
         # Las del catálogo en la misma ladera: a menos de PROTEGE_M de la escuela elegida.
         protegidas = [o['cct'] for o in escuelas if metros(punto, (o['latitud'], o['longitud'])) <= PROTEGE_M]
@@ -88,6 +99,7 @@ def main():
             'riesgo_derrumbe': e['riesgo']['derrumbe'],
             'susceptibilidad_cenapred': NOMBRE_SUSCEPTIBILIDAD[susc],
             'pendiente_p75_grados': p75,
+            'distancia_cauce_m': round(d),
             'parametros': ['LLUVIA', 'HUM_SUELO'] + (['INCL'] if susc >= SUSCEPTIBILIDAD_INCL else []),
             'escuelas_protegidas': sorted(set(protegidas) | {e['cct']}),
             # Si la escuela ya está junto a una estación de agua, el módulo se suma a esa estación (docs/20 §3.2).
@@ -97,12 +109,12 @@ def main():
     salida = {
         'version': '0.1-propuesta',
         '_provisional': True,
-        'criterio': ('Escuelas de escuelas.json con riesgo.derrumbe >= {} y susceptibilidad de laderas CENAPRED Alta o '
-                     'Muy alta, por riesgo de derrumbe descendente; las {} primeras a mas de {} m entre si; INCL solo con '
-                     'Muy alta. Umbrales de seleccion son hipotesis. Generado por scripts/100_escuelas_ladera.py.').format(
-                         DERRUMBE_MINIMO, N_MODULOS, SEPARACION_M),
+        'criterio': ('Escuelas de escuelas.json en el Alto Atoyac, con susceptibilidad de laderas CENAPRED Alta o Muy alta '
+                     'y a menos de {} m de un cauce del INEGI, por riesgo de derrumbe descendente; las {} primeras a mas de '
+                     '{} m entre si; INCL en todas. Umbrales de seleccion son hipotesis. Generado por '
+                     'scripts/100_escuelas_ladera.py.').format(CAUCE_M, N_MODULOS, SEPARACION_M),
         'elegibles': len(elegibles),
-        'elegibles_muy_alta': sum(1 for x in elegibles if x[1] >= SUSCEPTIBILIDAD_INCL),
+        'elegibles_muy_alta': sum(1 for x in elegibles if x[1] >= 1.0),
         'modulos': modulos,
     }
     with open(os.path.join(FIX, 'escuelas_ladera.json'), 'w', encoding='utf-8', newline='\n') as f:
@@ -112,9 +124,9 @@ def main():
     print('{} escuelas elegibles ({} con susceptibilidad Muy alta); {} modulos'.format(
         len(elegibles), salida['elegibles_muy_alta'], len(modulos)))
     for m in modulos:
-        print('  {} {} {:<26} {:<22} derrumbe {:.3f} {:<8} {} escuelas  {}'.format(
+        print('  {} {} {:<26} {:<22} derrumbe {:.3f} {:<8} cauce {:>3} m  {} escuelas  {}'.format(
             m['c_estacion'], m['cct'], m['municipio'][:26], m['localidad'][:22], m['riesgo_derrumbe'],
-            m['susceptibilidad_cenapred'], len(m['escuelas_protegidas']), ','.join(m['parametros'])))
+            m['susceptibilidad_cenapred'], m['distancia_cauce_m'], len(m['escuelas_protegidas']), ','.join(m['parametros'])))
 
 
 if __name__ == '__main__':

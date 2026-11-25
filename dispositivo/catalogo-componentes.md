@@ -15,13 +15,13 @@
 
 ```
 EE-MMM-TTTNN-SS-CCC-n
-21-157-ESC01-SD-TUR-1
+21-114-ESC01-SD-TUR-1
 ```
 
 | Campo | Qué es | Valores | Ejemplo |
 |---|---|---|---|
 | `EE` | **Entidad federativa**, clave INEGI de 2 dígitos. Es la misma que abre la CCT de la SEP | `21` Puebla, `29` Tlaxcala | `21` |
-| `MMM` | Municipio, clave INEGI de 3 dígitos (de `cve_loc` en `factores_escuelas.csv`) | `157` Tehuitzingo | `157` |
+| `MMM` | Municipio, clave INEGI de 3 dígitos (de `cve_loc` en `factores_escuelas.csv`) | `114` Puebla | `114` |
 | `TTTNN` | Mecanismo: tipo y número, los mismos de `c_estacion` del contrato sin guiones | `ESC` agua, `LAD` ladera, `ATY` Atoyac (red anterior) | `ESC01` ↔ `EST-ESC-01` |
 | `SS` | Subsistema | `SD` sondas de agua, `LD` ladera, `CO` colector, `CT` control, `CM` comunicación, `EN` energía, `ES` estructura | `SD` |
 | `CCC` | Componente (tabla de la sección 2) | `TUR` turbiedad | `TUR` |
@@ -31,12 +31,12 @@ Reglas:
 
 - La clave **no cambia** mientras la pieza siga en ese lugar. Si una sonda se reemplaza, la nueva conserva la clave
   y la vieja pasa a `RT` en el registro con su número de serie del fabricante.
-- De la clave se recupera el mecanismo del contrato: `21-157-ESC01-…` → `EST-ESC-01`. No hace falta otra tabla.
+- De la clave se recupera el mecanismo del contrato: `21-114-ESC01-…` → `EST-ESC-01`. No hace falta otra tabla.
 - La etiqueta física de cada pieza lleva la clave en texto y en código QR.
 
 ### 1.2 Estado operativo
 
-Va **después** de la clave, separado por un punto medio, y sí cambia: `21-157-ESC01-SD-TUR-1 · OP`.
+Va **después** de la clave, separado por un punto medio, y sí cambia: `21-114-ESC01-SD-TUR-1 · OP`.
 Cada código corresponde a algo que el contrato o el simulador ya expresan, así que se puede asignar solo.
 
 | Código | Estado | Cuándo | De dónde sale hoy |
@@ -58,18 +58,20 @@ El estado del **mecanismo** es el peor de sus componentes, en este orden: `F*` >
 
 ### 1.3 Prefijos de los mecanismos actuales
 
+Todos en el Alto Atoyac (las cuatro subcuencas que drenan a Valsequillo), junto a un cauce del INEGI.
+
 | Mecanismo (contrato) | Prefijo | Municipio | Localidad | Estado operativo hoy |
 |---|---|---|---|---|
-| EST-ESC-01 | `21-157-ESC01` | Tehuitzingo | San Vicente Ferrer | `PR` |
-| EST-ESC-02 | `21-114-ESC02` | Puebla | Guadalupe Tlatelpa | `PR` |
-| EST-ESC-03 | `21-134-ESC03` | San Matías Tlalancaleca | San Matías Tlalancaleca | `PR` |
-| EST-ESC-04 | `21-034-ESC04` | Coronango | San Martín Zoquiapan | `PR` |
-| EST-ESC-05 | `21-132-ESC05` | San Martín Texmelucan | San Cristóbal Tepatlaxco | `PR` |
-| EST-LAD-01 | `21-089-LAD01` | Jopala | Tecuantla (los Reyes) | `PR` |
-| EST-LAD-02 | `21-197-LAD02` | Xicotepec | El Tabacal | `PR` |
-| EST-LAD-03 | `21-078-LAD03` | Huitzilan de Serdán | Xinachapan de Allende | `PR` |
-| EST-LAD-04 | `21-109-LAD04` | Pahuatlán | San Pablito | `PR` |
-| EST-LAD-05 | `21-202-LAD05` | Xochitlán de Vicente Suárez | Bonillagco | `PR` |
+| EST-ESC-01 | `21-114-ESC01` | Puebla | Guadalupe Tlatelpa | `PR` |
+| EST-ESC-02 | `21-134-ESC02` | San Matías Tlalancaleca | San Matías Tlalancaleca | `PR` |
+| EST-ESC-03 | `21-034-ESC03` | Coronango | San Martín Zoquiapan | `PR` |
+| EST-ESC-04 | `21-132-ESC04` | San Martín Texmelucan | San Cristóbal Tepatlaxco | `PR` |
+| EST-ESC-05 | `21-074-ESC05` | Huejotzingo | Santa Elena | `PR` |
+| EST-LAD-01 | `21-134-LAD01` | San Matías Tlalancaleca | Ex-hacienda Molino de Guadalupe (san Félix) | `PR` |
+| EST-LAD-02 | `21-106-LAD02` | Ocoyucan | San Isidro Petlácatl | `PR` |
+| EST-LAD-03 | `21-180-LAD03` | Tlahuapan | La Preciosita | `PR` |
+| EST-LAD-04 | `21-180-LAD04` | Tlahuapan | El Pipirín | `PR` |
+| EST-LAD-05 | `21-114-LAD05` | Puebla | Buenavista Tetela | `PR` |
 
 Las 5 estaciones del Atoyac (`EST-ATY-`) siguen en los fixtures. Las de Tlaxcala llevarían `29-` y las de Puebla `21-`:
 por eso la entidad va primero.
@@ -153,19 +155,19 @@ por eso la entidad va primero.
 
 | Clave | Pieza | Estado |
 |---|---|---|
-| `21-157-ESC01-SD-PHS-1` | Sonda de pH | `PR` |
-| `21-157-ESC01-SD-ODS-1` | Sonda de oxígeno disuelto | `PR` |
-| `21-157-ESC01-SD-CES-1` | Sonda de conductividad | `PR` |
-| `21-157-ESC01-SD-TES-1` | Sonda de temperatura | `PR` |
-| `21-157-ESC01-SD-TUR-1` | Sonda de turbiedad | `PR` |
-| `21-157-ESC01-SD-AIS-1` … `-3` | Aisladores | `PR` |
-| `21-157-ESC01-CT-MCU-1` | Controlador y módem | `PR` |
-| `21-157-ESC01-CO-NIV-1` | Nivel del río del colector | `PR` |
-| `21-157-ESC01-CO-MCU-1` | Controlador del colector | `PR` |
+| `21-114-ESC01-SD-PHS-1` | Sonda de pH | `PR` |
+| `21-114-ESC01-SD-ODS-1` | Sonda de oxígeno disuelto | `PR` |
+| `21-114-ESC01-SD-CES-1` | Sonda de conductividad | `PR` |
+| `21-114-ESC01-SD-TES-1` | Sonda de temperatura | `PR` |
+| `21-114-ESC01-SD-TUR-1` | Sonda de turbiedad | `PR` |
+| `21-114-ESC01-SD-AIS-1` … `-3` | Aisladores | `PR` |
+| `21-114-ESC01-CT-MCU-1` | Controlador y módem | `PR` |
+| `21-114-ESC01-CO-NIV-1` | Nivel del río del colector | `PR` |
+| `21-114-ESC01-CO-MCU-1` | Controlador del colector | `PR` |
 | … | (una fila por pieza de 2.1, 2.2 y 2.4) | |
 
 Una vez instalada, si la sonda de turbiedad empieza a mandar `-999`, su etiqueta en el registro pasa a
-`21-157-ESC01-SD-TUR-1 · FR` y el mecanismo `21-157-ESC01` queda en `FR` hasta que se repare.
+`21-114-ESC01-SD-TUR-1 · FR` y el mecanismo `21-114-ESC01` queda en `FR` hasta que se repare.
 
 ## 5. Fuentes de los modelos verificados
 

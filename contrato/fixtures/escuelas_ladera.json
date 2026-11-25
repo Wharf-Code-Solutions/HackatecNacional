@@ -1,127 +1,130 @@
 {
  "version": "0.1-propuesta",
  "_provisional": true,
- "criterio": "Escuelas de escuelas.json con riesgo.derrumbe >= 0.7 y susceptibilidad de laderas CENAPRED Alta o Muy alta, por riesgo de derrumbe descendente; las 5 primeras a mas de 5000 m entre si; INCL solo con Muy alta. Umbrales de seleccion son hipotesis. Generado por scripts/100_escuelas_ladera.py.",
- "elegibles": 248,
- "elegibles_muy_alta": 56,
+ "criterio": "Escuelas de escuelas.json en el Alto Atoyac, con susceptibilidad de laderas CENAPRED Alta o Muy alta y a menos de 500 m de un cauce del INEGI, por riesgo de derrumbe descendente; las 5 primeras a mas de 5000 m entre si; INCL en todas. Umbrales de seleccion son hipotesis. Generado por scripts/100_escuelas_ladera.py.",
+ "elegibles": 23,
+ "elegibles_muy_alta": 0,
  "modulos": [
   {
    "c_estacion": "EST-LAD-01",
-   "cct": "21KTV0122C",
-   "escuela": "Secundaria Comunitaria Rural Tecuantla, Los Reyes",
-   "nivel": "secundaria",
-   "municipio": "Jopala",
-   "localidad": "Tecuantla (los Reyes)",
-   "latitud": 20.164262,
-   "longitud": -97.69145,
-   "riesgo_derrumbe": 1.0,
-   "susceptibilidad_cenapred": "Muy alta",
-   "pendiente_p75_grados": 36.6,
+   "cct": "21KJN0964E",
+   "escuela": "Preescolar Comunitario Mestizo Ex Hacienda Molino de Guadalupe",
+   "nivel": "preescolar",
+   "municipio": "San Matías Tlalancaleca",
+   "localidad": "Ex-hacienda Molino de Guadalupe (san Félix)",
+   "latitud": 19.368889,
+   "longitud": -98.520833,
+   "riesgo_derrumbe": 0.567,
+   "susceptibilidad_cenapred": "Alta",
+   "pendiente_p75_grados": 11.2,
+   "distancia_cauce_m": 94,
    "parametros": [
     "LLUVIA",
     "HUM_SUELO",
     "INCL"
    ],
    "escuelas_protegidas": [
-    "21KTV0122C"
+    "21KJN0964E",
+    "21KPR0865V"
    ],
-   "estacion_de_agua_existente": null
+   "estacion_de_agua_existente": "EST-LAD-01"
   },
   {
    "c_estacion": "EST-LAD-02",
-   "cct": "21DPR0901Z",
-   "escuela": "Club de Leones de Xicotepec",
-   "nivel": "primaria",
-   "municipio": "Xicotepec",
-   "localidad": "El Tabacal",
-   "latitud": 20.287337,
-   "longitud": -97.948396,
-   "riesgo_derrumbe": 1.0,
-   "susceptibilidad_cenapred": "Muy alta",
-   "pendiente_p75_grados": 36.4,
+   "cct": "21DJN1678H",
+   "escuela": "Jose Luis Rodriguez Alconedo",
+   "nivel": "preescolar",
+   "municipio": "Ocoyucan",
+   "localidad": "San Isidro Petlácatl",
+   "latitud": 18.965556,
+   "longitud": -98.300278,
+   "riesgo_derrumbe": 0.556,
+   "susceptibilidad_cenapred": "Alta",
+   "pendiente_p75_grados": 10.6,
+   "distancia_cauce_m": 84,
    "parametros": [
     "LLUVIA",
     "HUM_SUELO",
     "INCL"
    ],
    "escuelas_protegidas": [
-    "21DPR0901Z",
-    "21DPR0971V",
-    "21DTV0192O"
+    "21DJN1678H",
+    "21DST0025D"
    ],
-   "estacion_de_agua_existente": null
+   "estacion_de_agua_existente": "EST-LAD-02"
   },
   {
    "c_estacion": "EST-LAD-03",
-   "cct": "21DCC0912Z",
-   "escuela": "Yolot'si",
+   "cct": "21DJN1221K",
+   "escuela": "Luis Donaldo Colosio Murrieta",
    "nivel": "preescolar",
-   "municipio": "Huitzilan de Serdán",
-   "localidad": "Xinachapan de Allende",
-   "latitud": 19.968377,
-   "longitud": -97.679854,
-   "riesgo_derrumbe": 0.922,
-   "susceptibilidad_cenapred": "Muy alta",
-   "pendiente_p75_grados": 33.5,
+   "municipio": "Tlahuapan",
+   "localidad": "La Preciosita",
+   "latitud": 19.408247,
+   "longitud": -98.546221,
+   "riesgo_derrumbe": 0.502,
+   "susceptibilidad_cenapred": "Alta",
+   "pendiente_p75_grados": 17.6,
+   "distancia_cauce_m": 154,
    "parametros": [
     "LLUVIA",
     "HUM_SUELO",
     "INCL"
    ],
    "escuelas_protegidas": [
-    "21DCC0912Z",
-    "21DPB0484C",
-    "21EJN1113B",
-    "21EPR1541K"
+    "21DJN1221K",
+    "21DPR0641D",
+    "21DTV0442D"
    ],
-   "estacion_de_agua_existente": null
+   "estacion_de_agua_existente": "EST-LAD-03"
   },
   {
    "c_estacion": "EST-LAD-04",
-   "cct": "21KJN1742B",
-   "escuela": "Preescolar Comunitario Rural San Pablito",
+   "cct": "21KJN1187D",
+   "escuela": "Preescolar Comunitario Tla el Pipirin",
    "nivel": "preescolar",
-   "municipio": "Pahuatlán",
-   "localidad": "San Pablito",
-   "latitud": 20.297957,
-   "longitud": -98.15735,
-   "riesgo_derrumbe": 0.915,
-   "susceptibilidad_cenapred": "Muy alta",
-   "pendiente_p75_grados": 25.3,
+   "municipio": "Tlahuapan",
+   "localidad": "El Pipirín",
+   "latitud": 19.350354,
+   "longitud": -98.62649,
+   "riesgo_derrumbe": 0.451,
+   "susceptibilidad_cenapred": "Alta",
+   "pendiente_p75_grados": 14.8,
+   "distancia_cauce_m": 96,
    "parametros": [
     "LLUVIA",
     "HUM_SUELO",
     "INCL"
    ],
    "escuelas_protegidas": [
-    "21DCC0439L",
-    "21DPB0745Y",
-    "21DPR1945D",
-    "21ETV0948S",
-    "21KJN1742B"
+    "21KJN1187D",
+    "21KPR0477D"
    ],
-   "estacion_de_agua_existente": null
+   "estacion_de_agua_existente": "EST-LAD-04"
   },
   {
    "c_estacion": "EST-LAD-05",
-   "cct": "21DCC1196M",
-   "escuela": "Tierra y Libertad",
-   "nivel": "preescolar",
-   "municipio": "Xochitlán de Vicente Suárez",
-   "localidad": "Bonillagco",
-   "latitud": 19.934205,
-   "longitud": -97.625876,
-   "riesgo_derrumbe": 0.909,
+   "cct": "21DPR1567T",
+   "escuela": "Profr. Rafael Ramirez",
+   "nivel": "primaria",
+   "municipio": "Puebla",
+   "localidad": "Buenavista Tetela",
+   "latitud": 18.921891,
+   "longitud": -98.174159,
+   "riesgo_derrumbe": 0.356,
    "susceptibilidad_cenapred": "Alta",
-   "pendiente_p75_grados": 31.9,
+   "pendiente_p75_grados": 5.3,
+   "distancia_cauce_m": 210,
    "parametros": [
     "LLUVIA",
-    "HUM_SUELO"
+    "HUM_SUELO",
+    "INCL"
    ],
    "escuelas_protegidas": [
-    "21DCC1196M"
+    "21DJN1165I",
+    "21DPR1567T"
    ],
-   "estacion_de_agua_existente": null
+   "estacion_de_agua_existente": "EST-LAD-05"
   }
  ]
 }

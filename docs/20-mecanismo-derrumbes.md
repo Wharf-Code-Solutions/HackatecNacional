@@ -147,7 +147,8 @@ Lo lleva la sesión de datos y reglas de derrumbe; aquí solo para que se sepa q
 **Hecho (24 de noviembre de 2026).** Las reglas están en `motor/reglas.py` (`_ladera`) con los umbrales de
 `umbrales_lluvia.json` y el p99 de `lluvia_sitios.json`. El umbral de humedad ya no es 45 % para todas: lo calibra
 `scripts/103_suelo_laderas.py` con el suelo de cada ladera (SoilGrids: porosidad y capacidad de campo de Saxton y Rawls,
-2006) como el 90 % de su porosidad, y queda entre 46.5 y 57.7 % (`suelo_laderas.json`). El 0.9 es hipótesis; en campo se
+2006) como el 90 % de su porosidad (`suelo_laderas.json`). Desde el mismo día las 5 laderas están en el Alto Atoyac,
+a menos de 500 m de un cauce (`100_escuelas_ladera.py`), y sus umbrales quedan entre 43.5 y 49.9 %. El 0.9 es hipótesis; en campo se
 ajusta con una muestra gravimétrica al instalar y con una temporada del sensor (`--serie`, por la curva de secado).
 
 ## 6. Quién hace qué

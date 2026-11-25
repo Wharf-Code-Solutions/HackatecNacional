@@ -5,53 +5,6 @@
  "estaciones": [
   {
    "c_estacion": "EST-ESC-01",
-   "c_sitio": "DLPUE2069M1",
-   "nombre": "Junto a Joaquin Leal",
-   "cuerpo_agua": "Cauce hacia Río Atoyac",
-   "municipio": "Tehuitzingo",
-   "estado": "Puebla",
-   "latitud": 18.401308,
-   "longitud": -98.298206,
-   "parametros": [
-    "COND",
-    "OD",
-    "PH",
-    "TEMP",
-    "TURB"
-   ],
-   "estado_dispositivo": "Activo",
-   "cct": "21DPR0448Z",
-   "escuela": "Joaquin Leal",
-   "localidad": "San Vicente Ferrer",
-   "escuelas_protegidas": [
-    "21DPR0448Z",
-    "21EJN0965T"
-   ],
-   "distancia_escuela_m": 278,
-   "distancia_al_sitio_m": 2318,
-   "banda_simulacion": "DLPUE2064",
-   "instalacion": "propuesta",
-   "autorizaciones": [
-    {
-     "organismo": "CEASPUE",
-     "tramite": "instalacion_en_cauce",
-     "estado": "pendiente",
-     "fecha": null
-    },
-    {
-     "organismo": "CAPCEE",
-     "tramite": "vinculacion_con_plantel",
-     "estado": "pendiente",
-     "fecha": null
-    }
-   ],
-   "colector": {
-    "c_colector": "COL-ESC-01",
-    "posicion": "misma orilla, ≈ 10 m aguas arriba de la estación"
-   }
-  },
-  {
-   "c_estacion": "EST-ESC-02",
    "c_sitio": "DLPUE2068",
    "nombre": "Junto a Francisco I. Madero",
    "cuerpo_agua": "Cauce hacia Presa Manuel Avila Camacho",
@@ -77,11 +30,65 @@
     "21DPR3486W",
     "21DJN2033Y",
     "21DJN1090I",
-    "21DPR1314Q"
+    "21DPR1314Q",
+    "21DJN1098A",
+    "21DJN2435S",
+    "21DPR3504V"
    ],
    "distancia_escuela_m": 277,
    "distancia_al_sitio_m": 10353,
    "banda_simulacion": "DLPUE2064",
+   "instalacion": "propuesta",
+   "autorizaciones": [
+    {
+     "organismo": "CEASPUE",
+     "tramite": "instalacion_en_cauce",
+     "estado": "pendiente",
+     "fecha": null
+    },
+    {
+     "organismo": "CAPCEE",
+     "tramite": "vinculacion_con_plantel",
+     "estado": "pendiente",
+     "fecha": null
+    }
+   ],
+   "colector": {
+    "c_colector": "COL-ESC-01",
+    "posicion": "misma orilla, ≈ 10 m aguas arriba de la estación"
+   }
+  },
+  {
+   "c_estacion": "EST-ESC-02",
+   "c_sitio": "DLPUE0114RNL",
+   "nombre": "Junto a Santos Hernandez Aguilar",
+   "cuerpo_agua": "Cauce hacia Río Atoyac",
+   "municipio": "San Matías Tlalancaleca",
+   "estado": "Puebla",
+   "latitud": 19.327466,
+   "longitud": -98.493854,
+   "parametros": [
+    "COND",
+    "OD",
+    "PH",
+    "TEMP",
+    "TURB"
+   ],
+   "estado_dispositivo": "Activo",
+   "cct": "21EBH0297Z",
+   "escuela": "Santos Hernandez Aguilar",
+   "localidad": "San Matías Tlalancaleca",
+   "escuelas_protegidas": [
+    "21EBH0297Z",
+    "21DJN1644R",
+    "21DPR0752I",
+    "21DJN0628T",
+    "21DPR1528R",
+    "21DTV0159G"
+   ],
+   "distancia_escuela_m": 456,
+   "distancia_al_sitio_m": 5058,
+   "banda_simulacion": "DLTLA2577",
    "instalacion": "propuesta",
    "autorizaciones": [
     {
@@ -104,13 +111,13 @@
   },
   {
    "c_estacion": "EST-ESC-03",
-   "c_sitio": "DLPUE0114RNL",
-   "nombre": "Junto a Santos Hernandez Aguilar",
-   "cuerpo_agua": "Cauce hacia Río Atoyac",
-   "municipio": "San Matías Tlalancaleca",
+   "c_sitio": "DLPUE2014M1",
+   "nombre": "Junto a Niños Héroes",
+   "cuerpo_agua": "Cauce hacia Arroyo Prieto",
+   "municipio": "Coronango",
    "estado": "Puebla",
-   "latitud": 19.327466,
-   "longitud": -98.493854,
+   "latitud": 19.133974,
+   "longitud": -98.311917,
    "parametros": [
     "COND",
     "OD",
@@ -119,17 +126,16 @@
     "TURB"
    ],
    "estado_dispositivo": "Activo",
-   "cct": "21EBH0297Z",
-   "escuela": "Santos Hernandez Aguilar",
-   "localidad": "San Matías Tlalancaleca",
+   "cct": "21EJN1205S",
+   "escuela": "Niños Héroes",
+   "localidad": "San Martín Zoquiapan",
    "escuelas_protegidas": [
-    "21EBH0297Z",
-    "21DJN1644R",
-    "21DPR0752I"
+    "21EJN1205S",
+    "21DJN0810S"
    ],
-   "distancia_escuela_m": 456,
-   "distancia_al_sitio_m": 5058,
-   "banda_simulacion": "DLTLA2577",
+   "distancia_escuela_m": 237,
+   "distancia_al_sitio_m": 599,
+   "banda_simulacion": "DLTLA2544",
    "instalacion": "propuesta",
    "autorizaciones": [
     {
@@ -152,52 +158,6 @@
   },
   {
    "c_estacion": "EST-ESC-04",
-   "c_sitio": "DLPUE2014M1",
-   "nombre": "Junto a Niños Héroes",
-   "cuerpo_agua": "Cauce hacia Arroyo Prieto",
-   "municipio": "Coronango",
-   "estado": "Puebla",
-   "latitud": 19.133974,
-   "longitud": -98.311917,
-   "parametros": [
-    "COND",
-    "OD",
-    "PH",
-    "TEMP",
-    "TURB"
-   ],
-   "estado_dispositivo": "Activo",
-   "cct": "21EJN1205S",
-   "escuela": "Niños Héroes",
-   "localidad": "San Martín Zoquiapan",
-   "escuelas_protegidas": [
-    "21EJN1205S"
-   ],
-   "distancia_escuela_m": 237,
-   "distancia_al_sitio_m": 599,
-   "banda_simulacion": "DLTLA2544",
-   "instalacion": "propuesta",
-   "autorizaciones": [
-    {
-     "organismo": "CEASPUE",
-     "tramite": "instalacion_en_cauce",
-     "estado": "pendiente",
-     "fecha": null
-    },
-    {
-     "organismo": "CAPCEE",
-     "tramite": "vinculacion_con_plantel",
-     "estado": "pendiente",
-     "fecha": null
-    }
-   ],
-   "colector": {
-    "c_colector": "COL-ESC-04",
-    "posicion": "misma orilla, ≈ 10 m aguas arriba de la estación"
-   }
-  },
-  {
-   "c_estacion": "EST-ESC-05",
    "c_sitio": "DLPUE2017",
    "nombre": "Junto a Caic San Cristobal Tepatlaxco",
    "cuerpo_agua": "Cauce hacia Río Atoyac",
@@ -240,6 +200,62 @@
     }
    ],
    "colector": {
+    "c_colector": "COL-ESC-04",
+    "posicion": "misma orilla, ≈ 10 m aguas arriba de la estación"
+   }
+  },
+  {
+   "c_estacion": "EST-ESC-05",
+   "c_sitio": "DLPUE0131RNL",
+   "nombre": "Junto a Martin Gonzalez Vazquez",
+   "cuerpo_agua": "Cauce hacia Xopanac",
+   "municipio": "Huejotzingo",
+   "estado": "Puebla",
+   "latitud": 19.168038,
+   "longitud": -98.423775,
+   "parametros": [
+    "COND",
+    "OD",
+    "PH",
+    "TEMP",
+    "TURB"
+   ],
+   "estado_dispositivo": "Activo",
+   "cct": "21DJN1068G",
+   "escuela": "Martin Gonzalez Vazquez",
+   "localidad": "Santa Elena",
+   "escuelas_protegidas": [
+    "21DJN1068G",
+    "21KJN0640Y",
+    "21EJN1310C",
+    "21DJN1092G",
+    "21DPR2418S",
+    "21DPR3615Z",
+    "21EJN0675C",
+    "21ETV0697D",
+    "21DJN0459O",
+    "21DPR2424C",
+    "21ETV0875Q"
+   ],
+   "distancia_escuela_m": 585,
+   "distancia_al_sitio_m": 9198,
+   "banda_simulacion": "DLTLA2577",
+   "instalacion": "propuesta",
+   "autorizaciones": [
+    {
+     "organismo": "CEASPUE",
+     "tramite": "instalacion_en_cauce",
+     "estado": "pendiente",
+     "fecha": null
+    },
+    {
+     "organismo": "CAPCEE",
+     "tramite": "vinculacion_con_plantel",
+     "estado": "pendiente",
+     "fecha": null
+    }
+   ],
+   "colector": {
     "c_colector": "COL-ESC-05",
     "posicion": "misma orilla, ≈ 10 m aguas arriba de la estación"
    }
@@ -247,24 +263,27 @@
   {
    "c_estacion": "EST-LAD-01",
    "c_sitio": null,
-   "nombre": "Ladera de Tecuantla (los Reyes)",
-   "municipio": "Jopala",
+   "nombre": "Ladera de Ex-hacienda Molino de Guadalupe (san Félix)",
+   "cuerpo_agua": "Cauce hacia Río Atoyac",
+   "municipio": "San Matías Tlalancaleca",
    "estado": "Puebla",
-   "latitud": 20.164262,
-   "longitud": -97.69145,
+   "latitud": 19.368889,
+   "longitud": -98.520833,
    "parametros": [
     "LLUVIA",
     "HUM_SUELO",
     "INCL"
    ],
    "estado_dispositivo": "Activo",
-   "cct": "21KTV0122C",
-   "escuela": "Secundaria Comunitaria Rural Tecuantla, Los Reyes",
-   "localidad": "Tecuantla (los Reyes)",
+   "cct": "21KJN0964E",
+   "escuela": "Preescolar Comunitario Mestizo Ex Hacienda Molino de Guadalupe",
+   "localidad": "Ex-hacienda Molino de Guadalupe (san Félix)",
    "escuelas_protegidas": [
-    "21KTV0122C"
+    "21KJN0964E",
+    "21KPR0865V"
    ],
    "distancia_escuela_m": 0,
+   "distancia_cauce_m": 94,
    "distancia_al_sitio_m": null,
    "banda_simulacion": null,
    "instalacion": "propuesta",
@@ -281,26 +300,27 @@
   {
    "c_estacion": "EST-LAD-02",
    "c_sitio": null,
-   "nombre": "Ladera de El Tabacal",
-   "municipio": "Xicotepec",
+   "nombre": "Ladera de San Isidro Petlácatl",
+   "cuerpo_agua": "Cauce hacia Río Atoyac",
+   "municipio": "Ocoyucan",
    "estado": "Puebla",
-   "latitud": 20.287337,
-   "longitud": -97.948396,
+   "latitud": 18.965556,
+   "longitud": -98.300278,
    "parametros": [
     "LLUVIA",
     "HUM_SUELO",
     "INCL"
    ],
    "estado_dispositivo": "Activo",
-   "cct": "21DPR0901Z",
-   "escuela": "Club de Leones de Xicotepec",
-   "localidad": "El Tabacal",
+   "cct": "21DJN1678H",
+   "escuela": "Jose Luis Rodriguez Alconedo",
+   "localidad": "San Isidro Petlácatl",
    "escuelas_protegidas": [
-    "21DPR0901Z",
-    "21DPR0971V",
-    "21DTV0192O"
+    "21DJN1678H",
+    "21DST0025D"
    ],
    "distancia_escuela_m": 0,
+   "distancia_cauce_m": 84,
    "distancia_al_sitio_m": null,
    "banda_simulacion": null,
    "instalacion": "propuesta",
@@ -317,27 +337,28 @@
   {
    "c_estacion": "EST-LAD-03",
    "c_sitio": null,
-   "nombre": "Ladera de Xinachapan de Allende",
-   "municipio": "Huitzilan de Serdán",
+   "nombre": "Ladera de La Preciosita",
+   "cuerpo_agua": "Cauce hacia Río Atoyac",
+   "municipio": "Tlahuapan",
    "estado": "Puebla",
-   "latitud": 19.968377,
-   "longitud": -97.679854,
+   "latitud": 19.408247,
+   "longitud": -98.546221,
    "parametros": [
     "LLUVIA",
     "HUM_SUELO",
     "INCL"
    ],
    "estado_dispositivo": "Activo",
-   "cct": "21DCC0912Z",
-   "escuela": "Yolot'si",
-   "localidad": "Xinachapan de Allende",
+   "cct": "21DJN1221K",
+   "escuela": "Luis Donaldo Colosio Murrieta",
+   "localidad": "La Preciosita",
    "escuelas_protegidas": [
-    "21DCC0912Z",
-    "21DPB0484C",
-    "21EJN1113B",
-    "21EPR1541K"
+    "21DJN1221K",
+    "21DPR0641D",
+    "21DTV0442D"
    ],
    "distancia_escuela_m": 0,
+   "distancia_cauce_m": 154,
    "distancia_al_sitio_m": null,
    "banda_simulacion": null,
    "instalacion": "propuesta",
@@ -354,28 +375,27 @@
   {
    "c_estacion": "EST-LAD-04",
    "c_sitio": null,
-   "nombre": "Ladera de San Pablito",
-   "municipio": "Pahuatlán",
+   "nombre": "Ladera de El Pipirín",
+   "cuerpo_agua": "Cauce hacia Río Atoyac",
+   "municipio": "Tlahuapan",
    "estado": "Puebla",
-   "latitud": 20.297957,
-   "longitud": -98.15735,
+   "latitud": 19.350354,
+   "longitud": -98.62649,
    "parametros": [
     "LLUVIA",
     "HUM_SUELO",
     "INCL"
    ],
    "estado_dispositivo": "Activo",
-   "cct": "21KJN1742B",
-   "escuela": "Preescolar Comunitario Rural San Pablito",
-   "localidad": "San Pablito",
+   "cct": "21KJN1187D",
+   "escuela": "Preescolar Comunitario Tla el Pipirin",
+   "localidad": "El Pipirín",
    "escuelas_protegidas": [
-    "21DCC0439L",
-    "21DPB0745Y",
-    "21DPR1945D",
-    "21ETV0948S",
-    "21KJN1742B"
+    "21KJN1187D",
+    "21KPR0477D"
    ],
    "distancia_escuela_m": 0,
+   "distancia_cauce_m": 96,
    "distancia_al_sitio_m": null,
    "banda_simulacion": null,
    "instalacion": "propuesta",
@@ -392,23 +412,27 @@
   {
    "c_estacion": "EST-LAD-05",
    "c_sitio": null,
-   "nombre": "Ladera de Bonillagco",
-   "municipio": "Xochitlán de Vicente Suárez",
+   "nombre": "Ladera de Buenavista Tetela",
+   "cuerpo_agua": "Cauce hacia Presa Manuel Avila Camacho (obra DE Toma)",
+   "municipio": "Puebla",
    "estado": "Puebla",
-   "latitud": 19.934205,
-   "longitud": -97.625876,
+   "latitud": 18.921891,
+   "longitud": -98.174159,
    "parametros": [
     "LLUVIA",
-    "HUM_SUELO"
+    "HUM_SUELO",
+    "INCL"
    ],
    "estado_dispositivo": "Activo",
-   "cct": "21DCC1196M",
-   "escuela": "Tierra y Libertad",
-   "localidad": "Bonillagco",
+   "cct": "21DPR1567T",
+   "escuela": "Profr. Rafael Ramirez",
+   "localidad": "Buenavista Tetela",
    "escuelas_protegidas": [
-    "21DCC1196M"
+    "21DJN1165I",
+    "21DPR1567T"
    ],
    "distancia_escuela_m": 0,
+   "distancia_cauce_m": 210,
    "distancia_al_sitio_m": null,
    "banda_simulacion": null,
    "instalacion": "propuesta",

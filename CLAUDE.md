@@ -268,11 +268,12 @@ backend (M5), panel de autoridad (M7), prototipo de app ciudadana (M8) y la red 
    `contrato/fixtures/mecanismos.json` (`EST-ESC-01..05` con `COL-ESC-01..05`); simulador y mapa ya los leen, y el motor y el
    mock los registran junto a las 5 del Atoyac. Pendiente: línea base de sus sitios CONAGUA (hoy ninguno está en
    `linea_base.json`: el motor solo los compara contra su historia reciente y el simulador usa `banda_simulacion`;
-   regenerarla pide los crudos F05); la Sierra Norte queda fuera hasta bajar su red del INEGI; ficha del colector
+   regenerarla pide los crudos F05). **Todos los mecanismos están en el Alto Atoyac** (`_comun.SUBCUENCAS_ALTO_ATOYAC`) y junto
+   a un cauce; `escuelas.json` incluye todas las escuelas del catálogo de esa zona. Ficha del colector
    (`dispositivo/ficha-colector.md`), D32 y propuesta de contrato para su paquete; costos (M10).
    **Módulo de ladera** construido en el simulador (`EST-LAD-01..05`) y **reglas de derrumbe en el motor** (`_ladera` en
    `motor/reglas.py`), con el umbral de humedad calibrado por el suelo de cada ladera (`scripts/103_suelo_laderas.py`,
-   SoilGrids, 46.5 a 57.7 %). Falta que el panel muestre esas escuelas (hoy filtra a la cuenca), calibrar en campo (muestra
+   SoilGrids, 43.5 a 49.9 %); la figura de ladera tiene un arroyo al pie del cerro que crece con la lluvia. Falta calibrar en campo (muestra
    gravimétrica al instalar y una temporada del sensor con `--serie`) y confirmar el umbral de saturación (0.9 es hipótesis).
 1. **Pendientes de la red nueva de estaciones** (fixtures regenerados con las 5 de docs/18):
    - correr `backend/prueba.py` (ya espera 0, 1, 5, 3 y 0 alertas; necesita el entorno del backend);

@@ -155,6 +155,11 @@ def main(argv):
     for m in modulos:
         ce = m['c_estacion']
         ruta = os.path.join(CRUDOS, 'soilgrids_{}.json'.format(ce))
+        if os.path.exists(ruta):                        # si la estación se movió, lo guardado es de otro punto
+            with open(ruta, encoding='utf-8') as f:
+                lon_g, lat_g = json.load(f)['geometry']['coordinates'][:2]
+            if abs(lon_g - m['longitud']) > 1e-4 or abs(lat_g - m['latitud']) > 1e-4:
+                os.remove(ruta)
         if not os.path.exists(ruta):
             if sin_red:
                 print('  {}: sin descarga (--sin-red)'.format(ce))

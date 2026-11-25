@@ -129,3 +129,90 @@ def serial_a_fecha(v):
     from pyxlsb import convert_date
     d = convert_date(n)
     return d.strftime('%Y-%m-%d') if d else ''
+
+
+# ----------------------------------------------------------------- geometría (mecanismos, docs/19 y docs/20)
+# La usan 97_escuelas_riesgo.py, 99_reubicacion.py y 100_escuelas_ladera.py. Distancias en plano local: bastan
+# a la escala de unos kilómetros.
+import json as _json
+import math as _math
+import os as _os
+
+_RAIZ = _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
+
+# El Alto Atoyac: las cuatro subcuencas del INEGI que drenan a la presa Manuel Ávila Camacho (Valsequillo). La cuenca
+# RH18A que dibuja el mapa es mucho mayor (llega a la Mixteca); el proyecto se centra en esta parte.
+SUBCUENCAS_ALTO_ATOYAC = ('RH18Ad', 'RH18Ai', 'RH18Aj', 'RH18Ac')   # Texmelucan, Zahuapan, Alseseca, Valsequillo
+_alto = None
+
+
+def metros(lat, lon, lat2, lon2):
+    kx = 111320 * _math.cos(_math.radians(lat))
+    return _math.hypot((lon2 - lon) * kx, (lat2 - lat) * 110540)
+
+
+def proyecta(lat, lon, a, b):
+    """Distancia del punto al segmento a-b ([lon, lat]) y el punto proyectado, en plano local."""
+    kx = 111320 * _math.cos(_math.radians(lat))
+    ax, ay = (a[0] - lon) * kx, (a[1] - lat) * 110540
+    bx, by = (b[0] - lon) * kx, (b[1] - lat) * 110540
+    dx, dy = bx - ax, by - ay
+    l2 = dx * dx + dy * dy
+    t = 0.0 if l2 == 0 else max(0.0, min(1.0, -(ax * dx + ay * dy) / l2))
+    px, py = ax + t * dx, ay + t * dy
+    return _math.hypot(px, py), [lon + px / kx, lat + py / 110540], t
+
+
+def lineas(geom):
+    return geom['coordinates'] if geom['type'] == 'MultiLineString' else [geom['coordinates']]
+
+
+def mas_cercano(lat, lon, tramos):
+    """tramos: [(coords, dato)]. Devuelve (distancia, punto, dato, metros del punto al final del tramo, coords)."""
+    mejor = None
+    for coords, dato in tramos:
+        for i in range(len(coords) - 1):
+            d, p, t = proyecta(lat, lon, coords[i], coords[i + 1])
+            if mejor is None or d < mejor[0]:
+                resto = (1 - t) * metros(coords[i][1], coords[i][0], coords[i + 1][1], coords[i + 1][0])
+                resto += sum(metros(coords[j][1], coords[j][0], coords[j + 1][1], coords[j + 1][0])
+                             for j in range(i + 1, len(coords) - 1))
+                mejor = (d, p, dato, resto, coords)
+    return mejor
+
+
+def tramos_de_cauces():
+    """Los cauces del INEGI: los de asignación (todos los órdenes, con su sitio CONAGUA aguas abajo) y los del mapa
+    (orden >= 4). [(coords, tramo o None)]."""
+    with open(_os.path.join(_RAIZ, 'datos', 'procesados', 'red', 'red_asignacion.json'), encoding='utf-8') as f:
+        asig = [(t['p'], t) for t in _json.load(f)['tramos']]
+    with open(_os.path.join(_RAIZ, 'datos', 'procesados', 'mapa', 'red_hidrografica.geojson'), encoding='utf-8') as f:
+        red = [(l, None) for ft in _json.load(f)['features'] for l in lineas(ft['geometry'])]
+    return asig, red
+
+
+def distancia_a_cauce(lat, lon, cauces):
+    asig, red = cauces
+    return min(m[0] for m in (mas_cercano(lat, lon, asig), mas_cercano(lat, lon, red)) if m)
+
+
+def en_alto_atoyac(lat, lon):
+    """True si el punto cae en una de las SUBCUENCAS_ALTO_ATOYAC (datos/procesados/mapa/subcuencas.geojson)."""
+    global _alto
+    if _alto is None:
+        with open(_os.path.join(_RAIZ, 'datos', 'procesados', 'mapa', 'subcuencas.geojson'), encoding='utf-8') as f:
+            _alto = []
+            for ft in _json.load(f)['features']:
+                if ft['properties']['clave'] in SUBCUENCAS_ALTO_ATOYAC:
+                    g = ft['geometry']
+                    _alto += [g['coordinates']] if g['type'] == 'Polygon' else g['coordinates']
+    for pol in _alto:
+        dentro, a = False, pol[0]
+        for i in range(len(a)):
+            x1, y1 = a[i - 1][:2]
+            x2, y2 = a[i][:2]
+            if (y1 > lat) != (y2 > lat) and lon < (x2 - x1) * (lat - y1) / (y2 - y1) + x1:
+                dentro = not dentro
+        if dentro:
+            return True
+    return False
