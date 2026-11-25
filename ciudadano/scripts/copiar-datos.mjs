@@ -37,6 +37,21 @@ function compactarRios() {
   return lineas.length;
 }
 
+// Las escuelas de interés (scripts/97_escuelas_riesgo.py) para dibujarlas en el mapa: OpenStreetMap casi no tiene las
+// rurales (de 503 solo traía 8). Solo lo que el mapa usa: CCT, nombre y coordenadas, ≈ 17 KB.
+function compactarEscuelas() {
+  const origen = join(RAIZ, 'contrato/fixtures/escuelas.json');
+  if (!existsSync(origen)) return false;
+  const e = JSON.parse(readFileSync(origen, 'utf8'));
+  const r5 = (v) => Math.round(v * 1e5) / 1e5;
+  writeFileSync(join(DESTINO, 'escuelas.json'), JSON.stringify({
+    type: 'FeatureCollection',
+    features: e.map((x) => ({ type: 'Feature', geometry: { type: 'Point', coordinates: [r5(x.longitud), r5(x.latitud)] },
+      properties: { cct: x.cct, nombre: x.nombre } })),
+  }));
+  return e.length;
+}
+
 mkdirSync(DESTINO, { recursive: true });
 let faltan = 0;
 for (const rel of ARCHIVOS) {
@@ -50,5 +65,6 @@ for (const rel of ARCHIVOS) {
 }
 const tramos = compactarRios();
 if (tramos === false) { console.error('Falta datos/procesados/mapa/red_hidrografica.geojson'); faltan++; }
+if (compactarEscuelas() === false) { console.error('Falta contrato/fixtures/escuelas.json'); faltan++; }
 if (faltan) process.exit(1);
 console.log('Datos de la app ciudadana copiados a public/datos/ (' + ARCHIVOS.length + ' archivos y ' + tramos + ' tramos de río).');

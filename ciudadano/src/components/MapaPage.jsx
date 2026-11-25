@@ -5,6 +5,7 @@ import FormularioReporte from './FormularioReporte.jsx';
 import FichaReporte from './FichaReporte.jsx';
 import Emergencia, { Telefono } from './Emergencia.jsx';
 import Alarma from './Alarma.jsx';
+import { modoAlarma, RADIO_M, suena } from '../lib/alarma.js';
 import { TerminosGate } from './Terminos.jsx';
 import { avisoAceptado } from '../lib/almacen.js';
 import { fotoDemo, getJSON } from '../lib/backend.js';
@@ -12,21 +13,12 @@ import { dentroDeArea, haversine, posicion, TEXTO_FUERA, textoErrorUbicacion } f
 
 const REFRESCO_MS = 60000;
 
-// Alarma de deslave: mientras la app está abierta, pide cada ALARMA_MS las alertas Críticas de ladera abiertas y suena
-// con las que no había visto, si su estación queda a menos de ALARMA_RADIO_M de la persona (su GPS o, sin él, el centro
-// del mapa). Lo que ya estaba abierto al abrir la app no suena. Se compara por folio, no por hora: el simulador corre
-// más rápido que el reloj y la hora de sus alertas no es la real. Con ?alarma=todas (se recuerda en este teléfono)
-// suena cualquiera, para la demostración. Sin la app abierta no suena: eso pediría notificaciones push.
-const ALARMA_MS = 10000;
-const ALARMA_RADIO_M = 5000;
-const CLAVE_ALARMA = 'atoyac.alarma';
-const alarmaTodas = () => {
-  try {
-    const q = new URLSearchParams(window.location.search).get('alarma');
-    if (q) localStorage.setItem(CLAVE_ALARMA, q);
-    return (q || localStorage.getItem(CLAVE_ALARMA)) === 'todas';
-  } catch { return false; }
-};
+// Alarma de deslave: mientras la app está abierta, pide cada ALARMA_MS las alertas de ladera abiertas y suena con las
+// que no había visto y que deben sonar (lib/alarma.js: el movimiento de la ladera desde su aviso, y lo Crítico), si su
+// estación queda cerca de la persona o si eligió «toda la cuenca». Lo que ya estaba abierto al abrir la app no suena.
+// Se compara por folio, no por hora: el simulador corre más rápido que el reloj y la hora de sus alertas no es la real.
+// Cada 3 s: entre el aviso y el derrumbe hay poco tiempo. Sin la app abierta no suena: eso pediría notificaciones push.
+const ALARMA_MS = 3000;
 
 // Preferencia de ver los ríos, solo de este teléfono. Si el navegador no deja guardar, se ven.
 const CLAVE_RIOS = 'atoyac.rios';
@@ -81,11 +73,11 @@ export default function MapaPage({ origen, datos, conectado, pendientes, setPend
   const vistas = useRef(null);                    // folios ya vistos; null hasta la primera consulta
   useEffect(() => {
     if (origen.modo !== 'api' || !datos) return undefined;
-    const todas = alarmaTodas();
     let vigente = true;
-    const revisar = () => getJSON(origen.url + '/alertas?nivel=Critica&abiertas=1&modulo=ladera').then((j) => {
+    const revisar = () => getJSON(origen.url + '/alertas?abiertas=1&modulo=ladera').then((j) => {
       if (!vigente) return;
-      const lista = j.alertas || [];
+      const todas = modoAlarma() === 'todas';     // se lee cada vez: el interruptor de Emergencia la cambia
+      const lista = (j.alertas || []).filter(suena);
       if (vistas.current === null) { vistas.current = new Set(lista.map((a) => a.c_alerta)); return; }
       const nuevas = lista.filter((a) => !vistas.current.has(a.c_alerta));
       nuevas.forEach((a) => vistas.current.add(a.c_alerta));
@@ -93,10 +85,11 @@ export default function MapaPage({ origen, datos, conectado, pendientes, setPend
       const cerca = nuevas.filter((a) => {
         const e = datos.estaciones && datos.estaciones[a.c_estacion];
         if (todas) return true;
-        return e && yo && haversine(yo.lat, yo.lon, e.latitud, e.longitud) <= ALARMA_RADIO_M;
+        return e && yo && haversine(yo.lat, yo.lon, e.latitud, e.longitud) <= RADIO_M;
       });
       if (cerca.length) {
-        const a = cerca[cerca.length - 1];
+        // Si llegan varias juntas, la más grave: que la ladera cedió pesa más que el aviso de movimiento
+        const a = cerca.find((x) => x.nivel === 'Critica') || cerca[cerca.length - 1];
         setAlarma({ alerta: a, estacion: datos.estaciones && datos.estaciones[a.c_estacion], recibida: new Date() });
       }
     }).catch(() => {});
@@ -191,7 +184,7 @@ export default function MapaPage({ origen, datos, conectado, pendientes, setPend
           onClose={() => setHoja(null)} onEnviado={() => { setTick((n) => n + 1); setRecienEnviado(true); }} onPendiente={() => setPendientes((n) => n + 1)} ir={ir} />
       )}
       {alarma && <Alarma {...alarma} onVer={verAlarma} onClose={() => setAlarma(null)} />}
-      {hoja && hoja.tipo === 'emergencia' && <Emergencia punto={punto} onClose={() => setHoja(null)} />}
+      {hoja && hoja.tipo === 'emergencia' && <Emergencia punto={punto} onClose={() => setHoja(null)} alarmaActiva={origen.modo === 'api'} />}
       {hoja && hoja.tipo === 'reporte' && <FichaReporte reporte={hoja.reporte} onClose={() => setHoja(null)} />}
     </div>
   );

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { guardarModoAlarma, modoAlarma } from '../lib/alarma.js';
 import BottomSheet from './BottomSheet.jsx';
 
 // Números de emergencia. La app NO avisa a nadie por su cuenta: nadie la atiende las 24 horas. Esta hoja solo marca.
@@ -18,7 +19,9 @@ const Telefono = () => (
 
 export { Telefono };
 
-export default function Emergencia({ punto, onClose }) {
+export default function Emergencia({ punto, onClose, alarmaActiva = false }) {
+  const [modo, setModo] = useState(modoAlarma);
+  const elegir = (v) => { guardarModoAlarma(v); setModo(v); };
   return (
     <BottomSheet titulo="Emergencia" onClose={onClose}>
       <div className="emergencia">
@@ -37,6 +40,13 @@ export default function Emergencia({ punto, onClose }) {
           </p>
         )}
         <p className="emergencia__nota">Esta app no avisa a emergencias por su cuenta. Si hay personas en riesgo, llama.</p>
+        {alarmaActiva && (
+          <fieldset className="emergencia__avisos">
+            <legend>Avisos de deslave con la app abierta</legend>
+            <label><input type="radio" name="modo-alarma" checked={modo === 'cerca'} onChange={() => elegir('cerca')} /> Cerca de mí (5 km)</label>
+            <label><input type="radio" name="modo-alarma" checked={modo === 'todas'} onChange={() => elegir('todas')} /> En toda la cuenca</label>
+          </fieldset>
+        )}
       </div>
     </BottomSheet>
   );

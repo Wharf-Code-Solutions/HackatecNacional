@@ -13,7 +13,7 @@ export default function NavBar({ pantalla, ir }) {
       <div className="navbar-izq">
         <img src="https://framework-gb.cdn.gob.mx/landing/img/logoheader.svg" alt="Gobierno de México" className="navbar-logo" />
         <div className="navbar-divisor" />
-        <span className="navbar-titulo">Río Atoyac</span>
+        <span className="navbar-titulo">CENTINELA</span>
       </div>
       <nav className="navbar-links" aria-label="Navegación principal">
         {(LINKS[pantalla] || LINKS.mapa).map(([p, texto, title]) => (

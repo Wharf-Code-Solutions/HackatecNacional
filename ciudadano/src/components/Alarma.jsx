@@ -37,17 +37,24 @@ export default function Alarma({ alerta, estacion, recibida, onVer, onClose }) {
 
   const escuela = (estacion && estacion.escuela) || 'una escuela cercana';
   const lugar = estacion ? [estacion.localidad, estacion.municipio].filter(Boolean).join(', ') : '';
-  const que = alerta.regla === 'movimiento_ladera' ? 'La ladera se movió'
-    : alerta.regla === 'lluvia_acumulada' ? 'Lluvia peligrosa para la ladera' : 'Suelo saturado en la ladera';
+  // El aviso cambia con lo que pasó: la ladera empieza a moverse (da tiempo de salir), cedió, o la lluvia o el suelo
+  // llegaron a su nivel crítico.
+  const moviendo = alerta.regla === 'movimiento_ladera' && alerta.nivel === 'Preventiva';
+  const cedio = alerta.regla === 'movimiento_ladera' && alerta.nivel === 'Critica';
+  const titulo = moviendo ? 'La ladera empezó a moverse' : cedio ? 'Deslave' : 'Riesgo de deslave';
+  const que = moviendo ? 'El sensor de la ladera detectó movimiento junto a'
+    : cedio ? 'La ladera cedió junto a'
+      : alerta.regla === 'lluvia_acumulada' ? 'Llovió lo suficiente para mover la ladera junto a' : 'El suelo de la ladera está saturado junto a';
+  const indica = moviendo ? 'Prepárate para salir: aléjate de la ladera y de los cauces y sigue las indicaciones de Protección Civil.'
+    : 'Aléjate de la ladera y de los cauces, y sigue las indicaciones de Protección Civil.';
 
   return (
     <div className="alarma" role="alertdialog" aria-modal="true" aria-labelledby="alarma-titulo" aria-describedby="alarma-texto">
       <div className="alarma__caja">
         <p className="alarma__marca">Aviso de riesgo · {hora(recibida)}</p>
-        <h2 id="alarma-titulo">Riesgo de deslave</h2>
+        <h2 id="alarma-titulo">{titulo}</h2>
         <p id="alarma-texto" className="alarma__texto">
-          {que} junto a <strong>{escuela}</strong>{lugar ? ' (' + lugar + ')' : ''}. Aléjate de la ladera y de los
-          cauces, y sigue las indicaciones de Protección Civil.
+          {que} <strong>{escuela}</strong>{lugar ? ' (' + lugar + ')' : ''}. {indica}
         </p>
         <div className="alarma__acciones">
           {NUMEROS.map((n) => (

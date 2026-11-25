@@ -27,7 +27,8 @@ const BASE = import.meta.env.BASE_URL;
 const CAPAS_RIOS = ['rios', 'rios-flujo', 'rios3', 'rios3-flujo'];
 const esCauceBase = (c) => c.type === 'line' && c['source-layer'] === 'waterway';
 // Rótulos de la base que se amontonan con los ríos sin ayudar a ubicar el cauce: comercios, paradas de
-// transporte, números de casa y aeropuertos. Se quedan calles, colonias, localidades y nombres de agua.
+// transporte, números de casa y aeropuertos. Se quedan calles, colonias, localidades y nombres de agua. Escuelas y
+// hospitales vuelven con su propia capa (ponerEstablecimientos).
 // (source-layer de OpenMapTiles y de Mapbox Streets)
 const ROTULOS_FUERA = new Set(['poi', 'poi_label', 'housenumber', 'transit_stop_label', 'aerodrome_label', 'airport_label']);
 
@@ -69,12 +70,66 @@ function imagenFlujo(m, quieto) {
   };
 }
 
+// Escuelas y hospitales: de los lugares de la base son los únicos que vuelven, porque el proyecto gira alrededor de las
+// escuelas y un hospital es a dónde se va en una emergencia. Se dibujan aparte (círculo con «E» o «H», y el nombre al
+// acercar) para no traer de vuelta comercios y paradas. Funciona con las dos bases: OpenMapTiles (capa `poi`, campo
+// `class`) y Mapbox Streets (capa `poi_label`, campo `maki`).
+const ZOOM_LUGARES = 13;
+const ZOOM_NOMBRES = 15;
+const ZOOM_ESCUELAS = 11;      // las de interés, antes que las de la base: son pocas y están dispersas
+function ponerLugaresBase(m, poi, fuentes) {
+  const mapbox = poi['source-layer'] === 'poi_label';
+  const campo = ['get', mapbox ? 'maki' : 'class'];
+  const escuela = ['match', campo, ['school', 'college', 'kindergarten'], true, false];
+  const hospital = ['match', campo, mapbox ? ['hospital'] : ['hospital', 'clinic'], true, false];
+  const fuente = { source: poi.source, 'source-layer': poi['source-layer'], minzoom: ZOOM_LUGARES };
+  const filtro = ['any', escuela, hospital];
+  m.addLayer({ id: 'lugares-punto', type: 'circle', ...fuente, filter: filtro,
+    paint: { 'circle-radius': ['interpolate', ['linear'], ['zoom'], ZOOM_LUGARES, 6, 17, 9],
+      'circle-color': ['case', hospital, '#9D2449', '#13322E'], 'circle-stroke-color': '#fff', 'circle-stroke-width': 1.5 } });
+  m.addLayer({ id: 'lugares-letra', type: 'symbol', ...fuente, filter: filtro,
+    layout: { 'text-field': ['case', hospital, 'H', 'E'], 'text-font': fuentes, 'text-size': ['interpolate', ['linear'], ['zoom'], ZOOM_LUGARES, 8, 17, 11],
+      'text-allow-overlap': true, 'text-ignore-placement': true },
+    paint: { 'text-color': '#fff' } });
+  m.addLayer({ id: 'lugares-nombre', type: 'symbol', ...fuente, minzoom: ZOOM_NOMBRES, filter: filtro,
+    layout: { 'text-field': ['coalesce', ['get', 'name:es'], ['get', 'name']], 'text-font': fuentes, 'text-size': 12,
+      'text-anchor': 'top', 'text-offset': [0, 0.9], 'text-max-width': 9, 'text-optional': true },
+    paint: { 'text-color': '#13322E', 'text-halo-color': '#fff', 'text-halo-width': 1.6 } });
+
+}
+
+function ponerEstablecimientos(m) {
+  const capas = m.getStyle().layers;
+  const poi = capas.find((c) => c['source-layer'] === 'poi' || c['source-layer'] === 'poi_label');
+  if (m.getLayer('escuelas-punto')) return;
+  const letra = (capas.find((c) => c.type === 'symbol' && c.layout && c.layout['text-font']) || {}).layout;
+  const fuentes = (letra && letra['text-font']) || ['Noto Sans Regular'];
+  if (poi) ponerLugaresBase(m, poi, fuentes);
+
+  // Las escuelas de interés del proyecto, de nuestros datos (catálogo SEP), con la misma «E»: OpenStreetMap casi no tiene
+  // las rurales. Encima de las de la base; si una está en las dos, coinciden casi en el mismo punto.
+  m.addSource('escuelas', { type: 'geojson', data: BASE + 'datos/escuelas.json' });
+  const propia = { source: 'escuelas', minzoom: ZOOM_ESCUELAS };
+  m.addLayer({ id: 'escuelas-punto', type: 'circle', ...propia,
+    paint: { 'circle-radius': ['interpolate', ['linear'], ['zoom'], ZOOM_ESCUELAS, 5, 17, 9], 'circle-color': '#13322E',
+      'circle-stroke-color': '#fff', 'circle-stroke-width': 1.5 } });
+  m.addLayer({ id: 'escuelas-letra', type: 'symbol', ...propia,
+    layout: { 'text-field': 'E', 'text-font': fuentes, 'text-size': ['interpolate', ['linear'], ['zoom'], ZOOM_ESCUELAS, 7, 17, 11],
+      'text-allow-overlap': true, 'text-ignore-placement': true },
+    paint: { 'text-color': '#fff' } });
+  m.addLayer({ id: 'escuelas-nombre', type: 'symbol', source: 'escuelas', minzoom: ZOOM_NOMBRES,
+    layout: { 'text-field': ['get', 'nombre'], 'text-font': fuentes, 'text-size': 12, 'text-anchor': 'top',
+      'text-offset': [0, 0.9], 'text-max-width': 9, 'text-optional': true },
+    paint: { 'text-color': '#13322E', 'text-halo-color': '#fff', 'text-halo-width': 1.6 } });
+}
+
 function ponerRios(m, visibles) {
   // Los cauces de la base se apagan mientras se ven los nuestros (sus nombres se quedan): dos trazos del
   // mismo río no coinciden.
   for (const capa of m.getStyle().layers) {
     if (capa.type === 'symbol' && ROTULOS_FUERA.has(capa['source-layer'])) m.setLayoutProperty(capa.id, 'visibility', 'none');
   }
+  ponerEstablecimientos(m);
   mostrarRios(m, visibles());
   // Debajo de los rótulos de la base; la huella y los pines quedan encima.
   const antes = (m.getStyle().layers.find((c) => c.type === 'symbol') || {}).id;

@@ -166,3 +166,31 @@ ajusta con una muestra gravimétrica al instalar y con una temporada del sensor 
 - Los umbrales y los modelos de humedad e inclinación son **hipótesis declaradas** hasta que haya datos de campo.
 - No hay datos reales de humedad del suelo ni de inclinación en estas laderas: esa ausencia es, como la de calidad del
   agua, la razón de instalar el mecanismo.
+
+## 8. Ritmo del deslave en la demostración (pendiente de M4, para que lo revise Manuel)
+
+> Agregado el 25 de noviembre de 2026 por el módulo C. **No está implementado en el simulador**: es una propuesta.
+
+La app ciudadana suena con la alerta **Preventiva de movimiento de la ladera** (la estaca pasa 0.5°) y vuelve a sonar con
+la **Crítica** (la ladera cede); consulta cada 3 s (`ciudadano/src/lib/alarma.js`, `MapaPage.jsx`). En el escenario del
+simulador (`modelo.js`, prueba `deslave`) la estaca repta de 0.1° a 0.6° entre las 10.5 h y las 13 h simuladas, pasa
+0.5° hacia las **12.5 h** y salta a 3.8° a las **13 h**: hay **30 minutos simulados** entre el aviso y el derrumbe.
+
+**El problema.** `ui.js` fuerza 3 600× al lanzar el deslave: esos 30 minutos duran medio segundo real, así que en pantalla
+la alarma del celular llega al mismo tiempo o después del derrumbe, aunque el sistema sí avise antes.
+
+**La propuesta.** Al lanzar «Deslave», 3 600× hasta las **12 h** simuladas y **180×** de ahí al derrumbe; después del
+salto, de vuelta a la velocidad de antes. Con eso, desde el clic:
+
+| Momento | Tiempo real desde el clic |
+|---|---|
+| Lluvias y suelo saturándose (3 600×) | 0 a 12 s |
+| La estaca repta (180×) | 12 a 22 s |
+| Suena el celular: «La ladera empezó a moverse» | ≈ 22 a 25 s |
+| La ladera cede; vuelve a sonar: «Deslave» | ≈ 32 s |
+
+Unos **10 segundos de aviso visibles** y el deslave completo en ≈ 32 s, dentro del minuto y medio que hay para el
+simulador en la presentación. Alternativas: 120× da ≈ 15 s de aviso (deslave de ≈ 45 s); 300× da ≈ 6 s (≈ 25 s).
+
+Dónde: `dispositivo/simulador/ui.js`, donde hoy se sube a 3 600× para el deslave (`b.dataset.ev === 'deslave'`), cambiar
+la velocidad según el reloj simulado. No toca firmware, modelo ni contrato.
