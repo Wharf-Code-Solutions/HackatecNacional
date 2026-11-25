@@ -21,6 +21,20 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-25 · Módulo B: por qué cada mecanismo está donde está
+
+**Qué cambió.** El mapa de Escuelas muestra los 10 mecanismos (numeración de `mapa/`) y una línea punteada a cada
+escuela que protegen (43). La ficha de la escuela y la tabla de Autorizaciones dicen por qué se eligió cada mecanismo
+(lugar por riesgo de contaminación o de derrumbe, distancia al cauce); la ficha de una escuela sin mecanismo explica el
+criterio, su lugar en cada riesgo y, si está entre las primeras, que no cumple otra condición. `porQueMecanismo` y
+`porQueSinMecanismo` en `contexto.js` usan las cifras de `99_reubicacion.py` y `100_escuelas_ladera.py` (5 y 5; 2.5 km,
+3 km, 500 m, 5 km).
+**Por qué.** Petición del usuario: entender cómo se proponen los mecanismos y por qué una escuela tiene o no uno.
+**Qué arrastró.** `contexto.js`, `FichaEscuela.jsx`, `Autorizaciones.jsx`, `Escuelas.jsx`, `MapaEstaciones.jsx`, `estilos.css`.
+**Impacto en otros módulos.** A: si cambian esas cifras en los scripts, hay que cambiarlas en `contexto.js`.
+
+---
+
 ## 2026-11-25 · M5 y módulo B: registrar autorizaciones desde el panel
 
 **Qué cambió.** Backend: tabla `autorizacion` (SQLite y Postgres, con RLS), `GET /autorizaciones` y `PATCH

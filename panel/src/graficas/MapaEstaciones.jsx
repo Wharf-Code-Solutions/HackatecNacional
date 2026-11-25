@@ -26,7 +26,7 @@ const FUENTE_TXT = { red_publica: 'red pública', pozo: 'pozo', manantial: 'mana
 const COLOR_ZONA = { derrumbe: '#8a6a3c', inundacion: '#1d6fa5', contaminacion: '#5f6b3a' };
 const TIPO_ZONA = { derrumbe: 'Derrumbe', inundacion: 'Inundación', contaminacion: 'Contaminación' };
 
-export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir, escuelas = [], onElegirEscuela, zonas = null, escuelaElegida = null, mecanismos = null }) {
+export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir, escuelas = [], onElegirEscuela, zonas = null, escuelaElegida = null, mecanismos = null, proteccion = false }) {
   const caja = useRef(null);
   const mapa = useRef(null);
   const marcas = useRef({});
@@ -218,6 +218,18 @@ export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir,
           m.addLayer({ id: 'rios_mecanismos', type: 'line', source: 'rios_mecanismos', filter: ['==', ['get', 'conexion'], true],
             layout: { 'line-cap': 'round', 'line-join': 'round' },
             paint: { 'line-color': AGUA, 'line-opacity': 0.95, 'line-width': ['interpolate', ['linear'], ['zoom'], 7, 0.6, 10, 1.1, 13, 1.8] } });
+        }
+
+        // Escuelas: una línea fina de cada mecanismo a cada escuela que protege (solo las que el mapa muestra).
+        if (proteccion && mecs.length) {
+          const porCct = Object.fromEntries(conCoord.map((e) => [e.cct, e]));
+          const lineas = mecs.flatMap((x) => (x.escuelas_protegidas || []).filter((c) => porCct[c]).map((c) => ({
+            type: 'Feature', properties: { ladera: (x.parametros || []).includes('LLUVIA') },
+            geometry: { type: 'LineString', coordinates: [[x.longitud, x.latitud], [porCct[c].longitud, porCct[c].latitud]] } })));
+          m.addSource('proteccion', { type: 'geojson', data: { type: 'FeatureCollection', features: lineas } });
+          m.addLayer({ id: 'proteccion', type: 'line', source: 'proteccion', layout: { 'line-cap': 'round' },
+            paint: { 'line-color': TINTA, 'line-width': ['interpolate', ['linear'], ['zoom'], 8, 1, 13, 2], 'line-opacity': 0.55,
+              'line-dasharray': [2, 2] } }, 'escuelas');
         }
 
         // Estaciones: el marcador de mapa/ (numero en circulo negro, nombre al acercarse, pulso de radar con una

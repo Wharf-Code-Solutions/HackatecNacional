@@ -35,7 +35,7 @@ function CeldaTramite({ objeto, t, registrar }) {
 
 export default function Autorizaciones({ escuelas, mecanismos = {}, onElegirEscuela, registrar, demo }) {
   const mecs = Object.values(mecanismos).sort((a, b) => a.c_estacion.localeCompare(b.c_estacion));
-  const { mecanismoActivo: activo } = useDatos();
+  const { mecanismoActivo: activo, porQueMecanismo } = useDatos();
   const nActivos = mecs.filter(activo).length;
 
   // Todos los trámites: los de los mecanismos y los de las escuelas.
@@ -103,6 +103,7 @@ export default function Autorizaciones({ escuelas, mecanismos = {}, onElegirEscu
                           ? <button className="enlace" onClick={() => onElegirEscuela(m.cct)}>{m.escuela || m.cct}</button>
                           : (m.escuela || m.cct || 'sin dato')}
                         <br /><span className="tenue">protege {n} {n === 1 ? 'escuela' : 'escuelas'}</span>
+                        <span className="por-que por-que-tabla">{porQueMecanismo(m)}</span>
                       </td>
                       <td>{activo(m) ? 'Activo' : 'Propuesto'}</td>
                       <td><CeldaTramite objeto={m.c_estacion} t={ce} registrar={registrar} /></td>

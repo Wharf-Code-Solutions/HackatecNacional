@@ -26,7 +26,7 @@ const nombreFactor = (k) => FACTOR[k] || inicial(k.replace(/_/g, ' '));
 const tramite = (t) => inicial((t || '').replace(/_/g, ' '));
 
 export default function FichaEscuela({ escuela: e, alertas, zonas }) {
-  const { mecanismosDe, mecanismoActivo } = useDatos();
+  const { mecanismosDe, mecanismoActivo, porQueMecanismo, porQueSinMecanismo } = useDatos();
   if (!e) {
     return (
       <article className="expediente" aria-label="Ficha de la escuela">
@@ -89,6 +89,13 @@ export default function FichaEscuela({ escuela: e, alertas, zonas }) {
             + (mecanismoActivo(m) ? ' · activo' : ' · propuesto')).join('; ') : 'Ninguno cerca'}</dd>
           {mecs.length > 0 && <><dt>Alertas por atender</dt><dd>{abiertas.length} de {suyas.length}</dd></>}
         </dl>
+        {mecs.map((m) => (
+          <p key={m.c_estacion} className="por-que">
+            <b>Por qué {m.c_estacion}{m.cct === e.cct ? ' está aquí' : ' la protege'}:</b>{' '}
+            {m.cct === e.cct ? porQueMecanismo(m) : 'su estación queda junto a ' + (m.escuela || m.cct) + ' y cubre a las escuelas vecinas. ' + porQueMecanismo(m)}
+          </p>
+        ))}
+        {!mecs.length && <p className="por-que"><b>Por qué no tiene mecanismo:</b> {porQueSinMecanismo(e)}</p>}
       </section>
 
       {mecs.length > 0 && (

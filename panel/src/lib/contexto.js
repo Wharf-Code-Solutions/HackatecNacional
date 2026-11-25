@@ -87,5 +87,41 @@ export function ayudantes(fijos) {
     const v = cp === 'INCL' ? Math.abs(valor) : valor;
     return umbralesDe(c, cp, 24).filter((u) => v >= u.valor).length;
   };
-  return { ...fijos, nombreEstacion, banda, unidad, escuelasDe, estacionDe, umbralesDe, mecanismosDe, mecanismoActivo, todas, nivelLadera };
+  // Por qué un mecanismo está donde está y por qué una escuela no tiene uno. Mismo criterio que los scripts del
+  // módulo A (scripts/99_reubicacion.py y 100_escuelas_ladera.py); si allá cambian las cifras, cambiarlas aquí.
+  const CRITERIO_MEC = { agua: { n: 5, cauce_m: 2500, separacion_m: 3000 }, ladera: { n: 5, cauce_m: 500, separacion_m: 5000 } };
+  const lugarEn = (cct, campo) => {
+    const orden = escuelas.filter((e) => e.riesgo && e.riesgo[campo] != null)
+      .sort((a, b) => b.riesgo[campo] - a.riesgo[campo]).map((e) => e.cct);
+    const i = orden.indexOf(cct);
+    return i < 0 ? null : { lugar: i + 1, de: orden.length };
+  };
+  const esLadera = (m) => (m.parametros || []).includes('LLUVIA');
+  const n2 = (x) => (x == null ? 'sin dato' : Number(x).toFixed(2));
+  const porQueMecanismo = (m) => {
+    const e = porCct[m.cct];
+    if (esLadera(m)) {
+      const l = lugarEn(m.cct, 'derrumbe');
+      return 'Elegida por riesgo de derrumbe ' + n2(e && e.riesgo && e.riesgo.derrumbe) + (l ? ' (' + l.lugar + '.º de ' + l.de + ')' : '') +
+        ', con laderas de susceptibilidad alta según CENAPRED y un cauce a ' + (m.distancia_cauce_m != null ? m.distancia_cauce_m + ' m' : 'menos de 500 m') +
+        ' que puede socavar su pie. El módulo va en la escuela.';
+    }
+    const l = lugarEn(m.cct, 'contaminacion');
+    return 'Elegida por riesgo de contaminación ' + n2(e && e.riesgo && e.riesgo.contaminacion) + (l ? ' (' + l.lugar + '.º de ' + l.de + ')' : '') +
+      '. La estación va en el cauce más cercano, a ' + (m.distancia_escuela_m != null ? m.distancia_escuela_m + ' m' : 'menos de 2.5 km') +
+      ' de la escuela, y protege también a las escuelas vecinas sobre ese cauce.';
+  };
+  const porQueSinMecanismo = (e) => {
+    const c = lugarEn(e.cct, 'contaminacion'), d = lugarEn(e.cct, 'derrumbe');
+    const A = CRITERIO_MEC.agua, L = CRITERIO_MEC.ladera;
+    return 'Se proponen ' + A.n + ' mecanismos de agua para las escuelas con más riesgo de contaminación que tienen un cauce a menos de ' +
+      (A.cauce_m / 1000) + ' km, a más de ' + (A.separacion_m / 1000) + ' km entre sí' + (c ? '; esta es la ' + c.lugar + '.ª de ' + c.de + ' por ese riesgo' : '') +
+      '. Y ' + L.n + ' de ladera para las de más riesgo de derrumbe con laderas susceptibles (CENAPRED) y un cauce a menos de ' + L.cauce_m + ' m' +
+      (d ? '; es la ' + d.lugar + '.ª por derrumbe' : '') + '. El presupuesto es de ' + (A.n + L.n) + ' mecanismos.' +
+      ((c && c.lugar <= A.n) || (d && d.lugar <= L.n)
+        ? ' Aunque está entre las primeras por riesgo, no cumple alguna otra condición (cauce cerca, laderas susceptibles) o queda demasiado cerca de otro mecanismo.'
+        : '');
+  };
+  return { ...fijos, nombreEstacion, banda, unidad, escuelasDe, estacionDe, umbralesDe, mecanismosDe, mecanismoActivo, todas, nivelLadera,
+    porQueMecanismo, porQueSinMecanismo };
 }
