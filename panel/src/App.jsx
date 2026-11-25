@@ -48,6 +48,7 @@ export default function App() {
   const [seccion, setSeccion] = useState('monitoreo');
   const [vista, setVista] = useState('alertas');
   const [sel, setSel] = useState(null);
+  const [escuelaSel, setEscuelaSel] = useState(null);
   const [filtros, setFiltros] = useState({ estado: 'activas', nivel: 'todos', estacion: 'todas' });
 
   const demo = be.origen.modo === 'demo';
@@ -144,6 +145,7 @@ export default function App() {
                 {/* El mapa de la red marca también las escuelas de escuelas.json (docs/19 §6, punto 6). */}
                 <Panorama parte="mapa" alertas={be.alertas} veredictos={be.veredictos} corte={corte} elegida={filtros.estacion}
                   escuelas={ctx.escuelas}
+                  onElegirEscuela={(cct) => { setEscuelaSel(cct); setSeccion('escuelas'); window.scrollTo(0, 0); }}
                   onElegir={(c) => setFiltros({ ...filtros, estacion: filtros.estacion === c ? 'todas' : c })} />
                 <TablaEstaciones alertas={be.alertas} veredictos={be.veredictos} elegida={filtros.estacion}
                   onElegir={(c) => setFiltros({ ...filtros, estacion: c })} />
@@ -157,7 +159,7 @@ export default function App() {
               </section>
             )}
             {seccion === 'monitoreo' && vista === 'avisos' && <Avisos veredictos={be.veredictos} conectado={be.conectado} />}
-            {seccion === 'escuelas' && <Escuelas escuelas={ctx.escuelas} />}
+            {seccion === 'escuelas' && <Escuelas escuelas={ctx.escuelas} alertas={be.alertas} zonas={ctx.zonas} sel={escuelaSel} onElegir={setEscuelaSel} />}
             {seccion === 'autorizaciones' && <Autorizaciones escuelas={ctx.escuelas} />}
             {seccion === 'reportes' && (
               <Reportes reportes={be.reportes} prioridades={be.prioridades} huella={be.huella} conectado={be.conectado}

@@ -20,7 +20,7 @@ const RIESGO_TXT = { muy_alto: 'muy alto', alto: 'alto', medio: 'medio', bajo: '
 const FUENTE_TXT = { red_publica: 'red pública', pozo: 'pozo', manantial: 'manantial', rio: 'río', pipa: 'pipa',
   captacion_lluvia: 'captación de lluvia', desconocida: 'sin dato' };
 
-export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir, escuelas = [] }) {
+export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir, escuelas = [], onElegirEscuela }) {
   const caja = useRef(null);
   const mapa = useRef(null);
   const marcas = useRef({});
@@ -28,6 +28,8 @@ export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir,
   const [falla, setFalla] = useState(false);
   const alElegir = useRef(onElegir);
   alElegir.current = onElegir;
+  const alElegirEsc = useRef(onElegirEscuela);
+  alElegirEsc.current = onElegirEscuela;
 
   useEffect(() => {
     let vivo = true;
@@ -129,7 +131,7 @@ export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir,
           const html = (g.length > 1 ? '<b>' + g.length + ' escuelas en ' + lugar + '</b><br><br>' : '') +
             g.map(fila).join('<br><br>') + (g.length > 1 ? '' : '<br>' + lugar);
           return { type: 'Feature', geometry: { type: 'Point', coordinates: [g[0].longitud, g[0].latitud] },
-            properties: { n: g.length, riesgo, html } };
+            properties: { n: g.length, riesgo, html, cct: g[0].cct } };
         });
         m.addSource('escuelas', { type: 'geojson', data: { type: 'FeatureCollection', features: puntosEsc } });
         m.addLayer({ id: 'escuelas', type: 'circle', source: 'escuelas',
@@ -151,7 +153,9 @@ export default function MapaEstaciones({ estaciones, alertas, elegida, onElegir,
           m.on('mousemove', capa, (e) => { m.getCanvas().style.cursor = 'pointer'; pop.setLngLat(e.lngLat).setHTML(html(e.features[0].properties)).addTo(m); });
           m.on('mouseleave', capa, () => { m.getCanvas().style.cursor = ''; pop.remove(); });
         };
-        emergente('escuelas', (p) => p.html);
+        emergente('escuelas', (p) => p.html + '<br><span style="color:#767676">Clic para abrir su ficha</span>');
+        // Un clic abre la ficha de la escuela (la de mayor riesgo si el punto agrupa varias).
+        m.on('click', 'escuelas', (e) => { const f = e.features[0]; if (f && alElegirEsc.current) alElegirEsc.current(f.properties.cct); });
         emergente('confluencias', (p) => '<b>Confluencia</b><br>' + p.detalle + '<br>Red aguas arriba: ' +
           miles(p.km_red_principal) + ' y ' + miles(p.km_red_afluente) + ' km');
 

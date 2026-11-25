@@ -21,6 +21,18 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Módulo B: ficha de escuela
+
+**Qué cambió.** `FichaEscuela.jsx` (nuevo): encabezado, índice y subíndices, desglose del riesgo en barras (suma el
+índice; pesos hipótesis), fuente de agua, mecanismo ("propuesto" sin autorización otorgada de CEASPUE), alertas de su
+mecanismo, zonas de riesgo que la contienen y trámites. La pestaña Escuelas pone lista y ficha lado a lado; un clic en
+una escuela del mapa de Alertas abre su ficha.
+**Por qué.** Paso 3 del módulo B (docs/19 §6, punto 2).
+**Qué arrastró.** `Escuelas.jsx`, `App.jsx`, `Panorama.jsx`, `MapaEstaciones.jsx`, `estilos.css`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
 ## 2026-11-24 · Módulo A: historia de lluvia y 7 puntos más (contraste Sierra Norte, cuenca y ciudad)
 
 **Qué cambió.** `101_lluvia_sitios.py` escribe ahora `lluvia_historia.json`: por punto, cuántos episodios de lluvia pasaron cada

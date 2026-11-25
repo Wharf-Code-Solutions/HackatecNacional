@@ -1,15 +1,12 @@
 import { useState } from 'react';
 import { inicial, num } from '../lib/formato.js';
 import BarrasH from '../graficas/BarrasH.jsx';
+import FichaEscuela, { COLOR_RIESGO, FUENTE_AGUA, NIVEL_RIESGO } from './FichaEscuela.jsx';
 
 // Vista de escuelas (docs/19 §6, punto 1): cuántas hay por nivel de riesgo, por tipo y por municipio,
 // y la lista ordenada por índice. Todo sale de escuelas.json ya filtrado a la cuenca (lib/datos.js).
 // Los colores son los mismos del mapa: guinda más oscuro cuanto mayor el riesgo.
 export const NIVELES_RIESGO = ['muy_alto', 'alto', 'medio', 'bajo'];
-export const NIVEL_RIESGO = { muy_alto: 'Muy alto', alto: 'Alto', medio: 'Medio', bajo: 'Bajo' };
-export const COLOR_RIESGO = { muy_alto: '#5c0f24', alto: '#9D2449', medio: '#c56a87', bajo: '#e3a9ba' };
-export const FUENTE_AGUA = { red_publica: 'Red pública', pozo: 'Pozo', manantial: 'Manantial', rio: 'Río', pipa: 'Pipa',
-  captacion_lluvia: 'Captación de lluvia', desconocida: 'Sin dato' };
 const TIPO = { derrumbe: 'Derrumbe', contaminacion: 'Contaminación' };
 
 const r = (e) => e.riesgo || {};
@@ -43,7 +40,7 @@ function Tarjeta({ titulo, subtitulo, ancha, children }) {
   );
 }
 
-export default function Escuelas({ escuelas }) {
+export default function Escuelas({ escuelas, alertas, zonas, sel, onElegir }) {
   const [filtro, setFiltro] = useState({ nivel: 'todos', tipo: 'todos', municipio: 'todos' });
   const total = escuelas.length;
   const altas = escuelas.filter((e) => ['alto', 'muy_alto'].includes(r(e).nivel)).length;
@@ -77,6 +74,14 @@ export default function Escuelas({ escuelas }) {
     .sort((a, b) => (r(b).indice || 0) - (r(a).indice || 0));
   const cambia = (k) => (ev) => setFiltro({ ...filtro, [k]: ev.target.value });
   const nombreNivel = (k) => NIVEL_RIESGO[k] || 'Sin dato';
+  const elegida = escuelas.find((e) => e.cct === sel) || null;
+  const elegir = (cct) => {
+    onElegir(cct);
+    // En teléfono la ficha va debajo de la lista.
+    if (window.matchMedia('(max-width: 1000px)').matches) {
+      setTimeout(() => document.getElementById('ficha-escuela')?.scrollIntoView(), 0);
+    }
+  };
 
   return (
     <section className="vista">
@@ -98,55 +103,49 @@ export default function Escuelas({ escuelas }) {
         </Tarjeta>
       </div>
 
-      <figure className="tarjeta ancha">
-        <h2 className="titulo-seccion">Escuelas por atender</h2>
-        <p className="subtitulo-seccion">De mayor a menor índice de riesgo.</p>
-        <div className="filtros filtros-escuelas">
-          <label>Riesgo
-            <select value={filtro.nivel} onChange={cambia('nivel')}>
-              <option value="todos">Todos</option>
-              {NIVELES_RIESGO.map((k) => <option key={k} value={k}>{NIVEL_RIESGO[k]}</option>)}
-            </select>
-          </label>
-          <label>Pesa más
-            <select value={filtro.tipo} onChange={cambia('tipo')}>
-              <option value="todos">Cualquiera</option>
-              {Object.entries(TIPO).map(([k, t]) => <option key={k} value={k}>{t}</option>)}
-            </select>
-          </label>
-          <label>Municipio
-            <select value={filtro.municipio} onChange={cambia('municipio')}>
-              <option value="todos">Todos</option>
-              {municipios.map((m) => <option key={m} value={m}>{m}</option>)}
-            </select>
-          </label>
-        </div>
-        <p className="nota" style={{ margin: '8px 0' }}>{lista.length} de {total} escuelas</p>
-        {!lista.length ? <p className="vacio">Ninguna escuela con estos filtros.</p> : (
-          <div className="tabla-desliza">
-            <table className="estaciones">
-              <thead>
-                <tr><th className="num">#</th><th>Escuela</th><th>Localidad</th><th>Riesgo</th><th>Pesa más</th>
-                  <th>Agua</th><th>Mecanismo</th><th className="num">Índice</th></tr>
-              </thead>
-              <tbody>
-                {lista.map((e, i) => (
-                  <tr key={e.cct}>
-                    <td className="num tenue">{i + 1}</td>
-                    <td><b>{e.nombre}</b><br /><span className="tenue">{e.cct} · {inicial(e.nivel || 'sin dato')}</span></td>
-                    <td>{inicial(e.localidad || 'sin dato')}<br /><span className="tenue">{inicial(e.municipio || '')}</span></td>
-                    <td><span className="riesgo-marca" style={{ background: COLOR_RIESGO[r(e).nivel] || '#ddd' }} />{nombreNivel(r(e).nivel)}</td>
-                    <td>{TIPO[tipoPrincipal(e)] || 'sin dato'}</td>
-                    <td>{FUENTE_AGUA[e.fuente_agua] || 'Sin dato'}</td>
-                    <td>{e.c_estacion || <span className="tenue">ninguno</span>}</td>
-                    <td className="num">{r(e).indice != null ? num(r(e).indice, 2) : 'sin dato'}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+      <div className="trabajo">
+        <section className="lista-col" aria-label="Escuelas">
+          <div className="lista-cabeza">
+            <h2 className="titulo-seccion">Escuelas por atender</h2>
+            <div className="filtros">
+              <label>Riesgo
+                <select value={filtro.nivel} onChange={cambia('nivel')}>
+                  <option value="todos">Todos</option>
+                  {NIVELES_RIESGO.map((k) => <option key={k} value={k}>{NIVEL_RIESGO[k]}</option>)}
+                </select>
+              </label>
+              <label>Pesa más
+                <select value={filtro.tipo} onChange={cambia('tipo')}>
+                  <option value="todos">Cualquiera</option>
+                  {Object.entries(TIPO).map(([k, t]) => <option key={k} value={k}>{t}</option>)}
+                </select>
+              </label>
+              <label>Municipio
+                <select value={filtro.municipio} onChange={cambia('municipio')}>
+                  <option value="todos">Todos</option>
+                  {municipios.map((m) => <option key={m} value={m}>{m}</option>)}
+                </select>
+              </label>
+            </div>
+            <p className="conteo">{lista.length} de {total} escuelas, de mayor a menor índice</p>
           </div>
-        )}
-      </figure>
+          <ol className="alertas">
+            {!lista.length && <li className="vacio">Ninguna escuela con estos filtros.</li>}
+            {lista.map((e) => (
+              <li key={e.cct} className={e.cct === sel ? 'activa' : ''}>
+                <button onClick={() => elegir(e.cct)}>
+                  <span className="nivel-esc"><span className="riesgo-marca" style={{ background: COLOR_RIESGO[r(e).nivel] || '#ddd' }} />{nombreNivel(r(e).nivel)}</span>
+                  <span className="cuando">{r(e).indice != null ? 'índice ' + num(r(e).indice, 2) : 'sin índice'}</span>
+                  <span className="que">{e.nombre}</span>
+                  <span className="estado">{TIPO[tipoPrincipal(e)] || ''}</span>
+                  <span className="donde">{inicial(e.localidad || 'sin dato')}, {inicial(e.municipio || '')}{e.c_estacion ? ' · ' + e.c_estacion : ''}</span>
+                </button>
+              </li>
+            ))}
+          </ol>
+        </section>
+        <FichaEscuela escuela={elegida} alertas={alertas} zonas={zonas} />
+      </div>
     </section>
   );
 }

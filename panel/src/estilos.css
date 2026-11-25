@@ -516,3 +516,7 @@ main.tablero-main { padding: 0; flex: 1; display: flex; }
 @media (max-width: 600px) { .dashinfo-rangos { width: 100%; } .dashinfo-rangos button { flex: 1; } .dashinfo-filtros select { flex: 1; } }
 .filtros-escuelas { max-width: 640px; }
 .riesgo-marca { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+.ficha-alertas { list-style: none; padding: 0; margin: 0; font-size: 14px; }
+.ficha-alertas li { display: grid; grid-template-columns: auto 1fr auto auto; gap: 12px; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--linea); }
+.ficha-alertas li:last-child { border-bottom: 0; }
+.nivel-esc { display: inline-flex; align-items: center; font-weight: 600; font-size: 13px; color: var(--titulo); }

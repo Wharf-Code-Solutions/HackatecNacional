@@ -18,7 +18,7 @@ function Tarjeta({ titulo, subtitulo, ancha, children }) {
   );
 }
 
-export default function Panorama({ parte, alertas, veredictos, corte, elegida, onElegir, escuelas }) {
+export default function Panorama({ parte, alertas, veredictos, corte, elegida, onElegir, escuelas, onElegirEscuela }) {
   const { estaciones, lineaBase } = useDatos();
   const porEstacion = Object.keys(estaciones).sort().map((c) => {
     const partes = {};
@@ -37,8 +37,8 @@ export default function Panorama({ parte, alertas, veredictos, corte, elegida, o
   // tabla de estaciones y de las alertas, las graficas.
   if (parte === 'mapa') return (
     <div className="panorama">
-      <Tarjeta titulo="La red de estaciones" subtitulo="Estaciones y escuelas rurales en riesgo. En rojo, las estaciones con una alerta por atender; un clic filtra la lista de alertas.">
-        <MapaEstaciones estaciones={estaciones} alertas={alertas} elegida={elegida} onElegir={onElegir} escuelas={escuelas} />
+      <Tarjeta titulo="La red de estaciones" subtitulo="Estaciones y escuelas rurales en riesgo. En rojo, las estaciones con una alerta por atender; un clic en una estación filtra la lista de alertas y en una escuela abre su ficha.">
+        <MapaEstaciones estaciones={estaciones} alertas={alertas} elegida={elegida} onElegir={onElegir} escuelas={escuelas} onElegirEscuela={onElegirEscuela} />
       </Tarjeta>
       <Tarjeta titulo="Cómo están las estaciones ahora" subtitulo="Última lectura de cada sonda frente a la historia de su sitio.">
         <MatrizEstaciones estaciones={estaciones} lineaBase={lineaBase} veredictos={veredictos} corte={corte} />
