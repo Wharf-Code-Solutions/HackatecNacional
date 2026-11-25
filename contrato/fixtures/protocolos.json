@@ -1,0 +1,141 @@
+{
+  "version": "0.1-propuesta",
+  "_provisional": true,
+  "aviso": "Protocolos de referencia redactados por el equipo a partir de normas públicas. POR VALIDAR con CEASPUE, CAPCEE y Protección Civil: no son instrucciones oficiales. No se recomienda verter ningún químico en ríos o barrancas: sería una descarga más (NOM-001-SEMARNAT-2021).",
+  "plazos": {
+    "inmediata": "Inmediata",
+    "mismo_dia": "El mismo día",
+    "seguimiento": "Seguimiento"
+  },
+  "condiciones": {
+    "agua_del_entorno": {
+      "etiqueta": "Si la escuela toma agua de pozo, manantial, río o captación de lluvia",
+      "fuentes": ["pozo", "manantial", "rio", "captacion_lluvia"]
+    },
+    "red_publica": {
+      "etiqueta": "Si la escuela toma agua de la red pública",
+      "fuentes": ["red_publica"]
+    }
+  },
+  "confirmar_fuente": {
+    "plazo": "inmediata",
+    "accion": "Confirmar con la dirección de la escuela de dónde toma el agua (pozo, manantial, río, red pública, pipa o captación de lluvia) y registrarlo",
+    "responsable": "CAPCEE con la dirección de la escuela",
+    "fuente": "Dato faltante en escuelas.json"
+  },
+  "protocolos": [
+    {
+      "id": "agua_industrial",
+      "titulo": "Posible descarga industrial",
+      "aplica": { "fuente_probable": ["descarga_industrial", "mixta"] },
+      "acciones": [
+        { "plazo": "inmediata", "si": "agua_del_entorno", "accion": "Suspender el uso del agua para beber, cocinar y lavar manos; usar agua embotellada o de pipa", "responsable": "Dirección de la escuela", "fuente": "NOM-127-SSA1-2021 (agua para uso y consumo humano)" },
+        { "plazo": "inmediata", "si": "red_publica", "accion": "Avisar al organismo operador del agua para que revise si su captación está aguas abajo del punto", "responsable": "CEASPUE", "fuente": "Guía del equipo, por validar" },
+        { "plazo": "inmediata", "accion": "Tomar una muestra de agua con cadena de custodia para laboratorio acreditado, antes de que pase el evento", "responsable": "CEASPUE", "fuente": "NOM-001-SEMARNAT-2021 (descargas)" },
+        { "plazo": "inmediata", "accion": "Notificar la posible descarga a la autoridad ambiental con la hora, el punto y la evidencia del panel", "responsable": "PROFEPA y CONAGUA", "fuente": "NOM-001-SEMARNAT-2021" },
+        { "plazo": "mismo_dia", "accion": "Revisar los establecimientos aguas arriba que señala la fuente probable", "responsable": "CEASPUE con PROFEPA", "fuente": "Guía del equipo, por validar" },
+        { "plazo": "seguimiento", "si": "agua_del_entorno", "accion": "Reanudar el uso del agua solo con un análisis que cumpla la norma de agua potable", "responsable": "CEASPUE y dirección de la escuela", "fuente": "NOM-127-SSA1-2021" }
+      ]
+    },
+    {
+      "id": "agua_municipal",
+      "titulo": "Posibles aguas residuales municipales",
+      "aplica": { "fuente_probable": ["aguas_residuales_municipales"] },
+      "acciones": [
+        { "plazo": "inmediata", "si": "agua_del_entorno", "accion": "Suspender el uso del agua para beber y cocinar; usar agua embotellada o hervida", "responsable": "Dirección de la escuela", "fuente": "NOM-127-SSA1-2021" },
+        { "plazo": "inmediata", "accion": "Evitar que alumnos y personal tengan contacto con el río o la barranca cercana", "responsable": "Dirección de la escuela", "fuente": "Guía del equipo, por validar" },
+        { "plazo": "mismo_dia", "accion": "Tomar una muestra para análisis microbiológico (coliformes) en laboratorio acreditado", "responsable": "CEASPUE", "fuente": "NOM-127-SSA1-2021" },
+        { "plazo": "mismo_dia", "accion": "Revisar colectores y descargas de drenaje aguas arriba del punto", "responsable": "Organismo operador del municipio con CEASPUE", "fuente": "Guía del equipo, por validar" },
+        { "plazo": "seguimiento", "si": "agua_del_entorno", "accion": "Desinfectar cisterna y tinacos de la escuela y reanudar el uso con un análisis que cumpla la norma", "responsable": "CAPCEE y dirección de la escuela", "fuente": "NOM-127-SSA1-2021" }
+      ]
+    },
+    {
+      "id": "agua_arrastre",
+      "titulo": "Escurrimiento o arrastre por lluvia",
+      "aplica": { "fuente_probable": ["escurrimiento_o_arrastre"] },
+      "acciones": [
+        { "plazo": "inmediata", "si": "agua_del_entorno", "accion": "No usar el agua turbia para beber; dejar reposar y usar agua embotellada mientras dure la turbiedad", "responsable": "Dirección de la escuela", "fuente": "NOM-127-SSA1-2021" },
+        { "plazo": "mismo_dia", "accion": "Revisar la ladera y los drenajes del plantel: el arrastre puede venir con tierra de un deslave", "responsable": "Brigada CAPCEE", "fuente": "Guía del equipo, por validar" },
+        { "plazo": "seguimiento", "accion": "Confirmar que la turbiedad vuelve a su rango habitual en las lecturas siguientes", "responsable": "CEASPUE", "fuente": "Historia del propio sitio (panel)" }
+      ]
+    },
+    {
+      "id": "agua_indeterminada",
+      "titulo": "Contaminación de origen no identificado",
+      "aplica": { "fuente_probable": ["indeterminada", null] },
+      "acciones": [
+        { "plazo": "inmediata", "si": "agua_del_entorno", "accion": "Por precaución, suspender el uso del agua para beber y cocinar hasta tener un análisis", "responsable": "Dirección de la escuela", "fuente": "NOM-127-SSA1-2021" },
+        { "plazo": "inmediata", "accion": "Tomar una muestra de agua para laboratorio acreditado", "responsable": "CEASPUE", "fuente": "Guía del equipo, por validar" },
+        { "plazo": "mismo_dia", "accion": "Revisar en sitio el río aguas arriba del mecanismo para buscar el origen", "responsable": "CEASPUE", "fuente": "Guía del equipo, por validar" }
+      ]
+    },
+    {
+      "id": "ladera_preventiva",
+      "titulo": "Ladera en observación",
+      "aplica": { "regla": ["lluvia_acumulada", "suelo_saturado", "movimiento_ladera"], "nivel": ["Informativa", "Preventiva"] },
+      "acciones": [
+        { "plazo": "inmediata", "accion": "Avisar a la dirección de la escuela; no usar salones ni patio del lado del cerro mientras dure la lluvia", "responsable": "Dirección de la escuela", "fuente": "Ley General de Protección Civil" },
+        { "plazo": "mismo_dia", "accion": "Inspección visual de grietas, hundimientos, árboles o postes inclinados y escurrimientos en el plantel", "responsable": "Brigada CAPCEE", "fuente": "Guía del equipo, por validar" },
+        { "plazo": "seguimiento", "accion": "Limpiar canaletas y drenaje del plantel para que el agua no sature la ladera", "responsable": "CAPCEE", "fuente": "Guía del equipo, por validar" }
+      ]
+    },
+    {
+      "id": "ladera_critica",
+      "titulo": "Riesgo de deslave",
+      "aplica": { "regla": ["lluvia_acumulada", "suelo_saturado", "movimiento_ladera"], "nivel": ["Critica"] },
+      "acciones": [
+        { "plazo": "inmediata", "accion": "Evacuar las aulas hacia la zona de menor riesgo del plantel y llamar a Protección Civil (911)", "responsable": "Dirección de la escuela", "fuente": "Ley General de Protección Civil" },
+        { "plazo": "inmediata", "accion": "Evaluar la ladera y decidir si se suspenden clases", "responsable": "Protección Civil municipal y estatal", "fuente": "Ley General de Protección Civil" },
+        { "plazo": "seguimiento", "accion": "Dictamen del estado del inmueble antes de volver a usar el plantel", "responsable": "CAPCEE", "fuente": "Guía del equipo, por validar" }
+      ]
+    },
+    {
+      "id": "reporte_agua",
+      "titulo": "Agua con descarga, espuma, color o mal olor",
+      "aplica": { "reporte": ["descarga_visible", "espuma", "color_anormal", "mal_olor"] },
+      "acciones": [
+        { "plazo": "inmediata", "accion": "Revisar si un mecanismo cercano registra el mismo cambio (pestaña Alertas)", "responsable": "Quien atiende el panel", "fuente": "Panel" },
+        { "plazo": "mismo_dia", "accion": "Verificar en sitio y tomar una muestra si se confirma", "responsable": "CEASPUE", "fuente": "Guía del equipo, por validar" },
+        { "plazo": "mismo_dia", "accion": "Si hay una escuela cerca que toma agua del entorno, avisarle que no la use hasta tener un análisis", "responsable": "CAPCEE", "fuente": "NOM-127-SSA1-2021" },
+        { "plazo": "seguimiento", "accion": "Notificar a la autoridad ambiental si se confirma una descarga", "responsable": "PROFEPA y CONAGUA", "fuente": "NOM-001-SEMARNAT-2021" }
+      ]
+    },
+    {
+      "id": "reporte_peces",
+      "titulo": "Peces muertos",
+      "aplica": { "reporte": ["peces_muertos"] },
+      "acciones": [
+        { "plazo": "inmediata", "accion": "Tomar una muestra de agua lo antes posible: la falta de oxígeno o un tóxico pasan rápido", "responsable": "CEASPUE", "fuente": "Guía del equipo, por validar" },
+        { "plazo": "inmediata", "accion": "Pedir que nadie consuma los peces ni use esa agua", "responsable": "Ayuntamiento y escuelas cercanas", "fuente": "Guía del equipo, por validar" },
+        { "plazo": "mismo_dia", "accion": "Notificar a la autoridad ambiental con la ubicación y las fotos del reporte", "responsable": "PROFEPA y CONAGUA", "fuente": "NOM-001-SEMARNAT-2021" }
+      ]
+    },
+    {
+      "id": "reporte_basura",
+      "titulo": "Basura o residuos",
+      "aplica": { "reporte": ["basura_o_residuos"] },
+      "acciones": [
+        { "plazo": "mismo_dia", "accion": "Programar la limpieza del punto y retirar los residuos sin echarlos al cauce", "responsable": "Servicios de limpia del ayuntamiento", "fuente": "Guía del equipo, por validar" },
+        { "plazo": "seguimiento", "accion": "Si se repite en el mismo punto, señalizar y vigilar el tiradero", "responsable": "Ayuntamiento", "fuente": "Guía del equipo, por validar" }
+      ]
+    },
+    {
+      "id": "reporte_deslave",
+      "titulo": "Deslave reportado",
+      "aplica": { "reporte": ["deslave"] },
+      "acciones": [
+        { "plazo": "inmediata", "accion": "Avisar a Protección Civil (911) y a la escuela más cercana", "responsable": "Quien atiende el panel", "fuente": "Ley General de Protección Civil" },
+        { "plazo": "inmediata", "accion": "Si la escuela está en la ladera afectada, evacuar las aulas del lado del cerro", "responsable": "Dirección de la escuela", "fuente": "Ley General de Protección Civil" },
+        { "plazo": "mismo_dia", "accion": "Inspección de la ladera y del plantel", "responsable": "Protección Civil y brigada CAPCEE", "fuente": "Guía del equipo, por validar" }
+      ]
+    },
+    {
+      "id": "reporte_otro",
+      "titulo": "Otro problema",
+      "aplica": { "reporte": ["otro"] },
+      "acciones": [
+        { "plazo": "mismo_dia", "accion": "Revisar la foto y la descripción y reclasificar el reporte si corresponde", "responsable": "Quien atiende el panel", "fuente": "Panel" }
+      ]
+    }
+  ]
+}

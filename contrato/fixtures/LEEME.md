@@ -4,6 +4,7 @@
 |---|---|---|
 | `escuelas.json` | **Datos reales** (2026-11-24) | `scripts/97_escuelas_riesgo.py` a partir de `scripts/98_escuelas_candidatas.py` |
 | `zonas_riesgo.geojson` | **Derivadas de los datos**, no de un atlas | `scripts/97_escuelas_riesgo.py` |
+| `protocolos.json` | `"_provisional": true`, **por validar** con CEASPUE, CAPCEE y Protección Civil | A mano (no es derivado): acciones de respuesta por tipo de incidente que muestra el panel en «Qué hacer» |
 
 `escuelas.json` trae 400 escuelas públicas rurales de Puebla, de 7 384 en el catálogo de centros de trabajo de la
 SEP 2026: las 300 de mayor índice de riesgo y las 100 siguientes de mayor riesgo de contaminación (sin estas, la
