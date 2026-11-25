@@ -2,9 +2,10 @@ import { useDatos } from '../lib/contexto.js';
 import { AVISO } from '../lib/etiquetas.js';
 import { hora, inicial, porAtender } from '../lib/formato.js';
 
-// Las 5 estaciones. Un clic filtra la lista de alertas por esa estación; otro lo quita.
+// Todas las estaciones: los mecanismos junto a escuelas (agua y ladera) y las del Atoyac. Un clic filtra la lista
+// de alertas por esa estación; otro lo quita.
 export default function TablaEstaciones({ alertas, veredictos, elegida, onElegir }) {
-  const { estaciones, nombreEstacion } = useDatos();
+  const { todas: estaciones, nombreEstacion } = useDatos();
   return (
     <section className="estaciones-bloque">
       <h2 className="titulo-seccion">Estaciones</h2>
@@ -12,7 +13,7 @@ export default function TablaEstaciones({ alertas, veredictos, elegida, onElegir
         <table className="estaciones">
           <thead>
             <tr>
-              <th>Estación</th><th>Estado</th><th>Última lectura</th>
+              <th>Estación</th><th>Vigila</th><th>Última lectura</th>
               <th className="num">Alertas por atender</th><th>Falla técnica (última hora)</th>
             </tr>
           </thead>
@@ -27,7 +28,7 @@ export default function TablaEstaciones({ alertas, veredictos, elegida, onElegir
                 <tr key={c} className={elegida === c ? 'elegida' : ''} onClick={() => onElegir(elegida === c ? 'todas' : c)}
                   tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter') onElegir(elegida === c ? 'todas' : c); }}>
                   <td><span className="codigo">{c.replace('EST-', '')}</span> {nombreEstacion(c)}</td>
-                  <td>{inicial(estaciones[c].estado)}</td>
+                  <td>{(estaciones[c].parametros || []).includes('LLUVIA') ? 'Ladera' : 'Agua'} · {inicial(estaciones[c].estado || '')}</td>
                   <td>{ultima ? hora(ultima) : <span className="tenue">sin dato</span>}</td>
                   <td className="num">
                     {act.length ? <>{act.length}{crit > 0 && <> <span className="nivel Critica">{crit} crít.</span></>}</> : <span className="tenue">0</span>}

@@ -64,5 +64,13 @@ export function ayudantes(fijos) {
     if (ce.length) return ce.some((x) => x.estado === 'otorgada');
     return a.length > 0 && a.every((x) => x.estado === 'otorgada');
   };
-  return { ...fijos, nombreEstacion, banda, unidad, escuelasDe, estacionDe, umbralesDe, mecanismosDe, mecanismoActivo };
+  // Todas las estaciones que miden: las del Atoyac y los mecanismos (agua y ladera).
+  const todas = { ...estaciones, ...mecanismos };
+  // Cuántos umbrales de ladera alcanza un valor (0 = ninguno). LLUVIA se compara ya acumulada en 24 h.
+  const nivelLadera = (c, cp, valor) => {
+    if (valor == null) return null;
+    const v = cp === 'INCL' ? Math.abs(valor) : valor;
+    return umbralesDe(c, cp, 24).filter((u) => v >= u.valor).length;
+  };
+  return { ...fijos, nombreEstacion, banda, unidad, escuelasDe, estacionDe, umbralesDe, mecanismosDe, mecanismoActivo, todas, nivelLadera };
 }

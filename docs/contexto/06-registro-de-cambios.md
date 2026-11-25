@@ -21,6 +21,20 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Módulo B: tabla, matriz y huella con los mecanismos
+
+**Qué cambió.** La tabla de estaciones, la matriz y la huella de Alertas incluyen los 10 mecanismos además de las 5 del
+Atoyac (`todas` en `contexto.js`). La matriz separa agua (contra su banda) y ladera (lluvia acumulada 24 h, humedad e
+inclinación contra los umbrales del motor, `nivelLadera`). En la huella de una ladera el color dice cuántos umbrales
+alcanzó cada lectura. La tabla suma la columna «Vigila».
+**Por qué.** Petición del usuario: ver las gráficas de los mecanismos como las de las demás estaciones.
+**Qué arrastró.** `contexto.js`, `Panorama.jsx`, `TablaEstaciones.jsx`, `MatrizEstaciones.jsx`, `Huella.jsx`.
+**Impacto en otros módulos.** M2: los mecanismos de agua no tienen línea base y el motor manda `z_robusto` y
+`posicion_en_banda` vacíos; su matriz y su huella salen en blanco (la huella lo avisa). Para colorearlas, el motor
+tendría que publicar la desviación contra su historia reciente.
+
+---
+
 ## 2026-11-24 · Módulo B: el mapa de Alertas muestra los mecanismos de agua y ladera
 
 **Qué cambió.** `MapaEstaciones.jsx` dibuja los 10 mecanismos de `mecanismos.json` con el número de `mapa/` (1 a 5

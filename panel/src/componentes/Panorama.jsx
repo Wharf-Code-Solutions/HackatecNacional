@@ -19,7 +19,7 @@ function Tarjeta({ titulo, subtitulo, ancha, children }) {
 }
 
 export default function Panorama({ parte, alertas, veredictos, corte, elegida, onElegir, escuelas, onElegirEscuela }) {
-  const { estaciones, lineaBase, zonas, mecanismos } = useDatos();
+  const { estaciones, lineaBase, zonas, mecanismos, todas } = useDatos();
   const porEstacion = Object.keys(estaciones).sort().map((c) => {
     const partes = {};
     let total = 0;
@@ -41,14 +41,14 @@ export default function Panorama({ parte, alertas, veredictos, corte, elegida, o
         <MapaEstaciones estaciones={estaciones} mecanismos={mecanismos} alertas={alertas} elegida={elegida} onElegir={onElegir} />
       </Tarjeta>
       <Tarjeta titulo="Cómo están las estaciones ahora" subtitulo="Última lectura de cada sonda frente a la historia de su sitio.">
-        <MatrizEstaciones estaciones={estaciones} lineaBase={lineaBase} veredictos={veredictos} corte={corte} />
+        <MatrizEstaciones estaciones={todas} lineaBase={lineaBase} veredictos={veredictos} corte={corte} />
       </Tarjeta>
     </div>
   );
   return (
     <div className="panorama">
       <Tarjeta titulo="Huella de las últimas horas" subtitulo="Cuándo se salió cada sonda de la estación de lo habitual." ancha>
-        <Huella estaciones={estaciones} veredictos={veredictos} alertas={alertas} elegida={elegida} />
+        <Huella estaciones={todas} veredictos={veredictos} alertas={alertas} elegida={elegida} />
       </Tarjeta>
       <Tarjeta titulo="Alertas por hora" ancha><GraficaHoras alertas={alertas} /></Tarjeta>
       <Tarjeta titulo="Alertas por atender, por estación">
