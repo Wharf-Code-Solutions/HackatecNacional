@@ -159,7 +159,8 @@ export default function App() {
             )}
             {seccion === 'monitoreo' && vista === 'avisos' && <Avisos veredictos={be.veredictos} conectado={be.conectado} />}
             {seccion === 'escuelas' && <Escuelas escuelas={ctx.escuelas} alertas={be.alertas} zonas={ctx.zonas} sel={escuelaSel} onElegir={setEscuelaSel} />}
-            {seccion === 'autorizaciones' && <Autorizaciones escuelas={ctx.escuelas} />}
+            {seccion === 'autorizaciones' && <Autorizaciones escuelas={ctx.escuelas} mecanismos={ctx.mecanismos}
+              onElegirEscuela={(cct) => { setEscuelaSel(cct); setSeccion('escuelas'); window.scrollTo(0, 0); }} />}
             {seccion === 'reportes' && (
               <Reportes reportes={be.reportes} prioridades={be.prioridades} huella={be.huella} conectado={be.conectado}
                 guardarReporte={be.guardarReporte} refrescar={be.refrescar} demo={demo} />

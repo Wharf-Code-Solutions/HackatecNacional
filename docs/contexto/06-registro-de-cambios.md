@@ -21,6 +21,18 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Módulo B: tablero de autorizaciones
+
+**Qué cambió.** La pestaña Autorizaciones tiene cifras (mecanismos activos, trámites pendientes, solicitados y
+otorgados), trámites por organismo y estado, quién autoriza qué (CEASPUE y CAPCEE, nombres no oficiales), la tabla de los
+5 mecanismos de `mecanismos.json` (propuesto mientras CEASPUE no otorgue) y los trámites de las escuelas, con enlace a la
+ficha. Hoy: 0 de 5 activos y 24 trámites pendientes.
+**Por qué.** Paso 6 del módulo B (docs/19 §4.3 y §6, punto 5).
+**Qué arrastró.** `Autorizaciones.jsx`, `App.jsx`, `estilos.css`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
 ## 2026-11-24 · Módulo C: «Color o espuma» y nuevo tipo «Deslave» en los reportes
 
 **Qué cambió.** La app ofrece 6 tipos: «Espuma» se junta con «Color anormal» (código `color_anormal`, etiqueta «Color o espuma»)

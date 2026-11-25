@@ -527,3 +527,5 @@ main.tablero-main { padding: 0; flex: 1; display: flex; }
 .escuelas-afectadas li:last-child { border-bottom: 0; }
 .escuelas-afectadas .riesgo-marca { margin-top: 5px; }
 .enlace { font: inherit; font-size: 13px; color: var(--principal); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; white-space: nowrap; }
+.estado-tramite { display: inline-flex; align-items: center; white-space: nowrap; }
+.competencias { grid-template-columns: 90px minmax(0, 1fr); }
