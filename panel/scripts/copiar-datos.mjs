@@ -26,6 +26,8 @@ const ARCHIVOS = [
   'contrato/fixtures/umbrales_lluvia.json',
   'contrato/fixtures/suelo_laderas.json',
   'contrato/fixtures/lluvia_sitios.json',
+  // Protocolos de respuesta («Qué hacer») por tipo de incidente; por validar.
+  'contrato/fixtures/protocolos.json',
   // Las capas del modulo del mapa (M6, scripts/60_red_para_mapa.py): el mapa de la red del panel
   // usa las mismas, con la misma base, para verse igual que mapa/.
   'datos/procesados/mapa/cuenca.geojson',

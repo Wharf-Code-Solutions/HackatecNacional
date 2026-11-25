@@ -583,3 +583,15 @@ main.tablero-main { padding: 0; flex: 1; display: flex; }
 /* Reportes: alejado solo se ve el calor; los pines aparecen al acercarse (MapaReportes.jsx, ZOOM_PINES). */
 /* MapLibre pone la opacidad del marcador en línea; por eso se oculta con visibility e !important. */
 .tablero-mapa-lienzo.sin-pines .maplibregl-marker { visibility: hidden !important; pointer-events: none; }
+
+/* «Qué hacer» (Protocolo.jsx): acciones con casilla, plazo, condición y quién las hace. */
+.protocolo-titulo { font-weight: 600; color: var(--titulo); margin-bottom: 8px; }
+.protocolo-acciones { list-style: none; padding: 0; margin: 0 0 8px; }
+.protocolo-acciones li { border-bottom: 1px solid var(--linea); }
+.protocolo-acciones li:last-child { border-bottom: 0; }
+.protocolo-acciones label { display: grid; grid-template-columns: auto 1fr; gap: 10px; padding: 10px 0; cursor: pointer; font-size: 14px; }
+.protocolo-acciones input { margin-top: 3px; accent-color: var(--principal); }
+.protocolo-texto small { display: block; color: var(--tenue); font-size: 12.5px; margin-top: 2px; }
+.protocolo-plazo { display: inline-block; font-size: 12px; font-weight: 600; color: var(--principal); margin-right: 8px; }
+.protocolo-si { font-style: italic; margin-right: 4px; }
+.protocolo-acciones li.hecha .protocolo-texto { color: var(--tenue); text-decoration: line-through; }

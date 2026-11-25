@@ -7,6 +7,7 @@ import Serie from '../graficas/Serie.jsx';
 import { Mensaje } from '../graficas/marcas.jsx';
 import { Nivel } from './ListaAlertas.jsx';
 import Prediccion from './Prediccion.jsx';
+import Protocolo, { protocoloPara } from './Protocolo.jsx';
 import { COLOR_RIESGO, NIVEL_RIESGO } from './FichaEscuela.jsx';
 
 // Estado y responsable. Se monta de nuevo al cambiar de alerta (key), así el sondeo no pisa
@@ -153,7 +154,7 @@ function Sondas({ alerta, alertas, estacion, banda, veredictos, lineaBase, evide
 }
 
 export default function Expediente({ alerta, alertas, veredictos, motor, guardar, prediccion, demo, onElegirEscuela }) {
-  const { estaciones, lineaBase, nombreEstacion, banda, unidad, escuelasDe, estacionDe, umbralesDe } = useDatos();
+  const { estaciones, lineaBase, nombreEstacion, banda, unidad, escuelasDe, estacionDe, umbralesDe, protocolos } = useDatos();
   if (!alerta) {
     return (
       <article className="expediente" aria-label="Expediente de la alerta">
@@ -236,7 +237,12 @@ export default function Expediente({ alerta, alertas, veredictos, motor, guardar
 
       {/* A todo lo ancho: con los candidatos del DENUE la tabla no cabe en media columna. */}
       <section className="bloque"><h3>Fuente probable</h3><Fuente f={a.fuente_probable} motor={motor} /></section>
-      <section className="bloque"><h3>Medidas sugeridas</h3><Medidas ms={a.medidas_sugeridas} /></section>
+      <section className="bloque">
+        <h3>Qué hacer</h3>
+        {protocoloPara(protocolos, { alerta: a })
+          ? <Protocolo key={a.c_alerta} clave={a.c_alerta} protocolo={protocoloPara(protocolos, { alerta: a })} escuelas={escuelasDe(a)} />
+          : <Medidas ms={a.medidas_sugeridas} />}
+      </section>
 
       {/* Cambio de rumbo (docs/19 §6): la llegada aguas abajo y los sitios aguas arriba del Atoyac no
           aparecen en la vista nueva. Prediccion y TablaRed se conservan en el código. */}

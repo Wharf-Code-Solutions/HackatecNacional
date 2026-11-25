@@ -21,6 +21,21 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Módulo B: «Qué hacer», protocolos de respuesta por tipo de incidente
+
+**Qué cambió.** `contrato/fixtures/protocolos.json` (nuevo, provisional): 11 protocolos (4 de agua por fuente probable, 2
+de ladera por nivel, 5 de reportes por tipo), cada acción con plazo, responsable y fuente (NOM-127, NOM-001, Ley General
+de Protección Civil o «guía del equipo, por validar»). Ninguno recomienda verter químicos. El panel (`Protocolo.jsx`) lo
+muestra en el expediente de cada alerta y en el detalle de cada reporte (escuelas a menos de 1 km). Las acciones que
+dependen del agua de la escuela se filtran si su fuente se conoce; si no, la primera acción es confirmarla y las ramas se
+muestran como condición. Casillas para marcar lo hecho, solo en pantalla.
+**Por qué.** Petición del usuario: recomendar qué hacer según el incidente. La fuente de agua falta en todas las escuelas.
+**Qué arrastró.** `LEEME.md` de fixtures, `copiar-datos.mjs`, `datos.js`, `Expediente.jsx`, `Reportes.jsx`, `estilos.css`.
+**Impacto en otros módulos.** Todos: el contenido de `protocolos.json` debe revisarlo alguien antes de presentarlo. C:
+`Reportes.jsx` suma la caja «Qué hacer».
+
+---
+
 ## 2026-11-24 · M4 y mapa: deslave a lo largo del relieve, inundación, sirena y pulso de radar
 
 **Qué cambió.** Deslave: cicatriz y lámina de lodo (mallas que siguen el relieve) que avanzan por toda la ladera, de la escuela al fondo, con 150 bloques que ruedan al arroyo; con la tierra en el cauce el agua sube y se tiende sobre la explanada. Sirena con luz en el techo de la escuela que enciende la plataforma: ámbar con una alerta Preventiva, roja con ondas y el texto «Alerta: posible deslave» con una Crítica. En el mapa 2D, una alerta abierta emite ondas rojas desde el círculo de la estación, como el pulso de un radar (también con «reducir animaciones»).

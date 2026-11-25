@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { distanciaAlCauce } from '../lib/cauce.js';
+import Protocolo, { protocoloPara } from './Protocolo.jsx';
 import { REPORTE, txt } from '../lib/etiquetas.js';
 import { hora } from '../lib/formato.js';
 import { useDatos } from '../lib/contexto.js';
@@ -147,7 +148,18 @@ const CONFIRMAR = {
   Descartado: (n) => '¿Descartar? ' + (n > 1 ? 'Los ' + n + ' reportes dejan' : 'El reporte deja') + ' de contar para la prioridad y el calor. Se puede restaurar después.',
 };
 
+// Escuelas a menos de 1 km del reporte: a ellas se dirigen las acciones que dependen del agua de la escuela.
+const KM_ESCUELA = 1;
+function escuelasCerca(escuelas, lat, lon) {
+  if (lat == null || lon == null) return [];
+  const kx = 111.32 * Math.cos((lat * Math.PI) / 180), ky = 110.57;
+  return (escuelas || []).filter((e) => e.latitud != null && Math.hypot((e.longitud - lon) * kx, (e.latitud - lat) * ky) <= KM_ESCUELA);
+}
+
 function Detalle({ it, nombreSitio, onCerrar, cambiar, ocupado }) {
+  const { protocolos, escuelas } = useDatos();
+  const protocolo = protocoloPara(protocolos, { reporte: { tipo: it.tipo } });
+  const cerca = escuelasCerca(escuelas, it.lat, it.lon);
   const [confirmando, setConfirmando] = useState(null);
   useEffect(() => setConfirmando(null), [it.id, it.estado]);
   const foto = it.reportes.find((r) => r.foto_url);
@@ -202,6 +214,15 @@ function Detalle({ it, nombreSitio, onCerrar, cambiar, ocupado }) {
             ? <div className="aviso aviso-peligro"><strong>Descartado.</strong> No cuenta para la prioridad ni para el calor.</div>
             : <Pasos estado={it.estado} />}
         </div>
+
+        {protocolo && it.estado !== 'Descartado' && (
+          <div className="caja-info">
+            <div className="caja-cabeza"><span>Qué hacer</span>
+              <span className="texto-suave">{cerca.length ? cerca.length + (cerca.length === 1 ? ' escuela' : ' escuelas') + ' a menos de 1 km' : 'sin escuelas a menos de 1 km'}</span>
+            </div>
+            <Protocolo key={it.id} clave={it.id} protocolo={protocolo} escuelas={cerca} />
+          </div>
+        )}
 
         <div className="caja-info">
           <div className="caja-cabeza"><span>Impacto ciudadano</span></div>

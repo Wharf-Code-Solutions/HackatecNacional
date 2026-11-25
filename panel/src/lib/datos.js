@@ -70,7 +70,8 @@ export function useDatosFijos() {
       getJSON(base + 'umbrales_lluvia.json').catch(() => ({})),
       getJSON(base + 'suelo_laderas.json').catch(() => ({})),
       getJSON(base + 'lluvia_sitios.json').catch(() => ({})),
-    ]).then(([est, lb, abajo, pares, geo, rios, esc, zonas, cuenca, mec, uLluvia, suelo, lluviaSitios]) => {
+      getJSON(base + 'protocolos.json').catch(() => null),
+    ]).then(([est, lb, abajo, pares, geo, rios, esc, zonas, cuenca, mec, uLluvia, suelo, lluviaSitios, protocolos]) => {
       const estaciones = Object.fromEntries(est.estaciones.map((e) => [e.c_estacion, e]));
       const lineaBase = {};
       lb.linea_base.forEach((r) => {
@@ -105,7 +106,7 @@ export function useDatosFijos() {
         p99, humedad, humedadPorDefecto: num((uLluvia.humedad_suelo || {}).cerca_de_saturacion_pct) ?? 45,
         inclinacion: { aviso: num(inc.aviso_grados) ?? 0.5, critico: num(inc.critico_grados) ?? 2 },
       };
-      setDatos({ estaciones, lineaBase, nombresSitio, pares: listaPares, sitios, rios: rios.lineas, escuelas, zonas, mecanismos, umbralesLadera });
+      setDatos({ estaciones, lineaBase, nombresSitio, pares: listaPares, sitios, rios: rios.lineas, escuelas, zonas, mecanismos, umbralesLadera, protocolos });
     }).catch((e) => setError(e.message));
   }, []);
   return { datos, error };
