@@ -21,6 +21,19 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Módulo C: botón de emergencia en la app ciudadana
+
+**Qué cambió.** Botón rojo de solo icono bajo «Ríos» (que también pasa a solo icono). Abre una hoja con «Llamar al 911»,
+Protección Civil de Puebla (222 246 27 50) y la ubicación del mapa para dictarla. Son enlaces `tel:`: la app no avisa a nadie
+por su cuenta, y la hoja lo dice.
+**Por qué.** Un derrumbe con personas en riesgo pide una llamada, no un reporte que se revisa después. El número de Protección
+Civil sale del Programa Especial de Protección Civil para la Temporada de Lluvias y Ciclones Tropicales 2024 (p. 91, «atención
+24 horas»); su sitio web da el mismo número con horario de oficina, por eso el 911 va primero.
+**Qué arrastró.** `ciudadano/src/components/Emergencia.jsx` (nuevo), `MapaPage.jsx`, `componentes.css`.
+**Impacto en otros módulos.** Ninguno.
+
+---
+
 ## 2026-11-24 · M5 y C: recibo por correo al crear un reporte
 
 **Qué cambió.** Si la persona deja su correo, `POST /reportes` manda un recibo con el folio y el enlace al rastreo

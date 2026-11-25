@@ -50,7 +50,22 @@
 .btn-capa.activo svg { stroke: #1d6fa5; }
 @media (hover: hover) { .btn-capa:hover { background: var(--gob-gris-claro); } }
 .banda ~ .btn-capa { top: 98px; }
-.map-container .toast-aviso { top: 128px; }
+/* «Emergencia»: el único botón rojo de la app, porque es la única alarma real. Debajo de «Ríos». */
+.btn-emergencia { position: absolute; top: 124px; right: 20px; background: #c62828; color: #fff; font-family: var(--font-gob);
+  font-weight: 600; font-size: 14px; padding: 10px 16px; border: 0; border-radius: 30px; cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0,0,0,.25); z-index: 20; display: flex; align-items: center; gap: 8px; }
+@media (hover: hover) { .btn-emergencia:hover { background: #a61f1f; } }
+.banda ~ .btn-emergencia { top: 150px; }
+.emergencia { display: flex; flex-direction: column; gap: 12px; padding-bottom: 8px; }
+.emergencia__llamar { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 10px; text-decoration: none;
+  border: 2px solid #c62828; color: #c62828; background: #fff; }
+.emergencia__llamar.es-principal { background: #c62828; color: #fff; }
+.emergencia__llamar span { display: flex; flex-direction: column; text-align: left; }
+.emergencia__llamar strong { font-family: var(--font-gob); font-size: 17px; }
+.emergencia__llamar small { font-size: 13px; opacity: .9; }
+.emergencia__ubicacion { margin: 4px 0 0; font-size: 14px; }
+.emergencia__nota { margin: 0; font-size: 13px; color: #777; }
+.map-container .toast-aviso { top: 176px; }
 
 /* Pines: gota de SIGRIV. Reportes en guinda (abiertos) o gris (cerrados) */
 .pin-publico { cursor: pointer; border: 2px solid #fff; border-radius: 50% 50% 50% 0; width: 22px; height: 22px; padding: 0;
@@ -199,5 +214,8 @@
 
 /* Con la banda de aviso arriba, los controles bajan para no tapar su texto */
 .banda ~ .btn-ubicarme { top: 46px; }
-.banda ~ .toast-aviso { top: 150px; }
+.banda ~ .toast-aviso { top: 202px; }
 
+
+/* «Ríos» y «Emergencia»: solo el icono, en un círculo de 44 px (tamaño mínimo cómodo para el dedo), alineados a la derecha. */
+.btn-capa, .btn-emergencia { width: 44px; height: 44px; padding: 0; justify-content: center; border-radius: 50%; }

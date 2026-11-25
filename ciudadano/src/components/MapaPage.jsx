@@ -3,6 +3,7 @@ import Mapa from './Mapa.jsx';
 import Toast from './Toast.jsx';
 import FormularioReporte from './FormularioReporte.jsx';
 import FichaReporte from './FichaReporte.jsx';
+import Emergencia, { Telefono } from './Emergencia.jsx';
 import { TerminosGate } from './Terminos.jsx';
 import { avisoAceptado } from '../lib/almacen.js';
 import { fotoDemo, getJSON } from '../lib/backend.js';
@@ -110,11 +111,13 @@ export default function MapaPage({ origen, datos, conectado, pendientes, setPend
         Ubicarme
       </button>
       <button className={'btn-capa' + (rios ? ' activo' : '')} onClick={alternarRios} aria-pressed={rios}
-        title={rios ? 'Ocultar los ríos' : 'Mostrar los ríos'}>
+        title={rios ? 'Ocultar los ríos' : 'Mostrar los ríos'} aria-label={rios ? 'Ocultar los ríos' : 'Mostrar los ríos'}>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
           <path d="M2 8c2.5-2 4.5-2 7 0s4.5 2 7 0 4.5-2 6 0M2 15c2.5-2 4.5-2 7 0s4.5 2 7 0 4.5-2 6 0" />
         </svg>
-        Ríos
+      </button>
+      <button className="btn-emergencia" onClick={() => setHoja({ tipo: 'emergencia' })} title="Emergencia" aria-label="Emergencia">
+        <Telefono />
       </button>
       <Toast aviso={aviso} onClose={cerrarAviso} />
 
@@ -130,6 +133,7 @@ export default function MapaPage({ origen, datos, conectado, pendientes, setPend
         <FormularioReporte lat={hoja.lat} lon={hoja.lon} precision={precision(hoja)} origen={origen} datos={datos}
           onClose={() => setHoja(null)} onEnviado={() => setTick((n) => n + 1)} onPendiente={() => setPendientes((n) => n + 1)} ir={ir} />
       )}
+      {hoja && hoja.tipo === 'emergencia' && <Emergencia punto={punto} onClose={() => setHoja(null)} />}
       {hoja && hoja.tipo === 'reporte' && <FichaReporte reporte={hoja.reporte} onClose={() => setHoja(null)} />}
     </div>
   );
