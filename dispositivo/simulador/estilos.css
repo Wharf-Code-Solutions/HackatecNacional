@@ -1,43 +1,56 @@
-/* Una sola columna, dos cosas: la estación en 3D y lo que llega a la plataforma.
-   Fondo claro, trazo fino, azul para el agua y rojo solo cuando hay alarma. */
+/* Mismo aspecto que el panel y la app ciudadana (kit gob.mx v3): barra verde oscuro, guinda y dorado,
+   Patria en títulos y Noto Sans en el texto. El azul queda solo para el agua y el rojo para la alarma. */
+@font-face { font-family: 'Patria'; src: url('https://framework-gb.cdn.gob.mx/snd/v1/fuentes/Patria_Bold.otf') format('opentype'); font-weight: 600 700; font-display: swap; }
 :root {
-  --papel: #f3f5f6;
+  --gob-guinda: #9D2449; --gob-guinda-oscuro: #7a1a32; --gob-dorado: #BC955C; --gob-nav: #0B231E; --gob-verde: #13322E;
+  --papel: #ebe7e4;
   --superficie: #ffffff;
-  --tinta: #16222c;
-  --tenue: #5b6974;
-  --linea: #cdd5da;
+  --tinta: #212529;
+  --texto: #545454;
+  --tenue: #767676;
+  --linea: #DDD8D3;
   --agua: #1d6fa5;
   --alarma: #b3261e;
-  --cuerpo: "Public Sans", system-ui, "Segoe UI", sans-serif;
+  --principal: var(--gob-guinda);
+  --radio: 8px;
+  --sombra: 0 1px 3px rgba(0,0,0,.08), 0 2px 8px rgba(0,0,0,.05);
+  --cuerpo: "Noto Sans", system-ui, "Segoe UI", sans-serif;
+  --titular: "Patria", "Noto Sans", Georgia, serif;
   color-scheme: light;
 }
 * { box-sizing: border-box; }
-html, body { margin: 0; background: var(--papel); color: var(--tinta); font: 14px/1.5 var(--cuerpo); }
+html, body { margin: 0; background: var(--papel); color: var(--texto); font: 15px/1.5 var(--cuerpo); }
 h1, p { margin: 0; }
-h1 { font-size: 17px; font-weight: 700; margin-right: auto; }
 code { font-size: 12px; }
-:focus-visible { outline: 2px solid var(--agua); outline-offset: 2px; }
+:focus-visible { outline: 3px solid var(--gob-dorado); outline-offset: 2px; }
 [hidden] { display: none !important; }
 
-.cabecera { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 10px 24px;
-  background: var(--superficie); border-bottom: 1px solid var(--linea); }
-.reloj { color: var(--tenue); font-variant-numeric: tabular-nums; }
-.reloj b { color: var(--tinta); font-size: 16px; font-weight: 600; margin-left: 4px; }
-select { font: inherit; font-size: 13px; color: var(--tinta); background: var(--superficie);
-  border: 1px solid var(--linea); border-radius: 3px; padding: 5px 8px; }
-.boton { font: inherit; font-size: 13px; color: var(--tinta); background: var(--superficie); border: 1px solid #aeb9c0;
-  border-radius: 3px; padding: 5px 12px; cursor: pointer; }
-.boton:hover { border-color: var(--tinta); }
-.boton.activo { background: var(--tinta); color: #fff; border-color: var(--tinta); }
+/* barra: la del panel y la app ciudadana */
+.cabecera { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 0 24px; min-height: 60px;
+  background: var(--gob-nav); color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,.2); }
+.navbar-logo { height: 32px; display: block; }
+.navbar-divisor { border-left: 1px solid var(--gob-dorado); height: 32px; margin: 0 4px; }
+.cabecera h1 { font-family: var(--titular); font-size: 16px; font-weight: 600; letter-spacing: .5px; margin-right: auto; color: #fff; }
+.reloj { color: #d9d4cf; font-variant-numeric: tabular-nums; }
+.reloj b { color: #fff; font-size: 16px; font-weight: 600; margin-left: 4px; }
+select { font: inherit; font-size: 14px; color: var(--tinta); background: var(--superficie);
+  border: 1px solid #999; border-radius: 6px; padding: 5px 8px; }
+.boton { font: inherit; font-size: 14px; color: var(--texto); background: var(--superficie); border: 1px solid #999;
+  border-radius: 6px; padding: 6px 14px; cursor: pointer; }
+.boton:hover { background: #F4F4F4; }
+.cabecera .boton { border-color: var(--gob-dorado); }
+.boton.activo { background: var(--principal); color: #fff; border-color: var(--principal); }
 
-.probar { display: flex; gap: 8px; flex-wrap: wrap; padding: 10px 24px; background: var(--superficie); border-bottom: 1px solid var(--linea); }
-.aviso { margin: 12px 24px 0; padding: 10px 14px; border: 1px solid var(--alarma); color: var(--alarma); background: #fff5f4; }
+.probar { display: flex; gap: 8px; flex-wrap: wrap; padding: 12px 24px; background: var(--superficie); border-bottom: 1px solid var(--linea); }
+.aviso { margin: 12px 24px 0; padding: 10px 14px; border: 1px solid #f4b6c2; border-radius: 6px; color: var(--gob-guinda-oscuro); background: #fde8ec; }
 
 .pagina { max-width: 1040px; padding: 16px 24px 32px; }
 .pagina > * + * { margin-top: 18px; }
 
 /* figura 3D: lienzo y rótulos HTML encima, en el mismo marco fino */
-.escena3d { container-type: inline-size; position: relative; background: var(--superficie); border: 1px solid var(--linea); aspect-ratio: 16 / 8.5; overflow: hidden; }
+/* los textos de la figura 3D se quedan como estaban: Public Sans y tinta azulada */
+.escena3d { --tinta: #16222c; --tenue: #5b6974; --cuerpo: "Public Sans", system-ui, "Segoe UI", sans-serif; font-family: var(--cuerpo); }
+.escena3d { container-type: inline-size; position: relative; background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio); box-shadow: var(--sombra); aspect-ratio: 16 / 8.5; overflow: hidden; }
 .escena3d canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; cursor: grab; touch-action: none; }
 .escena3d canvas:active { cursor: grabbing; }
 .escena3d.sin3d { aspect-ratio: auto; padding: 16px; color: var(--tenue); }
@@ -65,12 +78,13 @@ select { font: inherit; font-size: 13px; color: var(--tinta); background: var(--
 .volver3d { position: absolute; top: 10px; left: 10px; }
 
 /* lo que recibe la plataforma: pestañas con el último valor y la línea de tiempo */
+.recepcion { background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio); box-shadow: var(--sombra); padding: 14px 18px; }
 .recepcion svg { width: 100%; height: auto; display: block; font-family: var(--cuerpo); font-variant-numeric: tabular-nums; }
 .rec-param { display: flex; flex-wrap: wrap; gap: 4px 20px; margin-bottom: 4px; }
-.rec-param button { font: inherit; font-size: 13px; color: var(--tenue); background: none; border: 0; padding: 3px 0; cursor: pointer;
+.rec-param button { font: inherit; font-size: 14px; color: var(--tenue); background: none; border: 0; padding: 3px 0; cursor: pointer;
   border-bottom: 2px solid transparent; }
 .rec-param button .v { color: var(--tinta); font-weight: 600; font-variant-numeric: tabular-nums; margin-left: 4px; }
-.rec-param button.activo { color: var(--tinta); border-bottom-color: var(--tinta); }
+.rec-param button.activo { color: var(--principal); border-bottom-color: var(--principal); }
 .alarma-linea { color: var(--alarma); font-weight: 600; margin-bottom: 6px; }
 
 /* modo incrustado (lo usa el mapa por URL): sin cabecera */
@@ -84,7 +98,7 @@ select { font: inherit; font-size: 13px; color: var(--tinta); background: var(--
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 .rot3d .mod { display: block; color: var(--tenue); font-size: 11.5px; font-weight: 600; }
 
-.boton.ev.activo { background: var(--agua); border-color: var(--agua); color: #fff; }
+.boton.ev.activo { background: var(--principal); border-color: var(--principal); color: #fff; }
 
 .punto3d { position: absolute; width: 9px; height: 9px; border-radius: 50%; background: var(--tinta); border: 2px solid #fff;
   box-sizing: content-box; transform: translate(-50%, -50%); }

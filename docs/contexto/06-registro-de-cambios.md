@@ -21,6 +21,15 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-25 · M6 y M4: mapa y simulador con el aspecto gob.mx del panel y la app
+
+**Qué cambió.** El mapa y el simulador usan la barra verde oscuro con el logotipo del Gobierno de México, guinda y dorado, Patria en títulos y Noto Sans en el texto, fondo cálido y esquinas redondeadas, como el panel y la app ciudadana. Los botones de prueba activos pasan de azul a guinda. Los rótulos de la figura 3D conservan Public Sans y su tinta.
+**Por qué.** Que los tres frontends se vean como un solo producto (kit gob.mx v3, D31).
+**Qué arrastró.** `mapa/estilos.css`, `mapa/index.html`, `dispositivo/simulador/estilos.css`, `index.html` y `recepcion.js` (colores de la gráfica).
+**Impacto en otros módulos.** Ninguno.
+
+---
+
 ## 2026-11-25 · Módulo B: por qué cada mecanismo está donde está
 
 **Qué cambió.** El mapa de Escuelas muestra los 10 mecanismos (numeración de `mapa/`) y una línea punteada a cada

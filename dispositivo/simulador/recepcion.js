@@ -94,38 +94,38 @@
     svg.innerHTML = '';
     // leyenda en una línea, arriba a la derecha
     var ly = 10;
-    el('circle', { cx: W - 330, cy: ly, r: 3.5, fill: '#16222c' }, svg);
-    el('text', { x: W - 322, y: ly + 4, 'font-size': 11.5, fill: '#5b6974' }, svg, 'recibida por la plataforma');
-    el('circle', { cx: W - 168, cy: ly, r: 3.5, fill: '#fff', stroke: '#16222c', 'stroke-width': 1.3 }, svg);
-    el('text', { x: W - 160, y: ly + 4, 'font-size': 11.5, fill: '#5b6974' }, svg, 'en la estación, por enviar');
+    el('circle', { cx: W - 330, cy: ly, r: 3.5, fill: '#212529' }, svg);
+    el('text', { x: W - 322, y: ly + 4, 'font-size': 11.5, fill: '#767676' }, svg, 'recibida por la plataforma');
+    el('circle', { cx: W - 168, cy: ly, r: 3.5, fill: '#fff', stroke: '#212529', 'stroke-width': 1.3 }, svg);
+    el('text', { x: W - 160, y: ly + 4, 'font-size': 11.5, fill: '#767676' }, svg, 'en la estación, por enviar');
     if (L) {
       // franja del rango habitual
       el('rect', { x: IZQ, y: Y(L.p90), width: W - IZQ - DER, height: Math.max(1, Y(L.p10) - Y(L.p90)), fill: '#1d6fa5', opacity: 0.08 }, svg);
-      el('text', { x: IZQ - 6, y: Y(L.p90) + 4, 'text-anchor': 'end', 'font-size': 11, fill: '#5b6974' }, svg, fmt(L.p90, dec));
-      el('text', { x: IZQ - 6, y: Y(L.p10) + 4, 'text-anchor': 'end', 'font-size': 11, fill: '#5b6974' }, svg, fmt(L.p10, dec));
+      el('text', { x: IZQ - 6, y: Y(L.p90) + 4, 'text-anchor': 'end', 'font-size': 11, fill: '#767676' }, svg, fmt(L.p90, dec));
+      el('text', { x: IZQ - 6, y: Y(L.p10) + 4, 'text-anchor': 'end', 'font-size': 11, fill: '#767676' }, svg, fmt(L.p10, dec));
     } else if (ref !== undefined) {
       // umbral de referencia de ladera (hipótesis)
       el('line', { x1: IZQ, y1: Y(ref), x2: W - DER, y2: Y(ref), stroke: '#1d6fa5', 'stroke-dasharray': '4 4', 'stroke-opacity': 0.6 }, svg);
-      el('text', { x: IZQ - 6, y: Y(ref) + 4, 'text-anchor': 'end', 'font-size': 11, fill: '#5b6974' }, svg, fmt(ref, dec));
+      el('text', { x: IZQ - 6, y: Y(ref) + 4, 'text-anchor': 'end', 'font-size': 11, fill: '#767676' }, svg, fmt(ref, dec));
     }
     // eje de tiempo: una marca cada 2 h
-    el('line', { x1: IZQ, y1: H - ABA, x2: W - DER, y2: H - ABA, stroke: '#16222c' }, svg);
+    el('line', { x1: IZQ, y1: H - ABA, x2: W - DER, y2: H - ABA, stroke: '#212529' }, svg);
     var paso = 7200;
     for (var t = Math.ceil(t0 / paso) * paso; t <= ahora; t += paso) {
-      el('line', { x1: X(t), y1: H - ABA, x2: X(t), y2: H - ABA + 4, stroke: '#16222c' }, svg);
-      el('text', { x: X(t), y: H - ABA + 17, 'text-anchor': 'middle', 'font-size': 11, fill: '#5b6974' }, svg, M.iso(t).substr(11, 5));
+      el('line', { x1: X(t), y1: H - ABA, x2: X(t), y2: H - ABA + 4, stroke: '#212529' }, svg);
+      el('text', { x: X(t), y: H - ABA + 17, 'text-anchor': 'middle', 'font-size': 11, fill: '#767676' }, svg, M.iso(t).substr(11, 5));
     }
-    el('line', { x1: X(ahora), y1: ARR - 6, x2: X(ahora), y2: H - ABA, stroke: '#16222c', 'stroke-dasharray': '2 3' }, svg);
+    el('line', { x1: X(ahora), y1: ARR - 6, x2: X(ahora), y2: H - ABA, stroke: '#212529', 'stroke-dasharray': '2 3' }, svg);
 
     // la serie: línea fina entre lo recibido, puntos llenos y vacíos
     var tramo = rec.slice().sort(function (a, b) { return a.t - b.t; }).filter(function (x) { return valido(x.valores[param]); })
       .map(function (x) { return X(x.t).toFixed(1) + ',' + Y(x.valores[param]).toFixed(1); });
-    if (tramo.length > 1) el('polyline', { points: tramo.join(' '), fill: 'none', stroke: '#16222c', 'stroke-width': 1, 'stroke-opacity': 0.45 }, svg);
+    if (tramo.length > 1) el('polyline', { points: tramo.join(' '), fill: 'none', stroke: '#212529', 'stroke-width': 1, 'stroke-opacity': 0.45 }, svg);
     rec.map(function (x) { return { t: x.t, v: x.valores[param], ok: true }; })
       .concat(pend.map(function (x) { return { t: x.t, v: x.valores[param], ok: false }; }))
       .forEach(function (x) {
         if (!valido(x.v)) { el('text', { x: X(x.t), y: H - ABA - 6, 'text-anchor': 'middle', 'font-size': 10, fill: '#b3261e' }, svg, '×'); return; }
-        el('circle', { cx: X(x.t), cy: Y(x.v), r: 3.2, fill: x.ok ? '#16222c' : '#fff', stroke: '#16222c', 'stroke-width': 1.3 }, svg);
+        el('circle', { cx: X(x.t), cy: Y(x.v), r: 3.2, fill: x.ok ? '#212529' : '#fff', stroke: '#212529', 'stroke-width': 1.3 }, svg);
       });
   }
 

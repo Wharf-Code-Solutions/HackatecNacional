@@ -1,21 +1,26 @@
 /* Carta temática: base vectorial clara, el agua en azul, las estaciones en tinta.
    La barra lateral es el índice de estaciones y la casilla del flujo. */
+@font-face { font-family: 'Patria'; src: url('https://framework-gb.cdn.gob.mx/snd/v1/fuentes/Patria_Bold.otf') format('opentype'); font-weight: 600 700; font-display: swap; }
 :root {
-  --papel: #f3f5f6;
+  --gob-guinda: #9D2449; --gob-guinda-oscuro: #7a1a32; --gob-dorado: #BC955C; --gob-nav: #0B231E; --gob-verde: #13322E;
+  --papel: #ebe7e4;
   --superficie: #ffffff;
-  --tinta: #16222c;
-  --tenue: #5b6974;
-  --linea: #cdd5da;
+  --tinta: #13322E;
+  --texto: #545454;
+  --tenue: #767676;
+  --linea: #DDD8D3;
   --agua: #1d6fa5;
   --alerta: #b3261e;
-  --cuerpo: "Public Sans", system-ui, "Segoe UI", sans-serif;
+  --cuerpo: "Noto Sans", system-ui, "Segoe UI", sans-serif;
+  --titular: "Patria", "Noto Sans", Georgia, serif;
   color-scheme: light;
 }
 * { box-sizing: border-box; }
-html, body { height: 100%; margin: 0; background: var(--papel); color: var(--tinta); font: 14px/1.5 var(--cuerpo); overflow: hidden; }
+html, body { height: 100%; margin: 0; background: var(--papel); color: var(--texto); font: 14px/1.5 var(--cuerpo); overflow: hidden; }
 h1, h2, ol { margin: 0; padding: 0; }
-h1 { font-size: 18px; font-weight: 700; line-height: 1.25; margin-bottom: 14px; }
-:focus-visible { outline: 2px solid var(--agua); outline-offset: 2px; }
+h1 { font-family: var(--titular); font-size: 18px; font-weight: 700; line-height: 1.25; margin-bottom: 14px; color: var(--gob-guinda); }
+h1::after { content: ""; display: block; width: 40px; height: 4px; background: var(--gob-dorado); margin-top: 8px; }
+:focus-visible { outline: 3px solid var(--gob-dorado); outline-offset: 2px; }
 
 .app { display: flex; height: 100%; }
 .lateral { flex: 0 0 240px; overflow-y: auto; overflow-x: hidden; background: var(--superficie); border-right: 1px solid var(--linea);
@@ -36,11 +41,11 @@ h1 { font-size: 18px; font-weight: 700; line-height: 1.25; margin-bottom: 14px; 
 .app.menu-cerrado .estaciones button { grid-template-columns: 26px; justify-content: center; padding: 6px 0; }
 
 .estaciones { list-style: none; }
-.estaciones li + li { border-top: 1px solid #e4e9ec; }
+.estaciones li + li { border-top: 1px solid var(--linea); }
 .estaciones button { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 10px; align-items: center; width: 100%;
   background: none; border: 0; padding: 8px 4px; text-align: left; cursor: pointer; font: inherit; color: inherit; }
 .estaciones button:hover { background: var(--papel); }
-.estaciones li.activa button { background: #e8f1f8; }
+.estaciones li.activa button { background: #f6f0e6; box-shadow: inset 3px 0 0 var(--gob-guinda); }
 .num { width: 24px; height: 24px; border-radius: 50%; background: var(--tinta); color: #fff; display: grid; place-items: center; font-size: 12px; font-weight: 700; }
 .estaciones li.alerta .num { background: var(--alerta); }
 .estaciones b { display: block; font-size: 13.5px; font-weight: 600; }
@@ -49,9 +54,10 @@ h1 { font-size: 18px; font-weight: 700; line-height: 1.25; margin-bottom: 14px; 
 .capas { margin-top: auto; padding-top: 14px; border-top: 1px solid var(--linea); }
 .check { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px; color: var(--tenue); }
 .app.menu-cerrado .capas { display: none; }
-.boton { font: inherit; font-size: 13px; color: var(--tinta); background: var(--superficie); border: 1px solid #aeb9c0;
-  border-radius: 3px; padding: 5px 12px; cursor: pointer; }
-.boton:hover { border-color: var(--tinta); }
+.boton { font: inherit; font-size: 14px; color: var(--texto); background: var(--superficie); border: 1px solid #999;
+  border-radius: 6px; padding: 6px 14px; cursor: pointer; }
+.boton:hover { background: #F4F4F4; }
+.detalle .boton { border-color: var(--gob-dorado); white-space: nowrap; }
 
 .mapa-col { position: relative; flex: 1 1 0; min-width: 0; }
 #mapa { position: absolute; inset: 0; background: var(--papel); }
@@ -74,7 +80,7 @@ h1 { font-size: 18px; font-weight: 700; line-height: 1.25; margin-bottom: 14px; 
 .est-marca .punto { width: 26px; height: 26px; border-radius: 50%; background: var(--tinta); color: #fff; border: 2px solid #fff;
   box-shadow: 0 0 0 1px var(--tinta); display: grid; place-items: center; font-weight: 700; font-size: 13px; }
 .est-marca.alerta .punto { background: var(--alerta); box-shadow: 0 0 0 1px var(--alerta); }
-.est-marca.activa .punto { box-shadow: 0 0 0 3px var(--agua); }
+.est-marca.activa .punto { box-shadow: 0 0 0 3px var(--gob-dorado); }
 .est-marca .nombre { white-space: nowrap; font-size: 12.5px; font-weight: 600; color: var(--tinta);
   text-shadow: 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff; display: none; }
 #mapa.zoom-cerca .est-marca .nombre { display: block; }
@@ -84,8 +90,10 @@ h1 { font-size: 18px; font-weight: 700; line-height: 1.25; margin-bottom: 14px; 
 }
 /* con una estación abierta: la zona en el mapa a la izquierda (≈ 40 %) y su simulador a la derecha */
 .app.abierto .detalle { flex: 0 0 58%; width: auto; }
-.detalle header { display: flex; align-items: center; gap: 14px; padding: 8px 14px; background: var(--superficie); border-bottom: 1px solid var(--linea); flex: none; }
-.detalle h2 { font-size: 15px; font-weight: 600; }
+.detalle header { display: flex; align-items: center; gap: 14px; padding: 0 16px; min-height: 52px; background: var(--gob-nav); box-shadow: 0 2px 4px rgba(0,0,0,.2); flex: none; }
+.navbar-logo { height: 28px; display: block; }
+.navbar-divisor { border-left: 1px solid var(--gob-dorado); height: 28px; }
+.detalle h2 { font-family: var(--titular); font-size: 16px; font-weight: 600; letter-spacing: .5px; color: #fff; }
 .detalle iframe { flex: 1; border: 0; width: 100%; background: var(--papel); }
 
 @media (max-width: 900px) {
