@@ -69,7 +69,7 @@ export default function Huella({ estaciones, veredictos, alertas, elegida }) {
   const sinZ = !ladera && vs.every((v) => (v.parametros || []).every((x) => x.z_robusto == null));
   const col = Object.fromEntries(tiempos.map((t, i) => [t, i]));
   const ancho = W >= 520;
-  const Iz = ancho ? 130 : 46, D = 4, A = 4, filaH = ancho ? 34 : 26, sep = 8;
+  const Iz = ancho ? 170 : 46, D = 4, A = 4, filaH = ancho ? 34 : 26, sep = 8;
   const Ab = 42;   // abajo: marcas de hora y titulo del eje
   const H = A + PARAMS.length * (filaH + sep) + Ab;
   const baseY = A + PARAMS.length * (filaH + sep) - sep;
@@ -92,8 +92,8 @@ export default function Huella({ estaciones, veredictos, alertas, elegida }) {
     if (t < ms[0] || d.getHours() % paso_h) continue;
     const i = ms.findIndex((m) => m >= t);
     // Las columnas son lecturas, no tiempo: si el firmware aceleró el muestreo o hubo un hueco, dos horas pueden caer
-    // juntas. Se salta la marca que quede a menos de 64 px de la anterior.
-    if (i >= 0 && (!marcas.length || (i - marcas[marcas.length - 1].i) * cw >= 64)) marcas.push({ i, iso: d.toISOString() });
+    // juntas. Se salta la marca que quede a menos de 140 px de la anterior (cabe un rótulo con fecha).
+    if (i >= 0 && (!marcas.length || (i - marcas[marcas.length - 1].i) * cw >= 140)) marcas.push({ i, iso: d.toISOString() });
   }
   return (
     <div ref={ref} className="lienzo">

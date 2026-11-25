@@ -27,7 +27,8 @@ El criterio de qué cuenta como relevante está en
 (el sitio más cercano con línea base), provisional hasta el piloto; así publica `z_robusto` y la huella se llena.
 `contrato/sembrar_demo.py` (nuevo) siembra 24 h de lecturas fabricadas de los 10 mecanismos con eventos (industrial en
 ESC-02 ya normalizada, orgánica en ESC-04, tormenta en LAD-02, deslave en LAD-04): 16 alertas en local, 10 por atender.
-`Huella.jsx`: últimas 48 lecturas y marcas de hora a 64 px como mínimo (se encimaban).
+`Huella.jsx`: últimas 48 lecturas, marcas de hora a 140 px como mínimo (se encimaban) y columna de nombres más ancha.
+El script da a cada estación un episodio (deriva lenta del agua, pulsos, calor, aguaceros) para que toda huella tenga color.
 **Por qué.** Los escenarios eran de las ATY; sin ellas el panel salía vacío para la presentación.
 **Qué arrastró.** `motor/reglas.py`, `contrato/sembrar_demo.py`, `panel/src/graficas/Huella.jsx`.
 **Impacto en otros módulos.** M5 y el mock usan el motor: las ESC ahora tienen desviación histórica en su veredicto.

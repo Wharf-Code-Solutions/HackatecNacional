@@ -57,12 +57,18 @@ def agua(est, lb, t, i, rnd, evento):
     for cp in est['parametros']:
         b = lb[(sitio, cp)]
         med, mad = b['mediana'], max(b['mad'], 0.05 * abs(b['mediana']) or 0.1)
-        x = med + rnd.gauss(0, 0.6 * mad)
+        # Deriva lenta (horas) de hasta ±4.5 MAD más ruido: aleja la lectura de lo habitual sin un escalón brusco.
+        fase = sum(map(ord, est['c_estacion'] + cp)) % 7
+        x = med + 4.5 * mad * math.sin(i / 14.0 + fase) + rnd.gauss(0, 0.5 * mad)
         if cp == 'TEMP':
             x = med + 2.0 * math.sin((t.hour + t.minute / 60 - 9) / 24 * 2 * math.pi) + rnd.gauss(0, 0.3)
         v[cp] = x
     k = evento(i)
-    if k == 'industrial':
+    if k == 'pulso':
+        v['TURB'] *= 1.8; v['COND'] *= 1.25
+    elif k == 'calor':
+        v['TEMP'] += 3.5; v['OD'] *= 0.7
+    elif k == 'industrial':
         v['COND'] *= 9; v['PH'] += 1.6; v['OD'] *= 0.5; v['TURB'] *= 2
     elif k == 'organica':
         v['TURB'] *= 5; v['COND'] *= 1.8; v['PH'] -= 0.6; v['OD'] *= 0.4
@@ -76,6 +82,10 @@ def ladera(t, i, rnd, evento, estado):
     lluvia = 0.0
     if k == 'tormenta':
         lluvia = rnd.uniform(5, 9)
+    elif k == 'aguacero':
+        lluvia = rnd.uniform(3, 5)
+    elif k == 'llovizna':
+        lluvia = rnd.uniform(1.5, 3)
     elif k == 'deslave':
         lluvia = rnd.uniform(6, 11)
     elif rnd.random() < 0.06:
@@ -100,6 +110,13 @@ EVENTOS = {
     'EST-ESC-04': lambda i: 'organica' if i >= N - 8 else None,
     'EST-LAD-02': lambda i: 'tormenta' if entre(32, 16)(i) else None,
     'EST-LAD-04': lambda i: 'deslave' if i >= N - 20 else None,
+    # Las demás tienen un episodio menor: la huella de cada una muestra algo, como un día real de temporada.
+    'EST-ESC-01': lambda i: 'pulso' if entre(20, 12)(i) else None,
+    'EST-ESC-03': lambda i: 'calor' if entre(30, 14)(i) else None,
+    'EST-ESC-05': lambda i: 'pulso' if entre(14, 6)(i) else None,
+    'EST-LAD-01': lambda i: 'aguacero' if entre(26, 14)(i) else None,
+    'EST-LAD-03': lambda i: 'llovizna' if entre(40, 10)(i) else None,
+    'EST-LAD-05': lambda i: 'aguacero' if entre(18, 8)(i) else None,
 }
 
 
