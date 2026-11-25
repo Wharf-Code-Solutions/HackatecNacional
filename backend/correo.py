@@ -28,7 +28,7 @@ from email.message import EmailMessage
 from email.utils import formataddr
 
 TIPO = {
-    'descarga_visible': 'Descarga visible', 'espuma': 'Espuma', 'color_anormal': 'Color anormal',
+    'descarga_visible': 'Descarga visible', 'espuma': 'Espuma', 'color_anormal': 'Color o espuma', 'deslave': 'Deslave',
     'mal_olor': 'Mal olor', 'basura_o_residuos': 'Basura o residuos', 'peces_muertos': 'Peces muertos', 'otro': 'Otro',
 }
 GUINDA, DORADO, VERDE, GRIS = '#9D2449', '#BC955C', '#0B231E', '#545454'

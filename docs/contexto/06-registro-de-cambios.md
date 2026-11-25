@@ -21,6 +21,19 @@ El criterio de qué cuenta como relevante está en
 
 ---
 
+## 2026-11-24 · Módulo C: «Color o espuma» y nuevo tipo «Deslave» en los reportes
+
+**Qué cambió.** La app ofrece 6 tipos: «Espuma» se junta con «Color anormal» (código `color_anormal`, etiqueta «Color o espuma»)
+y entra `deslave`. `reporte_ciudadano.schema.json` suma `deslave` y sigue aceptando `espuma` para los reportes viejos. Gemini
+(`analisis_foto.py`) reconoce deslaves sin exigir agua; `prioridad_huella.py` le da gravedad 4 (hipótesis); etiquetas del panel
+y del correo actualizadas.
+**Por qué.** Cambio de rumbo a derrumbes (docs/19, docs/20); el usuario pidió un número par de opciones.
+**Qué arrastró.** `ciudadano/src/lib/etiquetas.js`, `CategoriaIcono.jsx`, `backend/correo.py`, `panel/src/lib/etiquetas.js`.
+**Impacto en otros módulos.** Compatible. Un reporte de deslave no se valida por cercanía al agua. El título de la app y el
+mensaje de ubicación fuera de rango siguen hablando del río Atoyac.
+
+---
+
 ## 2026-11-24 · Módulo B: alertas con escuelas afectadas
 
 **Qué cambió.** `alerta.schema.json` admite `escuelas_afectadas` (lista de CCT, opcional y compatible; docs/19 §4.4).
@@ -78,6 +91,7 @@ una escuela del mapa de Alertas abre su ficha.
 **Por qué.** Paso 3 del módulo B (docs/19 §6, punto 2).
 **Qué arrastró.** `Escuelas.jsx`, `App.jsx`, `Panorama.jsx`, `MapaEstaciones.jsx`, `estilos.css`.
 **Impacto en otros módulos.** Ninguno.
+
 
 ---
 

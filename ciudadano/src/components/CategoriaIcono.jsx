@@ -8,6 +8,7 @@ const TRAZOS = {
   mal_olor: <><path d="M4 9c2-2 4 2 6 0s4 2 6 0 3 0 4 0" /><path d="M4 14c2-2 4 2 6 0s4 2 6 0 3 0 4 0" /><path d="M4 19c2-2 4 2 6 0s4 2 6 0 3 0 4 0" /></>,
   basura_o_residuos: <><path d="M5 7h14" /><path d="M9 7V4h6v3" /><path d="M7 7l1 13h8l1-13" /><path d="M10 11v5M14 11v5" /></>,
   peces_muertos: <><path d="M3 12c3-4 7-5 11-3l4-3v12l-4-3c-4 2-8 1-11-3z" /><path d="M8 11l2 2M10 11l-2 2" /></>,
+  deslave: <><path d="M3 20h18" /><path d="M3 20L10 6l3 5" /><path d="M13 11l3-2 5 11" /><circle cx="15" cy="16" r="1.3" /><circle cx="18.5" cy="18" r="1" /><circle cx="12" cy="18" r="1" /></>,
   otro: <><circle cx="6" cy="12" r="1.4" /><circle cx="12" cy="12" r="1.4" /><circle cx="18" cy="12" r="1.4" /></>,
 };
 

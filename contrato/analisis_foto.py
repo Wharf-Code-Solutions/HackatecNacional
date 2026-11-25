@@ -2,7 +2,7 @@
 """Revisa si la foto de un reporte ciudadano corresponde a alguno de los tipos que se pueden reportar.
 
 La app ciudadana manda la miniatura (JPEG de 640 px, sin EXIF) y este modulo le pregunta a Gemini si
-muestra una descarga, espuma, un color anormal del agua, basura en el cauce, peces muertos o un mal
+muestra una descarga, un color anormal o espuma en el agua, un deslave, basura en el cauce, peces muertos o un mal
 olor (una orilla o un cuerpo de agua sospechoso), o si no tiene nada que ver (selfi, captura de
 pantalla, comida, un interior). Sirve para que no entren fotos basura.
 
@@ -30,7 +30,7 @@ import urllib.error
 import urllib.request
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-TIPOS = ['descarga_visible', 'espuma', 'color_anormal', 'mal_olor', 'basura_o_residuos', 'peces_muertos']
+TIPOS = ['descarga_visible', 'color_anormal', 'mal_olor', 'basura_o_residuos', 'peces_muertos', 'deslave']
 UMBRAL = 0.6                  # menos confianza que esto cuenta como 'no corresponde'
 MAX_BYTES = 600 * 1024        # la miniatura real pesa ~60 KB; esto corta abusos
 TIEMPO_MAX_S = 12             # por modelo
@@ -38,16 +38,17 @@ MODELOS = ['gemini-flash-lite-latest', 'gemini-3.5-flash-lite', 'gemini-3.8-flas
 POR_MINUTO = 10               # por IP, en este proceso (en Vercel es por instancia: es un freno, no una garantia)
 
 PROMPT = (
-    'Eres un filtro de calidad para reportes ciudadanos de contaminacion del rio Atoyac (Puebla y Tlaxcala). '
+    'Eres un filtro de calidad para reportes ciudadanos de contaminacion del agua y de deslaves cerca de escuelas rurales de Puebla. '
     'Mira la foto y elige el tipo de reporte que mejor la describe, o "ninguno" si no corresponde a ninguno.\n'
     'Tipos:\n'
     '- descarga_visible: un tubo, canal o ducto que vierte liquido al rio, arroyo o barranca.\n'
-    '- espuma: espuma sobre el agua o en la orilla.\n'
-    '- color_anormal: agua de un color inusual (rojo, negro, verde intenso, lechoso, aceitoso, con brillo).\n'
+    '- color_anormal: agua de un color inusual (rojo, negro, verde intenso, lechoso, aceitoso, con brillo) o con espuma.\n'
     '- mal_olor: un cuerpo de agua o una orilla con aspecto sucio o estancado donde se pueda sentir mal olor.\n'
     '- basura_o_residuos: basura, escombro o residuos en el cauce o en la orilla.\n'
     '- peces_muertos: peces u otros animales muertos en o junto al agua.\n'
-    '- ninguno: la foto no muestra un rio, arroyo, canal, orilla ni ninguna de las situaciones anteriores '
+    '- deslave: tierra, lodo, rocas o arboles que se desprendieron de una ladera o cerro, sobre un camino, una casa o '
+    'una escuela, o una ladera con una cicatriz o grieta reciente. No necesita agua.\n'
+    '- ninguno: la foto no muestra un rio, arroyo, canal, orilla, ladera ni ninguna de las situaciones anteriores '
     '(selfi, personas posando, captura de pantalla, comida, mascotas, interiores, memes, imagenes borrosas o negras).\n'
     'Reglas: evalua solo lo que se ve; no identifiques a ninguna persona. Si dudas entre un tipo y "ninguno", '
     'baja la confianza. "confianza" va de 0 a 1. "motivo" es una frase corta en espanol de lo que ves.'

@@ -16,7 +16,7 @@
     "fecha_hora": { "type": "string", "format": "date-time" },
     "tipo": {
       "type": "string",
-      "enum": ["descarga_visible", "espuma", "color_anormal", "mal_olor", "basura_o_residuos", "peces_muertos", "otro"]
+      "enum": ["descarga_visible", "espuma", "color_anormal", "mal_olor", "basura_o_residuos", "peces_muertos", "deslave", "otro"]
     },
     "descripcion": { "type": ["string", "null"], "maxLength": 1000 },
     "latitud": { "type": "number", "minimum": 17.5, "maximum": 20.5 },

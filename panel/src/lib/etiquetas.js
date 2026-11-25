@@ -22,7 +22,7 @@ export const AVISO = {
   posible_deriva: 'Posible deriva',
 };
 export const REPORTE = {
-  descarga_visible: 'Descarga visible', espuma: 'Espuma', color_anormal: 'Color anormal', mal_olor: 'Mal olor',
+  descarga_visible: 'Descarga visible', espuma: 'Espuma', color_anormal: 'Color o espuma', deslave: 'Deslave', mal_olor: 'Mal olor',
   basura_o_residuos: 'Basura o residuos', peces_muertos: 'Peces muertos', otro: 'Otro',
 };
 // Estados de un reporte ciudadano, en el orden en que avanza la atención.

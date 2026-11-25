@@ -38,7 +38,8 @@ FIX = os.path.join(RAIZ, 'contrato', 'fixtures')
 
 # ----------------------------------------------------------------- pesos (hipotesis ajustables)
 GRAVEDAD = {'peces_muertos': 5, 'descarga_visible': 4, 'color_anormal': 3, 'espuma': 3,
-            'basura_o_residuos': 2, 'mal_olor': 2, 'otro': 2}
+            'basura_o_residuos': 2, 'mal_olor': 2, 'otro': 2,
+            'deslave': 4}       # deslave: hipotesis, a la par de una descarga (pone en riesgo a una escuela)
 FOCO_RADIO_M = 150            # mismo tipo a menos de esto y de FOCO_HORAS: es el mismo foco
 FOCO_HORAS = 24
 ZONA_RADIO_M = 1500           # focos del mismo sitio a menos de esto forman una zona de calor
